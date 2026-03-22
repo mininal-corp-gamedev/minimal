@@ -1,0 +1,25 @@
+{
+  "publish": {
+    "Enabled": false,
+    "ProjectConfig": {
+      "Title": "Road",
+      "Type": "map",
+      "Org": "local",
+      "Ident": "road",
+      "Schema": 0,
+      "IncludeSourceFiles": false,
+      "Resources": null,
+      "PackageReferences": [],
+      "EditorReferences": [
+        "facepunch.metal_painted_blue_a_hs#29191",
+        "rustextended.asphalt_a_gravel_blend#43221"
+      ],
+      "Mounts": null,
+      "IsStandaloneOnly": false,
+      "Metadata": {
+        "SingleAssetSource": "maps/road.vmap",
+        "ParentPackage": "minimalinc.mrp"
+      }
+    }
+  }
+}

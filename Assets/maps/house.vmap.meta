@@ -1,0 +1,26 @@
+{
+  "publish": {
+    "Enabled": false,
+    "ProjectConfig": {
+      "Title": "House",
+      "Type": "map",
+      "Org": "local",
+      "Ident": "house",
+      "Schema": 0,
+      "IncludeSourceFiles": false,
+      "Resources": null,
+      "PackageReferences": [],
+      "EditorReferences": [
+        "facepunch.wall_brick_new#115471",
+        "rustextended.concrete_f_single#43240",
+        "sugmatextures.greyinteriortilefloor#35364"
+      ],
+      "Mounts": null,
+      "IsStandaloneOnly": false,
+      "Metadata": {
+        "SingleAssetSource": "maps/house.vmap",
+        "ParentPackage": "minimalinc.mrp"
+      }
+    }
+  }
+}

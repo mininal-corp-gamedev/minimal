@@ -1,0 +1,39 @@
+{
+  "publish": {
+    "Enabled": false,
+    "ProjectConfig": {
+      "Title": "Luxury House",
+      "Type": "map",
+      "Org": "local",
+      "Ident": "luxuryhouse",
+      "Schema": 0,
+      "IncludeSourceFiles": false,
+      "Resources": null,
+      "PackageReferences": [],
+      "EditorReferences": [
+        "aitextures.beigewallpaper01#17731",
+        "aitextures.beigewallpaper03#45259",
+        "creation.dark_planks#19306",
+        "degg.base_mat_wood#10139",
+        "exorealms.4407851c411bf7d4#92151",
+        "facepunch.carpet_a#85497",
+        "facepunch.floor_gravel_asphalt#85386",
+        "facepunch.floor_tile_basalt#85413",
+        "facepunch.granite_simple#85416",
+        "facepunch.leaves_green_a#111314",
+        "facepunch.woodenfloorherringbonealight#111277",
+        "facepunch.woodenflooringa#111159",
+        "jammie.roofshingles01#85920",
+        "mapperskai.wood1_512#12659",
+        "rustextended.brick_wall_b#43210",
+        "titanovsky.walllpaper14_2k#54255"
+      ],
+      "Mounts": null,
+      "IsStandaloneOnly": false,
+      "Metadata": {
+        "SingleAssetSource": "maps/luxury_house.vmap",
+        "ParentPackage": "minimalinc.mrp"
+      }
+    }
+  }
+}

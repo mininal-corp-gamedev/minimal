@@ -1,0 +1,52 @@
+{
+  "publish": {
+    "Enabled": false,
+    "ProjectConfig": {
+      "Title": "Las Sausages",
+      "Type": "map",
+      "Org": "local",
+      "Ident": "lassausages",
+      "Schema": 0,
+      "IncludeSourceFiles": false,
+      "Resources": null,
+      "PackageReferences": [],
+      "EditorReferences": [
+        "aitextures.beigewallpaper01#17731",
+        "aitextures.beigewallpaper03#45259",
+        "aitextures.marblefloor05#17653",
+        "ambientcg.concrete_010#34355",
+        "creation.dark_planks#19306",
+        "degg.base_mat_wood#10139",
+        "exorealms.4407851c411bf7d4#92151",
+        "facepunch.carpet_a#85497",
+        "facepunch.floor_gravel_asphalt#85386",
+        "facepunch.floor_tile_basalt#85413",
+        "facepunch.granite_simple#85416",
+        "facepunch.leaves_green_a#111314",
+        "facepunch.wall_brick_new#115471",
+        "facepunch.wall_concrete_painted_a#85470",
+        "facepunch.woodenfloorherringbonealight#111277",
+        "facepunch.woodenflooringa#111159",
+        "goose.g_concretep_w_1#9633",
+        "jammie.roofshingles01#85920",
+        "mapperskai.wood1_512#12659",
+        "rustextended.asphalt_a#43213",
+        "rustextended.brick_wall_b#43210",
+        "rustextended.concrete_f_single#43240",
+        "sugmatextures.greyinteriortilefloor#35364",
+        "thefirm.asphalt#26336",
+        "thefirm.building_facade#26333",
+        "thefirm.desertsand#23488",
+        "titanovsky.stone4_2k#54139",
+        "titanovsky.walllpaper14_2k#54255",
+        "way.blue_brick_road01#19097"
+      ],
+      "Mounts": null,
+      "IsStandaloneOnly": false,
+      "Metadata": {
+        "SingleAssetSource": "maps/las sausages.vmap",
+        "ParentPackage": "minimalinc.mrp"
+      }
+    }
+  }
+}

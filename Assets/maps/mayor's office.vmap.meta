@@ -1,0 +1,29 @@
+{
+  "publish": {
+    "Enabled": false,
+    "ProjectConfig": {
+      "Title": "Mayor\u0027s Office",
+      "Type": "map",
+      "Org": "local",
+      "Ident": "mayorsoffice",
+      "Schema": 0,
+      "IncludeSourceFiles": false,
+      "Resources": null,
+      "PackageReferences": [],
+      "EditorReferences": [
+        "aitextures.marblefloor05#17653",
+        "ambientcg.concrete_010#34355",
+        "facepunch.wall_concrete_painted_a#85470",
+        "goose.g_concretep_w_1#9633",
+        "sugmatextures.greyinteriortilefloor#35364",
+        "titanovsky.stone4_2k#54139"
+      ],
+      "Mounts": null,
+      "IsStandaloneOnly": false,
+      "Metadata": {
+        "SingleAssetSource": "maps/mayor\u0027s office.vmap",
+        "ParentPackage": "minimalinc.mrp"
+      }
+    }
+  }
+}

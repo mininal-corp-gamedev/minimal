@@ -1,0 +1,52 @@
+$ammo-green: #4fd945;
+
+AmmoHud
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	justify-content: flex-end;
+	align-items: flex-end;
+	padding: 24px;
+	pointer-events: none;
+
+	.ammo-panel
+	{
+		flex-direction: row;
+		align-items: center;
+		padding: 10px 14px;
+		background-color: rgba(12, 14, 18, 0.72);
+		border-radius: 10px;
+		box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+	}
+
+	.ammo-value
+	{
+		flex-direction: row;
+		flex-wrap: nowrap;
+		justify-content: flex-start;
+		align-items: center;
+		white-space: nowrap;
+		flex-shrink: 0;
+		font-size: 32px;
+		font-family: Poppins;
+		font-weight: 700;
+		color: $ammo-green;
+	}
+
+	.ammo-value.empty
+	{
+		color: rgba(79, 217, 69, 0.45);
+	}
+
+	.ammo-label
+	{
+		font-size: 16px;
+		font-family: Poppins;
+		font-weight: 400;
+		color: rgba(0, 0, 0, 0.55);
+		margin-left: 6px;
+	}
+}

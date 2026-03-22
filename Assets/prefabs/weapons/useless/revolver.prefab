@@ -1,0 +1,253 @@
+{
+  "RootObject": {
+    "__guid": "4d0d08fd-d93f-46ff-a12a-3c797f876769",
+    "__version": 2,
+    "Flags": 0,
+    "Name": "revolver",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 0,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "Megashot.Weapons.WeaponRevolver",
+        "__guid": "03f29fa6-d7e1-43f2-b5da-10941266400c",
+        "__enabled": true,
+        "Flags": 0,
+        "Ammo": 0,
+        "BulletPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefabs/bullet.prefab"
+        },
+        "CanAttackWithoutAmmo": false,
+        "ClipSize": 6,
+        "Damage": 75,
+        "FireDelay": 0.75,
+        "FireSound": "sounds/m4a1 shot.sound",
+        "HasHipFire": true,
+        "HasReload": true,
+        "IsIronSight": false,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "ReloadDurationSeconds": 4,
+        "ReloadSound": "sounds/m4 reload sequence.sound",
+        "SemiAuto": true,
+        "ShotPos": {
+          "_type": "gameobject",
+          "go": "36dbaa0a-2d9f-4782-8650-4c605e8dc2a9"
+        },
+        "SpawnSpriteFireOnShot": true,
+        "SpriteFirePrefab": {
+          "_type": "gameobject",
+          "prefab": "prefabs/weapons/muzzleflash/pistol_muzzleflash.prefab"
+        },
+        "TotalReserveAmmo": 12,
+        "Viewmodel": {
+          "_type": "component",
+          "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
+          "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
+          "component_type": "SkinnedModelRenderer"
+        }
+      }
+    ],
+    "Children": [
+      {
+        "__guid": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "viewmodel",
+        "Position": "16.92952,0,-144",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 0,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "c8ff336a-e934-4098-9c31-ba4f3d823703",
+            "__enabled": true,
+            "Flags": 0,
+            "AnimationGraph": null,
+            "BodyGroups": 18446744073709551615,
+            "BoneMergeTarget": null,
+            "CreateAttachments": true,
+            "CreateBoneObjects": false,
+            "LodOverride": null,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Materials": null,
+            "Model": "weapons/rust_python/v_python.vmdl",
+            "Morphs": {},
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Parameters": {
+              "bools": {
+                "b_attack": false,
+                "b_reload": false
+              },
+              "ints": {},
+              "floats": {},
+              "vectors": {},
+              "rotations": {}
+            },
+            "PlaybackRate": 1,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Sequence": {
+              "Name": null,
+              "Looping": true,
+              "Blending": false
+            },
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
+          }
+        ],
+        "Children": [
+          {
+            "__guid": "36dbaa0a-2d9f-4782-8650-4c605e8dc2a9",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "ShotPos",
+            "Position": "58.68962,-9.199264,140.0234",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 0,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          }
+        ]
+      },
+      {
+        "__guid": "062e07aa-52fc-405d-a851-aa472f4fce3d",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "arms",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": false,
+        "NetworkMode": 0,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "31640b06-be37-4c11-9348-e44011f4c6a7",
+            "__enabled": true,
+            "Flags": 0,
+            "AnimationGraph": null,
+            "BodyGroups": 21,
+            "BoneMergeTarget": {
+              "_type": "component",
+              "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
+              "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
+              "component_type": "SkinnedModelRenderer"
+            },
+            "CreateAttachments": false,
+            "CreateBoneObjects": false,
+            "LodOverride": null,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Materials": null,
+            "Model": "models/first_person/v_first_person_arms_human.vmdl",
+            "Morphs": {},
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Parameters": {
+              "bools": {},
+              "ints": {},
+              "floats": {},
+              "vectors": {},
+              "rotations": {}
+            },
+            "PlaybackRate": 1,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Sequence": {
+              "Name": null,
+              "Looping": true,
+              "Blending": false
+            },
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
+          }
+        ],
+        "Children": []
+      }
+    ],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [
+    "drakefruit.m4a1_shot#91284",
+    "drakefruit.rifle_reload#91283",
+    "facepunch.v_first_person_arms_human#142949",
+    "rust.vpython#76270"
+  ],
+  "__version": 2
+}

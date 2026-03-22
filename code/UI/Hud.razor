@@ -1,0 +1,44 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="hud-stack">
+		<div class="top-panel hud-panel">
+			<div class="job-icon"></div>
+			<div class="job-name">Должность</div>
+			<div class="wallet-icon"></div>
+			<div class="money-value">$@(Player.Local?.Money ?? 0)</div>
+		</div>
+		<div class="bottom-panel hud-panel">
+			<div class="player-avatar" style="background-image: url(avatar:@Game.SteamId.Value);"></div>
+			<div class="bottom-main">
+				<div class="player-name">@(Connection.Local?.DisplayName ?? "—")</div>
+				<div class="health-row">
+					<div class="health-icon"></div>
+					<div class="health-bar">
+						<div class="health-fill" style="width: @(HealthPercent)%;"></div>
+						<div class="health-text">@HealthValue</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</root>
+
+@code
+{
+	float HealthPercent => Player.Local != null
+		? Math.Clamp( Player.Local.Health / Player.Local.MaxHealth * 100f, 0f, 100f )
+		: 0f;
+
+	int HealthValue => (int)(Player.Local?.Health ?? 0f);
+
+	protected override int BuildHash() => System.HashCode.Combine(
+		Player.Local?.Money ?? 0,
+		Player.Local?.Health ?? 0f,
+		Connection.Local?.DisplayName,
+		Game.SteamId );
+}

@@ -1,0 +1,58 @@
+PlayerWorldHud
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	font-weight: bold;
+
+	.title
+	{
+		font-size: 25px;
+		font-family: Poppins;
+		color: #3d9ceb;
+		text-stroke: 3px rgba( 0, 0, 0, 0.88 );
+		margin-bottom: 6px;
+	}
+
+	.health-bar
+	{
+		position: relative;
+		width: 160px;
+		height: 18px;
+		background-color: rgba( 61, 156, 235, 0.15 );
+		border: 2px solid #3d9ceb;
+		border-radius: 9px;
+		overflow: hidden;
+	}
+
+	.health-fill
+	{
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		background-color: #3d9ceb;
+		border-radius: 9px;
+	}
+
+	.health-text
+	{
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		font-size: 14px;
+		font-family: Poppins;
+		font-weight: 700;
+		color: #ffffff;
+		text-stroke: 2px rgba( 0, 0, 0, 0.75 );
+		justify-content: center;
+		align-items: center;
+	}
+}

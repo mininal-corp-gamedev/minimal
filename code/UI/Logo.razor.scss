@@ -1,0 +1,25 @@
+$logo-width: 210px;
+$logo-height: 180px;
+
+Logo {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: flex-start;
+	padding: 4px 24px;
+	pointer-events: none;
+
+	.logo {
+		width: $logo-width;
+		height: $logo-height;
+		padding: 1px 1px;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+		border-radius: 8px;
+	}
+}

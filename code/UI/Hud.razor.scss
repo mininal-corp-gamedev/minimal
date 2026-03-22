@@ -1,0 +1,161 @@
+$hud-panel-width: 340px;
+$hud-panel-bg: rgba(12, 14, 18, 0.72);
+$hud-panel-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+$hud-gap: 6px;
+$health-green: #4fd945;
+
+Hud {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	flex-direction: column;
+	justify-content: flex-end;
+	align-items: flex-start;
+	padding: 24px;
+	pointer-events: none;
+
+	.hud-stack {
+		flex-direction: column;
+		width: $hud-panel-width;
+	}
+
+	.hud-panel {
+		width: 100%;
+		flex-shrink: 0;
+		background-color: $hud-panel-bg;
+		border-radius: 10px;
+		box-shadow: $hud-panel-shadow;
+	}
+
+	.top-panel {
+		flex-direction: row;
+		align-items: center;
+		padding: 10px 14px;
+		margin-bottom: $hud-gap;
+	}
+
+	.job-icon {
+		width: 28px;
+		height: 28px;
+		flex-shrink: 0;
+		margin-right: 10px;
+		background-image: url("icons/job.vtex");
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+	}
+
+	.job-name {
+		flex-grow: 1;
+		font-size: 16px;
+		font-family: Poppins;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.92);
+	}
+
+	.wallet-icon {
+		width: 26px;
+		height: 26px;
+		flex-shrink: 0;
+		margin-right: 8px;
+		background-image: url("icons/wallet.vtex");
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+	}
+
+	.money-value {
+		font-size: 18px;
+		font-family: Poppins;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		flex-shrink: 0;
+	}
+
+	.bottom-panel {
+		flex-direction: row;
+		align-items: center;
+		padding: 12px 14px;
+		min-height: 88px;
+	}
+
+	.player-avatar {
+		width: 64px;
+		height: 64px;
+		flex-shrink: 0;
+		margin-right: 14px;
+		border-radius: 999px;
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center;
+	}
+
+	.bottom-main {
+		flex-grow: 1;
+		flex-direction: column;
+		justify-content: center;
+		min-width: 0;
+	}
+
+	.player-name {
+		font-size: 15px;
+		font-family: Poppins;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.95);
+		margin-bottom: 8px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.health-row {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.health-icon {
+		width: 22px;
+		height: 22px;
+		flex-shrink: 0;
+		margin-right: 8px;
+		background-image: url("icons/health.vtex");
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+	}
+
+	.health-bar {
+		position: relative;
+		flex-grow: 1;
+		height: 22px;
+		background-color: rgba(0, 0, 0, 0.35);
+		border-radius: 11px;
+		min-width: 0;
+	}
+
+	.health-fill {
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		background-color: $health-green;
+		border-radius: 11px;
+	}
+
+	.health-text {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		font-size: 13px;
+		font-family: Poppins;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+		justify-content: center;
+		align-items: center;
+	}
+}

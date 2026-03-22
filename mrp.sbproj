@@ -1,0 +1,30 @@
+{
+  "Title": "MinimalRP",
+  "Type": "game",
+  "Org": "minimalinc",
+  "Ident": "mrp",
+  "Schema": 1,
+  "IncludeSourceFiles": false,
+  "Resources": "fonts/*",
+  "PackageReferences": [],
+  "EditorReferences": null,
+  "Mounts": null,
+  "IsStandaloneOnly": false,
+  "Metadata": {
+    "MaxPlayers": 64,
+    "MinPlayers": 1,
+    "TickRate": 50,
+    "GameNetworkType": "Multiplayer",
+    "MapSelect": "Unrestricted",
+    "MapList": [
+      "facepunch.flatgrass"
+    ],
+    "RankType": "None",
+    "PerMapRanking": false,
+    "LeaderboardType": "None",
+    "CsProjName": "",
+    "StartupScene": "scenes/minimal.scene",
+    "LaunchMode": "QuickPlay",
+    "DedicatedServerStartupScene": "scenes/minimal.scene"
+  }
+}

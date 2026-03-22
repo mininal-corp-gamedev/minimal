@@ -1,0 +1,29 @@
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if (ShouldShow)
+	{
+		<div class="ammo-panel">
+			<div class="ammo-value @(CurrentAmmo <= 0 ? "empty" : "")">@AmmoDisplayText</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	Weapon CurrentWeapon => Player.Local?.CurrentWeapon;
+	bool ShouldShow => CurrentWeapon != null && CurrentWeapon.UsesAmmunition;
+	int CurrentAmmo => CurrentWeapon?.Ammo ?? 0;
+	/// <summary>Запас патронов вне магазина (поле <see cref="Weapon.TotalReserveAmmo"/>).</summary>
+	int TotalAmmo => CurrentWeapon?.TotalReserveAmmo ?? 0;
+	string AmmoDisplayText => $"{CurrentAmmo}/{TotalAmmo}";
+
+	protected override int BuildHash() => System.HashCode.Combine(
+		Player.Local?.CurrentWeapon?.GetHashCode() ?? 0,
+		CurrentWeapon?.Ammo ?? 0,
+		CurrentWeapon?.TotalReserveAmmo ?? 0
+	);
+}

@@ -1,0 +1,61 @@
+$slot-size: 84px;
+$slot-size-active: 98px;
+
+WeaponHotbar {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	justify-content: center;
+	align-items: flex-end;
+	padding-bottom: 32px;
+	pointer-events: none;
+
+	.hotbar {
+		flex-direction: row;
+		align-items: flex-end;
+	}
+
+	.slot {
+		width: $slot-size;
+		height: $slot-size;
+		margin: 0 3px;
+		background-color: rgba(12, 14, 18, 0.72);
+		border-radius: 10px;
+		box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+		align-items: center;
+		justify-content: center;
+	}
+
+		.slot.active {
+			width: $slot-size-active;
+			height: $slot-size-active;
+			background-color: rgba(28, 34, 42, 0.88);
+			box-shadow: 0 6px 24px rgba(0, 0, 0, 0.65);
+		}
+
+	.slot-icon {
+		width: 100%;
+		height: 100%;
+		background-repeat: no-repeat;
+		background-size: 75%;
+		background-position: center;
+	}
+
+		.slot-icon.pickaxe {
+			background-image: url("icons/weapons/pickaxe.vtex");
+		}
+
+		.slot-icon.usp {
+			background-image: url("icons/weapons/usp.vtex");
+		}
+
+		.slot-icon.mp5 {
+			background-image: url("icons/weapons/mp5.vtex");
+		}
+
+		.slot-icon.m4a1 {
+			background-image: url("icons/weapons/m4a1.vtex");
+		}
+}

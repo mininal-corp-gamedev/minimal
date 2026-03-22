@@ -1,0 +1,43 @@
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="hotbar">
+		<div class="slot @SlotClass(0)">
+			<div class="slot-icon pickaxe"></div>
+		</div>
+		<div class="slot @SlotClass(1)">
+			<div class="slot-icon usp"></div>
+		</div>
+		<div class="slot @SlotClass(2)">
+			<div class="slot-icon mp5"></div>
+		</div>
+		<div class="slot @SlotClass(3)">
+			<div class="slot-icon m4a1"></div>
+		</div>
+	</div>
+</root>
+
+@code
+{
+	int ActiveSlot
+	{
+		get
+		{
+			var wep = Player.Local?.CurrentWeapon;
+			var wm = WeaponManager.Instance;
+			if ( wep == null || wm == null ) return -1;
+			if ( wep == wm.Pickaxe ) return 0;
+			if ( wep == wm.Usp ) return 1;
+			if ( wep == wm.Mp5 ) return 2;
+			if ( wep == wm.M4A1 ) return 3;
+			return -1;
+		}
+	}
+
+	string SlotClass( int index ) => ActiveSlot == index ? "active" : "";
+
+	protected override int BuildHash() => System.HashCode.Combine( Player.Local?.CurrentWeapon?.GetHashCode() ?? 0 );
+}

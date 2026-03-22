@@ -1,0 +1,32 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="title">@Name</div>
+	<div class="health-bar">
+		<div class="health-fill" style="width: @(HealthPercent)%;"></div>
+		<div class="health-text">@HealthDisplay / @MaxHealthDisplay</div>
+	</div>
+</root>
+
+@code
+{
+	[Sync] public string Name { get; set; } = "";
+
+	Player TargetPlayer => Components.Get<Player>( FindMode.EverythingInSelfAndAncestors );
+
+	float HealthValue => TargetPlayer?.Health ?? 0f;
+	float MaxHealthValue => TargetPlayer is { MaxHealth: > 0f } p ? p.MaxHealth : 1f;
+
+	float HealthPercent => Math.Clamp( HealthValue / MaxHealthValue * 100f, 0f, 100f );
+
+	int HealthDisplay => (int)MathF.Round( HealthValue );
+	int MaxHealthDisplay => (int)MathF.Round( MaxHealthValue );
+
+	public void WorldHudRefresh() => StateHasChanged();
+
+	protected override int BuildHash() => System.HashCode.Combine( Name, HealthValue, MaxHealthValue );
+}

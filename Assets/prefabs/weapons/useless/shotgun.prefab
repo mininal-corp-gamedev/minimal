@@ -1,0 +1,295 @@
+{
+  "RootObject": {
+    "__guid": "4d0d08fd-d93f-46ff-a12a-3c797f876769",
+    "__version": 2,
+    "Flags": 0,
+    "Name": "shotgun",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 0,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "Megashot.Weapons.WeaponShotgun",
+        "__guid": "e3b1229e-3c95-4884-be75-5f7c45736561",
+        "__enabled": true,
+        "Flags": 0,
+        "Ammo": 0,
+        "BulletPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefabs/bullet.prefab"
+        },
+        "CanAttackWithoutAmmo": false,
+        "ClipSize": 8,
+        "Damage": 5,
+        "FireDelay": 0.5,
+        "FireSound": "sounds/m4a1 shot.sound",
+        "HasHipFire": true,
+        "HasReload": true,
+        "IsIronSight": false,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "PelletCount": 8,
+        "ReloadAnimClipDuration": 1,
+        "ReloadDurationSeconds": 3,
+        "ReloadSound": "sounds/m4 reload sequence.sound",
+        "SemiAuto": false,
+        "ShotPos": {
+          "_type": "gameobject",
+          "go": "36dbaa0a-2d9f-4782-8650-4c605e8dc2a9"
+        },
+        "SpawnSpriteFireOnShot": true,
+        "SpreadDegrees": 4,
+        "SpriteFirePrefab": {
+          "_type": "gameobject",
+          "prefab": "prefabs/weapons/muzzleflash/pistol_muzzleflash.prefab"
+        },
+        "TotalReserveAmmo": 16,
+        "Viewmodel": {
+          "_type": "component",
+          "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
+          "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
+          "component_type": "SkinnedModelRenderer"
+        }
+      }
+    ],
+    "Children": [
+      {
+        "__guid": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "viewmodel",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 0,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "c8ff336a-e934-4098-9c31-ba4f3d823703",
+            "__enabled": true,
+            "Flags": 0,
+            "AnimationGraph": null,
+            "BodyGroups": 11,
+            "BoneMergeTarget": null,
+            "CreateAttachments": true,
+            "CreateBoneObjects": false,
+            "LodOverride": null,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Materials": null,
+            "Model": "models/weapons/sbox_shotgun_spaghellim4/v_spaghellim4.vmdl",
+            "Morphs": {},
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Parameters": {
+              "bools": {
+                "b_deploy_skip": true
+              },
+              "ints": {},
+              "floats": {},
+              "vectors": {},
+              "rotations": {}
+            },
+            "PlaybackRate": 1,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Sequence": {
+              "Name": null,
+              "Looping": true,
+              "Blending": false
+            },
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
+          }
+        ],
+        "Children": [
+          {
+            "__guid": "36dbaa0a-2d9f-4782-8650-4c605e8dc2a9",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "ShotPos",
+            "Position": "36.94164,-4.803466,-4.813882",
+            "Rotation": "0,0,0,1",
+            "Scale": "0.1,0.1,0.1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 0,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "6ad5eaea-fdeb-4345-bf66-09e3d3edfb7f",
+            "__version": 2,
+            "Flags": 8,
+            "Name": "muzzle",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "f79af86f-4875-4991-8e27-3e22ee270f48",
+            "__version": 2,
+            "Flags": 8,
+            "Name": "eject",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [],
+            "Children": []
+          }
+        ]
+      },
+      {
+        "__guid": "062e07aa-52fc-405d-a851-aa472f4fce3d",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "arms",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 0,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "31640b06-be37-4c11-9348-e44011f4c6a7",
+            "__enabled": true,
+            "Flags": 0,
+            "AnimationGraph": null,
+            "BodyGroups": 21,
+            "BoneMergeTarget": {
+              "_type": "component",
+              "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
+              "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
+              "component_type": "SkinnedModelRenderer"
+            },
+            "CreateAttachments": false,
+            "CreateBoneObjects": false,
+            "LodOverride": null,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Materials": null,
+            "Model": "models/first_person/v_first_person_arms_human.vmdl",
+            "Morphs": {},
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Parameters": {
+              "bools": {},
+              "ints": {},
+              "floats": {},
+              "vectors": {},
+              "rotations": {}
+            },
+            "PlaybackRate": 1,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Sequence": {
+              "Name": null,
+              "Looping": true,
+              "Blending": false
+            },
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
+          }
+        ],
+        "Children": []
+      }
+    ],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "CustomBounds": false,
+        "Bounds": {
+          "Mins": "0,0,0",
+          "Maxs": "0,0,0"
+        }
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [
+    "drakefruit.m4a1_shot#91284",
+    "drakefruit.rifle_reload#91283",
+    "facepunch.v_first_person_arms_human#142949",
+    "facepunch.v_spaghellim4#150536"
+  ],
+  "__version": 2
+}

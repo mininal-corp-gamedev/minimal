@@ -1,2 +1,2 @@
-# literp
-🌭 LiteRP for s&amp;box
+# Minimal RP
+🌭 yeah

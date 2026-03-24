@@ -222,6 +222,41 @@
         "RemoveUnownedItems": true,
         "Source": "OwnerConnection",
         "WorkshopItems": []
+      },
+      {
+        "__type": "Sandbox.Voice",
+        "__guid": "5c75715f-6f3c-4fb4-9ac3-d305e2c74bbc",
+        "__enabled": true,
+        "Flags": 0,
+        "Distance": 15910,
+        "Falloff": [
+          {
+            "x": 0.5,
+            "y": 0.5,
+            "in": 0,
+            "out": 0,
+            "mode": "Mirrored"
+          }
+        ],
+        "LipSync": false,
+        "Loopback": false,
+        "Mode": "PushToTalk",
+        "MorphScale": 3,
+        "MorphSmoothTime": 0.1,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "PushToTalkInput": "voice",
+        "Renderer": null,
+        "VoiceMixer": {
+          "Name": "game",
+          "Id": "899b1484-c304-4a12-923b-78ed556bca29"
+        },
+        "Volume": 1,
+        "WorldspacePlayback": true
       }
     ],
     "Children": [

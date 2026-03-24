@@ -25,6 +25,11 @@
     "CsProjName": "",
     "StartupScene": "scenes/minimal.scene",
     "LaunchMode": "QuickPlay",
-    "DedicatedServerStartupScene": "scenes/minimal.scene"
+    "DedicatedServerStartupScene": "scenes/minimal.scene",
+    "ControlModes": {
+      "Keyboard": true,
+      "VR": false,
+      "Gamepad": false
+    }
   }
 }

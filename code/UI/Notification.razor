@@ -1,0 +1,170 @@
+@using Sandbox
+@using Sandbox.UI
+@using System
+@using System.Collections.Generic
+@using System.Threading.Tasks
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsPrimaryInstance )
+	{
+		<div class="notification-list">
+			@foreach ( var notification in Notifications )
+			{
+				<div class="notification-item @GetTypeClass(notification.Type) @(notification.IsLeaving ? "leaving" : "visible")">
+					<div class="notification-content">
+						<span class="notification-icon"></span>
+						<span class="notification-text">@notification.Text</span>
+					</div>
+				</div>
+			}
+		</div>
+	}
+</root>
+
+@code
+{
+	public static Notification Instance { get; private set; }
+
+	[Property] public float DefaultAliveSeconds { get; set; } = 2.5f;
+	[Property] public float FadeSeconds { get; set; } = 0.2f;
+
+	[Property, Category("Sounds")] public SoundEvent NotifyInfoSound { get; set; }
+	[Property, Category("Sounds")] public SoundEvent NotifyWarnSound { get; set; }
+	[Property, Category("Sounds")] public SoundEvent NotifyErrorSound { get; set; }
+
+	private readonly List<NotificationMessage> Notifications = new();
+	private int NextId = 1;
+	private bool IsPrimaryInstance = true;
+
+	public static void EnsureInstance()
+	{
+		if ( Instance.IsValid() )
+			return;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return;
+
+		var notificationObject = scene.CreateObject();
+		notificationObject.Name = "NotificationUI";
+		notificationObject.Components.Create<Notification>();
+	}
+
+	public static void Make( string text, float timeAlive )
+	{
+		Info( text, timeAlive );
+	}
+
+	public static void Info( string text, float timeAlive = 0f )
+	{
+		AddTyped( text, timeAlive, NotificationType.Info );
+	}
+
+	public static void Warn( string text, float timeAlive = 0f )
+	{
+		AddTyped( text, timeAlive, NotificationType.Warn );
+	}
+
+	public static void Error( string text, float timeAlive = 0f )
+	{
+		AddTyped( text, timeAlive, NotificationType.Error );
+	}
+
+	private static void AddTyped( string text, float timeAlive, NotificationType type )
+	{
+		var normalized = NormalizeText( text );
+		if ( normalized.Length <= 0 )
+			return;
+
+		EnsureInstance();
+		Instance?.AddNotification( normalized, timeAlive, type );
+	}
+
+	private static string NormalizeText( string text )
+	{
+		return (text ?? string.Empty).Trim();
+	}
+
+	private void AddNotification( string text, float timeAlive, NotificationType type )
+	{
+		var safeTimeAlive = MathF.Max( 0.05f, timeAlive > 0f ? timeAlive : DefaultAliveSeconds );
+		var item = new NotificationMessage
+		{
+			Id = NextId++,
+			Text = text,
+			Type = type,
+			IsLeaving = false,
+			CreatedAtSeconds = Time.Now,
+			AliveSeconds = safeTimeAlive
+		};
+
+		Notifications.Add( item );
+		_ = AutoRemoveAsync( item, safeTimeAlive );
+
+		PlayTypeSound( type );
+	}
+
+	private void PlayTypeSound( NotificationType type )
+	{
+		var sound = type switch
+		{
+			NotificationType.Warn => NotifyWarnSound,
+			NotificationType.Error => NotifyErrorSound,
+			_ => NotifyInfoSound
+		};
+
+		if ( sound.IsValid() )
+			Sound.Play( sound );
+	}
+
+	private static string GetTypeClass( NotificationType type ) => type switch
+	{
+		NotificationType.Warn => "type-warn",
+		NotificationType.Error => "type-error",
+		_ => "type-info"
+	};
+
+	private async Task AutoRemoveAsync( NotificationMessage item, float aliveSeconds )
+	{
+		await Task.DelaySeconds( aliveSeconds );
+		if ( !Notifications.Contains( item ) )
+			return;
+
+		item.IsLeaving = true;
+		await Task.DelaySeconds( MathF.Max( 0.05f, FadeSeconds ) );
+
+		Notifications.Remove( item );
+	}
+
+	protected override void OnStart()
+	{
+		if ( Instance.IsValid() && Instance != this )
+		{
+			IsPrimaryInstance = false;
+			return;
+		}
+
+		Instance = this;
+		IsPrimaryInstance = true;
+	}
+
+	protected override void OnDestroy()
+	{
+		if ( Instance == this )
+			Instance = null;
+	}
+
+	protected override int BuildHash()
+	{
+		if ( !IsPrimaryInstance )
+			return 0;
+
+		var hash = HashCode.Combine( Notifications.Count, NextId );
+		foreach ( var notification in Notifications )
+			hash = HashCode.Combine( hash, notification.BuildHash() );
+
+		return hash;
+	}
+}

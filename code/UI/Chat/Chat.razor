@@ -1,0 +1,295 @@
+@using Sandbox
+@using Sandbox.UI
+@using System
+@using System.Collections.Generic
+@using System.Linq
+@using System.Threading.Tasks;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root class="@(IsChatOpen ? "chat-open" : "chat-closed")">
+	<div class="chat-panel @(IsChatOpen ? "chat-panel-open" : "chat-panel-closed")">
+		<div class="message-area">
+			<div class="message-list" @ref="MessageListRef">
+				@foreach ( var message in VisibleMessages )
+				{
+					<div class="chat-message @(message.IsSystem ? "system-message" : "player-message")">
+						<div class="message-row">
+							<span class="message-sender">@GetSenderLabel( message ):</span>
+							<span class="message-text">@message.Text</span>
+							<span class="message-time">@message.SentAt.ToString( "HH:mm" )</span>
+						</div>
+					</div>
+				}
+			</div>
+			<div class="scrollbar-placeholder"></div>
+		</div>
+
+		@if ( IsChatOpen )
+		{
+			<div class="chat-input-row">
+				<TextEntry @ref="ChatInputRef" class="chat-input" Value:bind="@PendingText" Placeholder="Type message..." onsubmit="@OnInputSubmit" />
+				<button class="send-button" @onclick="OnSendButtonPressed">&gt;&gt;</button>
+			</div>
+		}
+	</div>
+</root>
+
+@code
+{
+	public static Chat Instance { get; private set; }
+
+	[Property] public float ClosedMessageLifetime { get; set; } = 3f;
+	[Property] public int MaxMessageLength { get; set; } = 160;
+	[Property] public float SendCooldownSeconds { get; set; } = 0.25f;
+	[Property] public int MaxStoredMessages { get; set; } = 200;
+
+	private readonly List<ChatMessage> Messages = new();
+	private readonly Dictionary<ulong, double> HostNextAllowedSendAt = new();
+
+	private bool IsChatOpen;
+	private string PendingText = "";
+	private double LocalNextAllowedSendAt;
+	private bool NeedsInputFocus;
+	private bool NeedsScrollToBottom;
+	private int ScrollSnapRetriesLeft;
+	private int ScrollRequestVersion;
+	private TextEntry ChatInputRef;
+	private Panel MessageListRef;
+
+	private IEnumerable<ChatMessage> VisibleMessages =>
+		IsChatOpen
+			? Messages
+			: Messages.Where( x => Time.Now - x.CreatedAtSeconds <= ClosedMessageLifetime );
+
+	public void AddLocalSystemMessage( string text )
+	{
+		var normalized = NormalizeText( text );
+		if ( normalized.Length <= 0 )
+			return;
+
+		AddMessage( ChatMessage.CreateSystem( normalized ) );
+	}
+
+	public void AddLocalMessageFromPlayer( Player sender, string text )
+	{
+		if ( !sender.IsValid() )
+			return;
+
+		var normalized = NormalizeText( text );
+		if ( normalized.Length <= 0 )
+			return;
+
+		var connection = sender.Network?.Owner;
+		var steamId = connection != null ? connection.SteamId : (ulong?)null;
+		var name = connection?.DisplayName ?? "Player";
+
+		AddMessage( ChatMessage.CreatePlayer( name, steamId, normalized ) );
+	}
+
+	public void AddLocalMessageFromOtherPlayer( string displayName, ulong steamId, string text )
+	{
+		var normalized = NormalizeText( text );
+		if ( normalized.Length <= 0 )
+			return;
+
+		AddMessage( ChatMessage.CreatePlayer( displayName, steamId, normalized ) );
+	}
+
+	private static string NormalizeText( string text )
+	{
+		return (text ?? string.Empty).Trim();
+	}
+
+	private void AddMessage( ChatMessage message )
+	{
+		Messages.Add( message );
+		NeedsScrollToBottom = true;
+
+		if ( Messages.Count > MaxStoredMessages )
+			Messages.RemoveAt( 0 );
+	}
+
+	private void OpenChat()
+	{
+		IsChatOpen = true;
+		NeedsInputFocus = true;
+		NeedsScrollToBottom = true;
+		ScrollSnapRetriesLeft = 8;
+		ScrollRequestVersion++;
+		_ = EnsureScrollAfterLayoutAsync( ScrollRequestVersion );
+	}
+
+	private void CloseChat()
+	{
+		IsChatOpen = false;
+		PendingText = string.Empty;
+		NeedsInputFocus = false;
+		NeedsScrollToBottom = true;
+		ScrollSnapRetriesLeft = 0;
+		ScrollRequestVersion++;
+	}
+
+	private string GetSenderLabel( ChatMessage message )
+	{
+		return message.SenderName;
+	}
+
+	private void SubmitOrClose()
+	{
+		var normalized = NormalizeText( PendingText );
+
+		if ( normalized.Length <= 0 )
+		{
+			CloseChat();
+			return;
+		}
+
+		if ( !PassLocalValidation( normalized ) )
+		{
+			CloseChat();
+			return;
+		}
+
+		SendChatToHost( normalized );
+		CloseChat();
+	}
+
+	private bool PassLocalValidation( string message )
+	{
+		if ( message.Length <= 0 || message.Length > MaxMessageLength )
+			return false;
+
+		if ( Time.Now < LocalNextAllowedSendAt )
+			return false;
+
+		LocalNextAllowedSendAt = Time.Now + SendCooldownSeconds;
+		return true;
+	}
+
+	private void OnSendButtonPressed()
+	{
+		SubmitOrClose();
+	}
+
+	private void OnInputSubmit()
+	{
+		SubmitOrClose();
+	}
+
+	[Rpc.Host]
+	private void SendChatToHost( string message )
+	{
+		var caller = Rpc.Caller;
+		if ( caller is null )
+			return;
+
+		if ( !PassHostValidation( caller, message, out var normalized ) )
+			return;
+
+		BroadcastPlayerMessage( caller.DisplayName, caller.SteamId, normalized );
+	}
+
+	[Rpc.Broadcast]
+	private void BroadcastPlayerMessage( string senderName, ulong steamId, string message )
+	{
+		AddMessage( ChatMessage.CreatePlayer( senderName, steamId, message ) );
+	}
+
+	private bool PassHostValidation( Connection caller, string message, out string normalized )
+	{
+		normalized = NormalizeText( message );
+
+		if ( normalized.Length <= 0 || normalized.Length > MaxMessageLength )
+			return false;
+
+		var steamId = caller.SteamId;
+		if ( HostNextAllowedSendAt.TryGetValue( steamId, out var nextAllowedAt ) && Time.Now < nextAllowedAt )
+			return false;
+
+		HostNextAllowedSendAt[steamId] = Time.Now + SendCooldownSeconds;
+		return true;
+	}
+
+	private void SnapScrollToBottom()
+	{
+		if ( !MessageListRef.IsValid() )
+			return;
+
+		MessageListRef.ScrollVelocity = Vector2.Zero;
+		MessageListRef.ScrollOffset = new Vector2( MessageListRef.ScrollOffset.x, MessageListRef.ScrollSize.y );
+		MessageListRef.TryScrollToBottom();
+	}
+
+	private async Task EnsureScrollAfterLayoutAsync( int version )
+	{
+		// Wait a few frames because the full message list and scroll size
+		// can be rebuilt right after opening the chat panel.
+		for ( var i = 0; i < 8; i++ )
+		{
+			await Task.DelaySeconds( 0f );
+			if ( version != ScrollRequestVersion || !IsChatOpen )
+				return;
+
+			SnapScrollToBottom();
+		}
+	}
+
+	protected override void OnStart()
+	{
+		Instance = this;
+	}
+
+	protected override void OnFixedUpdate()
+	{
+		if ( Input.Pressed( "Chat" ) )
+		{
+			if ( IsChatOpen )
+				SubmitOrClose();
+			else
+				OpenChat();
+		}
+
+		if ( IsChatOpen && Input.EscapePressed )
+		{
+			CloseChat();
+		}
+
+		if ( IsChatOpen && NeedsInputFocus && ChatInputRef.IsValid() )
+		{
+			ChatInputRef.Focus();
+			NeedsInputFocus = false;
+		}
+
+		if ( NeedsScrollToBottom && MessageListRef.IsValid() )
+		{
+			SnapScrollToBottom();
+			NeedsScrollToBottom = false;
+		}
+
+		// After opening chat, keep snapping for a few ticks so it still works
+		// when message layout/scroll size updates one frame later.
+		if ( IsChatOpen && ScrollSnapRetriesLeft > 0 && MessageListRef.IsValid() )
+		{
+			SnapScrollToBottom();
+			ScrollSnapRetriesLeft--;
+		}
+	}
+
+	protected override void OnDestroy()
+	{
+		if ( Instance == this )
+			Instance = null;
+	}
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(
+			IsChatOpen,
+			PendingText,
+			Messages.Count,
+			Messages.Count > 0 ? Messages[^1].BuildHash() : 0,
+			VisibleMessages.Count()
+		);
+	}
+}

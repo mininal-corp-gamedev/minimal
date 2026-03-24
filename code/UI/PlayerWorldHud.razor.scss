@@ -1,5 +1,6 @@
-PlayerWorldHud
-{
+$health-green: #4fd945;
+
+PlayerWorldHud {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -10,46 +11,42 @@ PlayerWorldHud
 	align-items: center;
 	font-weight: bold;
 
-	.title
-	{
-		font-size: 25px;
+	.title {
+		font-size: 28px;
 		font-family: Poppins;
-		color: #3d9ceb;
+		color: $health-green;
 		text-stroke: 3px rgba( 0, 0, 0, 0.88 );
 		margin-bottom: 6px;
 	}
 
-	.health-bar
-	{
+	.health-bar {
 		position: relative;
 		width: 160px;
 		height: 18px;
 		background-color: rgba( 61, 156, 235, 0.15 );
-		border: 2px solid #3d9ceb;
+		border: 2px solid $health-green;
 		border-radius: 9px;
 		overflow: hidden;
 	}
 
-	.health-fill
-	{
+	.health-fill {
 		position: absolute;
 		left: 0;
 		top: 0;
 		bottom: 0;
-		background-color: #3d9ceb;
+		background-color: $health-green;
 		border-radius: 9px;
 	}
 
-	.health-text
-	{
+	.health-text {
 		position: absolute;
 		left: 0;
 		right: 0;
 		top: 0;
 		bottom: 0;
-		font-size: 14px;
+		font-size: 10px;
 		font-family: Poppins;
-		font-weight: 700;
+		font-weight: 600;
 		color: #ffffff;
 		text-stroke: 2px rgba( 0, 0, 0, 0.75 );
 		justify-content: center;

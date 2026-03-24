@@ -24,6 +24,8 @@ public sealed class Cactus : Component, Component.IPressable
 
         ply.CactusCount += Count;
 
+        Notification.Info($"You harvest {Count} cactus", 3.5f);
+
         Log.Info($"{ply} harvest {Count} cactus");
     }
 

@@ -1520,6 +1520,37 @@
       "OwnerTransfer": 1,
       "Components": [],
       "Children": []
+    },
+    {
+      "__guid": "e4b03c33-8f08-4753-9fd0-1ccfe763f0d5",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "TestDedicatedServerInfo",
+      "Position": "-56.73743,318.6883,1145.103",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 1,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "TestDedicatedServerInfo",
+          "__guid": "6a0f5f93-21c0-44cd-88d1-a7b8a96dc81a",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {
@@ -1545,7 +1576,7 @@
     "GameObjectSystems": {
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
-          "$blob": "b4567ac9-f693-4a0d-8115-577b9fcef1cf"
+          "$blob": "1393090a-792c-4bb9-8226-5babc360b8cb"
         }
       }
     }

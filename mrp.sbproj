@@ -23,9 +23,8 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "CsProjName": "",
-    "StartupScene": "scenes/minimal.scene",
-    "LaunchMode": "QuickPlay",
-    "DedicatedServerStartupScene": "scenes/minimal.scene",
+    "LaunchMode": "DedicatedServerOnly",
+    "DedicatedServerStartupScene": "scenes/dev.scene",
     "ControlModes": {
       "Keyboard": true,
       "VR": false,

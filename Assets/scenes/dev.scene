@@ -314,8 +314,13 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
+          "ShadowBias": 0.0005,
+          "ShadowCascadeCount": 4,
+          "ShadowCascadeSplitRatio": 0.91,
+          "ShadowHardness": 0,
           "Shadows": true,
-          "SkyColor": "0.53229,0.56538,0.6186,1"
+          "SkyColor": "0.53229,0.56538,0.6186,1",
+          "Visualizer": {}
         }
       ],
       "Children": []
@@ -1632,8 +1637,9 @@
               "__guid": "9e88886b-a32c-410f-99fc-0f2112c1384c",
               "__enabled": true,
               "Flags": 0,
-              "Amount": 5,
+              "Amount": 1000000,
               "Delay": 10,
+              "MaxDistance": 100,
               "OnComponentDestroy": null,
               "OnComponentDisabled": null,
               "OnComponentEnabled": null,
@@ -1657,7 +1663,7 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Body",
-      "Position": "91.42618,-17.41261,21.3111",
+      "Position": "15.91015,-50.46759,10.9917",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "",
@@ -1683,7 +1689,44 @@
           "MaterialOverride": null,
           "Materials": null,
           "Model": "models/citizen/citizen.vmdl",
-          "Morphs": {},
+          "Morphs": {
+            "openjawL": 0.4263249,
+            "openjawR": 0.22034854,
+            "openmouthL": 0.5517336,
+            "openmouthR": 0.89391375,
+            "jawsidewaysL": 0.532655,
+            "jawsidewaysR": 0.97725534,
+            "browlowererL": 0.7477114,
+            "browlowererR": 0.20579706,
+            "outerbrowraiserL": 0.57018405,
+            "outerbrowraiserR": 0.8340217,
+            "innerbrowraiserL": 0.69246656,
+            "innerbrowraiserR": 0.3667747,
+            "nosewrinklerL": 0.9363719,
+            "nosewrinklerR": 0.1533649,
+            "lipcornerpullerL": 0.18756804,
+            "lipcornerpullerR": 0.04217429,
+            "lipcornerdepressorL": 0.69965,
+            "lipcornerdepressorR": 0.41752034,
+            "upperlipraiserL": 0.6927143,
+            "upperlipraiserR": 0.24242337,
+            "cheekinflateL": 0.24752055,
+            "cheekinflateR": 0.13533048,
+            "LipSidewaysL": 0.08103415,
+            "LipSidewaysR": 0.73861057,
+            "jawthrust": 0.8066122,
+            "jawsuck": 0.9854962,
+            "eyelidbulgeupper": 0.88431007,
+            "eyelidbulgelower": 0.9373634,
+            "lippuckerer": 0.3543186,
+            "nostrildilator": 0.7994455,
+            "lowerLipFunneler": 0.49992234,
+            "upperLipFunneler": 0.9442319,
+            "upperLipsTowardAndPart": 0.6201486,
+            "lowerLipsTowardAndPart": 0.12836128,
+            "ChinRaiser": 0.48369053,
+            "LowerLipDrepressor": 0.4489059
+          },
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -1715,6 +1758,78 @@
         }
       ],
       "Children": []
+    },
+    {
+      "__guid": "337c8b04-a76c-40f6-b4d5-ce538b52b411",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Cube",
+      "Position": "-5.685471,259.3364,141.7599",
+      "Rotation": "0,0,0,1",
+      "Scale": "2,3,5",
+      "Tags": "ladder",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "9405cd5d-d3ba-4f1f-88ab-1330da3edd7a",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/dev/box.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.BoxCollider",
+          "__guid": "f5526634-0a0e-4a06-bb1d-43e68d060cf0",
+          "__enabled": true,
+          "Flags": 0,
+          "Center": "0,0,0",
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Scale": "50,50,50",
+          "Static": false,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {
@@ -1736,6 +1851,16 @@
       "ExcludedBodies": "",
       "IncludedBodies": "",
       "CustomBounds": false
+    },
+    "GameObjectSystems": {
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
+      },
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "e765880d-759b-48f5-b849-16128a42c073"
+        }
+      }
     }
   },
   "ResourceVersion": 3,

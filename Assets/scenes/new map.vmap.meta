@@ -17,7 +17,8 @@
       "Mounts": null,
       "IsStandaloneOnly": false,
       "Metadata": {
-        "SingleAssetSource": "scenes/new map.vmap"
+        "SingleAssetSource": "scenes/new map.vmap",
+        "ParentPackage": "minimalinc.mrp"
       }
     }
   }

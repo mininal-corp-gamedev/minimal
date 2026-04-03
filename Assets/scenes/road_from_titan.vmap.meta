@@ -17,7 +17,8 @@
       "Mounts": null,
       "IsStandaloneOnly": false,
       "Metadata": {
-        "SingleAssetSource": "scenes/road_from_titan.vmap"
+        "SingleAssetSource": "scenes/road_from_titan.vmap",
+        "ParentPackage": "minimalinc.mrp"
       }
     }
   }

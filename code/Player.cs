@@ -165,4 +165,18 @@ public sealed class Player : Component, Component.IDamageable
     {
         DestroyLocalInstance();
     }
+
+
+    public void TakeBox( int amount )
+    {
+        Money += amount;
+    
+        RpcNotifyTakeBox( amount );
+    }
+ 
+    [Rpc.Owner]
+    private void RpcNotifyTakeBox( int amount )
+    {
+        Notification.Info( $"Ты лутанул ${amount}", 3.5f );
+    }
 }

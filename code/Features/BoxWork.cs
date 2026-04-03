@@ -1,9 +1,11 @@
 using Sandbox;
+
 public sealed class BoxWork : Component, Component.IPressable
 {
     [Sync] public bool CanLoot { get; set; } = true;
     [Property] public int Amount { get; set; } = 5;
     [Property] public float Delay { get; set; } = 10f;
+    [Property] public float MaxDistance { get; set; } = 100f;
     [Property] public ModelRenderer Renderer { get; set; }
 
     private TimeUntil _delayToRefresh = 0;
@@ -30,34 +32,81 @@ public sealed class BoxWork : Component, Component.IPressable
 
     public void Refresh()
     {
-        CanLoot = true;         // #if SERVER — вернуть на дедике
+        // TODO (дедик): заменить Networking.IsHost на #if SERVER
+        if ( !Networking.IsHost ) return;
+
+        CanLoot = true;
+        _delayToRefresh = 0;
+
         RpcRefreshVisual();
     }
 
     // ─────────────────────────────────────────────
-    //  Loot — игрок подбирает деньги
+    //  RpcTakeBox — авторитетная обработка на хосте
+    //  Принимает GameObject а не Component — RPC так надёжнее
     // ─────────────────────────────────────────────
 
-    public void Loot( Player ply )
+    [Rpc.Host]
+    public void RpcTakeBox( GameObject boxGo )
     {
-        CanLoot = false;        // #if SERVER — вернуть на дедике
-        ply.Money += Amount;    // #if SERVER — вернуть на дедике
-        _delayToRefresh = Delay;// #if SERVER — вернуть на дедике
+        // TODO (дедик): заменить Networking.IsHost на #if SERVER
+        if ( !Networking.IsHost ) return;
 
-        Log.Info( $"{ply} looted ${Amount} from box" );
+        // 1. Получаем компонент коробки
+        var box = boxGo.Components.Get<BoxWork>();
 
-        RpcLootVisual();
-        RpcNotifyLooter( ply.Network.Owner, Amount );
-    }
+        if ( box is null )
+        {
+            Log.Warning( "RpcTakeBox: BoxWork component not found" );
+            return;
+        }
 
-    // ─────────────────────────────────────────────
-    //  RPC уведомление — только владельцу
-    // ─────────────────────────────────────────────
+        // 2. Ищем Player по SteamId звонящего
+        Player ply = null;
 
-    [Rpc.Owner]
-    private void RpcNotifyLooter( Connection owner, int amount )
-    {
-        Notification.Info( $"You looted ${amount}", 3.5f );
+        foreach ( var go in Scene.GetAllObjects( true ) )
+        {
+            if ( !go.Components.TryGet<Player>( out var candidate ) ) continue;
+
+            if ( candidate.GameObject.Network.Owner.SteamId == Rpc.Caller.SteamId )
+            {
+                ply = candidate;
+                break;
+            }
+        }
+
+        if ( ply is null )
+        {
+            Log.Warning( $"RpcTakeBox: player not found for {Rpc.Caller.DisplayName}" );
+            return;
+        }
+
+        // 3. Проверка дистанции
+        var dist = Vector3.DistanceBetween( ply.WorldPosition, box.WorldPosition );
+
+        if ( dist > MaxDistance )
+        {
+            Log.Warning( $"RpcTakeBox: {Rpc.Caller.DisplayName} too far ({dist:F0} > {MaxDistance})" );
+            return;
+        }
+
+        // 4. Проверка что коробка ещё доступна (race condition — два игрока жмут одновременно)
+        if ( !box.CanLoot )
+        {
+            Log.Warning( "RpcTakeBox: box already looted" );
+            return;
+        }
+
+        // 5. Засчитываем
+        box.CanLoot = false;
+        box._delayToRefresh = box.Delay;
+
+        ply.TakeBox( box.Amount );
+
+        box.RpcLootVisual();
+        
+
+        Log.Info( $"{Rpc.Caller.DisplayName} looted ${box.Amount} from box" );
     }
 
     // ─────────────────────────────────────────────
@@ -66,7 +115,9 @@ public sealed class BoxWork : Component, Component.IPressable
 
     protected override void OnFixedUpdate()
     {
-        // #if SERVER — вернуть на дедике
+        // TODO (дедик): заменить Networking.IsHost на #if SERVER
+        if ( !Networking.IsHost ) return;
+
         if ( CanLoot ) return;
 
         if ( _delayToRefresh )
@@ -76,18 +127,35 @@ public sealed class BoxWork : Component, Component.IPressable
     }
 
     // ─────────────────────────────────────────────
-    //  Press — взаимодействие игрока с коробкой
+    //  Press — клиентские проверки, потом уходим на хост
     // ─────────────────────────────────────────────
 
     public bool Press( IPressable.Event e )
     {
-        if ( !CanLoot ) return false;
+        Log.Info( "Press called" );
+
+        if ( !CanLoot )
+        {
+            Log.Info( "Press: CanLoot = false, skip" );
+            return false;
+        }
 
         var go = e.Source.GameObject;
 
-        if ( !go.Components.TryGet<Player>( out var ply, FindMode.EverythingInSelfAndParent ) ) return false;
+        if ( !go.Components.TryGet<Player>( out var ply, FindMode.EverythingInSelfAndParent ) )
+        {
+            Log.Info( "Press: Player not found on source" );
+            return false;
+        }
 
-        Loot( ply );    // #if SERVER — вернуть на дедике
+        if ( ply.IsProxy )
+        {
+            Log.Info( "Press: IsProxy, skip" );
+            return false;
+        }
+
+        Log.Info( $"Press: sending RpcTakeBox from {ply}" );
+        RpcTakeBox( GameObject );
 
         return true;
     }

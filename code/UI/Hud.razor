@@ -8,7 +8,7 @@
 	<div class="hud-stack">
 		<div class="top-panel hud-panel">
 			<div class="job-icon"></div>
-			<div class="job-name">Должность</div>
+			<div class="job-name">@(Player.Local?.Job?.JobDefinition?.Header ?? "—")</div>
 			<div class="wallet-icon"></div>
 			<div class="money-value">$@(Player.Local?.Money ?? 0)</div>
 		</div>
@@ -39,6 +39,7 @@
 	protected override int BuildHash() => System.HashCode.Combine(
 		Player.Local?.Money ?? 0,
 		Player.Local?.Health ?? 0f,
+		Player.Local?.Job?.JobDefinition?.Header,
 		Connection.Local?.DisplayName,
 		Game.SteamId );
 }

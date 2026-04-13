@@ -1,0 +1,9 @@
+{
+  "Id": "chief",
+  "Header": "The Chief",
+  "Category": "Police",
+  "Description": "",
+  "MaxCount": 1,
+  "__references": [],
+  "__version": 0
+}

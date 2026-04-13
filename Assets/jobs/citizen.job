@@ -1,0 +1,12 @@
+{
+  "Id": "citizen",
+  "Header": "Citizen",
+  "Category": "Other",
+  "Description": "",
+  "MaxCount": 0,
+  "HasPostSpawned": true,
+  "HasPostDemote": true,
+  "HasPostJoined": true,
+  "__references": [],
+  "__version": 0
+}

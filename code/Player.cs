@@ -9,6 +9,7 @@ public sealed class Player : Component, Component.IDamageable
     [Property] public PlayerController Controller { get; private set; }
     [Property] public Dresser Dresser { get; private set; }
     [Property] public PlayerWorldHud WorldHud { get; private set; }
+    [Property] public PlayerJob Job { get; private set; }
     [Property, Category("Sounds")] public SoundEvent HitSound { get; set; }
 
     [Sync] public float Health { get; set; } = 100f;
@@ -29,7 +30,9 @@ public sealed class Player : Component, Component.IDamageable
         Health = MaxHealth;
         WorldHud?.WorldHudRefresh();
         WorldPosition = spawnPoint.WorldPosition;
-        WorldRotation = spawnPoint.WorldRotation;
+        Controller.EyeAngles = spawnPoint.WorldRotation;
+
+        Job?.NotifySpawned();
     }
 
     public void OnDamage(in DamageInfo dmgInfo)
@@ -133,6 +136,7 @@ public sealed class Player : Component, Component.IDamageable
     {
         if (IsProxy) return;
 
+        Job?.AssignDefault();
         Spawn();
         SetupWorldHud();
         DressForHost(Dresser);

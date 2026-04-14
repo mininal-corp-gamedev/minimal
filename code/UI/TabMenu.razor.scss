@@ -1,0 +1,260 @@
+$tm-panel-bg:    rgba(5, 8, 20, 1.0);
+$tm-sidebar-bg:  rgba(3,  5,  14, 1.0);
+$tm-accent:      rgba(45, 95, 210, 0.80);
+$tm-accent-hover:rgba(60, 115, 240, 0.90);
+$tm-text:        rgba(255, 255, 255, 0.92);
+$tm-text-dim:    rgba(255, 255, 255, 0.75);
+$tm-divider:     rgba(255, 255, 255, 0.07);
+$tm-shadow:      0 10px 48px rgba(0, 0, 0, 0.80);
+
+TabMenu {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+
+	.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.76);
+		justify-content: center;
+		align-items: center;
+		pointer-events: all;
+		backdrop-filter: blur(12px);
+	}
+
+	.tm-panel {
+		width: 1560px;
+		height: 860px;
+		background-color: $tm-panel-bg;
+		border-radius: 14px;
+		box-shadow: $tm-shadow;
+		flex-direction: row;
+	}
+
+	/* ── Sidebar ── */
+
+	.sidebar {
+		width: 220px;
+		flex-shrink: 0;
+		background-color: $tm-sidebar-bg;
+		border-radius: 14px 0 0 14px;
+		flex-direction: column;
+	}
+
+	.tab-btn {
+		height: 50px;
+		width: 220px;
+		flex-shrink: 0;
+		background-color: transparent;
+		font-family: Poppins;
+		font-size: 17px;
+		font-weight: 700;
+		color: #82d97a;
+		padding-left: 24px;
+		padding-right: 16px;
+		justify-content: flex-start;
+		align-items: center;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.05);
+		}
+
+		&.active {
+			background-color: rgba(130, 217, 122, 0.12);
+			color: #82d97a;
+		}
+	}
+
+	/* ── Sidebar sections ── */
+
+	.sidebar-profile {
+		flex-shrink: 0;
+		flex-direction: column;
+		padding: 22px 18px 18px;
+		background-color: rgba(1, 2, 8, 1.0);
+		border-radius: 14px 0 0 0;
+	}
+
+	.sb-name {
+		font-family: Poppins;
+		font-size: 15px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		margin-bottom: 5px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.sb-job {
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 600;
+		color: #82d97a;
+		margin-bottom: 5px;
+	}
+
+	.sb-money {
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.75);
+	}
+
+	.sidebar-nav {
+		flex-direction: column;
+		flex-shrink: 0;
+		padding-top: 6px;
+	}
+
+	.sidebar-spacer {
+		flex-grow: 1;
+	}
+
+	.sidebar-bottom {
+		flex-direction: column;
+		flex-shrink: 0;
+		padding-bottom: 6px;
+	}
+
+	.bottom-btn {
+		height: 46px;
+		width: 220px;
+		flex-shrink: 0;
+		background-color: transparent;
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.45);
+		padding-left: 24px;
+		padding-right: 16px;
+		justify-content: flex-start;
+		align-items: center;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.04);
+			color: rgba(255, 255, 255, 0.80);
+		}
+
+		&:last-child {
+			border-radius: 0 0 0 14px;
+		}
+	}
+
+	/* ── Content area ── */
+
+	.content-area {
+		flex-grow: 1;
+		flex-direction: column;
+		padding: 40px 44px;
+		overflow-y: scroll;
+	}
+
+	.page {
+		flex-grow: 1;
+		flex-direction: column;
+	}
+
+	.page-title {
+		font-family: Poppins;
+		font-size: 28px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		margin-bottom: 28px;
+	}
+
+	.page-placeholder {
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 400;
+		color: $tm-text-dim;
+	}
+
+	/* ── Profile tab ── */
+
+	.profile-card {
+		flex-direction: row;
+		align-items: flex-start;
+	}
+
+	.profile-avatar {
+		width: 100px;
+		height: 100px;
+		border-radius: 999px;
+		flex-shrink: 0;
+		margin-right: 28px;
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center;
+		background-color: rgba(255, 255, 255, 0.08);
+	}
+
+	.profile-info {
+		flex-direction: column;
+		justify-content: center;
+		padding-top: 8px;
+	}
+
+	.profile-name {
+		font-family: Poppins;
+		font-size: 24px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		margin-bottom: 10px;
+	}
+
+	.profile-job {
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.55);
+		margin-bottom: 10px;
+	}
+
+	.profile-money {
+		font-family: Poppins;
+		font-size: 20px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.92);
+	}
+
+	/* ── Help tab ── */
+
+	.help-list {
+		flex-direction: column;
+	}
+
+	.help-row {
+		flex-direction: row;
+		align-items: center;
+		padding: 12px 0;
+		margin-bottom: 4px;
+	}
+
+	.help-key {
+		width: 110px;
+		flex-shrink: 0;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		background-color: rgba(255, 255, 255, 0.08);
+		border-radius: 6px;
+		padding: 6px 12px;
+		margin-right: 20px;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.help-desc {
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 400;
+		color: $tm-text-dim;
+	}
+}

@@ -246,7 +246,7 @@
         "__guid": "5c75715f-6f3c-4fb4-9ac3-d305e2c74bbc",
         "__enabled": true,
         "Flags": 0,
-        "Distance": 15910,
+        "Distance": 12988,
         "Falloff": [
           {
             "x": 0.5,
@@ -273,7 +273,7 @@
           "Name": "game",
           "Id": "899b1484-c304-4a12-923b-78ed556bca29"
         },
-        "Volume": 1,
+        "Volume": 1.5,
         "WorldspacePlayback": true
       }
     ],

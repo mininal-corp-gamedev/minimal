@@ -1,0 +1,98 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen )
+	{
+		<div class="overlay">
+			<div class="tm-panel">
+
+				<div class="sidebar">
+					<div class="sidebar-profile">
+						<div class="sb-name">@(Connection.Local?.DisplayName ?? "—")</div>
+						<div class="sb-job">@(Player.Local?.Job?.JobDefinition?.Header ?? "No Job")</div>
+						<div class="sb-money">$@(Player.Local?.Money ?? 0)</div>
+					</div>
+					<div class="sidebar-nav">
+						<button class="tab-btn @(ActiveTab == 0 ? "active" : "")" onclick=@(() => ActiveTab = 0)>Jobs</button>
+						<button class="tab-btn @(ActiveTab == 1 ? "active" : "")" onclick=@(() => ActiveTab = 1)>Shop</button>
+						<button class="tab-btn @(ActiveTab == 2 ? "active" : "")" onclick=@(() => ActiveTab = 2)>Players</button>
+						<button class="tab-btn @(ActiveTab == 3 ? "active" : "")" onclick=@(() => ActiveTab = 3)>Help</button>
+					</div>
+					<div class="sidebar-spacer"></div>
+					<div class="sidebar-bottom">
+						<button class="bottom-btn">Rules</button>
+						<button class="bottom-btn">Donate</button>
+						<button class="bottom-btn">Discord</button>
+					</div>
+				</div>
+
+				<div class="content-area">
+
+					@if ( ActiveTab == 0 )
+					{
+						<div class="page">
+							<div class="page-title">Jobs</div>
+							<div class="page-placeholder">Available jobs will be listed here.</div>
+						</div>
+					}
+					else if ( ActiveTab == 1 )
+					{
+						<div class="page">
+							<div class="page-title">Shop</div>
+							<div class="page-placeholder">Shop items will be listed here.</div>
+						</div>
+					}
+					else if ( ActiveTab == 2 )
+					{
+						<div class="page">
+							<div class="page-title">Players</div>
+							<div class="page-placeholder">Connected players will be listed here.</div>
+						</div>
+					}
+					else if ( ActiveTab == 3 )
+					{
+						<div class="page">
+							<div class="page-title">Help</div>
+							<div class="help-list">
+								<div class="help-row"><div class="help-key">Tab</div><div class="help-desc">Open / Close this menu</div></div>
+								<div class="help-row"><div class="help-key">WASD</div><div class="help-desc">Movement</div></div>
+								<div class="help-row"><div class="help-key">Space</div><div class="help-desc">Jump</div></div>
+								<div class="help-row"><div class="help-key">F</div><div class="help-desc">Interact</div></div>
+								<div class="help-row"><div class="help-key">1 – 4</div><div class="help-desc">Select weapon slot</div></div>
+								<div class="help-row"><div class="help-key">Enter</div><div class="help-desc">Open chat</div></div>
+							</div>
+						</div>
+					}
+
+				</div>
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	bool IsOpen { get; set; } = false;
+	int ActiveTab { get; set; } = 0;
+
+	protected override void OnUpdate()
+	{
+		if ( Input.Pressed( "Score" ) )
+			IsOpen = !IsOpen;
+
+#pragma warning disable CS0612
+		Mouse.Visible = IsOpen;
+#pragma warning restore CS0612
+	}
+
+	protected override int BuildHash() => System.HashCode.Combine(
+		IsOpen,
+		ActiveTab,
+		Player.Local?.Money ?? 0,
+		Player.Local?.Job?.JobDefinition?.Header,
+		Connection.Local?.DisplayName );
+}

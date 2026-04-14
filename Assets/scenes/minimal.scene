@@ -283,6 +283,18 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null
+        },
+        {
+          "__type": "Sandbox.TabMenu",
+          "__guid": "d60df5c3-ba79-4edc-b68d-1a63fce55951",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
         }
       ],
       "Children": []
@@ -1174,7 +1186,7 @@
       },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
-          "$blob": "0f2c9e5a-f770-4657-ae00-e828a5da1708"
+          "$blob": "1b29a60e-a58e-470e-adac-37865d3e454b"
         }
       }
     }

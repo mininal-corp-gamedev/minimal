@@ -10,13 +10,13 @@ public sealed class Player : Component, Component.IDamageable
     [Property] public PlayerController Controller { get; private set; }
     [Property] public Dresser Dresser { get; private set; }
     [Property] public PlayerWorldHud WorldHud { get; private set; }
-    [Property] public PlayerJob Job { get; private set; }
+    [Property, Sync(SyncFlags.FromHost)] public PlayerJob Job { get; private set; }
     [Property] public GameObject ItemDropPrefab { get; private set; }
     [Property, Category("Sounds")] public SoundEvent HitSound { get; set; }
 
-    [Sync] public float Health { get; set; } = 100f;
-    [Sync] public float MaxHealth { get; set; } = 100f;
-    [Sync] public int Money { get; set; } = 0;
+    [Sync(SyncFlags.FromHost)] public float Health { get; set; } = 100f;
+    [Sync(SyncFlags.FromHost)] public float MaxHealth { get; set; } = 100f;
+    [Sync(SyncFlags.FromHost)] public int Money { get; set; } = 0;
     public int CactusCount { get; set; } = 0;
     public bool IsAlive => Health > 0;
     public Inventory Inventory { get; set; } = new(10);

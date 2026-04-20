@@ -1,0 +1,12 @@
+{
+  "Id": "ammo_usp",
+  "Category": "ammo",
+  "Header": "Патроны USP",
+  "Description": "Патроны для USP. Использовать — пополнить запас (2 магазина).",
+  "MaxCount": 30,
+  "IconPath": "icons/items/default.vtex",
+  "Model": null,
+  "CanUse": true,
+  "__references": [],
+  "__version": 0
+}

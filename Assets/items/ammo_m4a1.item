@@ -1,0 +1,12 @@
+{
+  "Id": "ammo_m4a1",
+  "Category": "ammo",
+  "Header": "Патроны M4A1",
+  "Description": "Патроны для M4A1. Использовать — пополнить запас (2 магазина).",
+  "MaxCount": 30,
+  "IconPath": "icons/items/default.vtex",
+  "Model": null,
+  "CanUse": true,
+  "__references": [],
+  "__version": 0
+}

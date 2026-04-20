@@ -1,0 +1,12 @@
+{
+  "Id": "usp",
+  "Category": "weapon",
+  "Header": "USP",
+  "Description": "",
+  "MaxCount": 1,
+  "IconPath": "icons/items/usp.vtex",
+  "Model": null,
+  "CanUse": true,
+  "__references": [],
+  "__version": 0
+}

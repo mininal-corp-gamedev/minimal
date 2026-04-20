@@ -1,0 +1,12 @@
+{
+  "Id": "ammo_mp5",
+  "Category": "ammo",
+  "Header": "Патроны MP5",
+  "Description": "Патроны для MP5. Использовать — пополнить запас (2 магазина).",
+  "MaxCount": 30,
+  "IconPath": "icons/items/default.vtex",
+  "Model": null,
+  "CanUse": true,
+  "__references": [],
+  "__version": 0
+}

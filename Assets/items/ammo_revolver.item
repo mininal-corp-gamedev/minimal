@@ -1,0 +1,12 @@
+{
+  "Id": "ammo_revolver",
+  "Category": "ammo",
+  "Header": "Патроны револьвера",
+  "Description": "Патроны для револьвера. Использовать — пополнить запас (2 магазина).",
+  "MaxCount": 30,
+  "IconPath": "icons/items/default.vtex",
+  "Model": null,
+  "CanUse": true,
+  "__references": [],
+  "__version": 0
+}

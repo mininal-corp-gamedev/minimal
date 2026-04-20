@@ -1,3 +1,4 @@
+using Ambi.Storage;
 using Sandbox;
 using System;
 using static Sandbox.Gizmo;
@@ -10,6 +11,7 @@ public sealed class Player : Component, Component.IDamageable
     [Property] public Dresser Dresser { get; private set; }
     [Property] public PlayerWorldHud WorldHud { get; private set; }
     [Property] public PlayerJob Job { get; private set; }
+    [Property] public GameObject ItemDropPrefab { get; private set; }
     [Property, Category("Sounds")] public SoundEvent HitSound { get; set; }
 
     [Sync] public float Health { get; set; } = 100f;
@@ -17,6 +19,7 @@ public sealed class Player : Component, Component.IDamageable
     [Sync] public int Money { get; set; } = 0;
     public int CactusCount { get; set; } = 0;
     public bool IsAlive => Health > 0;
+    public Inventory Inventory { get; set; } = new(10);
 
     public Weapon CurrentWeapon { get; private set; }
 
@@ -116,6 +119,35 @@ public sealed class Player : Component, Component.IDamageable
             SwitchWeapon();
         else if (Input.Pressed("Slot0"))
             SwitchWeapon();
+    }
+
+    public void DropItem(Slot slot, int count = 1)
+    {
+        if (count <= 0) return;
+        if (slot.IsEmpty) return;
+        if (slot.Item.Count < count) return;
+
+        var item = slot.Item;
+
+        var pos = WorldPosition + Controller.EyeTransform.Forward * 90f + Controller.EyeTransform.Up * 80f; // Slightly above so it doesn't get stuck in ground
+        var gameObj = ItemDropPrefab.Clone(pos);
+        var itemComponent = gameObj.GetComponent<ItemComponent>();
+
+        itemComponent.Count = count;
+        itemComponent.ItemDefinition = item.Definition;
+        itemComponent.UsePickupMagnet = false;
+        itemComponent.DelayDestroy = 10f;
+        itemComponent.DelayDeleteSpawn = true;
+
+        if (item.Definition.Model.IsValid())
+        {
+            itemComponent.Model.Model = item.Definition.Model;
+            gameObj.GetComponent<ModelCollider>(true).Model = item.Definition.Model;
+        }
+
+        Inventory.RemoveItem(slot, count);
+
+        Notification.Make($"Relic dropped: {item.Definition.Header}", 10f);
     }
 
     [Rpc.Host]

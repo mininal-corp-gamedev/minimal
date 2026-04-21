@@ -1,0 +1,89 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+
+<root>
+    <div class="panel">
+        <div>@(Printer?.PrinterName ?? "Printer")</div>
+        <div>Status: @StatusText</div>
+        <div>Stored: $@(Printer?.StoredMoney.ToString("N0") ?? "0") / $@(Printer?.MaxMoney.ToString("N0") ?? "0")</div>
+        <div>
+            Money/sec:
+            $@(
+                Printer is not null && Printer.TickInterval > 0
+                    ? (Printer.MoneyPerTick / Printer.TickInterval).ToString("N1")
+                    : "0"
+            )
+        </div>
+        <div>HP: @(Printer?.Health.ToString("F0") ?? "0")</div>
+        <div>Time: @TimeLeftStr</div>
+
+        @if (Printer?.StoredMoney > 0)
+        {
+            <div>[E] Collect</div>
+        }
+    </div>
+</root>
+
+@code {
+    private MoneyPrinterBase Printer => Components.GetInParent<MoneyPrinterBase>();
+
+    private string StatusText =>
+        Printer is null || !Printer.IsRunning ? "OFF" :
+        Printer.StoredMoney >= Printer.MaxMoney ? "FULL" :
+        "ON";
+
+    private string TimeLeftStr
+    {
+        get
+        {
+            if (Printer is null)
+                return "0s";
+
+            if (Printer.Lifetime <= 0)
+                return "∞";
+
+            var t = Math.Max(0, (int)Printer.TimeLeft);
+            return t >= 60 ? $"{t / 60}m {t % 60}s" : $"{t}s";
+        }
+    }
+
+    protected override int BuildHash()
+    {
+        var p = Printer;
+        var hash = new HashCode();
+
+        hash.Add(p?.PrinterName);
+        hash.Add(p?.StoredMoney);
+        hash.Add(p?.MaxMoney);
+        hash.Add(p?.MoneyPerTick);
+        hash.Add(p?.TickInterval);
+        hash.Add(p?.IsRunning);
+        hash.Add((int)(p?.Health ?? 0f));
+        hash.Add((int)(p?.TimeLeft ?? 0f));
+        hash.Add(p is not null);
+
+        return hash.ToHashCode();
+    }
+}
+
+<style>
+    root {
+        width: 300px;
+        height: 200px;
+        pointer-events: none;
+    }
+
+    .panel {
+        width: 100%;
+        height: 100%;
+        background: black;
+        color: white;
+        padding: 12px;
+        font-size: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+</style>

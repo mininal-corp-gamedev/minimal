@@ -1,0 +1,114 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen )
+	{
+		<div class="context-overlay">
+			<div class="context-wheel">
+				<div class="wheel-ring"></div>
+				<div class="wheel-line diagonal-a"></div>
+				<div class="wheel-line diagonal-b"></div>
+
+				@foreach ( var action in Actions )
+				{
+					<button class="context-action @action.PositionClass @(ActiveAction == action.Id ? "active" : "")" onclick=@(() => SelectAction( action.Id ))>
+						<div class="action-icon @action.IconClass"></div>
+						<div class="action-title">@action.Title</div>
+						<div class="action-subtitle">@action.Subtitle</div>
+					</button>
+				}
+
+				<div class="center-info">
+					<div class="center-kicker">CONTEXT</div>
+					<div class="center-title">@SelectedAction.Title</div>
+					<div class="center-text">@SelectedAction.Description</div>
+				</div>
+			</div>
+
+			<div class="context-hint">Click action to preview. Press C to close.</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	bool IsOpen { get; set; }
+	string ActiveAction { get; set; } = "money";
+
+	static readonly ContextAction[] Actions =
+	{
+		new( "money", "Drop Money", "Share cash", "Give nearby player money.", "pos-top", "money" ),
+		new( "surrender", "Surrender", "Hands up", "Show that you are not resisting.", "pos-right", "surrender" ),
+		new( "sit", "Sit Down", "Rest here", "Take a seat on the ground.", "pos-bottom", "sit" ),
+		new( "status", "Status", "Your info", "View your current role status.", "pos-left", "status" )
+	};
+
+	ContextAction SelectedAction
+	{
+		get
+		{
+			foreach ( var action in Actions )
+			{
+				if ( action.Id == ActiveAction )
+					return action;
+			}
+
+			return Actions[0];
+		}
+	}
+
+	void SelectAction( string id )
+	{
+		ActiveAction = id;
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( Input.Pressed( "Context" ) )
+		{
+			IsOpen = !IsOpen;
+
+#pragma warning disable CS0612
+			Mouse.Visible = IsOpen;
+#pragma warning restore CS0612
+		}
+
+		if ( IsOpen )
+		{
+#pragma warning disable CS0612
+			Mouse.Visible = true;
+#pragma warning restore CS0612
+		}
+	}
+
+	protected override int BuildHash() => System.HashCode.Combine(
+		IsOpen,
+		ActiveAction,
+		Player.Local?.Money ?? 0,
+		Player.Local?.Job?.JobDefinition?.Header,
+		Player.Local?.Health ?? 0f );
+
+	sealed class ContextAction
+	{
+		public string Id { get; }
+		public string Title { get; }
+		public string Subtitle { get; }
+		public string Description { get; }
+		public string PositionClass { get; }
+		public string IconClass { get; }
+
+		public ContextAction( string id, string title, string subtitle, string description, string positionClass, string iconClass )
+		{
+			Id = id;
+			Title = title;
+			Subtitle = subtitle;
+			Description = description;
+			PositionClass = positionClass;
+			IconClass = iconClass;
+		}
+	}
+}

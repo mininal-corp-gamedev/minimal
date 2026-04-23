@@ -1,0 +1,78 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Globalization;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="printer-panel">
+		<div class="header">@PrinterName</div>
+
+		<div class="body">
+			<div class="rate-label">Rate</div>
+			<div class="rate-value">@RateText</div>
+
+			<div class="money-card">
+				<div class="money-label">Stored</div>
+				<div class="money">@MoneyText</div>
+			</div>
+
+			@if ( IsFull )
+			{
+				<div class="status full">FULL</div>
+			}
+		</div>
+
+		<div class="footer">Press "E"</div>
+	</div>
+</root>
+
+@code
+{
+	MoneyPrinterBase Printer => Components.Get<MoneyPrinterBase>( FindMode.EverythingInSelfAndAncestors );
+
+	string PrinterName => string.IsNullOrWhiteSpace( Printer?.PrinterName ) ? "Money Printer" : Printer.PrinterName;
+
+	int StoredMoney => Math.Max( 0, Printer?.StoredMoney ?? 0 );
+	int MaxMoney => Math.Max( 1, Printer?.MaxMoney ?? 1 );
+	bool IsFull => Printer is not null && StoredMoney >= MaxMoney;
+
+	float RatePerMinute => Printer is { TickInterval: > 0f } p
+		? p.MoneyPerTick * (60f / p.TickInterval)
+		: 0f;
+
+	string RateText => IsFull
+		? "Stopped"
+		: $"${RatePerMinute.ToString( "0", CultureInfo.InvariantCulture )}/min.";
+
+	string MoneyText => $"${StoredMoney} / ${MaxMoney}";
+
+	string FooterText
+	{
+		get
+		{
+			if ( Printer is null )
+				return "No Signal";
+
+			if ( IsFull )
+				return "Limit reached";
+
+			if ( !Printer.IsWorking )
+				return "Stopped";
+
+			if ( Printer.Lifetime <= 0f )
+				return "Unlimited";
+
+			return $"{MathF.Ceiling( Printer.TimeLeft )}s left";
+		}
+	}
+
+	protected override int BuildHash() => HashCode.Combine(
+		PrinterName,
+		StoredMoney,
+		MaxMoney,
+		IsFull,
+		RatePerMinute,
+		FooterText );
+}

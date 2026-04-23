@@ -14,12 +14,12 @@ public class MoneyPrinterBase : Component, Component.IPressable, Component.IDama
     [Sync( SyncFlags.FromHost )][Property, Group( "Stats" )] public string PrinterName  { get; set; } = "Printer";
     [Sync( SyncFlags.FromHost )][Property, Group( "Stats" )] public int    MoneyPerTick { get; set; } = 10;
     [Sync( SyncFlags.FromHost )][Property, Group( "Stats" )] public float  TickInterval { get; set; } = 5f;
-    [Sync( SyncFlags.FromHost )][Property, Group( "Stats" )] public int    MaxMoney     { get; set; } = 500;
+    [Sync( SyncFlags.FromHost )][Property, Group( "Stats" )] public int    MaxMoney     { get; set; } = 5000;
     [Sync( SyncFlags.FromHost )][Property, Group( "Stats" )] public float  MaxDistance  { get; set; } = 100f;
 
     [Sync( SyncFlags.FromHost )][Property, Group( "Health" )] public float MaxHealth { get; set; } = 100f;
 
-    /// <summary>Через сколько секунд принтер сам умрёт. 0 = не умирает.</summary>
+    /// <summary>Таймер для UI. Принтер больше не удаляется при истечении.</summary>
     [Sync( SyncFlags.FromHost )][Property, Group( "Lifetime" )] public float Lifetime { get; set; } = 60f;
 
     [Property] public ModelRenderer Renderer { get; set; }
@@ -32,7 +32,7 @@ public class MoneyPrinterBase : Component, Component.IPressable, Component.IDama
     [Sync( SyncFlags.FromHost )] public bool  IsWorking   { get; protected set; } = true;
     [Sync( SyncFlags.FromHost )] public float Health      { get; protected set; }
 
-    /// <summary>Сколько секунд осталось до смерти принтера (для UI).</summary>
+    /// <summary>Значение таймера для UI (объект больше не удаляется по времени).</summary>
     [Sync( SyncFlags.FromHost )] public float TimeLeft { get; protected set; }
 
     // ─────────────────────────────────────────────
@@ -54,6 +54,7 @@ public class MoneyPrinterBase : Component, Component.IPressable, Component.IDama
         _nextTick      = TickInterval;
         _lifetimeTimer = Lifetime;
         TimeLeft       = Lifetime;
+        IsWorking      = StoredMoney < MaxMoney;
 
         RefreshVisual();
     }
@@ -62,27 +63,29 @@ public class MoneyPrinterBase : Component, Component.IPressable, Component.IDama
     {
         if ( !Networking.IsHost ) return;
 
-        // ── Таймер жизни ──
+        // ── Таймер для UI (без удаления объекта) ──
         if ( Lifetime > 0f )
         {
             TimeLeft = MathF.Max( 0f, _lifetimeTimer );
-
-            if ( _lifetimeTimer )
-            {
-                Log.Info( $"{PrinterName}: lifetime expired, destroying" );
-                GameObject.Destroy();
-                return;
-            }
         }
 
         // ── Тик печати денег ──
         if ( !IsWorking ) return;
-        if ( StoredMoney >= MaxMoney ) return;
+        if ( StoredMoney >= MaxMoney )
+        {
+            IsWorking = false;
+            RefreshVisual();
+            return;
+        }
 
         if ( _nextTick )
         {
             StoredMoney = Math.Min( StoredMoney + MoneyPerTick, MaxMoney );
             _nextTick   = TickInterval;
+
+            if ( StoredMoney >= MaxMoney )
+                IsWorking = false;
+
             RefreshVisual();
         }
     }
@@ -205,6 +208,8 @@ public class MoneyPrinterBase : Component, Component.IPressable, Component.IDama
 
         var payout = printer.StoredMoney;
         printer.StoredMoney = 0;
+        printer.IsWorking = true;
+        printer._nextTick = printer.TickInterval;
 
         ply.TakeBox( payout );
         printer.RefreshVisual();

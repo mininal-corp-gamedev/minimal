@@ -5,7 +5,7 @@ using System;
 /// Базовый класс для всех денежных принтеров.
 /// Вся логика здесь — наследники только дают название.
 /// </summary>
-public abstract class MoneyPrinterBase : Component, Component.IPressable, Component.IDamageable
+public class MoneyPrinterBase : Component, Component.IPressable, Component.IDamageable
 {
     // ─────────────────────────────────────────────
     //  Инспектор — настраивается в редакторе
@@ -29,7 +29,7 @@ public abstract class MoneyPrinterBase : Component, Component.IPressable, Compon
     // ─────────────────────────────────────────────
 
     [Sync( SyncFlags.FromHost )] public int   StoredMoney { get; protected set; } = 0;
-    [Sync( SyncFlags.FromHost )] public bool  IsRunning   { get; protected set; } = true;
+    [Sync( SyncFlags.FromHost )] public bool  IsWorking   { get; protected set; } = true;
     [Sync( SyncFlags.FromHost )] public float Health      { get; protected set; }
 
     /// <summary>Сколько секунд осталось до смерти принтера (для UI).</summary>
@@ -76,7 +76,7 @@ public abstract class MoneyPrinterBase : Component, Component.IPressable, Compon
         }
 
         // ── Тик печати денег ──
-        if ( !IsRunning ) return;
+        if ( !IsWorking ) return;
         if ( StoredMoney >= MaxMoney ) return;
 
         if ( _nextTick )
@@ -96,7 +96,7 @@ public abstract class MoneyPrinterBase : Component, Component.IPressable, Compon
     {
         if ( !Renderer.IsValid() ) return;
 
-        if      ( !IsRunning              ) Renderer.Tint = Color.Gray;
+        if      ( !IsWorking              ) Renderer.Tint = Color.Gray;
         else if ( StoredMoney >= MaxMoney ) Renderer.Tint = new Color( 1f, 0.5f, 0f );
         else                               Renderer.Tint = new Color( 0.2f, 0.85f, 0.3f );
     }

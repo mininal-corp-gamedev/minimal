@@ -30,7 +30,7 @@
     private MoneyPrinterBase Printer => Components.GetInParent<MoneyPrinterBase>();
 
     private string StatusText =>
-        Printer is null || !Printer.IsRunning ? "OFF" :
+        Printer is null || !Printer.IsWorking ? "OFF" :
         Printer.StoredMoney >= Printer.MaxMoney ? "FULL" :
         "ON";
 
@@ -59,7 +59,7 @@
         hash.Add(p?.MaxMoney);
         hash.Add(p?.MoneyPerTick);
         hash.Add(p?.TickInterval);
-        hash.Add(p?.IsRunning);
+        hash.Add(p?.IsWorking);
         hash.Add((int)(p?.Health ?? 0f));
         hash.Add((int)(p?.TimeLeft ?? 0f));
         hash.Add(p is not null);

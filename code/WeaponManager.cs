@@ -9,11 +9,12 @@ public sealed class WeaponManager : Component
     public static WeaponManager Instance { get; private set; }
 
     [Property] public GameObject BulletPrefab { get; set; }
+    [Property] public Weapon Wep { get; set; }
 
     [Property, Category("Weapon Prefabs")] public GameObject WeaponPickaxe { get; set; }
+    [Property, Category("Weapon Prefabs")] public GameObject WeaponUspPrefab { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponMp5Prefab { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponM4a1Prefab { get; set; }
-    [Property, Category("Weapon Prefabs")] public GameObject WeaponUspPrefab { get; set; }
 
     /// <summary>Слот ближнего боя (без патронов). Префаб — <see cref="Megashot.Weapons.WeaponPickaxe"/> или <c>Weapon</c> с <c>IsMelee</c>.</summary>
     public Weapon Pickaxe { get; private set; }
@@ -54,6 +55,8 @@ public sealed class WeaponManager : Component
         M4A1 = SpawnWeapon(WeaponM4a1Prefab, camera, "M4A1");
         Usp = SpawnWeapon(WeaponUspPrefab, camera, "USP");
         Pickaxe = SpawnWeapon(WeaponPickaxe, camera, "Pickaxe");
+        //Sword = SpawnWeapon(WeaponSword, camera, "Sword");
+        //SwordUranium = SpawnWeapon(WeaponSwordUranium, camera, "Uranium");
 
         Log.Info("[WeaponManager] Spawned all weapons");
     }

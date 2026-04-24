@@ -163,7 +163,8 @@
           "WeaponUspPrefab": {
             "_type": "gameobject",
             "prefab": "prefabs/weapons/usp.prefab"
-          }
+          },
+          "Wep": null
         }
       ],
       "Children": []
@@ -299,6 +300,18 @@
         {
           "__type": "Sandbox.KeybindsHud",
           "__guid": "5a3e2a44-f6a2-4a7c-b276-208a5eec2261",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        },
+        {
+          "__type": "Sandbox.ContextMenu",
+          "__guid": "f8fe8209-b954-4f1a-a6f3-92264fcc564d",
           "__enabled": true,
           "Flags": 0,
           "OnComponentDestroy": null,

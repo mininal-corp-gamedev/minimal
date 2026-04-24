@@ -21,6 +21,7 @@
         "__enabled": true,
         "Flags": 0,
         "Ammo": 0,
+        "AttackRange": 2048,
         "BulletPrefab": {
           "_type": "gameobject",
           "prefab": "prefabs/bullets/bullet.prefab"
@@ -32,6 +33,7 @@
         "FireSound": "sounds/m4a1 shot.sound",
         "HasHipFire": true,
         "HasReload": true,
+        "HoldType": "None",
         "IsIronSight": false,
         "IsMelee": false,
         "OnComponentDestroy": null,
@@ -132,9 +134,9 @@
             "__version": 2,
             "Flags": 0,
             "Name": "ShotPos",
-            "Position": "19.21852,-4.600586,-3.178995",
+            "Position": "19.2185192,-4.60058594,-3.17899489",
             "Rotation": "0,0,0,1",
-            "Scale": "0.1,0.1,0.1",
+            "Scale": "0.100000001,0.100000001,0.100000001",
             "Tags": "",
             "Enabled": true,
             "NetworkMode": 0,
@@ -269,6 +271,7 @@
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
         "IncludedBodies": "",
+        "DeferGeneration": false,
         "CustomBounds": false
       }
     },

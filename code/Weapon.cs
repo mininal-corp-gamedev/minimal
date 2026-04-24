@@ -17,6 +17,7 @@ public class Weapon : Component
     /// <summary>Префаб спрайта вспышки при выстреле. Спавнится в ShotPos.</summary>
     [Property, Category("Combat")] public GameObject SpriteFirePrefab { get; set; }
     [Property, Category("Combat")] public bool SpawnSpriteFireOnShot { get; set; } = false;
+    [Property, Category("Combat")] public WeaponHoldType HoldType { get; set; } = WeaponHoldType.None;
 
     public WeaponState State { get; protected set; } = WeaponState.None;
 
@@ -139,9 +140,6 @@ public class Weapon : Component
         if (UsesAmmunition)
             Ammo -= 1;
 
-        if (FireSound.IsValid())
-            Sound.Play(FireSound, ShotPos?.WorldPosition ?? WorldPosition);
-
         if (UsesAmmunition && Ammo <= 0)
             State = WeaponState.None;
 
@@ -151,8 +149,11 @@ public class Weapon : Component
 
         ApplyDamageToTrace(tr, Damage);
 
-        SpawnBullet(origin, tr.Direction);
-        SpawnSpriteFire();
+        var bullet = SpawnBullet(origin, tr.Direction);
+
+        var muzzlePrefab = (SpawnSpriteFireOnShot && SpriteFirePrefab.IsValid()) ? SpriteFirePrefab : null;
+        var muzzleRot = ShotPos != null ? ShotPos.WorldRotation : GameObject.WorldRotation;
+        Player.Local?.RpcOnWeaponFired(FireSound, origin, muzzlePrefab, origin, muzzleRot, bullet);
     }
 
     /// <summary>Префаб пули: свой BulletPrefab или из WeaponManager.</summary>
@@ -163,11 +164,11 @@ public class Weapon : Component
     }
 
     /// <summary>Спавн одного снаряда из origin в направлении direction. Вызывается из PerformFire и из дробовика на каждый трейс.</summary>
-    protected virtual void SpawnBullet(Vector3 origin, Vector3 direction)
+    protected virtual GameObject SpawnBullet(Vector3 origin, Vector3 direction)
     {
-        if (IsMelee) return;
+        if (IsMelee) return null;
         var prefab = GetBulletPrefab();
-        if (!prefab.IsValid() || direction.LengthSquared < 0.0001f) return;
+        if (!prefab.IsValid() || direction.LengthSquared < 0.0001f) return null;
         var bulletObj = prefab.Clone(origin, Rotation.LookAt(direction));
 
         if (bulletObj.Components.TryGet<Bullet>(out var bullet))
@@ -179,6 +180,8 @@ public class Weapon : Component
             bullet.Owner = Player.Local?.GameObject;
             bullet.Weapon = GameObject;
         }
+
+        return bulletObj;
     }
 
     /// <summary>Спавн спрайта вспышки при выстреле (позиция ShotPos), если включено SpawnSpriteFireOnShot. Родитель — GlobalManager.Instance.CurrentLevel, через 0.5 сек объект уничтожается.</summary>
@@ -205,11 +208,14 @@ public class Weapon : Component
     {
         var dir = direction.Normal;
         var range = Math.Max(AttackRange, 1f);
-        return Scene.Trace
+
+        var tr = Scene.Trace
             .Ray(origin, origin + dir * range)
-            .IgnoreGameObject(Player.Local.GameObject)
+            .IgnoreGameObjectHierarchy(Player.Local.GameObject)
             .WithoutTags("bullet")
             .Run();
+
+        return tr;
     }
 
     /// <summary>Нанести урон по результату трассировки. Вызывается из PerformFire.</summary>
@@ -222,7 +228,7 @@ public class Weapon : Component
         {
             if (go.Components.TryGet<Player>(out var hitPlayer, FindMode.EverythingInSelfAndParent))
             {
-                hitPlayer.TakeDamageFromWeapon(damage);
+                hitPlayer.TakeDamageFromWeapon(damage, Player.Local.GameObject);
 
                 if (Player.Local.IsValid() && Player.Local.HitSound.IsValid())
                     Sound.Play(Player.Local.HitSound);
@@ -374,4 +380,17 @@ public enum WeaponState
     None,
     Fire,
     Reload
+}
+
+public enum WeaponHoldType : byte
+{
+    None = 0,
+    Pistol = 1,
+    Rifle = 2,
+    Shotgun = 3,
+    HoldItem = 4,
+    MeleePunch = 5,
+    MeleeWeapons = 6,
+    Rpg = 7,
+    PhysGun = 8
 }

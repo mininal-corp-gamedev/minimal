@@ -1,6 +1,7 @@
 using Ambi.Storage;
 using Sandbox;
 using System;
+using System.Runtime.CompilerServices;
 using static Sandbox.Gizmo;
 
 public sealed class Player : Component, Component.IDamageable
@@ -8,6 +9,7 @@ public sealed class Player : Component, Component.IDamageable
     public static Player Local { get; private set; }
 
     [Property] public PlayerController Controller { get; private set; }
+    [Property] public SkinnedModelRenderer Renderer { get; private set; }
     [Property] public Dresser Dresser { get; private set; }
     [Property] public PlayerWorldHud WorldHud { get; private set; }
     [Property, Sync(SyncFlags.FromHost)] public PlayerJob Job { get; private set; }
@@ -22,6 +24,8 @@ public sealed class Player : Component, Component.IDamageable
     public Inventory Inventory { get; set; } = new(10);
 
     public Weapon CurrentWeapon { get; private set; }
+
+    public bool IsLocalPlayer => !IsProxy;
 
     public void Spawn()
     {
@@ -43,27 +47,52 @@ public sealed class Player : Component, Component.IDamageable
         // Локальные источники урона (окружение и т.п.) — только на авторитетной копии.
         if (IsProxy) return;
 
-        TakeDamageFromWeapon(dmgInfo.Damage);
+        TakeDamageFromWeapon(dmgInfo.Damage, dmgInfo.Attacker);
     }
 
     /// <summary>
     /// Урон от оружия другого игрока. <c>[Rpc.Owner]</c> доставляет вызов на машину владельца этого Player,
     /// где <c>[Sync] Health</c> можно записать и изменение синхронизируется всем.
     /// </summary>
-    public void TakeDamageFromWeapon(float damage)
+    public void TakeDamageFromWeapon(float damage, GameObject attacker = null)
     {
-        RpcTakeDamageFromWeapon(damage);
+        RpcTakeDamageFromWeapon(damage, attacker);
+    }
+
+    [Rpc.Broadcast]
+    public void RpcOnWeaponFired(SoundEvent fireSound, Vector3 soundPos, GameObject muzzlePrefab, Vector3 muzzlePos, Rotation muzzleRot, GameObject bullet)
+    {
+        Renderer?.Set("b_attack", true);
+        if (fireSound.IsValid())
+            Sound.Play(fireSound, soundPos);
+        if (muzzlePrefab.IsValid())
+        {
+            var obj = muzzlePrefab.Clone(muzzlePos, muzzleRot);
+            var destroy = obj.Components.Create<DestroyAfterSeconds>();
+            destroy.Seconds = 0.5f;
+        }
+
+        if (bullet.IsValid())
+            bullet.NetworkSpawn();
+    }
+
+    [Rpc.Broadcast]
+    private void RpcOnPlayerHit(SkinnedModelRenderer renderer)
+    {
+        renderer.Set("hit", true);
     }
 
     [Rpc.Owner]
-    private void RpcTakeDamageFromWeapon(float damage)
+    private void RpcTakeDamageFromWeapon(float damage, GameObject attacker)
     {
-        const float maxPerRpc = 200f;
+        if (attacker == Local.GameObject) return;
+
         if (damage <= 0f) return;
-        damage = Math.Min(damage, maxPerRpc);
 
         Health = Math.Max(0f, Health - damage);
         WorldHud?.WorldHudRefresh();
+
+        RpcOnPlayerHit(Renderer);
 
         if (Health <= 0f)
             Die();
@@ -79,6 +108,8 @@ public sealed class Player : Component, Component.IDamageable
     public void SwitchWeapon(Weapon wep = null)
     {
         if (IsProxy) return;
+
+        Log.Info(WeaponManager.Instance.Usp.IsValid());
 
         if (CurrentWeapon.IsValid() && wep == CurrentWeapon) return;
 

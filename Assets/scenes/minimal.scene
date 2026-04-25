@@ -348,6 +348,18 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null
+        },
+        {
+          "__type": "Sandbox.InventoryPanel",
+          "__guid": "0e936a5a-d9f2-43a4-acaa-6983a4152f19",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
         }
       ],
       "Children": []
@@ -981,7 +993,7 @@
       "__version": 2,
       "Flags": 0,
       "Name": "door",
-      "Position": "-1925.27405,5946.74414,41.8683701",
+      "Position": "-1925.27405,5946.74414,17.8017101",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "",
@@ -1063,7 +1075,7 @@
           "__guid": "76a804fc-dbcb-4047-a686-b6a67f362d9a",
           "__enabled": true,
           "Flags": 0,
-          "Center": "0.0356954299,-23.1959305,41.5985107",
+          "Center": "0.0356954336,-23.1959305,53.9788971",
           "ColliderFlags": 0,
           "Elasticity": null,
           "Friction": null,
@@ -1079,13 +1091,93 @@
           "OnTriggerEnter": null,
           "OnTriggerExit": null,
           "RollingResistance": null,
-          "Scale": "2.45087504,48.987381,133.197006",
+          "Scale": "2.45087504,48.987381,108.436249",
           "Static": false,
           "Surface": null,
           "SurfaceVelocity": "0,0,0"
         }
       ],
-      "Children": []
+      "Children": [
+        {
+          "__guid": "130c5ed9-c426-44bc-9611-8a1793c6a6be",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Text",
+          "Position": "-1.16467285,-24.0708008,74.4283829",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.TextRenderer",
+              "__guid": "f04e5d83-a9fa-450f-bbd0-f78816219bf4",
+              "__enabled": true,
+              "Flags": 0,
+              "__version": 2,
+              "BlendMode": "Normal",
+              "FogStrength": 1,
+              "HorizontalAlignment": "Center",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "Scale": 0.1,
+              "TextScope": {
+                "Text": "Owner: ?\n$40",
+                "TextColor": "0.61246,0.90698,0.60746,1",
+                "FontName": "Poppins",
+                "FontSize": 42.538464,
+                "FontWeight": 800,
+                "FontItalic": false,
+                "FontVariantNumeric": "Normal",
+                "LineHeight": 1,
+                "LetterSpacing": 0,
+                "WordSpacing": 0,
+                "FilterMode": "Bilinear",
+                "FontSmooth": "Auto",
+                "Outline": {
+                  "Enabled": true,
+                  "Size": 4,
+                  "Color": "0,0,0,1"
+                },
+                "Shadow": {
+                  "Enabled": false,
+                  "Size": 4,
+                  "Color": "0,0,0,1",
+                  "Offset": "4,4"
+                },
+                "OutlineUnder": {
+                  "Enabled": false,
+                  "Size": 4,
+                  "Color": "0,1,0,1"
+                },
+                "ShadowUnder": {
+                  "Enabled": false,
+                  "Size": 4,
+                  "Color": "0,0,0,1",
+                  "Offset": "4,4"
+                }
+              },
+              "VerticalAlignment": "Center"
+            }
+          ],
+          "Children": []
+        }
+      ]
     },
     {
       "__guid": "eb6994c0-ca56-423d-8436-65d989615166",
@@ -1277,7 +1369,7 @@
               "IdValue": "1896f655-ca6f-451f-bbf6-7119a6d4b38a"
             },
             "Property": "Position",
-            "Value": "-2055.46558,6026.9082,52.6989212"
+            "Value": "-2055.46558,6026.9082,24.1338425"
           }
         ],
         "MovedObjects": []
@@ -1290,6 +1382,96 @@
         "14bac331-7dd3-43a3-b3d3-a81a19514052": "34702016-230e-46a6-84af-57a94096f433",
         "bfa2be84-9889-46b5-9148-3bdfc6672343": "159ef3f2-0de4-4a81-bb54-4d97d160c1ee",
         "bd59b4f6-bafc-4f27-a64c-7eecce459f7f": "571c7a2a-3bbf-485d-80fd-60c9d0092025"
+      }
+    },
+    {
+      "__guid": "65473111-a610-4ea3-9739-fd95f35fd8b1",
+      "__version": 2,
+      "__Prefab": "prefabs/money_printer.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "1896f655-ca6f-451f-bbf6-7119a6d4b38a"
+            },
+            "Property": "Name",
+            "Value": "money_printer (1)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "1896f655-ca6f-451f-bbf6-7119a6d4b38a"
+            },
+            "Property": "Position",
+            "Value": "-2055.46558,5996.84668,24.1338425"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "184f5586-561a-4917-a25c-963514033f26"
+            },
+            "Property": "Tint",
+            "Value": "0.84186,0.62102,0.10572,1"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "1896f655-ca6f-451f-bbf6-7119a6d4b38a": "65473111-a610-4ea3-9739-fd95f35fd8b1",
+        "184f5586-561a-4917-a25c-963514033f26": "05eb1ffa-ac73-4cf1-91d4-80214fd822e3",
+        "085c6678-9594-4ade-b41a-d8644a43bcf0": "cbf41eb6-e127-4608-a6e0-6879c398e350",
+        "cf2e3c7a-0f08-4fc1-827a-f02c0bc19ae1": "226ec0b3-0357-4f88-9949-94f8dc58675c",
+        "14bac331-7dd3-43a3-b3d3-a81a19514052": "c4487d61-c042-4ab4-a63d-6aba5c23415b",
+        "bfa2be84-9889-46b5-9148-3bdfc6672343": "e8c0865b-713b-4c4a-bd2c-79c19b66375b",
+        "bd59b4f6-bafc-4f27-a64c-7eecce459f7f": "3649473a-53fa-40ba-9bbe-fcb8ac6a6778"
+      }
+    },
+    {
+      "__guid": "02f8b569-e2f4-41e5-b960-34993dba1c03",
+      "__version": 2,
+      "__Prefab": "prefabs/money_printer.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "1896f655-ca6f-451f-bbf6-7119a6d4b38a"
+            },
+            "Property": "Name",
+            "Value": "money_printer (2)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "1896f655-ca6f-451f-bbf6-7119a6d4b38a"
+            },
+            "Property": "Position",
+            "Value": "-2055.46558,5964.75488,24.1338425"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "184f5586-561a-4917-a25c-963514033f26"
+            },
+            "Property": "Tint",
+            "Value": "0.94419,0.27227,0.1537,1"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "1896f655-ca6f-451f-bbf6-7119a6d4b38a": "02f8b569-e2f4-41e5-b960-34993dba1c03",
+        "184f5586-561a-4917-a25c-963514033f26": "a0ec5d00-d76c-438d-a4ca-63e73b9b7294",
+        "085c6678-9594-4ade-b41a-d8644a43bcf0": "1e2d3c34-a896-4682-9982-9b8369418f11",
+        "cf2e3c7a-0f08-4fc1-827a-f02c0bc19ae1": "97dc93b5-4b2f-4060-83ef-0df19113240a",
+        "14bac331-7dd3-43a3-b3d3-a81a19514052": "53a734cf-1d75-47eb-b29a-0db8964ee22a",
+        "bfa2be84-9889-46b5-9148-3bdfc6672343": "966ea7db-1736-41f6-8926-0df9b8309a34",
+        "bd59b4f6-bafc-4f27-a64c-7eecce459f7f": "d62ead6f-dafe-4843-b4bb-85a2c7502313"
       }
     },
     {
@@ -1376,6 +1558,275 @@
         }
       ],
       "Children": []
+    },
+    {
+      "__guid": "35413804-de4a-459d-9951-856a1fac152f",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "weed",
+      "Position": "-2066.62476,5312.95459,17.1127014",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 1,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "d595412a-84e9-4049-b08f-69d571c5219a",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/props/trim_sheets/pots/pot_02a.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "65aca51e-5d51-4636-8e22-3399a9805d40",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/props/trim_sheets/pots/pot_02a.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": false,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "Weed",
+          "__guid": "0f278d02-4457-49e9-9bb7-b4bf1bead2e2",
+          "__enabled": true,
+          "Flags": 0,
+          "GrowTime": 40,
+          "HarvestReward": 100,
+          "MaxInteractDistance": 100,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "PlantRenderer": {
+            "_type": "component",
+            "component_id": "4e851db2-df62-49cd-bab1-f4d9a82c9aab",
+            "go": "a2324daf-4e53-4f28-88b9-885992da80ca",
+            "component_type": "ModelRenderer"
+          }
+        }
+      ],
+      "Children": [
+        {
+          "__guid": "a2324daf-4e53-4f28-88b9-885992da80ca",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "cannabis",
+          "Position": "0.0231933594,0.470214844,12.2108383",
+          "Rotation": "0,0,0,1",
+          "Scale": "0.100000001,0.100000001,0.100000001",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "4e851db2-df62-49cd-bab1-f4d9a82c9aab",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/cannabis/cannabis.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          ],
+          "Children": []
+        },
+        {
+          "__guid": "312ed343-6c03-4c32-9232-b60634334456",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Sprite",
+          "Position": "0,0,55.222374",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.SpriteRenderer",
+              "__guid": "dc74a4a3-e742-4736-8f90-995155e4a8e3",
+              "__enabled": true,
+              "Flags": 0,
+              "__version": 2,
+              "Additive": false,
+              "AlphaCutoff": 0.5,
+              "Billboard": "Always",
+              "Color": "1,1,1,1",
+              "DepthFeather": 0,
+              "FlipHorizontal": false,
+              "FlipVertical": false,
+              "FogStrength": 1,
+              "IsSorted": false,
+              "Lighting": false,
+              "OnAnimationEnd": null,
+              "OnAnimationStart": null,
+              "OnBroadcastMessage": null,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Opaque": false,
+              "OverlayColor": "1,1,1,0",
+              "PlaybackSpeed": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "Shadows": false,
+              "Size": "10,10",
+              "Sprite": {
+                "$compiler": "embed",
+                "$source": null,
+                "data": {
+                  "Animations": [
+                    {
+                      "Name": "Default",
+                      "FrameRate": 15,
+                      "Origin": "0.5,0.5",
+                      "LoopMode": "Loop",
+                      "Frames": [
+                        {
+                          "Texture": {
+                            "$compiler": "texture",
+                            "$source": "text",
+                            "data": {
+                              "Size": "128,128",
+                              "Margin": {
+                                "Left": 0,
+                                "Top": 0,
+                                "Right": 0,
+                                "Bottom": 0
+                              },
+                              "TextFlags": "Center, DontClip",
+                              "TextScope": {
+                                "Text": "90%",
+                                "TextColor": "0.39073,0.90233,0.32316,1",
+                                "FontName": "Roboto",
+                                "FontSize": 64,
+                                "FontWeight": 400,
+                                "FontItalic": false,
+                                "FontVariantNumeric": "Normal",
+                                "LineHeight": 1,
+                                "LetterSpacing": 0,
+                                "WordSpacing": 0,
+                                "FilterMode": "Bilinear",
+                                "FontSmooth": "Auto",
+                                "Outline": {
+                                  "Enabled": true,
+                                  "Size": 4,
+                                  "Color": "0,0,0,1"
+                                },
+                                "Shadow": {
+                                  "Enabled": true,
+                                  "Size": 4,
+                                  "Color": "0,0,0,1",
+                                  "Offset": "4,4"
+                                },
+                                "OutlineUnder": {
+                                  "Enabled": false,
+                                  "Size": 4,
+                                  "Color": "0,1,0,1"
+                                },
+                                "ShadowUnder": {
+                                  "Enabled": false,
+                                  "Size": 4,
+                                  "Color": "0,0,0,1",
+                                  "Offset": "4,4"
+                                }
+                              }
+                            },
+                            "compiled": null
+                          },
+                          "BroadcastMessages": []
+                        }
+                      ]
+                    }
+                  ],
+                  "__references": null
+                },
+                "compiled": null
+              },
+              "StartingAnimationName": "Default",
+              "TextureFilter": "Bilinear"
+            }
+          ],
+          "Children": []
+        }
+      ]
     }
   ],
   "SceneProperties": {
@@ -1414,7 +1865,9 @@
   "Title": "minimal",
   "Description": null,
   "__references": [
+    "centuria.cannabisweed#156923",
     "facepunch.metal_board_01c#9577",
+    "facepunch.pot_02a#143474",
     "facepunch.wooden_door_01d#143453"
   ],
   "__version": 3

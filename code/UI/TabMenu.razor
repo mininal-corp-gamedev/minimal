@@ -1,6 +1,8 @@
 @using Sandbox;
 @using Sandbox.UI;
 @using System;
+@using System.Collections.Generic;
+@using System.Linq;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -19,7 +21,7 @@
 					<div class="sidebar-nav">
 						<button class="tab-btn @(ActiveTab == 0 ? "active" : "")" onclick=@(() => ActiveTab = 0)>Jobs</button>
 						<button class="tab-btn @(ActiveTab == 1 ? "active" : "")" onclick=@(() => ActiveTab = 1)>Shop</button>
-						<button class="tab-btn @(ActiveTab == 2 ? "active" : "")" onclick=@(() => ActiveTab = 2)>Players</button>
+						<button class="tab-btn @(ActiveTab == 2 ? "active" : "")" onclick=@(() => SelectPlayersTab())>Players</button>
 						<button class="tab-btn @(ActiveTab == 3 ? "active" : "")" onclick=@(() => ActiveTab = 3)>Help</button>
 					</div>
 					<div class="sidebar-spacer"></div>
@@ -50,7 +52,17 @@
 					{
 						<div class="page">
 							<div class="page-title">Players</div>
-							<div class="page-placeholder">Connected players will be listed here.</div>
+							<div class="players-count">Online: @CachedPlayers.Count</div>
+							<div class="player-list">
+								@foreach ( var conn in CachedPlayers )
+								{
+									<div class="player-row">
+										<div class="player-avatar" style="background-image: url( avatar:@conn.SteamId.Value )"></div>
+										<div class="player-name">@conn.DisplayName</div>
+										<div class="player-ping">@conn.Ping ms</div>
+									</div>
+								}
+							</div>
 						</div>
 					}
 					else if ( ActiveTab == 3 )
@@ -78,6 +90,15 @@
 {
 	bool IsOpen { get; set; } = false;
 	int ActiveTab { get; set; } = 0;
+	List<Connection> CachedPlayers { get; set; } = new();
+	int PlayersVersion { get; set; } = 0;
+
+	void SelectPlayersTab()
+	{
+		ActiveTab = 2;
+		CachedPlayers = Connection.All.ToList();
+		PlayersVersion++;
+	}
 
 	protected override void OnUpdate()
 	{
@@ -94,5 +115,6 @@
 		ActiveTab,
 		Player.Local?.Money ?? 0,
 		Player.Local?.Job?.JobDefinition?.Header,
-		Connection.Local?.DisplayName );
+		Connection.Local?.DisplayName,
+		PlayersVersion );
 }

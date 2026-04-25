@@ -1,0 +1,291 @@
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+
+@if ( Screen is not null && Screen.IsOpen )
+{
+    <root>
+
+        <div class="overlay">
+
+            <div class="card">
+
+                @* ── Заголовок ── *@
+                <div class="card-header">
+                    <span class="card-title">COLOR SLOT</span>
+                    <div class="close-btn" onclick=@Close>✕</div>
+                </div>
+
+                <div class="divider"></div>
+
+                @* ── Сумма ставки ── *@
+                <div class="bet-row">
+                    <span class="bet-label">BET</span>
+                    <span class="bet-amount">$@( Screen.Slot?.BetAmount ?? 0 )</span>
+                </div>
+
+                <div class="divider"></div>
+
+                @* ── Окно результата ── *@
+                <div class="result-box @ResultBoxClass">
+                    @if ( Screen.IsWaiting )
+                    {
+                        <span class="result-text">...</span>
+                    }
+                    else if ( Screen.NoMoney )
+                    {
+                        <span class="result-text result-nomoney">NOT ENOUGH MONEY</span>
+                    }
+                    else if ( Screen.HasResult )
+                    {
+                        <span class="result-color">@( Screen.ResultGreen ? "GREEN" : "RED" )</span>
+                        <span class="result-outcome @( Screen.ResultWon ? "outcome-win" : "outcome-lose" )">
+                            @( Screen.ResultWon ? "YOU WIN  ×2" : "YOU LOSE" )
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="result-placeholder">?</span>
+                    }
+                </div>
+
+                <div class="divider"></div>
+
+                @* ── Кнопки ── *@
+                <div class="btn-row">
+                    <div class="btn btn-green @( Screen.IsWaiting ? "btn-disabled" : "" )"
+                         onclick=@BetGreen>
+                        GREEN
+                    </div>
+                    <div class="btn btn-red @( Screen.IsWaiting ? "btn-disabled" : "" )"
+                         onclick=@BetRed>
+                        RED
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </root>
+}
+
+@code {
+    private ColorSlotScreen Screen { get; set; }
+
+    protected override void OnStart()
+    {
+        Screen = Components.GetInParent<ColorSlotScreen>( true );
+    }
+
+    private void Close()   => Screen?.Close();
+    private void BetGreen() => Screen?.PlaceBet( true );
+    private void BetRed()   => Screen?.PlaceBet( false );
+
+    private string ResultBoxClass
+    {
+        get
+        {
+            if ( Screen is null || !Screen.HasResult ) return "";
+            if ( Screen.NoMoney )                      return "box-neutral";
+            return Screen.ResultGreen ? "box-green" : "box-red";
+        }
+    }
+
+    protected override int BuildHash() => System.HashCode.Combine(
+        Screen?.IsOpen,
+        Screen?.IsWaiting,
+        Screen?.HasResult,
+        Screen?.ResultWon,
+        Screen?.ResultGreen,
+        Screen?.NoMoney
+    );
+}
+
+<style>
+
+    /* ── Полупрозрачный фон на весь экран ── */
+    .overlay {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.55);
+    }
+
+    /* ── Карточка по центру ── */
+    .card {
+        width: 360px;
+        background-color: #09090f;
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        border-radius: 10px;
+        padding: 0px;
+        display: flex;
+        flex-direction: column;
+        gap: 0px;
+        font-family: "Roboto Mono", monospace;
+        overflow: hidden;
+    }
+
+    /* ── Хедер ── */
+    .card-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 16px 12px 16px;
+    }
+
+    .card-title {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        color: rgba(255, 255, 255, 0.75);
+    }
+
+    .close-btn {
+        width: 28px;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(255, 255, 255, 0.06);
+        border-radius: 4px;
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.50);
+        cursor: pointer;
+    }
+
+    .close-btn:hover {
+        background-color: rgba(200, 40, 40, 0.55);
+        color: white;
+    }
+
+    /* ── Разделитель ── */
+    .divider {
+        height: 1px;
+        background-color: rgba(255, 255, 255, 0.06);
+        margin: 0;
+    }
+
+    /* ── Ставка ── */
+    .bet-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 16px;
+    }
+
+    .bet-label {
+        font-size: 10px;
+        letter-spacing: 2px;
+        color: rgba(255, 255, 255, 0.30);
+    }
+
+    .bet-amount {
+        font-size: 18px;
+        font-weight: 700;
+        color: #f0d060;
+    }
+
+    /* ── Окно результата ── */
+    .result-box {
+        min-height: 110px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin: 0;
+        padding: 16px;
+        background-color: #0d0d14;
+        transition: background-color 0.3s;
+    }
+
+    .box-green { background-color: rgba(20, 100, 40, 0.55); }
+    .box-red   { background-color: rgba(100, 20, 20, 0.55); }
+    .box-neutral { background-color: rgba(60, 40, 10, 0.40); }
+
+    .result-placeholder {
+        font-size: 36px;
+        color: rgba(255, 255, 255, 0.12);
+    }
+
+    .result-text {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.45);
+        letter-spacing: 2px;
+    }
+
+    .result-nomoney {
+        color: #f09040;
+    }
+
+    .result-color {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: 3px;
+        color: white;
+    }
+
+    .result-outcome {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    .outcome-win  { color: #50ff80; }
+    .outcome-lose { color: #ff5050; }
+
+    /* ── Кнопки ── */
+    .btn-row {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        padding: 14px 16px;
+    }
+
+    .btn {
+        flex: 1;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        cursor: pointer;
+    }
+
+    .btn-green {
+        background-color: rgba(20, 110, 45, 0.80);
+        border: 1px solid rgba(50, 200, 80, 0.35);
+        color: #60ff90;
+    }
+
+    .btn-green:hover {
+        background-color: rgba(30, 160, 65, 0.90);
+        border-color: rgba(60, 220, 90, 0.60);
+    }
+
+    .btn-red {
+        background-color: rgba(110, 20, 20, 0.80);
+        border: 1px solid rgba(200, 50, 50, 0.35);
+        color: #ff6060;
+    }
+
+    .btn-red:hover {
+        background-color: rgba(160, 30, 30, 0.90);
+        border-color: rgba(220, 60, 60, 0.60);
+    }
+
+    .btn-disabled {
+        opacity: 0.35;
+        pointer-events: none;
+        cursor: default;
+    }
+
+</style>

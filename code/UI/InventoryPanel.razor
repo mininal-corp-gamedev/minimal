@@ -1,0 +1,244 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using Ambi.Storage;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen )
+	{
+		<div class="inv-overlay">
+			<div class="inv-bg-close" onclick=@Close></div>
+			<div class="inv-panel" onclick=@OnPanelClick>
+				<div class="inv-header">
+					<div class="inv-title">Inventory</div>
+					<button class="inv-close" onclick=@Close>✕</button>
+				</div>
+
+				<div class="inv-section-label">Hotbar</div>
+				<div class="inv-row">
+					@for ( int i = 0; i < HotbarCount; i++ )
+					{
+						var idx = i;
+						var slot = GetSlot( idx );
+						<div class="inv-slot @(slot is not null && !slot.IsEmpty ? "has-item" : "")"
+							 onrightclick=@(() => OnSlotRightClick( idx ))
+							 onmouseover=@(() => HoverSlotIndex = idx)
+							 onmouseout=@(() => { if ( HoverSlotIndex == idx ) HoverSlotIndex = -1; })>
+							@if ( slot is not null && !slot.IsEmpty )
+							{
+								<div class="slot-icon" style="background-image: url(@slot.Item.Definition.IconPath);"></div>
+								@if ( slot.Item.Count > 1 )
+								{
+									<div class="slot-count">@slot.Item.Count</div>
+								}
+							}
+						</div>
+					}
+				</div>
+
+				<div class="inv-section-label">Backpack</div>
+				@{
+					int backpackCount = SlotCount - HotbarCount;
+					if ( backpackCount < 0 ) backpackCount = 0;
+					int rows = (int)Math.Ceiling( backpackCount / (float)SlotsPerRow );
+					if ( rows < 1 ) rows = 1;
+				}
+				@for ( int r = 0; r < rows; r++ )
+				{
+					<div class="inv-row">
+						@for ( int c = 0; c < SlotsPerRow; c++ )
+						{
+							var globalIndex = HotbarCount + r * SlotsPerRow + c;
+							var slot = GetSlot( globalIndex );
+							var exists = globalIndex < SlotCount;
+
+							@if ( exists )
+							{
+								<div class="inv-slot @(slot is not null && !slot.IsEmpty ? "has-item" : "")"
+									 onrightclick=@(() => OnSlotRightClick( globalIndex ))
+									 onmouseover=@(() => HoverSlotIndex = globalIndex)
+									 onmouseout=@(() => { if ( HoverSlotIndex == globalIndex ) HoverSlotIndex = -1; })>
+									@if ( slot is not null && !slot.IsEmpty )
+									{
+										<div class="slot-icon" style="background-image: url(@slot.Item.Definition.IconPath);"></div>
+										@if ( slot.Item.Count > 1 )
+										{
+											<div class="slot-count">@slot.Item.Count</div>
+										}
+									}
+								</div>
+							}
+							else
+							{
+								<div class="inv-slot locked"></div>
+							}
+						}
+					</div>
+				}
+			</div>
+
+			@if ( TooltipSlot is not null )
+			{
+				<div class="inv-tooltip" style="left: @(TipX)px; top: @(TipY)px;">
+					<div class="tip-name">@TooltipSlot.Item.Definition.Header</div>
+					<div class="tip-count">x@(TooltipSlot.Item.Count)</div>
+				</div>
+			}
+			@if ( CtxVisible )
+			{
+				<div class="ctx-menu" style="left: @(CtxX)px; top: @(CtxY)px;">
+					<button class="ctx-btn" onclick=@OnUse>Use</button>
+					<button class="ctx-btn" onclick=@OnDrop>Drop</button>
+					<button class="ctx-btn" onclick=@OnDropAll>Drop All</button>
+				</div>
+			}
+		</div>
+	}
+</root>
+
+@code
+{
+	bool IsOpen { get; set; }
+	bool CtxVisible { get; set; }
+	float CtxX { get; set; }
+	float CtxY { get; set; }
+	int CtxSlotIndex { get; set; } = -1;
+
+	int HoverSlotIndex { get; set; } = -1;
+	float TipX { get; set; }
+	float TipY { get; set; }
+
+	Slot TooltipSlot
+	{
+		get
+		{
+			if ( HoverSlotIndex < 0 ) return null;
+			var s = GetSlot( HoverSlotIndex );
+			return s is not null && !s.IsEmpty ? s : null;
+		}
+	}
+
+	const int HotbarCount = 6;
+	const int SlotsPerRow = 6;
+
+	Inventory Inv => Player.Local?.Inventory;
+	int SlotCount => Inv?.Slots?.Count ?? 0;
+
+	Slot GetSlot( int index )
+	{
+		if ( Inv is null ) return null;
+		if ( index < 0 || index >= Inv.Slots.Count ) return null;
+		return Inv.Slots[index];
+	}
+
+	void Open()
+	{
+		IsOpen = true;
+		CtxVisible = false;
+#pragma warning disable CS0612
+		Mouse.Visible = true;
+#pragma warning restore CS0612
+	}
+
+	void Close()
+	{
+		IsOpen = false;
+		CtxVisible = false;
+#pragma warning disable CS0612
+		Mouse.Visible = false;
+#pragma warning restore CS0612
+	}
+
+	void OnPanelClick()
+	{
+		CloseContextMenu();
+	}
+
+	void OnSlotRightClick( int index )
+	{
+		var slot = GetSlot( index );
+		if ( slot is null || slot.IsEmpty ) return;
+
+		CtxSlotIndex = index;
+		CtxX = Mouse.Position.x;
+		CtxY = Mouse.Position.y;
+		CtxVisible = true;
+	}
+
+	void CloseContextMenu()
+	{
+		CtxVisible = false;
+		CtxSlotIndex = -1;
+	}
+
+	void OnUse()
+	{
+		// TODO: implement use logic
+		var slot = GetSlot( CtxSlotIndex );
+		if ( slot is not null && !slot.IsEmpty )
+		{
+			Inv?.TryUseItem( slot, Player.Local );
+		}
+		CloseContextMenu();
+	}
+
+	void OnDrop()
+	{
+		// TODO: implement drop logic
+		var slot = GetSlot( CtxSlotIndex );
+		if ( slot is not null && !slot.IsEmpty )
+		{
+			Player.Local?.DropItem( slot, 1 );
+		}
+		CloseContextMenu();
+	}
+
+	void OnDropAll()
+	{
+		// TODO: implement drop all logic
+		var slot = GetSlot( CtxSlotIndex );
+		if ( slot is not null && !slot.IsEmpty )
+		{
+			Player.Local?.DropItem( slot, slot.Item.Count );
+		}
+		CloseContextMenu();
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( Input.Pressed( "Inventory" ) )
+		{
+			if ( IsOpen ) Close();
+			else Open();
+		}
+
+		if ( IsOpen )
+		{
+#pragma warning disable CS0612
+			Mouse.Visible = true;
+#pragma warning restore CS0612
+
+			if ( HoverSlotIndex >= 0 )
+			{
+				TipX = Mouse.Position.x + 16f;
+				TipY = Mouse.Position.y + 16f;
+			}
+		}
+	}
+
+	protected override int BuildHash()
+	{
+		var hash = System.HashCode.Combine( IsOpen, CtxVisible, CtxSlotIndex, CtxX, CtxY, SlotCount, HoverSlotIndex, TipX );
+		hash = System.HashCode.Combine( hash, TipY );
+		if ( Inv is not null )
+		{
+			foreach ( var slot in Inv.Slots )
+			{
+				hash = System.HashCode.Combine( hash, slot.Item?.Id, slot.Item?.Count ?? 0 );
+			}
+		}
+		return hash;
+	}
+}

@@ -195,6 +195,13 @@ public sealed class Player : Component, Component.IDamageable
         WorldHud.Name = Connection.Local.DisplayName;
     }
 
+    private void GiveStartingItems()
+    {
+        Inventory.AddItem( Item.Create( "ammo_usp", 15 ) );
+        Inventory.AddItem( Item.Create( "ammo_mp5", 20 ) );
+        Inventory.AddItem( Item.Create( "ammo_m4a1", 10 ) );
+    }
+
     private void NetworkInit()
     {
         if (IsProxy) return;
@@ -203,6 +210,7 @@ public sealed class Player : Component, Component.IDamageable
         Spawn();
         SetupWorldHud();
         DressForHost(Dresser);
+        GiveStartingItems();
     }
 
     private void MakeLocalInstance()

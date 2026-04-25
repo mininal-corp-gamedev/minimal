@@ -1,0 +1,212 @@
+$inv-bg: rgba(12, 14, 18, 0.82);
+$inv-slot-size: 64px;
+$inv-slot-bg: rgba(255, 255, 255, 0.06);
+$inv-slot-border: rgba(255, 255, 255, 0.10);
+$inv-slot-hover: rgba(255, 255, 255, 0.12);
+$inv-slot-has-item: rgba(255, 255, 255, 0.09);
+$inv-text: rgba(255, 255, 255, 0.94);
+$inv-dim: rgba(255, 255, 255, 0.50);
+$inv-gap: 6px;
+
+InventoryPanel {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	pointer-events: none;
+
+	.inv-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		justify-content: center;
+		align-items: center;
+		background-color: rgba(0, 0, 0, 0.35);
+		backdrop-filter: blur(8px) saturate(70%);
+		pointer-events: all;
+	}
+
+	.inv-bg-close {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+	}
+
+	.inv-panel {
+		position: relative;
+		flex-direction: column;
+		background-color: $inv-bg;
+		border-radius: 16px;
+		border: 1px solid rgba(255, 255, 255, 0.09);
+		box-shadow: 0 16px 64px rgba(0, 0, 0, 0.7);
+		padding: 32px 40px 40px 40px;
+		min-width: 600px;
+	}
+
+	.inv-header {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 16px;
+	}
+
+	.inv-title {
+		font-family: Poppins;
+		font-size: 20px;
+		font-weight: 800;
+		color: $inv-text;
+		text-transform: uppercase;
+	}
+
+	.inv-close {
+		width: 32px;
+		height: 32px;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba(255, 255, 255, 0.06);
+		border-radius: 8px;
+		font-family: Poppins;
+		font-size: 16px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.6);
+		transition: all 0.1s ease-out;
+
+		&:hover {
+			background-color: rgba(255, 80, 80, 0.25);
+			color: rgba(255, 120, 120, 0.95);
+		}
+	}
+
+	.inv-section-label {
+		font-family: Poppins;
+		font-size: 11px;
+		font-weight: 700;
+		color: $inv-dim;
+		text-transform: uppercase;
+		margin-bottom: 10px;
+		letter-spacing: 1px;
+	}
+
+	.inv-row {
+		flex-direction: row;
+		flex-wrap: wrap;
+		margin-bottom: 14px;
+	}
+
+	.inv-slot {
+		width: $inv-slot-size;
+		height: $inv-slot-size;
+		flex-shrink: 0;
+		position: relative;
+		align-items: center;
+		justify-content: center;
+		background-color: $inv-slot-bg;
+		border: 1px solid $inv-slot-border;
+		border-radius: 10px;
+		margin-right: $inv-gap;
+		margin-bottom: $inv-gap;
+		transition: background-color 0.08s ease-out;
+
+		&:hover {
+			background-color: $inv-slot-hover;
+		}
+
+		&.has-item {
+			background-color: $inv-slot-has-item;
+			border-color: rgba(255, 255, 255, 0.16);
+		}
+
+		&.locked {
+			background-color: rgba(255, 255, 255, 0.02);
+			border-color: rgba(255, 255, 255, 0.04);
+			opacity: 0.4;
+		}
+	}
+
+	.slot-icon {
+		width: 44px;
+		height: 44px;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+		pointer-events: none;
+	}
+
+	.slot-count {
+		position: absolute;
+		right: 4px;
+		bottom: 2px;
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.9);
+		text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+		pointer-events: none;
+	}
+
+	// Tooltip (lives inside inv-overlay for full-screen visibility)
+	.inv-tooltip {
+		position: absolute;
+		flex-direction: column;
+		background-color: rgba(14, 16, 22, 0.96);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 8px;
+		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+		padding: 8px 12px;
+		pointer-events: none;
+	}
+
+	.tip-name {
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		white-space: nowrap;
+	}
+
+	.tip-count {
+		font-family: Poppins;
+		font-size: 11px;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.52);
+		margin-top: 2px;
+		white-space: nowrap;
+	}
+
+	// Context menu (lives inside inv-overlay for screen-space positioning)
+	.ctx-menu {
+		position: absolute;
+		flex-direction: column;
+		background-color: rgba(18, 20, 26, 0.95);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 8px;
+		box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
+		padding: 4px;
+		min-width: 120px;
+		pointer-events: all;
+	}
+
+	.ctx-btn {
+		flex-direction: row;
+		align-items: center;
+		padding: 8px 14px;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.88);
+		background-color: transparent;
+		border-radius: 6px;
+		transition: background-color 0.08s ease-out;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.10);
+			color: rgba(255, 255, 255, 1);
+		}
+	}
+}

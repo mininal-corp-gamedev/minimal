@@ -772,97 +772,6 @@
       ]
     },
     {
-      "__guid": "8bcae256-9508-4369-a734-976140d92e47",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "cactus",
-      "Position": "-4258.57324,7039.11523,38.5124207",
-      "Rotation": "0,0,0.793353319,0.608761489",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 1,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.ModelRenderer",
-          "__guid": "4bb62020-1a97-4902-870f-c5f54e23a835",
-          "__enabled": true,
-          "Flags": 0,
-          "BodyGroups": 18446744073709551615,
-          "CreateAttachments": false,
-          "LodOverride": null,
-          "MaterialGroup": null,
-          "MaterialOverride": null,
-          "Materials": null,
-          "Model": "models/cactus01.vmdl",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "RenderOptions": {
-            "GameLayer": true,
-            "OverlayLayer": false,
-            "BloomLayer": false,
-            "AfterUILayer": false
-          },
-          "RenderType": "On",
-          "Tint": "0.40777,0.95814,0.08913,1"
-        },
-        {
-          "__type": "Sandbox.ModelCollider",
-          "__guid": "b80ba290-0a93-4d80-b582-297248a93ecb",
-          "__enabled": true,
-          "Flags": 0,
-          "ColliderFlags": 0,
-          "Elasticity": null,
-          "Friction": null,
-          "IsTrigger": false,
-          "Model": "models/cactus01.vmdl",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OnObjectTriggerEnter": null,
-          "OnObjectTriggerExit": null,
-          "OnTriggerEnter": null,
-          "OnTriggerExit": null,
-          "RollingResistance": null,
-          "Static": true,
-          "Surface": null,
-          "SurfaceVelocity": "0,0,0"
-        },
-        {
-          "__type": "Cactus",
-          "__guid": "c4568fa1-8231-4edd-9ef9-eb63774d8951",
-          "__enabled": true,
-          "Flags": 0,
-          "Count": 1,
-          "Delay": 10,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "Renderer": {
-            "_type": "component",
-            "component_id": "4bb62020-1a97-4902-870f-c5f54e23a835",
-            "go": "8bcae256-9508-4369-a734-976140d92e47",
-            "component_type": "ModelRenderer"
-          }
-        }
-      ],
-      "Children": []
-    },
-    {
       "__guid": "6f14ae76-7417-42c0-8c62-178eb3148baa",
       "__version": 2,
       "Flags": 0,
@@ -1393,8 +1302,7 @@
   "Description": null,
   "__references": [
     "facepunch.metal_board_01c#9577",
-    "facepunch.wooden_door_01d#143453",
-    "semxy.cactus01#23876"
+    "facepunch.wooden_door_01d#143453"
   ],
   "__version": 3
 }

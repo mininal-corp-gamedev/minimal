@@ -99,9 +99,9 @@ public class MoneyPrinterBase : Component, Component.IPressable, Component.IDama
     {
         if ( !Renderer.IsValid() ) return;
 
-        if      ( !IsWorking              ) Renderer.Tint = Color.Gray;
-        else if ( StoredMoney >= MaxMoney ) Renderer.Tint = new Color( 1f, 0.5f, 0f );
-        else                               Renderer.Tint = new Color( 0.2f, 0.85f, 0.3f );
+        //if      ( !IsWorking              ) Renderer.Tint = Color.Gray;
+        //else if ( StoredMoney >= MaxMoney ) Renderer.Tint = new Color( 1f, 0.5f, 0f );
+        //else                               Renderer.Tint = new Color( 0.2f, 0.85f, 0.3f );
     }
 
     protected void RefreshVisual() => RpcRefreshVisual();

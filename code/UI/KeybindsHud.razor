@@ -4,36 +4,47 @@
 @namespace Sandbox
 
 <root>
-	<div class="keybinds-panel">
-		<div class="keybind-row">
-			<div class="key-badge">TAB</div>
-			<div class="separator">—</div>
-			<div class="key-label">MENU</div>
+	@if ( IsOpen )
+	{
+		<div class="keybinds-panel">
+			<div class="keybind-row">
+				<div class="key-badge">TAB</div>
+				<div class="separator">—</div>
+				<div class="key-label">MENU</div>
+			</div>
+			<div class="keybind-row">
+				<div class="key-badge">Q</div>
+				<div class="separator">—</div>
+				<div class="key-label">PROPS</div>
+			</div>
+			<div class="keybind-row">
+				<div class="key-badge">I</div>
+				<div class="separator">—</div>
+				<div class="key-label">INVENTORY</div>
+			</div>
+			<div class="keybind-row">
+				<div class="key-badge">C</div>
+				<div class="separator">—</div>
+				<div class="key-label">CONTEXT</div>
+			</div>
+			<div class="keybind-row">
+				<div class="key-badge">X</div>
+				<div class="separator">—</div>
+				<div class="key-label">HIDE KEYBINDS</div>
+			</div>
 		</div>
-		<div class="keybind-row">
-			<div class="key-badge">Q</div>
-			<div class="separator">—</div>
-			<div class="key-label">PROPS</div>
-		</div>
-		<div class="keybind-row">
-			<div class="key-badge">I</div>
-			<div class="separator">—</div>
-			<div class="key-label">INVENTORY</div>
-		</div>
-		<div class="keybind-row">
-			<div class="key-badge">C</div>
-			<div class="separator">—</div>
-			<div class="key-label">CONTEXT</div>
-		</div>
-		<div class="keybind-row">
-			<div class="key-badge">X</div>
-			<div class="separator">—</div>
-			<div class="key-label">HIDE KEYBINDS</div>
-		</div>
-	</div>
+	}
 </root>
 
 @code
 {
-	protected override int BuildHash() => System.HashCode.Combine( 0 );
+	bool IsOpen { get; set; } = true;
+
+	protected override void OnUpdate()
+	{
+		if ( Input.Pressed( "HideKeybinds" ) )
+			IsOpen = !IsOpen;
+	}
+
+	protected override int BuildHash() => System.HashCode.Combine( IsOpen );
 }

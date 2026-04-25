@@ -320,6 +320,34 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null
+        },
+        {
+          "__type": "ColorSlotScreen",
+          "__guid": "0c6d6c53-a5ba-41a2-8919-e9a0f8109815",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "ScreenPanelObject": {
+            "_type": "gameobject",
+            "go": "a57770b7-b128-43f8-9126-3221af2a8b8c"
+          }
+        },
+        {
+          "__type": "Sandbox.Casino.ColorSlotPanel",
+          "__guid": "d834eefd-9bf8-45c2-a260-977229fa678e",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
         }
       ],
       "Children": []
@@ -1263,6 +1291,91 @@
         "bfa2be84-9889-46b5-9148-3bdfc6672343": "159ef3f2-0de4-4a81-bb54-4d97d160c1ee",
         "bd59b4f6-bafc-4f27-a64c-7eecce459f7f": "571c7a2a-3bbf-485d-80fd-60c9d0092025"
       }
+    },
+    {
+      "__guid": "a57770b7-b128-43f8-9126-3221af2a8b8c",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Cube",
+      "Position": "-1641.63098,5475.854,73.5876923",
+      "Rotation": "-0.0435357913,0.038978897,0.743748605,0.665900409",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "da6da61d-0a4d-4739-9b0e-88ce02637eca",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/dev/box.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.BoxCollider",
+          "__guid": "f88b58e2-83ac-4f33-b66d-076c76180fbc",
+          "__enabled": true,
+          "Flags": 0,
+          "Center": "0,0,0",
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Scale": "50,50,50",
+          "Static": false,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "ColorSlot",
+          "__guid": "cda583e1-25b4-4d85-813c-e7d37f131056",
+          "__enabled": true,
+          "Flags": 0,
+          "BetAmount": 50,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {

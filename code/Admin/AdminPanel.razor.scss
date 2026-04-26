@@ -1,20 +1,254 @@
-AdminPanel
-{
+$panel-bg: rgba(5, 8, 20, 1);
+$sidebar-bg: rgba(3, 5, 14, 1);
+$accent: #82d97a;
+$text: rgba(255, 255, 255, 0.92);
+$text-dim: rgba(255, 255, 255, 0.62);
+
+AdminPanel {
 	position: absolute;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: #444;
-	justify-content: center;
-	align-items: center;
-	font-weight: bold;
-	border-radius: 20px;
 
-	.title
-	{
-		font-size: 25px;
+	.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.76);
+		justify-content: center;
+		align-items: center;
+		pointer-events: all;
+		backdrop-filter: blur(12px);
+	}
+
+	.admin-panel {
+		width: 1320px;
+		height: 760px;
+		background-color: $panel-bg;
+		border-radius: 14px;
+		box-shadow: 0 10px 48px rgba(0, 0, 0, 0.8);
+		flex-direction: row;
+	}
+
+	.sidebar {
+		width: 240px;
+		flex-shrink: 0;
+		background-color: $sidebar-bg;
+		border-radius: 14px 0 0 14px;
+		flex-direction: column;
+	}
+
+	.sidebar-profile {
+		flex-shrink: 0;
+		flex-direction: column;
+		padding: 22px 18px 18px;
+		background-color: rgba(1, 2, 8, 1);
+		border-radius: 14px 0 0 0;
+	}
+
+	.sb-name {
 		font-family: Poppins;
-		color: #fff;
+		font-size: 15px;
+		font-weight: 700;
+		color: $text;
+		margin-bottom: 6px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.sb-rank {
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 600;
+		color: $accent;
+	}
+
+	.sidebar-nav {
+		flex-direction: column;
+		flex-shrink: 0;
+		padding-top: 6px;
+		overflow-y: scroll;
+	}
+
+	.tab-btn {
+		height: 46px;
+		width: 240px;
+		flex-shrink: 0;
+		background-color: transparent;
+		font-family: Poppins;
+		font-size: 15px;
+		font-weight: 700;
+		color: $accent;
+		padding-left: 24px;
+		padding-right: 16px;
+		justify-content: flex-start;
+		align-items: center;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.05);
+		}
+
+		&.active {
+			background-color: rgba(130, 217, 122, 0.12);
+			color: $accent;
+		}
+	}
+
+	.content-area {
+		flex-grow: 1;
+		flex-direction: column;
+		padding: 38px 44px;
+		overflow-y: scroll;
+	}
+
+	.page {
+		flex-grow: 1;
+		flex-direction: column;
+	}
+
+	.page-title {
+		font-family: Poppins;
+		font-size: 28px;
+		font-weight: 700;
+		color: $text;
+		margin-bottom: 8px;
+	}
+
+	.page-subtitle,
+	.page-placeholder {
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 500;
+		color: $text-dim;
+		margin-bottom: 24px;
+	}
+
+	.field-label {
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.72);
+		margin-bottom: 8px;
+	}
+
+	.admin-input {
+		height: 44px;
+		width: 520px;
+		flex-shrink: 0;
+		background-color: rgba(255, 255, 255, 0.07);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 6px;
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 600;
+		color: $text;
+		padding: 0 14px;
+		margin-bottom: 18px;
+	}
+
+	.player-list {
+		width: 720px;
+		max-height: 300px;
+		flex-direction: column;
+		margin-bottom: 22px;
+		overflow-y: scroll;
+	}
+
+	.player-row {
+		height: 58px;
+		width: 720px;
+		flex-shrink: 0;
+		flex-direction: row;
+		align-items: center;
+		background-color: transparent;
+		border-radius: 6px;
+		padding: 8px 12px;
+		margin-bottom: 4px;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.05);
+		}
+
+		&.active {
+			background-color: rgba(130, 217, 122, 0.12);
+			border: 1px solid rgba(130, 217, 122, 0.55);
+			border-left: 4px solid $accent;
+		}
+	}
+
+	.player-avatar {
+		width: 40px;
+		height: 40px;
+		border-radius: 999px;
+		flex-shrink: 0;
+		margin-right: 14px;
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center;
+		background-color: rgba(255, 255, 255, 0.08);
+	}
+
+	.player-main {
+		flex-grow: 1;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.player-name {
+		font-family: Poppins;
+		font-size: 15px;
+		font-weight: 700;
+		color: $text;
+	}
+
+	.player-steamid {
+		font-family: Poppins;
+		font-size: 11px;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.4);
+		margin-top: 2px;
+	}
+
+	.player-ping {
+		flex-shrink: 0;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.45);
+		margin-left: 16px;
+	}
+
+	.player-selected {
+		flex-shrink: 0;
+		font-family: Poppins;
+		font-size: 11px;
+		font-weight: 800;
+		color: $accent;
+		background-color: rgba(130, 217, 122, 0.14);
+		border-radius: 4px;
+		padding: 4px 8px;
+		margin-left: 12px;
+	}
+
+	.execute-btn {
+		height: 48px;
+		width: 180px;
+		flex-shrink: 0;
+		background-color: rgba(130, 217, 122, 0.18);
+		border-radius: 6px;
+		font-family: Poppins;
+		font-size: 15px;
+		font-weight: 800;
+		color: $accent;
+		justify-content: center;
+		align-items: center;
+
+		&:hover {
+			background-color: rgba(130, 217, 122, 0.28);
+		}
 	}
 }

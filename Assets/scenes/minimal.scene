@@ -188,6 +188,37 @@
       "Children": []
     },
     {
+      "__guid": "f9420057-4657-4d1d-8e40-e80c60c608a1",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Admin Manager",
+      "Position": "382.436737,-504.215576,291.346497",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "AdminManager",
+          "__guid": "daaa77be-5881-456a-a21b-2703b9a1bab9",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        }
+      ],
+      "Children": []
+    },
+    {
       "__guid": "18c2e5a5-2bea-4290-acac-1941f5497d9a",
       "__version": 2,
       "Flags": 0,
@@ -389,10 +420,9 @@
         },
         {
           "__type": "Sandbox.AdminPanel",
-          "__guid": "a12ea1cc-c9ee-4c06-92d3-96bc659b35a5",
+          "__guid": "d5577dc2-244e-4771-b8b1-cbb52c3ee838",
           "__enabled": true,
           "Flags": 0,
-          "MyStringValue": "Hello World!",
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,

@@ -21,6 +21,7 @@ public sealed class Player : Component, Component.IDamageable
     [Sync(SyncFlags.FromHost)] public float Health { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public float MaxHealth { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public int Money { get; set; } = 0;
+    [Sync(SyncFlags.FromHost)] public int AdminRank { get; set; } = 0;
 
     /// <summary>
     /// Number of doors currently owned (gameplay-wise) by this player.
@@ -64,6 +65,18 @@ public sealed class Player : Component, Component.IDamageable
     {
         if (IsProxy) return;
 
+        SpawnInternal();
+    }
+
+    public void AdminRespawn()
+    {
+        if (!Networking.IsHost) return;
+
+        SpawnInternal();
+    }
+
+    private void SpawnInternal()
+    {
         var spawnPoint = SpawnManager.Instance?.GetRandomPlayerSpawn();
         if (!spawnPoint.IsValid()) return;
 
@@ -337,6 +350,7 @@ public sealed class Player : Component, Component.IDamageable
         SetupWorldHud();
         DressForHost(Dresser);
         GiveStartingItems();
+        AdminManager.RpcRequestRankInit();
     }
 
     private void MakeLocalInstance()

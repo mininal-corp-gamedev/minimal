@@ -1,19 +1,275 @@
-@using Sandbox;
-@using Sandbox.UI;
+@using Sandbox
+@using Sandbox.UI
+@using System
+@using System.Collections.Generic
+@using System.Linq
 @inherits PanelComponent
 @namespace Sandbox
 
 <root>
-	<div class="title">@MyStringValue</div>
+	@if ( IsOpen )
+	{
+		<div class="overlay">
+			<div class="admin-panel" @ref="FocusSinkRef">
+				<div class="sidebar">
+					<div class="sidebar-profile">
+						<div class="sb-name">@(Connection.Local?.DisplayName ?? "-")</div>
+						<div class="sb-rank">Rank @(CurrentRank): @AdminManager.GetRankName( CurrentRank )</div>
+					</div>
+
+					<div class="sidebar-nav">
+						@foreach ( var ability in VisibleAbilities )
+						{
+							<button class="tab-btn @(ActiveAbility == ability.Id ? "active" : "")" onclick=@(() => SelectAbility( ability.Id ))>@ability.Title</button>
+						}
+					</div>
+				</div>
+
+				<div class="content-area">
+					@if ( ActiveDefinition is null )
+					{
+						<div class="page">
+							<div class="page-title">Admin</div>
+							<div class="page-placeholder">No abilities available for your rank.</div>
+						</div>
+					}
+					else
+					{
+						<div class="page">
+							<div class="page-title">@ActiveDefinition.Title</div>
+							<div class="page-subtitle">@ActiveDefinition.Description</div>
+
+							@if ( ActiveDefinition.NeedsOnlinePlayer )
+							{
+								<div class="field-label">Online player</div>
+								<div class="player-list">
+									@foreach ( var conn in CachedPlayers )
+									{
+										<button class="player-row @(SelectedSteamId == conn.SteamId.Value ? "active" : "")" onclick=@(() => SelectPlayer( conn.SteamId.Value ))>
+											<div class="player-avatar" style="background-image: url( avatar:@conn.SteamId.Value )"></div>
+											<div class="player-main">
+												<div class="player-name">@conn.DisplayName</div>
+												<div class="player-steamid">@conn.SteamId.Value</div>
+											</div>
+											@if ( SelectedSteamId == conn.SteamId.Value )
+											{
+												<div class="player-selected">SELECTED</div>
+											}
+											<div class="player-ping">@conn.Ping ms</div>
+										</button>
+									}
+								</div>
+							}
+
+							@if ( ActiveDefinition.NeedsSteamIdInput )
+							{
+								<div class="field-label">SteamId</div>
+								<TextEntry class="admin-input" Value:bind="@SteamIdInput" Placeholder="SteamId" onsubmit="@SubmitActiveAbility"></TextEntry>
+							}
+
+							@if ( ActiveDefinition.NeedsValue )
+							{
+								<div class="field-label">@ActiveDefinition.ValueLabel</div>
+								<TextEntry class="admin-input" Value:bind="@ValueInput" Placeholder="@ActiveDefinition.ValuePlaceholder" onsubmit="@SubmitActiveAbility"></TextEntry>
+							}
+
+							@if ( ActiveDefinition.NeedsReason )
+							{
+								<div class="field-label">Reason</div>
+								<TextEntry class="admin-input" Value:bind="@ReasonInput" Placeholder="Reason" onsubmit="@SubmitActiveAbility"></TextEntry>
+							}
+
+							<button class="execute-btn" onclick=@(() => SubmitActiveAbility())>Execute</button>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
 </root>
 
 @code
 {
+	private readonly List<AdminAbilityDefinition> Abilities = new()
+	{
+		new( "kick", "Kick", "Kick an online player from the server.", 1, true, false, false, true, "", "" ),
+		new( "ban", "Ban", "Ban a SteamId permanently.", 2, false, true, false, true, "", "" ),
+		new( "unban", "Unban", "Remove a SteamId from the ban list.", 2, false, true, false, false, "", "" ),
+		new( "spawn", "Spawn", "Respawn an online player.", 1, true, false, false, false, "", "" ),
+		new( "setmoney", "Set Money", "Set money for an online player.", 2, true, false, true, false, "Money", "Value" ),
+		new( "sethp", "Set HP", "Set health for an online player.", 2, true, false, true, false, "Health", "Value" ),
+		new( "setjob", "Set Job", "Set job for an online player by job id.", 2, true, false, true, false, "Job ID", "citizen" ),
+		new( "selldoor", "Sell Door", "Force-sell the door you are looking at.", 1, false, false, false, false, "", "" ),
+		new( "goto", "Goto", "Teleport yourself to an online player.", 1, true, false, false, false, "", "" ),
+		new( "tp", "TP", "Teleport an online player to you.", 1, true, false, false, false, "", "" ),
+		new( "return", "Return", "Return a teleported player to the saved position.", 1, true, false, false, false, "", "" ),
+		new( "giverank", "Give Rank", "Give an admin rank to a SteamId.", 3, false, true, true, false, "Rank", "0-3" )
+	};
 
-	[Property, TextArea] public string MyStringValue { get; set; } = "Hello World!";
+	private bool IsOpen { get; set; }
+	private string ActiveAbility { get; set; } = "";
+	private List<Connection> CachedPlayers { get; set; } = new();
+	private long SelectedSteamId { get; set; }
+	private string SteamIdInput { get; set; } = "";
+	private string ValueInput { get; set; } = "";
+	private string ReasonInput { get; set; } = "";
+	private int PlayersVersion { get; set; }
+	private Panel FocusSinkRef { get; set; }
 
-	/// <summary>
-	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
-	/// </summary>
-	protected override int BuildHash() => System.HashCode.Combine( MyStringValue );
+	private int CurrentRank => Player.Local?.AdminRank ?? 0;
+	private IEnumerable<AdminAbilityDefinition> VisibleAbilities => Abilities.Where( x => CurrentRank >= x.RequiredRank );
+	private AdminAbilityDefinition ActiveDefinition => Abilities.FirstOrDefault( x => x.Id == ActiveAbility && CurrentRank >= x.RequiredRank );
+
+	private void SelectAbility( string id )
+	{
+		ActiveAbility = id;
+		ClearFormState();
+		RefreshPlayers();
+		ClearTextFocus();
+	}
+
+	private void SelectPlayer( long steamId )
+	{
+		ClearTextFocus();
+		SelectedSteamId = steamId;
+		SteamIdInput = steamId.ToString();
+	}
+
+	private void RefreshPlayers()
+	{
+		CachedPlayers = Connection.All.ToList();
+		PlayersVersion++;
+	}
+
+	private void ClearFormState()
+	{
+		SelectedSteamId = 0;
+		SteamIdInput = "";
+		ValueInput = "";
+		ReasonInput = "";
+	}
+
+	private void ClearTextFocus()
+	{
+		FocusSinkRef?.Focus();
+	}
+
+	private long GetTargetSteamId()
+	{
+		if ( ActiveDefinition?.NeedsOnlinePlayer == true )
+			return SelectedSteamId;
+
+		if ( long.TryParse( (SteamIdInput ?? "").Trim(), out var steamId ) && steamId > 0 )
+			return steamId;
+
+		return 0;
+	}
+
+	private void SubmitActiveAbility()
+	{
+		ClearTextFocus();
+
+		var ability = ActiveDefinition;
+		if ( ability is null )
+			return;
+
+		var steamId = GetTargetSteamId();
+		if ( (ability.NeedsOnlinePlayer || ability.NeedsSteamIdInput) && steamId == 0 )
+		{
+			Notification.Error( "Invalid SteamId.", 3f );
+			return;
+		}
+
+		switch ( ability.Id )
+		{
+			case "kick":
+				AdminManager.RpcRequestKick( steamId, ReasonInput );
+				break;
+			case "ban":
+				AdminManager.RpcRequestBan( steamId, ReasonInput );
+				break;
+			case "unban":
+				AdminManager.RpcRequestUnban( steamId );
+				break;
+			case "spawn":
+				AdminManager.RpcRequestSpawn( steamId );
+				break;
+			case "setmoney":
+				if ( int.TryParse( ValueInput, out var money ) ) AdminManager.RpcRequestSetMoney( steamId, money );
+				else Notification.Error( "Invalid money value.", 3f );
+				break;
+			case "sethp":
+				if ( float.TryParse( ValueInput, out var hp ) ) AdminManager.RpcRequestSetHp( steamId, hp );
+				else Notification.Error( "Invalid hp value.", 3f );
+				break;
+			case "setjob":
+				AdminManager.RpcRequestSetJob( steamId, ValueInput );
+				break;
+			case "selldoor":
+				SendSellDoorRequest();
+				break;
+			case "goto":
+				AdminManager.RpcRequestGoto( steamId );
+				break;
+			case "tp":
+				AdminManager.RpcRequestTp( steamId );
+				break;
+			case "return":
+				AdminManager.RpcRequestReturn( steamId );
+				break;
+			case "giverank":
+				if ( int.TryParse( ValueInput, out var rank ) ) AdminManager.RpcRequestGiveRank( steamId, rank );
+				else Notification.Error( "Invalid rank value.", 3f );
+				break;
+		}
+	}
+
+	private void SendSellDoorRequest()
+	{
+		var controller = Player.Local?.Controller;
+		if ( controller.IsValid() )
+		{
+			var eye = controller.EyeTransform;
+			AdminManager.RpcRequestSellDoorAt( eye.Position, eye.Forward );
+			return;
+		}
+
+		AdminManager.RpcRequestSellDoor();
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( Input.Pressed( "AdminPanel" ) )
+		{
+			IsOpen = !IsOpen;
+			if ( IsOpen )
+			{
+				ClearFormState();
+				RefreshPlayers();
+				if ( string.IsNullOrEmpty( ActiveAbility ) || ActiveDefinition is null )
+					ActiveAbility = VisibleAbilities.FirstOrDefault()?.Id ?? "";
+			}
+		}
+
+#pragma warning disable CS0612
+		Mouse.Visible = IsOpen;
+#pragma warning restore CS0612
+	}
+
+	protected override int BuildHash()
+	{
+		var fieldsHash = HashCode.Combine(
+			SteamIdInput,
+			ValueInput,
+			ReasonInput,
+			PlayersVersion,
+			CachedPlayers.Count );
+
+		return HashCode.Combine(
+			IsOpen,
+			ActiveAbility,
+			CurrentRank,
+			SelectedSteamId,
+			fieldsHash );
+	}
 }

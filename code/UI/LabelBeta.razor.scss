@@ -1,0 +1,36 @@
+LabelBeta {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 20px;
+    pointer-events: none;
+
+    .badge {
+        background-color: rgba(0, 0, 0, 0.82);
+        border-left: 3px solid #f0a800;
+        border-radius: 4px;
+        padding: 8px 14px;
+        flex-direction: column;
+    }
+
+    .title {
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 4px;
+        color: #f0a800;
+        font-family: "Roboto Mono", monospace;
+    }
+
+    .sub {
+        font-size: 13px;
+        color: rgb(255, 255, 255);
+        margin-top: 3px;
+        letter-spacing: 0.5px;
+        font-family: "Roboto Mono", monospace;
+    }
+}

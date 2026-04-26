@@ -386,6 +386,19 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null
+        },
+        {
+          "__type": "Sandbox.AdminPanel",
+          "__guid": "a12ea1cc-c9ee-4c06-92d3-96bc659b35a5",
+          "__enabled": true,
+          "Flags": 0,
+          "MyStringValue": "Hello World!",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
         }
       ],
       "Children": []
@@ -829,14 +842,6 @@
             },
             "Property": "Position",
             "Value": "319.321075,-316.813721,42.3376999"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "DoorSecond",
-            "Value": null
           }
         ],
         "MovedObjects": []
@@ -867,32 +872,8 @@
               "Type": "GameObject",
               "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
             },
-            "Property": "Name",
-            "Value": "door (1)"
-          },
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
-            },
             "Property": "Position",
             "Value": "413.351807,-316.813721,42.3376999"
-          },
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
-            },
-            "Property": "Rotation",
-            "Value": "0,-0,-0.707106769,0.707106769"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "DoorSecond",
-            "Value": null
           }
         ],
         "MovedObjects": []

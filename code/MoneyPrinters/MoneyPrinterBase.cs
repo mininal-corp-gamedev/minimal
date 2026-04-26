@@ -132,12 +132,6 @@ public class MoneyPrinterBase : Component, Component.IPressable, Component.IDama
     {
         Log.Info( $"{PrinterName}: Press called" );
 
-        if ( StoredMoney <= 0 )
-        {
-            Log.Info( $"{PrinterName}: no money stored yet" );
-            return false;
-        }
-
         var go = e.Source.GameObject;
 
         if ( !go.Components.TryGet<Player>( out var ply, FindMode.EverythingInSelfAndParent ) )
@@ -152,9 +146,11 @@ public class MoneyPrinterBase : Component, Component.IPressable, Component.IDama
             return false;
         }
 
+        // StoredMoney is host-authoritative. Clients can have stale sync state,
+        // so always let the host validate whether there is anything to collect.
         RpcOnTakeMoney( GameObject );
         return true;
-        }
+    }
 
     // ─────────────────────────────────────────────
     //  RPC Host — авторитетная выдача денег
@@ -180,7 +176,7 @@ public class MoneyPrinterBase : Component, Component.IPressable, Component.IDama
             if ( !go.Components.TryGet<Player>( out var candidate ) ) 
                 continue;
 
-            if ( candidate.GameObject.Network.Owner.SteamId == Rpc.Caller.SteamId )
+            if ( candidate.GameObject.Network.Owner?.SteamId == Rpc.Caller.SteamId )
             {
                 ply = candidate;
                 break;

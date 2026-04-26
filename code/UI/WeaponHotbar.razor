@@ -1,43 +1,70 @@
 @using Sandbox;
 @using Sandbox.UI;
+@using Ambi.Storage;
 @inherits PanelComponent
 @namespace Sandbox
 
 <root>
 	<div class="hotbar">
-		<div class="slot @SlotClass(0)">
-			<div class="slot-icon pickaxe"></div>
-		</div>
-		<div class="slot @SlotClass(1)">
-			<div class="slot-icon usp"></div>
-		</div>
-		<div class="slot @SlotClass(2)">
-			<div class="slot-icon mp5"></div>
-		</div>
-		<div class="slot @SlotClass(3)">
-			<div class="slot-icon m4a1"></div>
-		</div>
+		@for ( int i = 0; i < HotbarCount; i++ )
+		{
+			var slot = GetSlot( i );
+			<div class="slot @SlotClass( i ) @(slot is not null && !slot.IsEmpty ? "has-item" : "")">
+				<div class="slot-key">@(i + 1)</div>
+				@if ( slot is not null && !slot.IsEmpty )
+				{
+					<div class="slot-icon" style="background-image: url(@slot.Item.Definition.IconPath);"></div>
+					@if ( slot.Item.Count > 1 )
+					{
+						<div class="slot-count">@slot.Item.Count</div>
+					}
+				}
+			</div>
+		}
 	</div>
 </root>
 
 @code
 {
+	const int HotbarCount = 6;
+
 	int ActiveSlot
 	{
 		get
 		{
-			var wep = Player.Local?.CurrentWeapon;
-			var wm = WeaponManager.Instance;
-			if ( wep == null || wm == null ) return -1;
-			if ( wep == wm.Pickaxe ) return 0;
-			if ( wep == wm.Usp ) return 1;
-			if ( wep == wm.Mp5 ) return 2;
-			if ( wep == wm.M4A1 ) return 3;
-			return -1;
+			var player = Player.Local;
+			if ( player == null || !player.CurrentWeapon.IsValid() ) return -1;
+			var index = player.CurrentInventorySlotIndex;
+			return index >= 0 && index < HotbarCount ? index : -1;
 		}
+	}
+
+	Inventory Inv => Player.Local?.Inventory;
+
+	Slot GetSlot( int index )
+	{
+		if ( Inv is null ) return null;
+		if ( index < 0 || index >= Inv.Slots.Count ) return null;
+		return Inv.Slots[index];
 	}
 
 	string SlotClass( int index ) => ActiveSlot == index ? "active" : "";
 
-	protected override int BuildHash() => System.HashCode.Combine( Player.Local?.CurrentWeapon?.GetHashCode() ?? 0 );
+	protected override int BuildHash()
+	{
+		var hash = System.HashCode.Combine(
+			Player.Local?.CurrentWeapon?.GetHashCode() ?? 0,
+			Player.Local?.CurrentInventorySlotIndex ?? -1 );
+
+		if ( Inv is not null )
+		{
+			for ( int i = 0; i < HotbarCount && i < Inv.Slots.Count; i++ )
+			{
+				var slot = Inv.Slots[i];
+				hash = System.HashCode.Combine( hash, slot.Item?.Id, slot.Item?.Count ?? 0 );
+			}
+		}
+
+		return hash;
+	}
 }

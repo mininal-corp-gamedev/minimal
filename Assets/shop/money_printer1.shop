@@ -1,0 +1,14 @@
+{
+  "Header": "Money Printer",
+  "Category": "Other",
+  "Description": "",
+  "ItemDefinition": null,
+  "Price": 10,
+  "IconPath": "icons/items/default.vtex",
+  "Model": null,
+  "IsAllowEveryone": true,
+  "JobsAllow": [],
+  "HasPostSpawned": false,
+  "__references": [],
+  "__version": 0
+}

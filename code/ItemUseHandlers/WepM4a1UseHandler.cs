@@ -1,12 +1,18 @@
 ﻿using Ambi.Storage;
 
+using Sandbox;
+
 namespace Megashot.ItemUseHandlers;
 
 public sealed class WepM4a1UseHandler : IItemUseHandler
 {
     public bool Use(Item item, Player caller)
     {
-        caller.SwitchWeapon(WeaponManager.Instance.M4A1);
+        var weapon = WeaponManager.Instance?.M4A1;
+        if (!weapon.IsValid())
+            return false;
+
+        caller.SwitchWeapon(weapon);
 
         return true;
     }

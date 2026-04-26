@@ -1,8 +1,7 @@
 using Ambi.Storage;
+using Megashot.ItemUseHandlers;
 using Sandbox;
 using System;
-using System.Runtime.CompilerServices;
-using static Sandbox.Gizmo;
 
 public sealed class Player : Component, Component.IDamageable
 {
@@ -24,8 +23,12 @@ public sealed class Player : Component, Component.IDamageable
     public Inventory Inventory { get; set; } = new(10);
 
     public Weapon CurrentWeapon { get; private set; }
+    public int CurrentInventorySlotIndex { get; private set; } = -1;
+    public string CurrentWeaponItemId { get; private set; }
 
     public bool IsLocalPlayer => !IsProxy;
+
+    private static bool _itemUseHandlersRegistered;
 
     public void Spawn()
     {
@@ -82,6 +85,12 @@ public sealed class Player : Component, Component.IDamageable
         renderer.Set("hit", true);
     }
 
+    [Rpc.Broadcast]
+    private void RpcSetHoldType(SkinnedModelRenderer renderer, int holdType)
+    {
+        renderer?.Set("holdtype", holdType);
+    }
+
     [Rpc.Owner]
     private void RpcTakeDamageFromWeapon(float damage, GameObject attacker)
     {
@@ -109,8 +118,6 @@ public sealed class Player : Component, Component.IDamageable
     {
         if (IsProxy) return;
 
-        Log.Info(WeaponManager.Instance.Usp.IsValid());
-
         if (CurrentWeapon.IsValid() && wep == CurrentWeapon) return;
 
         CurrentWeapon?.GameObject.Enabled = false;
@@ -118,38 +125,108 @@ public sealed class Player : Component, Component.IDamageable
         if (!wep.IsValid())
         {
             CurrentWeapon = null;
+            CurrentInventorySlotIndex = -1;
+            CurrentWeaponItemId = null;
+            RpcSetHoldType(Renderer, 0);
 
             return;
         }
 
         CurrentWeapon = wep;
         CurrentWeapon.GameObject.Enabled = true;
+        RpcSetHoldType(Renderer, (int)CurrentWeapon.HoldType);
     }
 
-    private void CheckChangeWeapon()
+    public bool UseInventorySlot(int slotIndex)
+    {
+        if (IsProxy) return false;
+        if (Inventory == null) return false;
+        if (slotIndex < 0 || slotIndex >= Inventory.Slots.Count) return false;
+
+        var slot = Inventory.Slots[slotIndex];
+        if (slot.IsEmpty || slot.Item == null)
+        {
+            if (CurrentWeapon.IsValid())
+            {
+                SwitchWeapon();
+                return true;
+            }
+
+            return false;
+        }
+
+        if (!slot.Item.Definition.CanUse) return false;
+
+        var itemId = slot.Item.Id;
+        var isWeapon = IsWeaponItem(slot.Item);
+        var successful = Inventory.TryUseItem(slot, this);
+
+        if (successful && isWeapon)
+        {
+            CurrentInventorySlotIndex = slotIndex;
+            CurrentWeaponItemId = itemId;
+        }
+
+        ValidateCurrentWeaponInventoryState();
+
+        return successful;
+    }
+
+    private static bool IsWeaponItem(Item item)
+    {
+        var category = item?.Definition?.Category;
+        return string.Equals(category, "weapon", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(category, "weapons", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private void CheckUseHotbarSlots()
     {
         if (IsProxy) return;
 
         if (Input.Pressed("Slot1"))
-            SwitchWeapon(WeaponManager.Instance.Pickaxe);
+            UseInventorySlot(0);
         else if (Input.Pressed("Slot2"))
-            SwitchWeapon(WeaponManager.Instance.Usp);
+            UseInventorySlot(1);
         else if (Input.Pressed("Slot3"))
-            SwitchWeapon(WeaponManager.Instance.Mp5);
+            UseInventorySlot(2);
         else if (Input.Pressed("Slot4"))
-            SwitchWeapon(WeaponManager.Instance.M4A1);
+            UseInventorySlot(3);
         else if (Input.Pressed("Slot5"))
-            SwitchWeapon();
+            UseInventorySlot(4);
         else if (Input.Pressed("Slot6"))
-            SwitchWeapon();
-        else if (Input.Pressed("Slot7"))
-            SwitchWeapon();
-        else if (Input.Pressed("Slot8"))
-            SwitchWeapon();
-        else if (Input.Pressed("Slot9"))
-            SwitchWeapon();
-        else if (Input.Pressed("Slot0"))
-            SwitchWeapon();
+            UseInventorySlot(5);
+    }
+
+    private void ValidateCurrentWeaponInventoryState()
+    {
+        if (CurrentWeaponItemId == null)
+            return;
+
+        var matchingSlotIndex = FindInventorySlotIndex(CurrentWeaponItemId);
+        if (matchingSlotIndex >= 0)
+        {
+            CurrentInventorySlotIndex = matchingSlotIndex;
+            return;
+        }
+
+        CurrentInventorySlotIndex = -1;
+        CurrentWeaponItemId = null;
+        SwitchWeapon();
+    }
+
+    private int FindInventorySlotIndex(string itemId)
+    {
+        if (Inventory == null)
+            return -1;
+
+        for (int i = 0; i < Inventory.Slots.Count; i++)
+        {
+            var slot = Inventory.Slots[i];
+            if (!slot.IsEmpty && slot.Item.Id == itemId)
+                return i;
+        }
+
+        return -1;
     }
 
     public void DropItem(Slot slot, int count = 1)
@@ -177,6 +254,7 @@ public sealed class Player : Component, Component.IDamageable
         }
 
         Inventory.RemoveItem(slot, count);
+        ValidateCurrentWeaponInventoryState();
 
         Notification.Make($"Relic dropped: {item.Definition.Header}", 10f);
     }
@@ -197,15 +275,33 @@ public sealed class Player : Component, Component.IDamageable
 
     private void GiveStartingItems()
     {
+        Inventory.AddItem( Item.Create( "usp", 1 ) ); // TODO: Remove starter USP after testing inventory weapon flow.
         Inventory.AddItem( Item.Create( "ammo_usp", 15 ) );
         Inventory.AddItem( Item.Create( "ammo_mp5", 20 ) );
         Inventory.AddItem( Item.Create( "ammo_m4a1", 10 ) );
+    }
+
+    private static void RegisterItemUseHandlers()
+    {
+        if (_itemUseHandlersRegistered)
+            return;
+
+        ItemUseRegistry.Register("usp", new WepUspUseHandler());
+        ItemUseRegistry.Register("mp5", new WepMp5UseHandler());
+        ItemUseRegistry.Register("m4a1", new WepM4a1UseHandler());
+        ItemUseRegistry.Register("ammo_usp", new AmmoUseHandler(new[] { "usp" }, 12, () => new[] { WeaponManager.Instance?.Usp }));
+        ItemUseRegistry.Register("ammo_mp5", new AmmoUseHandler(new[] { "mp5" }, 30, () => new[] { WeaponManager.Instance?.Mp5 }));
+        ItemUseRegistry.Register("ammo_m4a1", new AmmoUseHandler(new[] { "m4a1" }, 30, () => new[] { WeaponManager.Instance?.M4A1 }));
+
+        _itemUseHandlersRegistered = true;
     }
 
     private void NetworkInit()
     {
         if (IsProxy) return;
 
+        RegisterItemUseHandlers();
+        Inventory.OnChanged += ValidateCurrentWeaponInventoryState;
         Job?.AssignDefault();
         Spawn();
         SetupWorldHud();
@@ -233,11 +329,14 @@ public sealed class Player : Component, Component.IDamageable
 
     protected override void OnFixedUpdate()
     {
-        CheckChangeWeapon();
+        CheckUseHotbarSlots();
     }
 
     protected override void OnDestroy()
     {
+        if (Inventory != null)
+            Inventory.OnChanged -= ValidateCurrentWeaponInventoryState;
+
         DestroyLocalInstance();
     }
 

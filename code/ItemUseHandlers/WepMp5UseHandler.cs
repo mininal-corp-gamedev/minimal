@@ -1,5 +1,7 @@
 ﻿using Ambi.Storage;
 
+using Sandbox;
+
 namespace Megashot.ItemUseHandlers;
 
 public sealed class WepMp5UseHandler : IItemUseHandler
@@ -8,7 +10,11 @@ public sealed class WepMp5UseHandler : IItemUseHandler
     {
         //if (caller.CurrentWeapon == WeaponManager.Instance.Mp5) return false;
 
-        caller.SwitchWeapon(WeaponManager.Instance.Mp5);
+        var weapon = WeaponManager.Instance?.Mp5;
+        if (!weapon.IsValid())
+            return false;
+
+        caller.SwitchWeapon(weapon);
 
         return true;
     }

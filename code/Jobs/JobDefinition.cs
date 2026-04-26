@@ -1,4 +1,4 @@
-﻿[AssetType(Name = "Job Definition", Extension = "job", Category = "Role Play")]
+﻿[AssetType(Name = "Job Definition", Extension = "job", Category = "Minimal")]
 public sealed class JobDefinition : GameResource
 {
     [Property] public string Id { get; set; } = "id";

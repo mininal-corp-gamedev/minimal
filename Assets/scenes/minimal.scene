@@ -170,6 +170,24 @@
       "Children": []
     },
     {
+      "__guid": "0f92f4ae-941e-44dd-a117-fb10a4f20a9e",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Shop Manager",
+      "Position": "-1571.94922,7358.76562,509.088928",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [],
+      "Children": []
+    },
+    {
       "__guid": "18c2e5a5-2bea-4290-acac-1941f5497d9a",
       "__version": 2,
       "Flags": 0,
@@ -322,22 +340,6 @@
           "OnComponentUpdate": null
         },
         {
-          "__type": "ColorSlotScreen",
-          "__guid": "0c6d6c53-a5ba-41a2-8919-e9a0f8109815",
-          "__enabled": true,
-          "Flags": 0,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "ScreenPanelObject": {
-            "_type": "gameobject",
-            "go": "a57770b7-b128-43f8-9126-3221af2a8b8c"
-          }
-        },
-        {
           "__type": "Sandbox.Casino.ColorSlotPanel",
           "__guid": "d834eefd-9bf8-45c2-a260-977229fa678e",
           "__enabled": true,
@@ -352,6 +354,18 @@
         {
           "__type": "Sandbox.InventoryPanel",
           "__guid": "0e936a5a-d9f2-43a4-acaa-6983a4152f19",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        },
+        {
+          "__type": "ColorSlotState",
+          "__guid": "7d09c490-296a-4b1d-aeee-5eba31569447",
           "__enabled": true,
           "Flags": 0,
           "OnComponentDestroy": null,
@@ -539,44 +553,6 @@
       "Children": []
     },
     {
-      "__guid": "c13a0ccd-b355-47d2-b326-8d90a95c9aac",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "Map",
-      "Position": "0,0,0",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": false,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.MapInstance",
-          "__guid": "52de96bf-0beb-4465-a205-4e3e8362a1c3",
-          "__enabled": true,
-          "Flags": 0,
-          "__version": 1,
-          "EnableCollision": true,
-          "MapName": "maps/las sausages.vmap",
-          "NoOrigin": false,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OnMapLoaded": null,
-          "OnMapUnloaded": null,
-          "UseMapFromLaunch": false
-        }
-      ],
-      "Children": []
-    },
-    {
       "__guid": "0b04bc65-9023-485d-993a-340427f7372b",
       "__version": 2,
       "Flags": 0,
@@ -598,8 +574,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "-2298.15796,5642.09717,141.507904",
-          "Rotation": "0,0,0,1",
+          "Position": "311.215485,-542.667419,117.677299",
+          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -616,8 +592,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "-2160.42407,5664.7041,141.507904",
-          "Rotation": "0,0,0,1",
+          "Position": "311.215485,-542.667419,117.677299",
+          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -634,8 +610,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "-2479.50903,5612.33301,141.507904",
-          "Rotation": "0,0,0,1",
+          "Position": "311.215485,-542.667419,117.677299",
+          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -652,8 +628,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "-3297.77393,5642.09717,141.507904",
-          "Rotation": "0,0,0,1",
+          "Position": "311.215485,-542.667419,117.677299",
+          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -670,8 +646,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "-3160.04004,5664.7041,141.507904",
-          "Rotation": "0,0,0,1",
+          "Position": "311.215485,-542.667419,117.677299",
+          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -688,8 +664,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "-3479.125,5612.33301,141.507904",
-          "Rotation": "0,0,0,1",
+          "Position": "311.215485,-542.667419,117.677299",
+          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -706,8 +682,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "-2298.15796,6178.74512,141.507904",
-          "Rotation": "0,0,0,1",
+          "Position": "311.215485,-542.667419,117.677299",
+          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -724,8 +700,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "-2160.42407,6201.35303,141.507904",
-          "Rotation": "0,0,0,1",
+          "Position": "311.215485,-542.667419,117.677299",
+          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -742,8 +718,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "-2479.50903,6148.98096,141.507904",
-          "Rotation": "0,0,0,1",
+          "Position": "311.215485,-542.667419,117.677299",
+          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -760,8 +736,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "-3297.77393,6178.74512,141.507904",
-          "Rotation": "0,0,0,1",
+          "Position": "311.215485,-542.667419,117.677299",
+          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -778,8 +754,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "-3160.04004,6201.35303,141.507904",
-          "Rotation": "0,0,0,1",
+          "Position": "311.215485,-542.667419,117.677299",
+          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -796,8 +772,8 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "-3479.125,6148.98096,141.507904",
-          "Rotation": "0,0,0,1",
+          "Position": "311.215485,-542.667419,117.677299",
+          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -812,189 +788,12 @@
       ]
     },
     {
-      "__guid": "6f14ae76-7417-42c0-8c62-178eb3148baa",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "Block",
-      "Position": "-711.453491,5203.72803,424.441589",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "world",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.MeshComponent",
-          "__guid": "3c17201c-a6e6-426e-b414-24890ab027f2",
-          "__enabled": true,
-          "Flags": 0,
-          "ColliderFlags": 0,
-          "Collision": "None",
-          "Color": "1,1,1,1",
-          "Elasticity": null,
-          "Friction": null,
-          "HideInGame": false,
-          "IsTrigger": false,
-          "Mesh": {
-            "Topology": "H4sIAAAAAAAACl2QCQ7CMAwEp4Qj3NBy/f+laMRGsohUVbFn1+t04ANs+Z0VsM69AwfgBFyAKZ9MPXdgk3qLnsI+Um/h/me9i2ZXfFvYOazafTJN0XRgKZmPyWtfXvYVL73PZRd52WdYPa7xtC8veys7u6t17/7t6Tn0ZtFjvIXZR895zjKjPWf4NiOrGt+ivpXZ3XnozaOndVn9vvVkkTjEAQAA",
-            "Positions": [
-              "-7.51037598,-1214.58801,8.84957886",
-              "7.51037598,-1214.58801,8.84957886",
-              "7.51037598,1216.92102,8.84957886",
-              "-7.51037598,1216.92102,8.84957886",
-              "-7.51037598,1216.92102,-8.84957886",
-              "7.51037598,1216.92102,-8.84957886",
-              "7.51037598,-1214.58801,-8.84957886",
-              "-7.51037598,-1214.58801,-8.84957886"
-            ],
-            "Blends": [
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0"
-            ],
-            "Colors": [
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0",
-              "0,0,0,0"
-            ],
-            "TextureCoord": [
-              "-5.49955606,-31.1651497",
-              "-5.61690521,-3.4809401",
-              "-5.49955606,-50.1613197",
-              "31.1651497,-3.4809401",
-              "-5.61690521,-50.1613197",
-              "5.49955606,-3.4809401",
-              "-5.61690521,-31.1651497",
-              "-50.1613197,-3.4809401",
-              "-5.49955606,-50.1613197",
-              "5.61690521,-3.34266591",
-              "-5.49955606,-31.1651497",
-              "50.1613197,-3.34266591",
-              "-5.61690521,-31.1651497",
-              "-5.49955606,-3.34266591",
-              "-5.61690521,-50.1613197",
-              "-31.1651497,-3.34266591",
-              "-31.1651497,-3.4809401",
-              "-5.61690521,-3.34266591",
-              "-50.1613197,-3.34266591",
-              "5.61690521,-3.4809401",
-              "31.1651497,-3.34266591",
-              "-5.49955606,-3.4809401",
-              "50.1613197,-3.4809401",
-              "5.49955606,-3.34266591"
-            ],
-            "MaterialIndex": [
-              0,
-              0,
-              1,
-              0,
-              0,
-              0
-            ],
-            "EdgeFlags": [
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0
-            ],
-            "Materials": [
-              "materials/dev/reflectivity_30.vmat",
-              "materials/metal_board/metal_board_trans_01b.vmat"
-            ]
-          },
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OnObjectTriggerEnter": null,
-          "OnObjectTriggerExit": null,
-          "OnTriggerEnter": null,
-          "OnTriggerExit": null,
-          "RenderType": "On",
-          "RollingResistance": null,
-          "SmoothingAngle": 40,
-          "Static": false,
-          "Surface": null,
-          "SurfaceVelocity": "0,0,0"
-        }
-      ],
-      "Children": []
-    },
-    {
       "__guid": "b91b9769-5b94-46c7-a853-bca0c5d01d2c",
       "__version": 2,
       "Flags": 0,
       "Name": "door",
-      "Position": "-1925.27405,5946.74414,17.8017101",
-      "Rotation": "0,0,0,1",
+      "Position": "319.321075,-316.813721,42.3376999",
+      "Rotation": "0,0,0.707106769,0.707106769",
       "Scale": "1,1,1",
       "Tags": "",
       "Enabled": true,
@@ -1176,6 +975,85 @@
             }
           ],
           "Children": []
+        },
+        {
+          "__guid": "b716127e-dfa7-4ef7-8b41-45e80204f43e",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Text",
+          "Position": "1.02825546,-24.0707951,74.4283752",
+          "Rotation": "0,0,1,-4.37113883E-08",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.TextRenderer",
+              "__guid": "45acdb4f-a589-4973-864c-f45ee8f93dd5",
+              "__enabled": true,
+              "Flags": 0,
+              "__version": 2,
+              "BlendMode": "Normal",
+              "FogStrength": 1,
+              "HorizontalAlignment": "Center",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "Scale": 0.1,
+              "TextScope": {
+                "Text": "Owner: ?\n$40",
+                "TextColor": "0.61246,0.90698,0.60746,1",
+                "FontName": "Poppins",
+                "FontSize": 42.538464,
+                "FontWeight": 800,
+                "FontItalic": false,
+                "FontVariantNumeric": "Normal",
+                "LineHeight": 1,
+                "LetterSpacing": 0,
+                "WordSpacing": 0,
+                "FilterMode": "Bilinear",
+                "FontSmooth": "Auto",
+                "Outline": {
+                  "Enabled": true,
+                  "Size": 4,
+                  "Color": "0,0,0,1"
+                },
+                "Shadow": {
+                  "Enabled": false,
+                  "Size": 4,
+                  "Color": "0,0,0,1",
+                  "Offset": "4,4"
+                },
+                "OutlineUnder": {
+                  "Enabled": false,
+                  "Size": 4,
+                  "Color": "0,1,0,1"
+                },
+                "ShadowUnder": {
+                  "Enabled": false,
+                  "Size": 4,
+                  "Color": "0,0,0,1",
+                  "Offset": "4,4"
+                }
+              },
+              "VerticalAlignment": "Center"
+            }
+          ],
+          "Children": []
         }
       ]
     },
@@ -1184,7 +1062,7 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Block",
-      "Position": "-2192.32764,5691.67383,6.08843994",
+      "Position": "700.548523,-505.913757,28.0711937",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "world",
@@ -1694,139 +1572,909 @@
               "Tint": "1,1,1,1"
             }
           ],
-          "Children": []
-        },
-        {
-          "__guid": "312ed343-6c03-4c32-9232-b60634334456",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "Sprite",
-          "Position": "0,0,55.222374",
-          "Rotation": "0,0,0,1",
-          "Scale": "1,1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
+          "Children": [
             {
-              "__type": "Sandbox.SpriteRenderer",
-              "__guid": "dc74a4a3-e742-4736-8f90-995155e4a8e3",
-              "__enabled": true,
-              "Flags": 0,
+              "__guid": "312ed343-6c03-4c32-9232-b60634334456",
               "__version": 2,
-              "Additive": false,
-              "AlphaCutoff": 0.5,
-              "Billboard": "Always",
-              "Color": "1,1,1,1",
-              "DepthFeather": 0,
-              "FlipHorizontal": false,
-              "FlipVertical": false,
-              "FogStrength": 1,
-              "IsSorted": false,
-              "Lighting": false,
-              "OnAnimationEnd": null,
-              "OnAnimationStart": null,
-              "OnBroadcastMessage": null,
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "Opaque": false,
-              "OverlayColor": "1,1,1,0",
-              "PlaybackSpeed": 1,
-              "RenderOptions": {
-                "GameLayer": true,
-                "OverlayLayer": false,
-                "BloomLayer": false,
-                "AfterUILayer": false
-              },
-              "Shadows": false,
-              "Size": "10,10",
-              "Sprite": {
-                "$compiler": "embed",
-                "$source": null,
-                "data": {
-                  "Animations": [
-                    {
-                      "Name": "Default",
-                      "FrameRate": 15,
-                      "Origin": "0.5,0.5",
-                      "LoopMode": "Loop",
-                      "Frames": [
+              "Flags": 0,
+              "Name": "Sprite",
+              "Position": "-0.231933594,-4.70214844,232.711517",
+              "Rotation": "0,0,0,1",
+              "Scale": "10,10,10",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [
+                {
+                  "__type": "Sandbox.SpriteRenderer",
+                  "__guid": "dc74a4a3-e742-4736-8f90-995155e4a8e3",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "__version": 2,
+                  "Additive": false,
+                  "AlphaCutoff": 0.5,
+                  "Billboard": "Always",
+                  "Color": "1,1,1,1",
+                  "DepthFeather": 0,
+                  "FlipHorizontal": false,
+                  "FlipVertical": false,
+                  "FogStrength": 1,
+                  "IsSorted": false,
+                  "Lighting": false,
+                  "OnAnimationEnd": null,
+                  "OnAnimationStart": null,
+                  "OnBroadcastMessage": null,
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "Opaque": false,
+                  "OverlayColor": "1,1,1,0",
+                  "PlaybackSpeed": 1,
+                  "RenderOptions": {
+                    "GameLayer": true,
+                    "OverlayLayer": false,
+                    "BloomLayer": false,
+                    "AfterUILayer": false
+                  },
+                  "Shadows": false,
+                  "Size": "10,10",
+                  "Sprite": {
+                    "$compiler": "embed",
+                    "$source": null,
+                    "data": {
+                      "Animations": [
                         {
-                          "Texture": {
-                            "$compiler": "texture",
-                            "$source": "text",
-                            "data": {
-                              "Size": "128,128",
-                              "Margin": {
-                                "Left": 0,
-                                "Top": 0,
-                                "Right": 0,
-                                "Bottom": 0
+                          "Name": "Default",
+                          "FrameRate": 15,
+                          "Origin": "0.5,0.5",
+                          "LoopMode": "Loop",
+                          "Frames": [
+                            {
+                              "Texture": {
+                                "$compiler": "texture",
+                                "$source": "text",
+                                "data": {
+                                  "Size": "128,128",
+                                  "Margin": {
+                                    "Left": 0,
+                                    "Top": 0,
+                                    "Right": 0,
+                                    "Bottom": 0
+                                  },
+                                  "TextFlags": "Center, DontClip",
+                                  "TextScope": {
+                                    "Text": "90%",
+                                    "TextColor": "0.39073,0.90233,0.32316,1",
+                                    "FontName": "Roboto",
+                                    "FontSize": 64,
+                                    "FontWeight": 400,
+                                    "FontItalic": false,
+                                    "FontVariantNumeric": "Normal",
+                                    "LineHeight": 1,
+                                    "LetterSpacing": 0,
+                                    "WordSpacing": 0,
+                                    "FilterMode": "Bilinear",
+                                    "FontSmooth": "Auto",
+                                    "Outline": {
+                                      "Enabled": true,
+                                      "Size": 4,
+                                      "Color": "0,0,0,1"
+                                    },
+                                    "Shadow": {
+                                      "Enabled": true,
+                                      "Size": 4,
+                                      "Color": "0,0,0,1",
+                                      "Offset": "4,4"
+                                    },
+                                    "OutlineUnder": {
+                                      "Enabled": false,
+                                      "Size": 4,
+                                      "Color": "0,1,0,1"
+                                    },
+                                    "ShadowUnder": {
+                                      "Enabled": false,
+                                      "Size": 4,
+                                      "Color": "0,0,0,1",
+                                      "Offset": "4,4"
+                                    }
+                                  }
+                                },
+                                "compiled": "textures/generated/text/8e5ed3349992aac.vtex"
                               },
-                              "TextFlags": "Center, DontClip",
-                              "TextScope": {
-                                "Text": "90%",
-                                "TextColor": "0.39073,0.90233,0.32316,1",
-                                "FontName": "Roboto",
-                                "FontSize": 64,
-                                "FontWeight": 400,
-                                "FontItalic": false,
-                                "FontVariantNumeric": "Normal",
-                                "LineHeight": 1,
-                                "LetterSpacing": 0,
-                                "WordSpacing": 0,
-                                "FilterMode": "Bilinear",
-                                "FontSmooth": "Auto",
-                                "Outline": {
-                                  "Enabled": true,
-                                  "Size": 4,
-                                  "Color": "0,0,0,1"
-                                },
-                                "Shadow": {
-                                  "Enabled": true,
-                                  "Size": 4,
-                                  "Color": "0,0,0,1",
-                                  "Offset": "4,4"
-                                },
-                                "OutlineUnder": {
-                                  "Enabled": false,
-                                  "Size": 4,
-                                  "Color": "0,1,0,1"
-                                },
-                                "ShadowUnder": {
-                                  "Enabled": false,
-                                  "Size": 4,
-                                  "Color": "0,0,0,1",
-                                  "Offset": "4,4"
-                                }
-                              }
-                            },
-                            "compiled": null
-                          },
-                          "BroadcastMessages": []
+                              "BroadcastMessages": []
+                            }
+                          ]
                         }
-                      ]
-                    }
-                  ],
-                  "__references": null
-                },
-                "compiled": null
-              },
-              "StartingAnimationName": "Default",
-              "TextureFilter": "Bilinear"
+                      ],
+                      "__references": null
+                    },
+                    "compiled": null
+                  },
+                  "StartingAnimationName": "Default",
+                  "TextureFilter": "Bilinear"
+                }
+              ],
+              "Children": []
             }
-          ],
-          "Children": []
+          ]
         }
       ]
+    },
+    {
+      "__guid": "aafcdf3e-a2b6-4dc7-addc-ca654df5d7a3",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "ColorSlot (1)",
+      "Position": "-2072.05786,5825.05127,17.1258087",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "00bb2ee6-e2f5-4761-962e-199f0c4928ff",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "maps/models/props/player_prop/usable/dor.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "9bfe8656-3aee-4beb-b62b-105bb12ee9e4",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "maps/models/props/player_prop/usable/dor.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": false,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "ColorSlot",
+          "__guid": "6c5b83cb-e549-4944-9c1e-60c49d779014",
+          "__enabled": true,
+          "Flags": 0,
+          "BetAmount": 50,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "7dddcc52-ad07-4391-a804-1fac3ef28ef1",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "handcuffs",
+      "Position": "-1973.66052,5509.23242,40.4966011",
+      "Rotation": "0.707106769,0,0,-0.707106769",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "e355b48d-e8b5-4d50-8c6a-b2ce0b58b7dd",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 1,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "props/other/cuffs/handcuffs.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "97bb45d2-81d3-4d75-ad04-7df4a0814b06",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Map",
+      "Position": "0,0,0",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": false,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.MapInstance",
+          "__guid": "a05cefae-2cb4-492b-92f2-9b366dc70b6d",
+          "__enabled": true,
+          "Flags": 0,
+          "__version": 1,
+          "EnableCollision": true,
+          "MapName": "thieves.rpdowntown3tcompact",
+          "NoOrigin": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnMapLoaded": null,
+          "OnMapUnloaded": null,
+          "UseMapFromLaunch": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "c1de1632-79f4-4e1c-bc5b-5230e2047a24",
+      "__version": 2,
+      "__Prefab": "prefabs/1.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "5913d131-bcf7-4813-951f-058ba7b32de6"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "351353f0-21e7-4e8a-bfbb-556d8dc98565"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "35f5cb58-dea1-4d18-bfc7-5b15fb18a226"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "5e6de949-27e1-4755-a457-e426b065fe24"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "1a973c63-f11d-4c26-aca5-e737ab214ef0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "9954a761-5e49-4067-826e-45086d93019f"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "79a4251a-816d-4a4f-b56c-490bb6f1ff9a"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "8732d7f1-1dd1-422a-b051-dfc3fb504fb9"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "e86d013f-5b10-4469-90ee-719938593d88"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "3d7da031-4a58-4a55-80ed-e206457dafe4"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "775130be-5af3-441b-a2c0-0e0f5b7917fe"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "64ab3650-9c6a-4aa3-ba09-8347a51863df"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "81d50804-05e4-405d-b1fc-7dab3acbfa63"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "b5c71c70-e8ce-44ee-9bde-58248196d6c2"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "d3109305-a994-4c19-81c1-2f0185775942"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "c7790a05-665f-4f0f-98e1-8a313f7a14c9"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "c19f7636-f7f3-4558-a4a2-fd324733bbf6"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "45f969ac-d7e8-448e-bdb4-68ef4f02f88a"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "a7cba2e8-7686-4133-9eae-69fc896ebeb9"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "ef3bce95-f4ec-44bc-a8ea-4c54c4a4d8a2"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "0bef3ad7-0ccc-46dd-91d3-15aa3737433b"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "fd397786-7a2c-4dfb-8b1b-674106776040"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "043f01aa-df28-43ee-9e40-4efeaf7e50f4"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "2a8df2eb-cdae-4cd8-893b-c3e12d685093"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "c72dc50b-6f35-4702-b3f0-4b840c990649"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "d23e57a6-f3b0-4a09-9a1b-dc0df2a6637f"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "1299d5b8-4ff5-4b64-af9f-0bccc94bd82c"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "88f39a16-b047-4964-8f8e-0a6f790c57dc"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "b9346cae-b209-415a-b276-1881b330efaf"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "6fb55b32-096f-4118-b500-b5b044b1ca39"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "48b20d30-620b-4495-a156-5c5d8a6c3a48"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "4ca27ce8-1b2b-43a5-9c5e-3c5bef603ab1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "c12a61de-66ca-4150-9ef1-503853ac8231"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "c4471f4f-12ca-438e-b8ee-675fc663625f"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "1638334e-3e47-4fe3-9b61-e686aca9ddee"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "bb795483-4c0a-4f9e-a34c-eb2b0089bd46"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "f307420a-5d66-4b93-80d9-5d50404c9c4f"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "851ce8c2-516c-42eb-ad47-472861f7156f"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "fbbf3089-0c11-442e-9a38-9fe1a945a20e"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "fd122e49-e75d-42a2-b080-7a97319f8556"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "c6b02c8d-c8f6-45e3-b49d-402855192281"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "2ae7d9d3-3ee5-430e-9738-8c51360b18ab"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "ee31ed81-e437-42c5-ada2-c3b874b4e977"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "f1fce530-16d8-44a9-9ca0-0903cf28f5e0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "1a15dd54-cd0d-44ed-a23b-f230913aac7b"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "c9519e06-88c7-42f3-bae9-f235bf5c11ad"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "30d89e44-b904-4ca3-8c64-1ed52204f21f"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "e49d34c4-a6ca-492e-a5ac-6ee331eaf25b"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "3c99cdcc-a694-4a17-ad39-9bc1ef707452"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "c91fd54d-c508-407a-b570-a6e7469051c1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "695fc357-83c2-496c-b1e7-0d5c6cafd034"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "8c107f6d-168e-4697-8bf2-34900450e6ae"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "d2703594-7920-4141-b4c0-fe2a330d1316"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "99bf6bb6-e061-45e9-9c98-b0c86a628591"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "415e1812-878c-4df3-93ea-590e870f44a8"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "fccbb0d1-3dd7-4610-8e7c-b488560d4571"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "77580fcb-6ec4-4195-9feb-9b0e6e107c11"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "b461aa86-f6d6-4d43-8d56-242ef29e45eb"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "d6f87930-d7c4-4220-a646-1631ba16a7ad"
+            }
+          }
+        ],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "f85a4d64-f4be-48e8-af9d-e42c219a81c2"
+            },
+            "Property": "Enabled",
+            "Value": false
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "f85a4d64-f4be-48e8-af9d-e42c219a81c2": "c1de1632-79f4-4e1c-bc5b-5230e2047a24",
+        "15f435c7-19ef-43d2-85ed-c29013e28afc": "0c7a1188-f408-4a91-b75e-392db1101484",
+        "1874c903-f018-40cc-9b76-369517d01b3b": "4fbe3bbb-f444-42ee-8b3f-9b4b6c144977",
+        "0c4bc74b-190c-419f-9c8f-b19df034b7b9": "c91c2878-e26c-435f-8041-ae05414cb423",
+        "623d53ee-023d-45c5-ae1e-50238d702f58": "1facd830-fb59-4d03-97ce-7ca832e62cbb",
+        "5913d131-bcf7-4813-951f-058ba7b32de6": "9b40281d-07a7-49d2-89f8-961001f7c154",
+        "351353f0-21e7-4e8a-bfbb-556d8dc98565": "df6db000-b9af-47aa-bd4b-c0dcff7d8871",
+        "e117f910-1a4c-4b5d-82c2-ebe4a3c62438": "97dda0b2-a9f9-4842-a0b4-ba730e5fffa0",
+        "76d18d3d-de0f-41ef-9654-b4e3cfb3a395": "a232a908-9ab3-4353-b5e6-09c7cd655e86",
+        "35f5cb58-dea1-4d18-bfc7-5b15fb18a226": "59a68321-9676-457b-a7fb-357915fd2156",
+        "5e6de949-27e1-4755-a457-e426b065fe24": "fbb709d8-7e41-4cf9-a363-d810357aa0f1",
+        "fa3e5f88-99b0-4cf8-8873-f4bcf1695158": "2d4249b2-e3a2-432a-a305-230becfe56d2",
+        "81e2faf8-ab07-4605-8eca-7a2c8546c3f6": "71cf13ba-acdc-444d-b474-77099e6cf727",
+        "1a973c63-f11d-4c26-aca5-e737ab214ef0": "021b482d-ed63-4568-b313-9de507f525e2",
+        "9954a761-5e49-4067-826e-45086d93019f": "fd3f5f4d-2f47-49da-b04a-9724e86b9e56",
+        "fb50ad92-510a-413e-8d7c-e94c5c25e088": "c8ad42d4-2934-464a-b835-4d037f00a826",
+        "44f12abf-5c58-4b0e-bb51-80143ec0547a": "bbc5a733-c42e-43e8-ad1d-10a4ef0431d4",
+        "79a4251a-816d-4a4f-b56c-490bb6f1ff9a": "9aa4d21f-7daa-4f53-9620-7523257df031",
+        "8732d7f1-1dd1-422a-b051-dfc3fb504fb9": "fbfb28fc-77a6-47ce-be39-7e0f6a95f913",
+        "6e576222-7081-411f-b6d9-5e2cc0141029": "80b6ed6a-ada8-4e18-a0f1-1ed7bc0815ab",
+        "22e18339-3fc6-4db9-9b78-04c341c11472": "a8fce578-f023-43d7-b44d-7ff84e84c269",
+        "eb3f4995-1f7d-40c8-8491-a27086cd92af": "1a8a20c7-fcad-4297-8990-632074978363",
+        "bb5a354b-6407-4447-bed1-e8bc0b78826b": "6b6f5a07-e4f4-41bf-a836-1e26a3963886",
+        "807180c1-8be6-4ec7-b4bf-4372cc0abb7a": "a6d6a399-8f9b-4033-ac84-a0551743c6ef",
+        "f6bc8d4c-2c9c-4db5-9e08-aff2de43d9b2": "6982f6fc-d484-4fd1-a840-52d0e0fd7a60",
+        "e86d013f-5b10-4469-90ee-719938593d88": "d6c482a1-45a6-4bec-882a-ca096379ebd6",
+        "3d7da031-4a58-4a55-80ed-e206457dafe4": "798ebca2-e652-4437-a97e-ab272086ce11",
+        "d5ec8921-5409-4406-a558-12df0f0c4294": "3586deeb-8222-49d1-aa82-08523ac7e385",
+        "1c87cc4b-93ee-45cb-848c-a2bd520b6609": "0e285186-6a1b-47e2-9f22-96b3735e3c36",
+        "775130be-5af3-441b-a2c0-0e0f5b7917fe": "3a4f2230-98e2-40cd-876f-6f7468b0f646",
+        "64ab3650-9c6a-4aa3-ba09-8347a51863df": "903bdae1-55de-40c0-a5de-6497b9ae4822",
+        "288b9a9a-7c74-4d5e-b896-1b3ec064334c": "a5abba04-a95b-46f1-a9f0-bef71abe561d",
+        "2ff713af-524b-43ee-b09f-1be765e1a731": "98c5e1f6-5b0e-4656-be9c-6540e75d1b76",
+        "81d50804-05e4-405d-b1fc-7dab3acbfa63": "76020cd7-be08-43c0-8447-244a425d358e",
+        "b5c71c70-e8ce-44ee-9bde-58248196d6c2": "ca320d64-a081-474e-a9ef-5bbcedaa0941",
+        "d3109305-a994-4c19-81c1-2f0185775942": "1f79d0d8-82dd-4166-b8e7-ccd595c178e2",
+        "6868326b-4138-4336-9c6e-0e3c6fcafd85": "fc6d5fab-cde9-4a9d-9360-ebfb89863eca",
+        "76db6d40-d29a-4c4e-943d-c9f6738a5664": "55dd1e95-625b-4d69-a441-ee8b91abd33e",
+        "c7790a05-665f-4f0f-98e1-8a313f7a14c9": "9049329e-4e2c-4590-879e-7c95101d7e67",
+        "c19f7636-f7f3-4558-a4a2-fd324733bbf6": "97e5431b-df9a-4aaa-9f79-e4c8f30be0a2",
+        "6d1cdc15-c52c-4d4c-830f-67cb18d830e2": "a99a564d-7a9f-4ed7-b257-2a00f07323d2",
+        "81519798-505b-4309-8f47-83c5c38991ca": "8918f73b-c574-4bce-91d8-dd10c522a998",
+        "45f969ac-d7e8-448e-bdb4-68ef4f02f88a": "f553f89d-52e2-434c-bf0b-f81bfb393e33",
+        "a7cba2e8-7686-4133-9eae-69fc896ebeb9": "f9ee3a64-e873-4af8-b3b2-9744291fa385",
+        "bba7dd1e-da8a-4320-a054-d8b239560d14": "c123ef30-30c2-4bd9-a4db-73de5887a9f4",
+        "bbd54cc6-69dd-44b7-b145-1efa0c1bc9d1": "4b7af8dd-96f6-43b1-8185-4e8c0e7e0c2e",
+        "ef3bce95-f4ec-44bc-a8ea-4c54c4a4d8a2": "445f634d-a70e-41de-85fd-8bea8680150c",
+        "0bef3ad7-0ccc-46dd-91d3-15aa3737433b": "01930610-b31c-4d01-9b60-f851ed3e609a",
+        "f2549ded-b41b-4b3e-8c3d-799121dd0a01": "fc23f047-7308-4754-8c9b-ff4bf98253ed",
+        "93a7bc6e-244e-4416-ba22-4490c1940f7a": "8ec3419e-b307-460f-b463-0a8efa54abdd",
+        "fd397786-7a2c-4dfb-8b1b-674106776040": "bb207d98-2b4a-4424-9c9d-1977d6cb55eb",
+        "043f01aa-df28-43ee-9e40-4efeaf7e50f4": "761bda74-1c26-4e65-b3fe-d2031ff8b5c6",
+        "4f3c8c91-b429-411a-9bdf-1b699d7e0671": "bd545c3c-bfa7-4b39-99d7-e914e85d4a60",
+        "93b915bb-1f62-4811-ae8b-230c7b608a77": "4d79b151-c4cc-4606-b57f-36bd25d8f019",
+        "2a8df2eb-cdae-4cd8-893b-c3e12d685093": "39e1e23f-95cb-40cd-9fe0-67e4d03b6d83",
+        "c72dc50b-6f35-4702-b3f0-4b840c990649": "c63058bb-c8b6-4f89-8f0b-cc3201958344",
+        "07466b47-b698-4b2f-923f-a362a63653ca": "e5086c5c-8978-401d-ad14-3bef02b18048",
+        "175dac86-4895-4be2-91ca-adfbb7625269": "d80c8b69-34d9-4fd0-bfc0-37cda497657b",
+        "d23e57a6-f3b0-4a09-9a1b-dc0df2a6637f": "690328e0-e4fc-44e4-9348-23d3a83e2eec",
+        "1299d5b8-4ff5-4b64-af9f-0bccc94bd82c": "9467cd80-24cc-4d69-9abe-46ee50df0c9d",
+        "24034e53-cf4f-4faa-a347-0917fb87e5c3": "439ee464-422f-437d-9128-b1dd4642d93c",
+        "c1bd2408-68e4-475b-8b8d-fac2235168c4": "f928008f-d97b-4a96-92fe-57c9bc77189f",
+        "88f39a16-b047-4964-8f8e-0a6f790c57dc": "c6ecba7f-6717-45b8-9e2e-385dff4bee84",
+        "b9346cae-b209-415a-b276-1881b330efaf": "3a09a8b9-4b9b-4b20-bd25-cee7cdc3b431",
+        "64c77df2-eb65-4624-8ba3-6f985c5cc396": "32dd55a0-2961-46c9-81da-f72b44b0c28e",
+        "2eb99e86-7f62-4b98-a079-8383a86c947c": "8e81f242-e5c3-47ec-92cd-289b45836afd",
+        "6fb55b32-096f-4118-b500-b5b044b1ca39": "594b28ab-b90a-49c5-99b4-60507c81e2e0",
+        "48b20d30-620b-4495-a156-5c5d8a6c3a48": "7b25ba86-e323-4c22-ad03-191de522d141",
+        "b92b4446-54ad-42ab-9f1a-63ae61c0251c": "dccdd0d9-4428-4ed0-902e-8c4a1704ab51",
+        "a6fdb5db-5cbb-4c41-a9f4-78687d1379b0": "472195b9-da36-4355-8645-6a7b3078dbdd",
+        "4ca27ce8-1b2b-43a5-9c5e-3c5bef603ab1": "373e9bbc-7012-4337-b8e4-67dac8386a96",
+        "c12a61de-66ca-4150-9ef1-503853ac8231": "62ab230f-0358-44a0-81d1-5af83a0fb732",
+        "a598eed1-9d4e-4d4f-b6e7-7680755c7a2c": "607a780d-68c2-4adf-8339-6541c2eabf49",
+        "5677ca90-e2fb-4e85-89ea-6b312bdf4c75": "2d0e84c9-9c7e-4a8a-9971-0e8732aa4104",
+        "c4471f4f-12ca-438e-b8ee-675fc663625f": "bdb9324e-d8c6-4afd-b997-d574578da6fd",
+        "1638334e-3e47-4fe3-9b61-e686aca9ddee": "7375e0c7-e41c-4ecb-952c-a4ca60e17791",
+        "e56d5811-dad7-4ee2-9612-c1470a6bbc51": "aa54ddb7-25a5-47c9-bce1-f8b3b9ae6208",
+        "ae6ad448-9db2-4a43-8a9b-fac4d2600381": "122d1771-6245-4207-9e21-7b3d962e5e1c",
+        "bb795483-4c0a-4f9e-a34c-eb2b0089bd46": "cd0d8274-7260-4bc6-8afa-4aa05a8baa9f",
+        "f307420a-5d66-4b93-80d9-5d50404c9c4f": "01d34e26-1c26-4093-9a4f-ebce838f8e47",
+        "3891b5fe-1c2e-4e3e-98af-3a055b5270e2": "7373f2a0-3674-4e81-87b5-588862e9b2fe",
+        "c2f442c6-d957-4b43-92db-c7c9f6542802": "7084d7c5-1d97-4472-9b0a-8ddbc360f29b",
+        "851ce8c2-516c-42eb-ad47-472861f7156f": "364703b2-9239-4e54-aea8-0fd266644ed1",
+        "fbbf3089-0c11-442e-9a38-9fe1a945a20e": "881aac79-7905-40cd-bdb7-72d5d2cab821",
+        "f12608c6-7eeb-446b-9b51-9045648b38ea": "d4e3c057-ba21-4419-8a90-14b95c9f4c1a",
+        "4bb4665e-5183-439c-a79c-86cc263f4601": "030e7ac6-e6ec-4d37-96c3-75eeeb8fb11b",
+        "fd122e49-e75d-42a2-b080-7a97319f8556": "a86f30d4-7043-4b48-8e51-b0c5c8d98475",
+        "c6b02c8d-c8f6-45e3-b49d-402855192281": "f0da0443-a8f5-4eb2-b0da-7a418838a896",
+        "af8e367b-b646-4992-b87d-9a4a9fb95c0a": "da9008a5-6c99-4b4c-ad5b-573297b67f76",
+        "0666f45c-21bb-46d2-b4a7-916830690fa7": "8da678e3-abbb-43e4-9414-d424b659342a",
+        "2ae7d9d3-3ee5-430e-9738-8c51360b18ab": "dc3f9226-f2fe-4aa6-b348-dbfbea0609fb",
+        "ee31ed81-e437-42c5-ada2-c3b874b4e977": "0e4db5dd-b2fc-4224-8ade-61b04b931c08",
+        "c53785af-bd44-4b16-9e49-8392bdc38c7d": "c4da20f2-1840-40ef-8929-aaf974c5eb7d",
+        "2a9c8014-ac0a-4390-83ad-cefcba06a617": "2544c713-fba2-4f7d-9496-61c6a110ef11",
+        "e86f9f2e-7aac-410b-a99e-2b156f4aa5cb": "5d8d3071-0d85-4ce5-86d9-1b576f35ae16",
+        "d588368b-a5a2-46f4-ade4-1baae8143c77": "22362953-4161-47c1-a4b4-d2a19fe53bfd",
+        "32ab40b3-dc0f-41d2-8228-3e963d02cbd7": "f5fccca3-b690-4326-96ca-de87cdbd5589",
+        "d1a46fdf-b2e2-4e2f-8b82-8881e200b6a2": "c15a8928-a603-46cc-99ef-7997ac5f2311",
+        "0907affd-1140-493f-b17b-d0a9b84c315d": "f22cf677-2cc2-4b76-8894-c1431fb97f0c",
+        "5c9dccc0-5744-474e-8317-ea653cd39ac7": "e601c239-0859-48bd-ac76-343b761a74d5",
+        "631faa60-d841-4f66-ad04-f947d69c1e9e": "04012736-2206-4874-ae67-faf60b4ad392",
+        "e366aea5-48ed-4893-8e1e-27cb93130fb2": "06502b1b-be17-4636-9a6c-56f9f108a85e",
+        "4902fbb7-f8cb-496c-8e98-e1d5bd9b3383": "d1fe652e-a1d8-44bc-b483-658cfb7befb4",
+        "98307084-8392-4e31-b3d5-fbecf5ba5bd6": "07883b01-f5c5-4c43-b7e5-41221e3e451c",
+        "74aa7736-8399-4081-bebc-5b8173751228": "96221ed4-bc08-4785-b074-fff69664a51c",
+        "38b81a01-9645-4788-90e3-603e45a8dd44": "3c2df52e-adb2-4667-ac53-f1bc6f45d8aa",
+        "82fc53d1-4432-4d25-84cb-1d076d6a9512": "7a6a010c-c171-47be-9ccb-26468f47c972",
+        "92583554-ece1-4b45-a175-78bd7e065058": "576118aa-f963-4c92-9a9d-2694d35693b6",
+        "44c96c85-c3c1-431f-bcde-1123eefc01a5": "44005c99-82bb-455a-8f95-0fe264431a3d",
+        "3621d997-dfc7-4d8b-ab03-42a6ad9b6551": "1bfa019b-b26b-44eb-bfa0-1eacc0209ff3",
+        "3160fdd4-02bd-4bef-a26a-1d389075e7e5": "ed7713c4-62b3-45db-85f2-b0f1d6479eb1",
+        "bfd8193b-b2d7-4d27-a26b-58115cbd7d9d": "7b733303-57d1-474b-b9d3-e6fa9d692d0e",
+        "aa620813-5b08-4d52-ae69-e205145a1b96": "50d96c70-4356-4371-b1e7-1c21d2e7cba6",
+        "98c118e3-eab6-4748-b3d1-59b664108eaa": "11c007b7-7cf7-48e9-ac23-30dbe8e40f9d",
+        "42a4c356-9177-43d1-8e2c-8c4726af4f36": "b33d6278-2df3-4cf9-a3d6-6a54dc380000",
+        "8d68ecfe-969e-49e1-80be-be35f9cae9e0": "644be093-5a9e-44e8-aad9-9f1f3245424c",
+        "fd7daf27-8391-479f-a195-a3413703d1f4": "68d0d0bb-9c82-4a5a-9a1f-059fc5a04dcf",
+        "0d11e423-d225-4386-a7f8-8bd8d72260b9": "a9aeadbb-1364-4bef-a604-ec7fe9f18d24",
+        "93ba7ea0-3ff7-4fda-9d35-5f530033bbf1": "dda6c1f1-59e8-45e3-bc09-dba8146f9418",
+        "117b16c1-6b06-4cd2-a605-55b461f837ed": "9cf5e73e-3499-4aff-854b-f8f893faa0a3",
+        "f1fce530-16d8-44a9-9ca0-0903cf28f5e0": "11eaf84c-914f-4734-86f4-daca623afc2c",
+        "1a15dd54-cd0d-44ed-a23b-f230913aac7b": "f303a184-43a8-4dff-89e2-1e547dcfc5de",
+        "c14bc8f9-dbee-4d6a-86df-d0f574938445": "132525de-9015-46cc-a2c3-154a4ce24368",
+        "e2a2cad3-a287-4a1a-a8c0-a14cd2ac907b": "63d80901-1f3d-47b3-a477-b88d20468393",
+        "c9519e06-88c7-42f3-bae9-f235bf5c11ad": "3cb87b9e-3a90-4acb-a689-c66b89b2e867",
+        "30d89e44-b904-4ca3-8c64-1ed52204f21f": "3a2e656c-689c-46ef-bdeb-c96067253f63",
+        "9b018e3a-4a79-4178-a00f-dcf2c528f6ef": "a644d76c-0c10-4774-a834-d1c21c335e4b",
+        "0bfb0bc4-4e98-4a08-b2ee-a31291745b37": "4be7ecc4-244b-4218-b125-55a685294dd6",
+        "e49d34c4-a6ca-492e-a5ac-6ee331eaf25b": "5d243118-5493-4ac4-b589-4075aa9868c1",
+        "3c99cdcc-a694-4a17-ad39-9bc1ef707452": "23147bd8-7184-4007-aad9-e0c25d730f7f",
+        "e0dda020-2f03-4742-a46d-29bf355d14d7": "34e3d4c5-dc91-4f9b-b80d-aa44da7d5dc4",
+        "917a4d67-0949-42c0-8864-4e942ddbf46a": "abeea67b-0a03-4c75-8b71-16d0a703febf",
+        "c91fd54d-c508-407a-b570-a6e7469051c1": "069595c5-c81a-45ac-bbfa-cfb29f273446",
+        "695fc357-83c2-496c-b1e7-0d5c6cafd034": "a1a79ee9-72b3-45a9-b057-938233c80f39",
+        "afa4ed2a-8420-4290-855e-f307e6cc1285": "61f8edd8-6470-484c-9be7-0ca81431d5d0",
+        "cf7a6cd0-2c3d-4023-a647-4e85522e41cd": "ee397e52-c5c9-4f3f-ae94-45c71f510265",
+        "8c107f6d-168e-4697-8bf2-34900450e6ae": "39e6faf2-2b67-4680-bb75-0717506a879b",
+        "d2703594-7920-4141-b4c0-fe2a330d1316": "00248a8d-f4d2-4f1c-8b87-2d5c7dc9b7e5",
+        "764d8f46-3ab6-46c0-8bea-26288390ad8e": "0c99311b-2aad-48bc-b384-096430ea5bc0",
+        "e8a87321-8930-4f8b-8ba1-835e887e00a6": "d3a1819b-3711-4fdb-9ba2-e98a9cf86f48",
+        "99bf6bb6-e061-45e9-9c98-b0c86a628591": "5fe4a2f2-5fbc-4ab6-be5e-432b48fa9c06",
+        "415e1812-878c-4df3-93ea-590e870f44a8": "76491a3f-ef79-426a-9765-0221aa1aaddb",
+        "1069b147-962c-40a4-a975-48f92a4d962d": "bea5c815-a34a-4880-b69d-fb9dc2334a4c",
+        "dca4edda-43b1-44ee-b19a-bf42240828f8": "755edce7-bfae-4136-a0f2-3cdc6bb92f16",
+        "0f1c462f-6f38-4ad7-825f-b1fd0862efde": "3d947501-7a34-4e2c-a04b-ef1173524af2",
+        "04823796-0417-489e-ba0d-6dfe79b97562": "56817c14-c62f-4aa7-b22a-a3fd02834804",
+        "4a52f050-302e-4a3a-b741-4f826ae21f70": "a1edf1fe-eb01-4da1-a638-27919dcfacc7",
+        "9400aeb8-11db-402b-815e-73ff1e5da4c2": "6b1de157-9209-4ca5-9247-bb51a72061f4",
+        "fccbb0d1-3dd7-4610-8e7c-b488560d4571": "1fea9e33-97c3-462f-8356-3649fa4fd4fd",
+        "77580fcb-6ec4-4195-9feb-9b0e6e107c11": "e7a1b1fb-da9c-457d-a170-9077a9de713b",
+        "8eece3cc-4bb2-4787-99cd-62bd088ad407": "09ef705e-ede4-494b-a68e-334fb6c24f9e",
+        "4ea9d30b-f5e6-451e-8840-b4f581bd5d57": "91e1a38f-3657-4bc2-a6d1-f6750dac97c9",
+        "b461aa86-f6d6-4d43-8d56-242ef29e45eb": "603b61e6-28b5-4a35-9d73-189507b597a3",
+        "d6f87930-d7c4-4220-a646-1631ba16a7ad": "4b2a95f7-83c3-4915-b8e8-24787bcad6eb",
+        "645d2d89-c0ea-46a3-9daa-8a86e48b111d": "7dcd7318-9dc0-4666-827b-67b62a2920d4",
+        "72acd9e6-374f-4d2f-83cb-a39937d5f210": "581f6407-7aea-4132-8e39-73c70b9206d1",
+        "13059060-03fd-4456-a395-45c691f36168": "3bd86ffa-f5b6-4ea0-ad27-b3c1b49d16cd",
+        "24b7d250-ca7a-4cc3-bd96-39d732e78b77": "d1d21222-73b2-42b4-973c-5b064e9a91e0",
+        "d733efc8-3d84-45c1-af12-720f03675c3a": "c480ccc8-d356-481c-8589-151870d01bc0",
+        "4ac49c68-ce80-4c98-a957-26f25e4987b6": "44ad60aa-d458-436c-a1e2-9ec455ece685",
+        "c93c1af3-b809-42bf-9a9a-4f334b92f6b4": "061a254a-4d5a-411f-96f9-66073d12a742",
+        "4be5eae8-0cf9-4583-89a9-fbd1e06ff59f": "1f28ae7a-518c-470b-8611-5030d9213236",
+        "ef9cf219-46ae-40c2-8476-12b8f41bcc0d": "704af135-57bb-402c-8c35-82d7dced10f6",
+        "d7b8779d-bdcb-4191-a562-360e07709166": "0e3c81c6-0380-42ef-a1b6-e3e5804386a6",
+        "092a71ec-290f-4754-8053-d5dd528c4a26": "eb1d8926-4016-4c43-bae5-e22f2acb4d94",
+        "678c0a5d-f377-4bbe-be5e-14965886c479": "641625b1-2c2f-4c4b-ad9b-ad0082c0cfa6",
+        "933bafa7-e7f7-4a7c-81b7-233dcb79efed": "fa726c1e-0758-46f4-b958-8bfb534b960c",
+        "fab32ab7-9bf9-4b5a-bf2e-6f1ad213cdfe": "cdc51a00-ad82-437b-949d-5fc47378bfa0",
+        "e273f391-2372-4896-9d06-0833e37a07f5": "804faf94-5b69-491f-b4b7-088ed2c3527c",
+        "797678be-7cd5-4d75-a7bb-3ba857f625d3": "01cafb6c-7e8a-46a8-a3b8-aee9061882db",
+        "be14992c-8024-4279-be1f-1f07992d7fac": "7a41dbe2-88fd-4376-8eb7-15f84a0da205",
+        "3c71ecfe-1ef4-41b7-9822-bfb2c2a99d16": "7167346c-f8e3-4a32-89e6-f49653fe68bf",
+        "ae9e7e44-db6e-4c97-8fd6-3e30642d97ef": "5304dba5-9a24-465d-9e50-05008455d602",
+        "3c28f9d8-fc14-4684-8f71-80b47c32868f": "b2ad1353-a86e-43a8-8299-d335ea654e19",
+        "9c648e09-0eae-4241-822d-8ba1831ebf06": "745b5a59-8f98-4026-a3c7-63106313621f",
+        "0829331b-4aab-4326-8e08-bd2e2695db48": "7d76932d-a51f-403a-a4ea-1e881829b087",
+        "bbee1dc5-c7dc-49c2-bff4-70befed1f4d1": "ef481f8e-81b7-44fe-9515-b1884efebb63",
+        "af2e8bcf-6092-4a31-9c8a-fa9c487b05d0": "034280e4-7436-4a46-b93f-f4605f1f5690",
+        "539f63f6-c16c-4850-85bd-ad010fe2d5fb": "f252d2ea-8309-4c25-afd2-7ced6c1cee7a",
+        "84d2e87b-75f3-43a9-afaa-15f922d63fa3": "0a68471a-6162-4c6e-9dba-7f6503f30721",
+        "57c398bb-52a9-4374-ae0b-7d034c1b60ad": "641f8e06-142e-46e9-9893-98c97ad8ca58",
+        "61171bb0-1b8b-463d-8f77-5fa0331b213e": "8ef4792d-8dc3-441d-9d18-d28b2dd0347e",
+        "80152654-9d57-4567-b48d-b654c991b03b": "485741f7-9d5a-4891-8dfa-a05dd9904169",
+        "cc0f2c01-0079-44d7-948a-944b25a18d58": "076a6d65-bc6c-4b2d-8dc0-c3d8a23588c1",
+        "359c9dd7-3015-42bf-be8c-02faf6fc2da8": "8cff36cd-8d6d-4b2a-a4f0-5739a575eb55",
+        "23fd4847-61d7-4ef1-9a35-e37bbbc309fb": "ca41a508-7734-44f2-978c-cdb306e5a7d6",
+        "4b826e29-c974-4300-b9db-867fc2da31c8": "651cc0fc-fa34-4c1e-be24-8344bf2303a4",
+        "91dd2330-70dc-4bee-bec8-4f53250b87a0": "df830e34-be43-435c-9126-11c617262fe3",
+        "f71831c8-fbf0-4f1c-b760-4e29b8a09702": "54ee74aa-7fa0-4b5e-9e7e-19ee8d0e948f",
+        "708f12ba-55ae-4c32-9d49-5d2563036786": "c3ae4ac6-4d58-46b8-9942-88fe0a1b4c96",
+        "760b9208-2820-49b5-be02-a65836b5bebd": "00c56cbf-3b1e-4369-a3cb-ece22695b5dc",
+        "f7514cda-8f0e-4010-9bfd-b97e885522cd": "9f27ccd9-12cb-432d-a073-f1940ae5c174",
+        "949b1617-1986-4bd4-b0f0-09740d3ebe8a": "5a31f157-7bfa-42b7-b3e4-f44fa7b4a071",
+        "8c2c526f-49ad-4124-a67e-83349d8f534b": "3c9f7f47-d265-4164-86a3-2a6472c8be69",
+        "dc0b60c0-6af5-41a1-8279-d8421778627e": "d1e14475-69e5-4339-9be7-ef300ea1e946",
+        "b7669322-e234-4dc1-b220-e936569cf582": "4fb94cd7-f9d5-4ecf-b55b-cf6cde44b614",
+        "4585ba1a-98e0-4086-aca7-324be4034d87": "9ddb4bd8-409a-42ac-9c10-79a5c3c9fd7f",
+        "9444b4bf-579b-4f26-b929-4f21d7136cc7": "2dabf3b9-5159-43bf-a69b-e5bd2954a386",
+        "545b6464-4962-4de2-bd14-a133e5a77363": "ac587c61-5725-46c5-ba07-19a541f5cc1b",
+        "265e4883-135e-48a1-a8af-76591e9cad43": "d0311b59-e38a-4052-a568-6d10d3d255cc",
+        "2909212f-05d2-4d87-a2b5-abd625ebf5a2": "b0a5be86-739f-4877-9d03-68a8705102a4",
+        "e9b2d6bf-20d9-4ea6-96bc-79fe55376819": "ffd83d4a-d6c4-41de-b761-d3c28927013a",
+        "875014f0-e655-4003-b870-2ae37ba27279": "7bdb2080-42ab-410c-bae5-5d0599793024",
+        "158798e5-45cb-41e4-8d39-4955f911e5b9": "4136062d-9a18-498c-a80c-a2ec1a6febd9",
+        "63c98575-307d-4dba-a3d7-2746b108f8e9": "d5f6c214-4ffd-457f-88fd-a44cf3207ccc",
+        "9b75c94d-8821-4429-a2ca-a01b89b62cd0": "afa36d8b-87bf-44ff-acc9-fdf17976aa25",
+        "f8837c14-08a2-412b-ad84-624836fedae6": "28110111-4752-4d03-ab38-8e5ad41c1ca7",
+        "72d5f8b4-65ad-48e6-8f7f-0a9d81bffb7c": "be9cabfc-e5ac-4738-b05b-111d9110cadd",
+        "989d4493-661a-4d1d-aa15-553474892261": "749a116d-95be-46d5-a644-7e0fa9042f9c",
+        "31a05c0c-d4c3-44aa-8995-4f4661f0f428": "51bf662d-7ba5-4d53-a487-48b4602930b9",
+        "2a58fdc0-48af-41a2-ad72-d563e4c9ead7": "9f21a592-49d1-45d4-bc44-1c2a3ec60ad5",
+        "3b03442b-0eb7-40f3-8410-ac6858665ee4": "8493be1f-584b-4a7f-9e08-84323d5193ae",
+        "6cb8a620-6518-4f08-b13d-ae4645346b5e": "f63b0f60-7690-49e1-bdac-5ef5642d9af0",
+        "5c4a136e-4a28-430d-8920-c540a9507b2c": "fc38ab9d-30ec-45f3-8324-9a70c7b659d6",
+        "671210e0-dc8f-44e3-9c4b-d40b29a1c9dc": "cac72717-6c10-48df-a2e2-28e87d00b942",
+        "20d66898-fdef-4c5f-ba23-f4d968d138f0": "71f56e43-393b-465e-895e-0027da9f18ed",
+        "af0e52c9-b7c1-45a5-ae0b-24fd49a05a5d": "fdfb63b7-ebc1-441f-96f7-6678b1db33dd",
+        "813fd590-cb12-4a20-a0fd-aab3bff0d7d0": "5d06e363-a2cf-45ce-b604-711934d237f8",
+        "ae37e520-87b7-4b76-a115-e97624b9ed01": "c4190fea-2de8-4459-9801-80a9a080f482",
+        "cf694b28-ab25-472d-a145-8d515e9b2af8": "becf0ac6-e11f-45d4-9db0-22e92cf2100b",
+        "21acdb10-88c3-48c2-a64e-d33f27237418": "15b2d9b5-8619-443a-8792-0a0c85670555",
+        "bd08cd20-b561-4826-97cf-39dbcf24c2af": "d10f4d8d-f014-4deb-b248-644c110cce93",
+        "90d3aa1a-4dea-4a3f-a3f9-cae873f5a5b0": "7a75ec56-de54-4ae8-a5ae-67cfde52c1f8",
+        "1d808ba6-2775-4e53-ae29-2a9fbb62cea7": "4693d7b9-7d61-4bea-8776-86bc4877ff32"
+      }
     }
   ],
   "SceneProperties": {
@@ -1866,9 +2514,10 @@
   "Description": null,
   "__references": [
     "centuria.cannabisweed#156923",
-    "facepunch.metal_board_01c#9577",
     "facepunch.pot_02a#143474",
-    "facepunch.wooden_door_01d#143453"
+    "facepunch.wooden_door_01d#143453",
+    "keepitdev.dor#150914",
+    "thebox.handcuffs#203399"
   ],
   "__version": 3
 }

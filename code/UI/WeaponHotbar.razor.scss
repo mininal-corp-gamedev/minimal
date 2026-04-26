@@ -1,5 +1,5 @@
-$slot-size: 84px;
-$slot-size-active: 98px;
+$slot-size: 74px;
+$slot-size-active: 86px;
 
 WeaponHotbar {
 	position: absolute;
@@ -26,6 +26,7 @@ WeaponHotbar {
 		box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
 		align-items: center;
 		justify-content: center;
+		position: relative;
 	}
 
 		.slot.active {
@@ -35,6 +36,15 @@ WeaponHotbar {
 			box-shadow: 0 6px 24px rgba(0, 0, 0, 0.65);
 		}
 
+	.slot-key {
+		position: absolute;
+		top: 5px;
+		left: 7px;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.62);
+	}
+
 	.slot-icon {
 		width: 100%;
 		height: 100%;
@@ -43,19 +53,13 @@ WeaponHotbar {
 		background-position: center;
 	}
 
-		.slot-icon.pickaxe {
-			background-image: url("icons/weapons/pickaxe.vtex");
-		}
-
-		.slot-icon.usp {
-			background-image: url("icons/weapons/usp.vtex");
-		}
-
-		.slot-icon.mp5 {
-			background-image: url("icons/weapons/mp5.vtex");
-		}
-
-		.slot-icon.m4a1 {
-			background-image: url("icons/weapons/m4a1.vtex");
-		}
+	.slot-count {
+		position: absolute;
+		right: 7px;
+		bottom: 5px;
+		font-size: 14px;
+		font-weight: 700;
+		color: white;
+		text-shadow: 0 1px 3px black;
+	}
 }

@@ -1,6 +1,6 @@
 ﻿namespace Ambi.Storage;
 
-[AssetType( Name = "Item Definition", Extension = "item", Category = "Megashot")]
+[AssetType( Name = "Item Definition", Extension = "item", Category = "Minimal")]
 public sealed class ItemDefinition : GameResource
 {
     [Property] public string Id { get; set; } = "";

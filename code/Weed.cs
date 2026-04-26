@@ -15,9 +15,9 @@ public sealed class Weed : Component, Component.IPressable
 
     public bool IsGrown => GrowProgress >= 1f;
 
-    private static readonly Vector3 ScaleSmall  = new Vector3( 0.3f, 0.3f, 0.3f );
-    private static readonly Vector3 ScaleMedium = new Vector3( 0.6f, 0.6f, 0.6f );
-    private static readonly Vector3 ScaleMature = new Vector3( 1.0f, 1.0f, 1.0f );
+    private static readonly Vector3 ScaleSmall  = new Vector3( 0.2f, 0.2f, 0.2f );
+    private static readonly Vector3 ScaleMedium = new Vector3( 0.35f, 0.35f, 0.35f );
+    private static readonly Vector3 ScaleMature = new Vector3( 0.75f, 0.75f, 0.75f);
 
     protected override void OnStart()
     {

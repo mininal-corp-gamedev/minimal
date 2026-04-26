@@ -1,0 +1,125 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( Door is null )
+	{
+	}
+	else if ( Door.IsBlocked )
+	{
+		@if ( !string.IsNullOrWhiteSpace( Door.Header ) )
+		{
+			<div class="header-only">@Door.Header</div>
+		}
+	}
+	else if ( Door.HasOnlyJobs )
+	{
+		<div class="panel">
+			<div class="title">@Door.Header</div>
+			@if ( Door.IsLocalPlayerJobAllowed )
+			{
+				<div class="actions">
+					@if ( Door.LockState == Door.DoorLockState.Locked )
+					{
+						<button class="btn unlock" onclick=@OnUnlock>
+							<div class="btn-label">Unlock</div>
+						</button>
+					}
+					else
+					{
+						<button class="btn lock" onclick=@OnLock>
+							<div class="btn-label">Lock</div>
+						</button>
+					}
+				</div>
+				<div class="hint">Use LMB / RMB to interact</div>
+			}
+		</div>
+	}
+	else if ( !Door.HasOwner )
+	{
+		<div class="panel">
+			<div class="title">@Door.Header</div>
+			<div class="actions">
+				<button class="btn buy" onclick=@OnBuy>
+					<div class="btn-label">Buy</div>
+					<div class="btn-price">$@Door.BuyPrice</div>
+				</button>
+			</div>
+			<div class="hint">Use LMB / RMB to interact</div>
+		</div>
+	}
+	else
+	{
+		<div class="panel">
+			<div class="title">@Door.OwnerDisplayName</div>
+			@if ( Door.IsLocalPlayerOwner )
+			{
+				<div class="actions">
+					@if ( Door.LockState == Door.DoorLockState.Locked )
+					{
+						<button class="btn unlock" onclick=@OnUnlock>
+							<div class="btn-label">Unlock</div>
+						</button>
+					}
+					else
+					{
+						<button class="btn lock" onclick=@OnLock>
+							<div class="btn-label">Lock</div>
+						</button>
+					}
+					<button class="btn sell" onclick=@OnSell>
+						<div class="btn-label">Sell</div>
+						<div class="btn-price">$@Door.SellPrice</div>
+					</button>
+				</div>
+				<div class="hint">Use LMB / RMB to interact</div>
+			}
+		</div>
+	}
+</root>
+
+@code
+{
+	[Property] public Door Door { get; set; }
+
+	void OnBuy()
+	{
+		Door?.RpcRequestBuy();
+	}
+
+	void OnSell()
+	{
+		Door?.RpcRequestSell();
+	}
+
+	void OnLock()
+	{
+		Door?.RpcRequestLock();
+	}
+
+	void OnUnlock()
+	{
+		Door?.RpcRequestUnlock();
+	}
+
+	protected override int BuildHash()
+	{
+		var h = new HashCode();
+		h.Add( Door );
+		h.Add( Door?.Header );
+		h.Add( Door?.IsBlocked );
+		h.Add( Door?.HasOnlyJobs );
+		h.Add( Door?.IsLocalPlayerJobAllowed );
+		h.Add( Door?.HasOwner );
+		h.Add( Door?.OwnerDisplayName );
+		h.Add( Door?.LockState );
+		h.Add( Door?.IsLocalPlayerOwner );
+		h.Add( Door?.BuyPrice );
+		return h.ToHashCode();
+	}
+}

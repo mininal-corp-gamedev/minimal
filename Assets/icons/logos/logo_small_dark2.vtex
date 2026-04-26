@@ -2,7 +2,7 @@
   "Images": null,
   "Sequences": [
     {
-      "Source": "icons/logos/mrp_logo1.png",
+      "Source": "icons/logos/logo_small_dark2.png",
       "IsLooping": true,
       "FlipBook": false,
       "Columns": 0,

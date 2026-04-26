@@ -15,9 +15,27 @@ public sealed class Player : Component, Component.IDamageable
     [Property] public GameObject ItemDropPrefab { get; private set; }
     [Property, Category("Sounds")] public SoundEvent HitSound { get; set; }
 
+    /// <summary>Maximum number of doors this player can own at once.</summary>
+    [Property] public int MaxDoors { get; set; } = 8;
+
     [Sync(SyncFlags.FromHost)] public float Health { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public float MaxHealth { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public int Money { get; set; } = 0;
+
+    /// <summary>Number of doors currently owned (gameplay-wise) by this player.</summary>
+    public int OwnedDoorsCount
+    {
+        get
+        {
+            int count = 0;
+            foreach (var go in Scene.GetAllObjects(true))
+            {
+                if (!go.Components.TryGet<Door>(out var door)) continue;
+                if (door.PlayerOwner == this) count++;
+            }
+            return count;
+        }
+    }
     public int CactusCount { get; set; } = 0;
     public bool IsAlive => Health > 0;
     public Inventory Inventory { get; set; } = new(10);

@@ -1,16 +1,16 @@
-$logo-width: 210px;
-$logo-height: 180px;
+$logo-width: 200px;
+$logo-height: 200px;
 
 Logo {
 	position: absolute;
-	top: 0;
+	top: -40px;
 	left: 0;
 	right: 0;
 	bottom: 0;
 	flex-direction: row;
 	justify-content: flex-end;
 	align-items: flex-start;
-	padding: 4px 24px;
+	padding: 0px 0px;
 	pointer-events: none;
 
 	.logo {

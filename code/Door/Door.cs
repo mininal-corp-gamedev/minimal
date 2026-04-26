@@ -26,6 +26,12 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	/// <summary>Jobs allowed to lock/unlock this door when <see cref="HasOnlyJobs"/> is true.</summary>
 	[Property, ShowIf( "HasOnlyJobs", true )] public List<JobDefinition> AllowedJobs { get; set; } = new();
 
+	/// <summary>
+	/// Optional paired door. When set, Buy/Sell/Open/Close/Lock/Unlock mirror to the paired door.
+	/// Pairing is bidirectional and must be authored manually: set <c>DoorSecond</c> on both doors pointing at each other.
+	/// </summary>
+	[Property] public Door DoorSecond { get; set; }
+
 	/// <summary>Gameplay owner of this door. Set by Buy, cleared by Sell. Not the network object owner.</summary>
 	[Sync] public Player PlayerOwner { get; private set; }
 
@@ -125,15 +131,17 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		return true;
 	}
 
-	/// <summary>Opens the door. Has no effect if animating, already open, or locked.</summary>
+	/// <summary>Opens the door. Has no effect if animating, already open, or locked. Mirrors to <see cref="DoorSecond"/>.</summary>
 	public void Open()
 	{
+		if ( State == DoorState.Open ) return; // idempotent — prevents paired-door recursion
 		if ( IsPlayingAnimation ) return;
-		if ( State == DoorState.Open ) return;
 		if ( LockState == DoorLockState.Locked ) return;
 
 		State = DoorState.Open;
 		IsPlayingAnimation = true;
+
+		DoorSecond?.Open();
 	}
 
 	[Rpc.Host]
@@ -142,15 +150,17 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		Open();
 	}
 
-	/// <summary>Closes the door. Has no effect if animating, already closed, or the broken lockout is active.</summary>
+	/// <summary>Closes the door. Has no effect if animating, already closed, or the broken lockout is active. Mirrors to <see cref="DoorSecond"/>.</summary>
 	public void Close()
 	{
+		if ( State == DoorState.Closed ) return; // idempotent — prevents paired-door recursion
 		if ( IsPlayingAnimation ) return;
-		if ( State == DoorState.Closed ) return;
 		if ( IsBrokenLocked ) return;
 
 		State = DoorState.Closed;
 		IsPlayingAnimation = true;
+
+		DoorSecond?.Close();
 	}
 
 	[Rpc.Host]
@@ -159,9 +169,10 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		Close();
 	}
 
-	/// <summary>Locks the door. Requires a non-blocked, non-broken, closed, idle door that is either player-owned or a job-door.</summary>
+	/// <summary>Locks the door. Requires a non-blocked, non-broken, closed, idle door that is either player-owned or a job-door. Mirrors to <see cref="DoorSecond"/>.</summary>
 	public void Lock()
 	{
+		if ( LockState == DoorLockState.Locked ) return; // idempotent — prevents paired-door recursion
 		if ( IsPlayingAnimation ) return;
 		if ( State == DoorState.Open ) return;
 		if ( IsBrokenLocked ) return;
@@ -170,6 +181,8 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		if ( !HasOnlyJobs && !HasOwner ) return;
 
 		LockState = DoorLockState.Locked;
+
+		DoorSecond?.Lock();
 	}
 
 	[Rpc.Host]
@@ -180,13 +193,16 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		Lock();
 	}
 
-	/// <summary>Unlocks the door. Requires the door not being admin-blocked and being either player-owned or a job-door.</summary>
+	/// <summary>Unlocks the door. Requires the door not being admin-blocked and being either player-owned or a job-door. Mirrors to <see cref="DoorSecond"/>.</summary>
 	public void Unlock()
 	{
+		if ( LockState == DoorLockState.Unlocked ) return; // idempotent — prevents paired-door recursion
 		if ( IsBlocked ) return;
 		if ( !HasOnlyJobs && !HasOwner ) return;
 
 		LockState = DoorLockState.Unlocked;
+
+		DoorSecond?.Unlock();
 	}
 
 	[Rpc.Host]
@@ -222,6 +238,12 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		buyer.Money -= BuyPrice;
 		PlayerOwner = buyer;
+
+		// Mirror ownership to the paired door without charging again.
+		if ( DoorSecond.IsValid() && !DoorSecond.HasOwner )
+		{
+			DoorSecond.PlayerOwner = buyer;
+		}
 	}
 
 	[Rpc.Host]
@@ -248,10 +270,19 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		if ( !HasOwner ) return;
 
 		if ( PlayerOwner.IsValid() )
-			PlayerOwner.Money += SellPrice;
+			PlayerOwner.Money += SellPrice; // Refund half, once — not doubled for paired doors.
+
+		var partner = DoorSecond;
 
 		PlayerOwner = null;
 		LockState = DoorLockState.Unlocked;
+
+		// Clear ownership on the paired door without refunding again.
+		if ( partner.IsValid() && partner.HasOwner )
+		{
+			partner.PlayerOwner = null;
+			partner.LockState = DoorLockState.Unlocked;
+		}
 	}
 
 	[Rpc.Host]

@@ -22,17 +22,29 @@ public sealed class Player : Component, Component.IDamageable
     [Sync(SyncFlags.FromHost)] public float MaxHealth { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public int Money { get; set; } = 0;
 
-    /// <summary>Number of doors currently owned (gameplay-wise) by this player.</summary>
+    /// <summary>
+    /// Number of doors currently owned (gameplay-wise) by this player.
+    /// A paired (double) door counts as a single entry.
+    /// </summary>
     public int OwnedDoorsCount
     {
         get
         {
+            var visited = new HashSet<Door>();
             int count = 0;
+
             foreach (var go in Scene.GetAllObjects(true))
             {
                 if (!go.Components.TryGet<Door>(out var door)) continue;
-                if (door.PlayerOwner == this) count++;
+                if (door.PlayerOwner != this) continue;
+                if (!visited.Add(door)) continue;
+
+                if (door.DoorSecond.IsValid())
+                    visited.Add(door.DoorSecond);
+
+                count++;
             }
+
             return count;
         }
     }

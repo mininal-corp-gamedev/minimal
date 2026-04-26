@@ -835,26 +835,8 @@
               "Type": "Component",
               "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
             },
-            "Property": "AllowedJobs",
-            "Value": [
-              "jobs/citizen.job"
-            ]
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "HasOnlyJobs",
-            "Value": false
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "Header",
-            "Value": "Police Deparment"
+            "Property": "DoorSecond",
+            "Value": null
           }
         ],
         "MovedObjects": []
@@ -870,6 +852,62 @@
         "4e016627-1674-4521-bcf1-ada81bbc43a8": "bf833ac5-40a8-4f2e-8c5c-b06737ae98f0",
         "f73f0e36-5dab-48e6-9d43-a47a1aced771": "bb72d949-b3bc-4b42-bb3d-db5bf103cd82",
         "4b63a60b-841b-410a-a7b5-52dcaaac18ac": "5ef81ef4-5c77-4ef2-8f22-12c741f4128f"
+      }
+    },
+    {
+      "__guid": "bf090e9c-e51f-4e41-a81c-48f457136696",
+      "__version": 2,
+      "__Prefab": "prefabs/door.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+            },
+            "Property": "Name",
+            "Value": "door (1)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+            },
+            "Property": "Position",
+            "Value": "413.351807,-316.813721,42.3376999"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+            },
+            "Property": "Rotation",
+            "Value": "0,-0,-0.707106769,0.707106769"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+            },
+            "Property": "DoorSecond",
+            "Value": null
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "6ff64c8d-d72e-4559-88f1-0805701930f5": "bf090e9c-e51f-4e41-a81c-48f457136696",
+        "63f9abba-02bd-4247-86f7-08e143c836e7": "4782c3b1-930b-4bc5-aacb-08de4bb19769",
+        "6bf6f4c9-7b9a-4f74-b46d-a1e0296515f5": "ab1ff147-ed7c-4304-8b48-b0e5bec17ea9",
+        "5841057c-911e-402d-a936-4b4d0728f96c": "2a983309-48e2-4d1e-a694-e32d4a015b87",
+        "975f60f4-fb6b-48ed-b322-846386f529c6": "7232beeb-8e96-4237-affb-6e77c8e8d0d6",
+        "2eec3323-0b2b-43fc-bf6c-1503eb07df05": "12bcb57b-f825-4149-aeb6-721e6e7e1f9a",
+        "ac6ef700-0157-43f7-90d5-84d46d9069e6": "3edbca7a-6355-4920-942d-1676f95501b2",
+        "4e016627-1674-4521-bcf1-ada81bbc43a8": "95ee9557-3d4e-43d9-8f9f-ca7d5e80fd31",
+        "f73f0e36-5dab-48e6-9d43-a47a1aced771": "c0d1cb69-8285-43ae-8b44-476d84384ec0",
+        "4b63a60b-841b-410a-a7b5-52dcaaac18ac": "83a97ab2-dc7f-4912-989e-95d184856930"
       }
     },
     {

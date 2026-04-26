@@ -20,9 +20,13 @@
         "__guid": "63f9abba-02bd-4247-86f7-08e143c836e7",
         "__enabled": true,
         "Flags": 0,
+        "AllowedJobs": [
+          "jobs/citizen.job"
+        ],
         "AnimationSpeed": 90,
         "BuyPrice": 1,
-        "Header": "Door",
+        "HasOnlyJobs": false,
+        "Header": "Police Deparment",
         "IsBlocked": false,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,

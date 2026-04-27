@@ -6,6 +6,10 @@
 
 <root>
 	<div class="title">@Name</div>
+	@if ( !string.IsNullOrWhiteSpace( JobName ) )
+	{
+		<div class="job">@JobName</div>
+	}
 	<div class="health-bar">
 		<div class="health-fill" style="width: @(HealthPercent)%;"></div>
 		<div class="health-text">@HealthDisplay / @MaxHealthDisplay</div>
@@ -20,6 +24,7 @@
 
 	float HealthValue => TargetPlayer?.Health ?? 0f;
 	float MaxHealthValue => TargetPlayer is { MaxHealth: > 0f } p ? p.MaxHealth : 1f;
+	string JobName => TargetPlayer?.Job?.JobDefinition?.Header ?? "";
 
 	float HealthPercent => Math.Clamp( HealthValue / MaxHealthValue * 100f, 0f, 100f );
 
@@ -28,5 +33,5 @@
 
 	public void WorldHudRefresh() => StateHasChanged();
 
-	protected override int BuildHash() => System.HashCode.Combine( Name, HealthValue, MaxHealthValue );
+	protected override int BuildHash() => System.HashCode.Combine( Name, JobName, HealthValue, MaxHealthValue );
 }

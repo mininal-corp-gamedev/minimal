@@ -232,6 +232,9 @@
 
 	protected override int BuildHash()
 	{
+		if (IsOpen)
+			return System.HashCode.Combine(Time.Now);
+
 		var hash = System.HashCode.Combine( IsOpen, CtxVisible, CtxSlotIndex, CtxX, CtxY, SlotCount, HoverSlotIndex, TipX );
 		hash = System.HashCode.Combine( hash, TipY );
 		if ( Inv is not null )

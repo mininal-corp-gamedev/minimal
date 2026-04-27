@@ -227,6 +227,8 @@
 			propCustom.SetOwner( player );
 
 		gameObj.NetworkSpawn( caller );
+
+		Log.Info( $"[PropsMenu] {caller.DisplayName} ({caller.SteamId.Value}) bought/spawned prop '{GetPropHeader( prop )}' (id: {prop.Id}, price: ${prop.Price}, object: {gameObj.Name})." );
 		NotifyCaller( caller, $"Spawned: {GetPropHeader( prop )}.", true );
 	}
 

@@ -505,12 +505,31 @@ TabMenu {
 		background-color: rgba(255, 255, 255, 0.08);
 	}
 
-	.player-name {
+	.player-info {
 		flex-grow: 1;
+		min-width: 0;
+		flex-direction: column;
+	}
+
+	.player-name {
 		font-family: Poppins;
 		font-size: 15px;
 		font-weight: 600;
 		color: rgba(255, 255, 255, 0.90);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.player-job {
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 600;
+		color: #ff436c;
+		margin-top: 2px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.player-ping {

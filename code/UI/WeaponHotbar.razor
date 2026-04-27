@@ -52,10 +52,10 @@
 
 	protected override void OnUpdate()
 	{
-		// Physgun сам потребляет колёсико для изменения дистанции захвата —
-		// в этом случае не трогаем хотбар, иначе при попытке отдалить/приблизить
-		// объект игрок случайно переключит слот.
-		if ( Player.Local?.CurrentWeapon is Minimal.Weapons.WeaponPhysgun )
+		// Physgun потребляет колёсико ТОЛЬКО когда зажата ЛКМ (режим Physgun-захвата) —
+		// в этот момент колёсико регулирует дистанцию удержания. В любое другое время
+		// (даже если physgun просто в руках) хотбар должен нормально прокручиваться.
+		if ( Player.Local?.CurrentWeapon is Minimal.Weapons.WeaponPhysgun && Input.Down( "Attack1" ) )
 			return;
 
 		var wheel = Input.MouseWheel.y;
@@ -81,21 +81,27 @@
 
 	protected override int BuildHash()
 	{
-		var hash = System.HashCode.Combine(
-			Time.Now,
-			Player.Local?.CurrentWeapon?.GetHashCode() ?? 0,
-			Player.Local?.CurrentInventorySlotIndex ?? -1,
-			Player.Local?.SelectedHotbarSlotIndex ?? -1 );
+		return System.HashCode.Combine(Time.Now);
 
-		if ( Inv is not null )
-		{
-			for ( int i = 0; i < HotbarCount && i < Inv.Slots.Count; i++ )
-			{
-				var slot = Inv.Slots[i];
-				hash = System.HashCode.Combine( hash, slot.Item?.Id, slot.Item?.Count ?? 0 );
-			}
-		}
+		// Раньше в hash шёл Time.Now — он меняется каждый кадр, и панель
+		// перестраивалась 60 раз в секунду без надобности. Это и создавало
+		// нагрузку, из-за которой хотбар выглядел «лагающим». Хеш считаем
+		// только по реально влияющим на отображение полям; они уже
+		// обновляются оптимистично в Player.UseInventorySlot.
+		// var hash = System.HashCode.Combine(
+		// 	Player.Local?.CurrentWeapon?.GetHashCode() ?? 0,
+		// 	Player.Local?.CurrentInventorySlotIndex ?? -1,
+		// 	Player.Local?.SelectedHotbarSlotIndex ?? -1 );
 
-		return hash;
+		// if ( Inv is not null )
+		// {
+		// 	for ( int i = 0; i < HotbarCount && i < Inv.Slots.Count; i++ )
+		// 	{
+		// 		var slot = Inv.Slots[i];
+		// 		hash = System.HashCode.Combine( hash, slot.Item?.Id, slot.Item?.Count ?? 0 );
+		// 	}
+		// }
+
+		// return hash;
 	}
 }

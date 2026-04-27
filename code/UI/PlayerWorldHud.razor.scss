@@ -16,6 +16,15 @@ PlayerWorldHud {
 		font-family: Poppins;
 		color: $health-pink;
 		text-stroke: 3px rgba( 0, 0, 0, 0.88 );
+		margin-bottom: 1px;
+	}
+
+	.job {
+		font-size: 16px;
+		font-family: Poppins;
+		font-weight: 600;
+		color: #ffffff;
+		text-stroke: 2px rgba( 0, 0, 0, 0.82 );
 		margin-bottom: 6px;
 	}
 

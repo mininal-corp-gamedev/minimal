@@ -115,9 +115,14 @@
 							<div class="player-list">
 								@foreach ( var conn in CachedPlayers )
 								{
+									var jobName = GetPlayerJobName( conn );
+
 									<div class="player-row">
 										<div class="player-avatar" style="background-image: url( avatar:@conn.SteamId.Value )"></div>
-										<div class="player-name">@conn.DisplayName</div>
+										<div class="player-info">
+											<div class="player-name">@conn.DisplayName</div>
+											<div class="player-job">@jobName</div>
+										</div>
 										<div class="player-ping">@conn.Ping ms</div>
 									</div>
 								}
@@ -218,6 +223,25 @@
 		foreach ( var job in AvailableJobs )
 		{
 			hash = HashCode.Combine( hash, job.Id, GetJobPlayersCount( job.Id ) );
+		}
+
+		return hash;
+	}
+
+	private string GetPlayerJobName( Connection connection )
+	{
+		if ( connection is null )
+			return "No Job";
+
+		return FindPlayerBySteamId( connection.SteamId.Value )?.Job?.JobDefinition?.Header ?? "No Job";
+	}
+
+	private int GetPlayersJobHash()
+	{
+		var hash = 17;
+		foreach ( var connection in CachedPlayers )
+		{
+			hash = HashCode.Combine( hash, connection.SteamId.Value, GetPlayerJobName( connection ) );
 		}
 
 		return hash;
@@ -456,6 +480,7 @@
 		hash.Add( Connection.Local?.DisplayName );
 		hash.Add( Connection.All.Count );
 		hash.Add( GetJobsPopulationHash() );
+		hash.Add( GetPlayersJobHash() );
 		hash.Add( AvailableJobs.Count );
 		hash.Add( AvailableShopItems.Count );
 		hash.Add( VisibleShopItems.Count() );

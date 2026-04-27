@@ -366,6 +366,14 @@ public sealed class Player : Component, ICustomDamagable
         if (Networking.IsHost)
             return HostUseInventorySlot(slotIndex);
 
+        // Оптимистичный локальный апдейт подсветки слота: без него хотбар
+        // визуально «лагает» на величину сетевого RTT, пока не придёт
+        // RpcOwnerUseInventorySlotApproved. Если хост слот отвергнет —
+        // approved-RPC не придёт, индикатор просто останется на старом значении
+        // (валидируется ValidateCurrentWeaponInventoryState на клиенте).
+        if (slotIndex >= 0 && slotIndex < 9)
+            SelectedHotbarSlotIndex = slotIndex;
+
         RpcRequestUseInventorySlot(slotIndex);
         return true;
     }
@@ -782,6 +790,15 @@ public sealed class Player : Component, ICustomDamagable
         SetupWorldHud();
         DressForHost(Dresser);
         AdminManager.RpcRequestRankInit();
+
+        // Сейв-инит запрашиваем у хоста ИЗ NetworkInit, а не в OnStart.
+        // OnStart на хосте может срабатывать раньше, чем GameObject.Network.Owner
+        // успевает быть выставлен для клиентского Player — тогда
+        // GetOwnerSteamId() возвращает 0 и HostInitSave молча выходил, из‑за
+        // чего сохранение писалось, но не «выдавалось» при заходе.
+        // Через Rpc.Host мы гарантированно знаем Rpc.Caller.SteamId на хосте.
+        RpcRequestPlayerSaveInit();
+        RpcRequestPlayerInventoryInit();
     }
 
     private void HookInventoryEvents()
@@ -852,6 +869,54 @@ public sealed class Player : Component, ICustomDamagable
     }
 
     /// <summary>
+    /// Клиент-сторона: просит хост инициализировать денежный сейв ИМЕННО
+    /// для этого подключения. На хосте по <see cref="Rpc.Caller"/> находим
+    /// Player и грузим его сохранение (или выдаём стартовые деньги новичку).
+    /// Это безопаснее, чем грузить в OnStart: к моменту RPC у Player уже
+    /// гарантированно проставлен <c>GameObject.Network.Owner</c>.
+    /// </summary>
+    [Rpc.Host]
+    public static void RpcRequestPlayerSaveInit()
+    {
+        if ( !Networking.IsHost ) return;
+
+        var caller = Rpc.Caller;
+        if ( caller is null ) return;
+
+        var player = FindPlayerBySteamId( caller.SteamId.Value );
+        if ( !player.IsValid() )
+        {
+            Log.Warning( $"[PlayerSave] Init request: player not found for {caller.DisplayName} ({caller.SteamId.Value})." );
+            return;
+        }
+
+        if ( player._saveInitialized ) return;
+
+        player.HostInitSave();
+    }
+
+    /// <summary>Клиент-сторона: просит хост инициализировать инвентарный сейв.</summary>
+    [Rpc.Host]
+    public static void RpcRequestPlayerInventoryInit()
+    {
+        if ( !Networking.IsHost ) return;
+
+        var caller = Rpc.Caller;
+        if ( caller is null ) return;
+
+        var player = FindPlayerBySteamId( caller.SteamId.Value );
+        if ( !player.IsValid() )
+        {
+            Log.Warning( $"[InventorySave] Init request: player not found for {caller.DisplayName} ({caller.SteamId.Value})." );
+            return;
+        }
+
+        if ( player._inventorySaveInitialized ) return;
+
+        player.HostInitInventorySave();
+    }
+
+    /// <summary>
     /// Host-only. Loads save for the owning SteamId, applies it to this Player,
     /// and unlocks further persistence. If no save exists, issues the starting money.
     /// </summary>
@@ -889,11 +954,17 @@ public sealed class Player : Component, ICustomDamagable
             };
         }
 
-        // Apply to this player (bypasses persistence because _saveInitialized is still false).
-        _money = data.Money;
+        // Сначала разрешаем персист, чтобы сеттер мог сохранять при изменениях.
         _saveInitialized = true;
 
-        // Persist a fresh copy so new players get a file immediately.
+        // Применяем через property-сеттер, а не в backing field напрямую.
+        // [Sync(FromHost)] трекает изменение через property; запись в _money
+        // напрямую не уведомляла клиентов, из-за чего Hud не показывал
+        // загруженное значение после инициализации.
+        Money = data.Money;
+
+        // Гарантируем файл на диске даже если значение совпало с дефолтом
+        // (тогда сеттер не вызвал бы SavePlayerData).
         SavePlayerData();
     }
 
@@ -1026,8 +1097,11 @@ public sealed class Player : Component, ICustomDamagable
         MakeLocalInstance();
         RegisterItemUseHandlers();
         RegisterJobInventoryEvents();
-        HostInitSave();
-        HostInitInventorySave();
+        // HostInitSave/HostInitInventorySave НЕ зовём здесь:
+        // на хосте OnStart для клиентского Player может выполняться до того,
+        // как у GameObject уже проставлен Network.Owner, и тогда инициализация
+        // молча обрывается. Сейв инициализируется по запросу клиента из
+        // NetworkInit (см. RpcRequestPlayerSaveInit / RpcRequestPlayerInventoryInit).
         NetworkInit();
     }
 

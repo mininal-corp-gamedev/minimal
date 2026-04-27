@@ -1,5 +1,5 @@
 using System;
-using static Sandbox.Clothing;
+using System.Text.Json;
 
 namespace Ambi.Storage;
 
@@ -49,6 +49,9 @@ public sealed class Inventory
 
     public bool AddItem(Item item)
     {
+        if (item is null || item.Count <= 0)
+            return false;
+
         int remaining = item.Count;
         int addedTotal = 0;
 
@@ -58,7 +61,7 @@ public sealed class Inventory
             if (slot.Item == null)
                 continue;
 
-            if (slot.Item.Id != item.Id)
+            if (!slot.Item.CanStackWith(item))
                 continue;
 
             if (remaining <= 0)
@@ -85,7 +88,7 @@ public sealed class Inventory
             int stack = Math.Min(item.MaxCount, remaining);
             remaining -= stack;
 
-            var newItem = Item.Create(item.Id, stack);
+            var newItem = item.CopyWithCount(stack);
             slot.Set(newItem);
 
             addedTotal += stack;
@@ -161,22 +164,29 @@ public sealed class Inventory
 
     public bool CanAddItem(string id, int amount)
     {
-        if (amount <= 0)
+        return CanAddItem(Item.Create(id, amount));
+    }
+
+    public bool CanAddItem(Item item)
+    {
+        if (item is null)
+            return false;
+        if (item.Count <= 0)
             return true;
 
-        var def = ItemDatabase.Get(id);
+        var def = item.Definition;
         if (def is null)
             return false;
 
         var maxCount = Math.Max(1, def.MaxCount);
-        int remaining = amount;
+        int remaining = item.Count;
 
         foreach (var slot in _slots)
         {
             if (slot.Item == null)
                 continue;
 
-            if (slot.Item.Id != id)
+            if (!slot.Item.CanStackWith(item))
                 continue;
 
             int freeSpace = maxCount - slot.Item.Count;
@@ -221,17 +231,26 @@ public sealed class Inventory
 
         var item = slot.Item;
 
-        if (!item.Definition.CanUse)
+        var beforeCount = item.Count;
+        var definition = item.Definition;
+        if (definition is null || !definition.CanUse)
             return false;
 
         var successful = ItemUseRegistry.TryUse(item, caller);
 
+        var removed = Math.Max(0, beforeCount - item.Count);
         if (item.Count <= 0)
             slot.Clear();
 
         if (successful)
         {
+            if (removed > 0)
+                OnItemRemoved?.Invoke(item.CopyWithCount(removed), removed);
+
             OnUsed?.Invoke(slot);
+
+            if (removed > 0)
+                OnChanged?.Invoke();
         }
 
         return successful;
@@ -324,6 +343,115 @@ public sealed class Inventory
     {
         foreach (var slot in _slots)
             slot.Clear();
+        OnChanged?.Invoke();
+    }
+
+    public int RemoveJobItems()
+    {
+        int removedTotal = 0;
+
+        foreach (var slot in _slots)
+        {
+            if (slot.Item is null || !slot.Item.IsJobItem)
+                continue;
+
+            removedTotal += slot.Item.Count;
+            OnItemRemoved?.Invoke(slot.Item, slot.Item.Count);
+            slot.Clear();
+        }
+
+        if (removedTotal > 0)
+            OnChanged?.Invoke();
+
+        return removedTotal;
+    }
+
+    public InventorySnapshot CreateSnapshot(long steamId = 0, bool includeNonSaveItems = true)
+    {
+        var snapshot = new InventorySnapshot
+        {
+            SteamId = steamId,
+            SlotCount = _slots.Count
+        };
+
+        for (int i = 0; i < _slots.Count; i++)
+        {
+            var item = _slots[i].Item;
+            if (item is null)
+                continue;
+            if (!includeNonSaveItems && !item.CanSave)
+                continue;
+
+            snapshot.Slots.Add(new InventorySlotSnapshot
+            {
+                Index = i,
+                Id = item.Id,
+                Count = item.Count,
+                CanDrop = item.CanDrop,
+                IsJobItem = item.IsJobItem,
+                CanSave = item.CanSave
+            });
+        }
+
+        return snapshot;
+    }
+
+    public string CreateSnapshotJson(long steamId = 0, bool includeNonSaveItems = true)
+    {
+        return JsonSerializer.Serialize(CreateSnapshot(steamId, includeNonSaveItems));
+    }
+
+    public bool ApplySnapshotJson(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return false;
+
+        try
+        {
+            var snapshot = JsonSerializer.Deserialize<InventorySnapshot>(json);
+            if (snapshot is null)
+                return false;
+
+            ApplySnapshot(snapshot);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Log.Warning($"[Inventory] Failed to apply snapshot: {ex.Message}");
+            return false;
+        }
+    }
+
+    public void ApplySnapshot(InventorySnapshot snapshot)
+    {
+        if (snapshot is null)
+            return;
+
+        var slotCount = snapshot.SlotCount > 0 ? snapshot.SlotCount : _slots.Count;
+        if (slotCount < _slots.Count)
+            _slots.RemoveRange(slotCount, _slots.Count - slotCount);
+        else
+        {
+            for (int i = _slots.Count; i < slotCount; i++)
+                _slots.Add(new Slot());
+        }
+
+        foreach (var slot in _slots)
+            slot.Clear();
+
+        foreach (var savedSlot in snapshot.Slots)
+        {
+            if (savedSlot is null)
+                continue;
+            if (savedSlot.Index < 0 || savedSlot.Index >= _slots.Count)
+                continue;
+            if (string.IsNullOrWhiteSpace(savedSlot.Id) || savedSlot.Count <= 0)
+                continue;
+
+            var item = Item.Create(savedSlot.Id, savedSlot.Count, savedSlot.CanDrop, savedSlot.IsJobItem, savedSlot.CanSave);
+            _slots[savedSlot.Index].Set(item);
+        }
+
         OnChanged?.Invoke();
     }
 }

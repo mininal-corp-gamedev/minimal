@@ -54,6 +54,13 @@ public sealed class ShopManager : Component
 			return;
 		}
 
+		var item = shop.ItemDefinition is null ? null : Item.Create( shop.ItemDefinition.Id, 1 );
+		if ( item is not null && !buyer.Inventory.CanAddItem( item ) )
+		{
+			NotifyBuyer( caller, false, "Inventory is full.", null );
+			return;
+		}
+
 		buyer.Money -= price;
 
 		var context = new ShopPurchaseContext
@@ -70,8 +77,14 @@ public sealed class ShopManager : Component
 			return;
 		}
 
-		var itemId = shop.ItemDefinition?.Id;
-		NotifyBuyer( caller, true, $"Purchased: {shop.Header}.", itemId );
+		if ( item is not null && !buyer.HostAddItem( item ) )
+		{
+			buyer.Money += price;
+			NotifyBuyer( caller, false, "Inventory is full.", null );
+			return;
+		}
+
+		NotifyBuyer( caller, true, $"Purchased: {shop.Header}.", null );
 	}
 
 	public static bool CanBuyByJob( Player buyer, ShopDefinition shop )
@@ -120,20 +133,6 @@ public sealed class ShopManager : Component
 	{
 		if ( success )
 		{
-			if ( !string.IsNullOrWhiteSpace( itemId ) )
-			{
-				var player = Player.Local;
-				if ( player?.Inventory is not null && player.Inventory.CanAddItem( itemId, 1 ) )
-				{
-					player.Inventory.AddItem( Item.Create( itemId, 1 ) );
-				}
-				else
-				{
-					Notification.Error( "Inventory is full.", 3.5f );
-					return;
-				}
-			}
-
 			Notification.Info( message, 3.5f );
 			return;
 		}

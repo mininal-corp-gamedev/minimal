@@ -65,11 +65,19 @@ public sealed class Player : Component, ICustomDamagable
     [Sync(SyncFlags.FromHost)] public TimeUntil LockpickCooldown { get; set; }
 
     private const string PlayerSaveFolder = "players";
+    private const string InventorySaveFolder = "inv";
     private const int DefaultStartingMoney = 500;
+    private const int InventorySlotCount = 20;
+    private static readonly string[] DefaultInventoryItemIds = { "hands", "physgun", "toolgun" };
 
     // Host-only gate. Until the save is loaded on the host, Money writes
     // must not overwrite the file on disk.
     private bool _saveInitialized;
+    private bool _inventorySaveInitialized;
+    private bool _inventoryEventsHooked;
+    private bool _deferInventorySync;
+    private bool _inventoryChangedWhileDeferred;
+    private static bool _jobInventoryEventsRegistered;
 
     /// <summary>
     /// Number of doors currently owned (gameplay-wise) by this player.
@@ -99,7 +107,7 @@ public sealed class Player : Component, ICustomDamagable
     }
     public int CactusCount { get; set; } = 0;
     public bool IsAlive => Health > 0;
-    public Inventory Inventory { get; set; } = new(20);
+    public Inventory Inventory { get; set; } = new(InventorySlotCount);
 
     public Weapon CurrentWeapon { get; private set; }
     public int CurrentInventorySlotIndex { get; private set; } = -1;
@@ -246,6 +254,32 @@ public sealed class Player : Component, ICustomDamagable
     {
         if (IsProxy) return false;
         if (IsArrested) return false; // Арестованный не может пользоваться предметами
+
+        if (Networking.IsHost)
+            return HostUseInventorySlot(slotIndex);
+
+        RpcRequestUseInventorySlot(slotIndex);
+        return true;
+    }
+
+    [Rpc.Host]
+    private void RpcRequestUseInventorySlot(int slotIndex)
+    {
+        if (!Networking.IsHost)
+            return;
+
+        var player = FindCallerPlayer();
+        if (!player.IsValid() || player != this)
+            return;
+
+        player.HostUseInventorySlot(slotIndex);
+    }
+
+    private bool HostUseInventorySlot(int slotIndex)
+    {
+        if (!Networking.IsHost) return false;
+        if (!_inventorySaveInitialized) return false;
+        if (IsArrested) return false;
         if (Inventory == null) return false;
         if (slotIndex < 0 || slotIndex >= Inventory.Slots.Count) return false;
 
@@ -256,19 +290,27 @@ public sealed class Player : Component, ICustomDamagable
         if (slot.IsEmpty || slot.Item == null)
         {
             if (CurrentWeapon.IsValid())
-            {
                 SwitchWeapon();
-                return true;
-            }
 
-            return false;
+            RpcOwnerUseInventorySlotApproved(slotIndex, null);
+            return true;
         }
 
-        if (!slot.Item.Definition.CanUse) return false;
+        if (slot.Item.Definition is null || !slot.Item.Definition.CanUse)
+            return false;
 
         var itemId = slot.Item.Id;
         var isWeapon = IsWeaponItem(slot.Item);
-        var successful = Inventory.TryUseItem(slot, this);
+        bool successful;
+        _deferInventorySync = true;
+        try
+        {
+            successful = Inventory.TryUseItem(slot, this);
+        }
+        finally
+        {
+            _deferInventorySync = false;
+        }
 
         if (successful && isWeapon)
         {
@@ -278,7 +320,54 @@ public sealed class Player : Component, ICustomDamagable
 
         ValidateCurrentWeaponInventoryState();
 
+        if (successful)
+            RpcOwnerUseInventorySlotApproved(slotIndex, itemId);
+        if (_inventoryChangedWhileDeferred)
+        {
+            _inventoryChangedWhileDeferred = false;
+            SavePlayerInventory();
+            SendInventorySnapshotToOwner();
+        }
+        else if (!successful)
+        {
+            SendInventorySnapshotToOwner();
+        }
+
         return successful;
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerUseInventorySlotApproved(int slotIndex, string itemId)
+    {
+        if (Networking.IsHost)
+            return;
+        if (Inventory == null) return;
+        if (slotIndex < 0 || slotIndex >= Inventory.Slots.Count) return;
+
+        if (slotIndex >= 0 && slotIndex < 9)
+            SelectedHotbarSlotIndex = slotIndex;
+
+        if (string.IsNullOrWhiteSpace(itemId))
+        {
+            SwitchWeapon();
+            return;
+        }
+
+        var slot = Inventory.Slots[slotIndex];
+        if (slot.IsEmpty || slot.Item == null || slot.Item.Id != itemId)
+            return;
+
+        var item = slot.Item;
+        var isWeapon = IsWeaponItem(item);
+        var successful = Inventory.TryUseItem(slot, this);
+
+        if (successful && isWeapon)
+        {
+            CurrentInventorySlotIndex = slotIndex;
+            CurrentWeaponItemId = itemId;
+        }
+
+        ValidateCurrentWeaponInventoryState();
     }
 
     private static bool IsWeaponItem(Item item)
@@ -345,12 +434,94 @@ public sealed class Player : Component, ICustomDamagable
         return -1;
     }
 
+    public bool MoveOrSwapInventorySlots(int fromIndex, int toIndex)
+    {
+        if (IsProxy) return false;
+
+        if (Networking.IsHost)
+            return HostMoveOrSwapInventorySlots(fromIndex, toIndex);
+
+        RpcRequestMoveOrSwapInventorySlots(fromIndex, toIndex);
+        return true;
+    }
+
+    [Rpc.Host]
+    private void RpcRequestMoveOrSwapInventorySlots(int fromIndex, int toIndex)
+    {
+        if (!Networking.IsHost)
+            return;
+
+        var player = FindCallerPlayer();
+        if (!player.IsValid() || player != this)
+            return;
+
+        player.HostMoveOrSwapInventorySlots(fromIndex, toIndex);
+    }
+
+    private bool HostMoveOrSwapInventorySlots(int fromIndex, int toIndex)
+    {
+        if (!Networking.IsHost) return false;
+        if (!_inventorySaveInitialized) return false;
+        if (Inventory is null) return false;
+
+        var successful = Inventory.TryMoveOrSwap(fromIndex, toIndex);
+        if (!successful)
+            SendInventorySnapshotToOwner();
+
+        return successful;
+    }
+
     public void DropItem(Slot slot, int count = 1)
     {
-        if (count <= 0) return;
-        if (slot.IsEmpty) return;
-        if (slot.Item.Count < count) return;
-        if (!ItemDropPrefab.IsValid()) return;
+        var slotIndex = Inventory?.GetIndex(slot);
+        if (!slotIndex.HasValue)
+            return;
+
+        DropInventorySlot(slotIndex.Value, count);
+    }
+
+    public void DropInventorySlot(int slotIndex, int count = 1)
+    {
+        if (IsProxy) return;
+
+        if (Networking.IsHost)
+        {
+            HostDropInventorySlot(slotIndex, count);
+            return;
+        }
+
+        RpcRequestDropInventorySlot(slotIndex, count);
+    }
+
+    [Rpc.Host]
+    private void RpcRequestDropInventorySlot(int slotIndex, int count)
+    {
+        if (!Networking.IsHost)
+            return;
+
+        var player = FindCallerPlayer();
+        if (!player.IsValid() || player != this)
+            return;
+
+        player.HostDropInventorySlot(slotIndex, count);
+    }
+
+    private bool HostDropInventorySlot(int slotIndex, int count)
+    {
+        if (!Networking.IsHost) return false;
+        if (!_inventorySaveInitialized) return false;
+        if (count <= 0) return false;
+        if (Inventory == null) return false;
+        if (slotIndex < 0 || slotIndex >= Inventory.Slots.Count) return false;
+        var slot = Inventory.Slots[slotIndex];
+        if (slot.IsEmpty || slot.Item == null) return false;
+        if (slot.Item.Count < count) return false;
+        if (!slot.Item.CanDrop)
+        {
+            NotifyInventoryResult(GameObject.Network.Owner, "Этот предмет нельзя выбросить.", false);
+            return false;
+        }
+        if (!ItemDropPrefab.IsValid()) return false;
 
         var item = slot.Item;
 
@@ -360,11 +531,14 @@ public sealed class Player : Component, ICustomDamagable
         if (!itemComponent.IsValid())
         {
             gameObj.Destroy();
-            return;
+            return false;
         }
 
         itemComponent.Count = count;
         itemComponent.ItemDefinition = item.Definition;
+        itemComponent.CanDrop = item.CanDrop;
+        itemComponent.IsJobItem = item.IsJobItem;
+        itemComponent.CanSave = item.CanSave;
         itemComponent.UsePickupMagnet = false;
         itemComponent.DelayDestroy = 10f;
         itemComponent.DelayDeleteSpawn = true;
@@ -380,7 +554,61 @@ public sealed class Player : Component, ICustomDamagable
         Inventory.RemoveItem(slot, count);
         ValidateCurrentWeaponInventoryState();
 
-        Notification.Make($"You dropped: {item.Definition.Header}", 10f);
+        NotifyInventoryResult(GameObject.Network.Owner, $"You dropped: {item.Definition.Header}", true);
+        return true;
+    }
+
+    public bool HostAddItem(Item item)
+    {
+        if (!Networking.IsHost) return false;
+        if (!_inventorySaveInitialized) return false;
+        if (Inventory is null || item is null) return false;
+        if (!Inventory.CanAddItem(item)) return false;
+
+        return Inventory.AddItem(item);
+    }
+
+    public bool HostGiveJobItem(string itemId, int count = 1, bool canDrop = true, bool canSave = false)
+    {
+        return HostAddItem(Item.Create(itemId, count, canDrop, isJobItem: true, canSave: canSave));
+    }
+
+    public int HostRemoveJobItems()
+    {
+        if (!Networking.IsHost) return 0;
+        if (!_inventorySaveInitialized || Inventory is null) return 0;
+
+        return Inventory.RemoveJobItems();
+    }
+
+    public int HostTryPickup(ItemComponent droppedItem)
+    {
+        if (!Networking.IsHost) return 0;
+        if (!_inventorySaveInitialized) return 0;
+        if (!droppedItem.IsValid()) return 0;
+        if (Inventory is null || droppedItem.ItemDefinition is null) return 0;
+        if (droppedItem.Count <= 0)
+        {
+            droppedItem.GameObject.Destroy();
+            return 0;
+        }
+
+        if (Vector3.DistanceBetween(WorldPosition, droppedItem.WorldPosition) > droppedItem.PickupRadius)
+            return 0;
+
+        var itemName = string.IsNullOrWhiteSpace(droppedItem.ItemDefinition.Header)
+            ? droppedItem.ItemDefinition.Id
+            : droppedItem.ItemDefinition.Header;
+
+        var taken = droppedItem.TryPickup(Inventory);
+        if (taken <= 0)
+        {
+            SendInventorySnapshotToOwner();
+            return 0;
+        }
+
+        NotifyInventoryResult(GameObject.Network.Owner, $"Picked up {itemName} x{taken}", true);
+        return taken;
     }
 
     [Rpc.Host]
@@ -395,13 +623,6 @@ public sealed class Player : Component, ICustomDamagable
     private void SetupWorldHud()
     {
         WorldHud.Name = Connection.Local.DisplayName;
-    }
-
-    private void GiveStartingItems()
-    {
-        Inventory.AddItem( Item.Create( "handcuff", 1 ) ); // TODO: Remove starter USP after testing inventory weapon flow.
-        Inventory.AddItem(Item.Create("picklock", 1)); // TODO: Remove starter USP after testing inventory weapon flow.
-        Inventory.AddItem(Item.Create("usp", 1)); // TODO: Remove starter USP after testing inventory weapon flow.
     }
 
     private static void RegisterItemUseHandlers()
@@ -428,14 +649,61 @@ public sealed class Player : Component, ICustomDamagable
     {
         if (IsProxy) return;
 
-        RegisterItemUseHandlers();
-        Inventory.OnChanged += ValidateCurrentWeaponInventoryState;
+        HookInventoryEvents();
         Job?.AssignDefault();
         Spawn();
         SetupWorldHud();
         DressForHost(Dresser);
-        GiveStartingItems();
         AdminManager.RpcRequestRankInit();
+    }
+
+    private void HookInventoryEvents()
+    {
+        if (_inventoryEventsHooked || Inventory is null)
+            return;
+
+        Inventory.OnChanged += ValidateCurrentWeaponInventoryState;
+
+        if (Networking.IsHost)
+            Inventory.OnChanged += HostOnInventoryChanged;
+
+        _inventoryEventsHooked = true;
+    }
+
+    private void UnhookInventoryEvents()
+    {
+        if (!_inventoryEventsHooked || Inventory is null)
+            return;
+
+        Inventory.OnChanged -= ValidateCurrentWeaponInventoryState;
+        Inventory.OnChanged -= HostOnInventoryChanged;
+        _inventoryEventsHooked = false;
+    }
+
+    private static void RegisterJobInventoryEvents()
+    {
+        if (_jobInventoryEventsRegistered)
+            return;
+
+        PlayerJob.OnJobChanged += (player, _) => player?.HostRemoveJobItems();
+        PlayerJob.OnJobDemote += player => player?.HostRemoveJobItems();
+        _jobInventoryEventsRegistered = true;
+    }
+
+    private void HostOnInventoryChanged()
+    {
+        if (!Networking.IsHost)
+            return;
+        if (!_inventorySaveInitialized)
+            return;
+        if (_deferInventorySync)
+        {
+            _inventoryChangedWhileDeferred = true;
+            return;
+        }
+
+        SavePlayerInventory();
+        SendInventorySnapshotToOwner();
     }
 
     private long GetOwnerSteamId()
@@ -444,10 +712,16 @@ public sealed class Player : Component, ICustomDamagable
     }
 
     private static string GetPlayerSavePath( long steamId ) => $"{PlayerSaveFolder}/{steamId}.json";
+    private static string GetInventorySavePath( long steamId ) => $"{InventorySaveFolder}/{steamId}.json";
 
     private static void EnsurePlayerSaveFolder()
     {
         FileSystem.Data.CreateDirectory( PlayerSaveFolder );
+    }
+
+    private static void EnsureInventorySaveFolder()
+    {
+        FileSystem.Data.CreateDirectory( InventorySaveFolder );
     }
 
     /// <summary>
@@ -496,6 +770,50 @@ public sealed class Player : Component, ICustomDamagable
         SavePlayerData();
     }
 
+    private void HostInitInventorySave()
+    {
+        if (!Networking.IsHost) return;
+
+        var steamId = GetOwnerSteamId();
+        if (steamId == 0L)
+        {
+            Log.Warning("[InventorySave] Cannot init inventory: owner SteamId is 0.");
+            return;
+        }
+
+        HookInventoryEvents();
+        EnsureInventorySaveFolder();
+
+        InventorySnapshot snapshot = null;
+        try
+        {
+            var path = GetInventorySavePath(steamId);
+            if (FileSystem.Data.FileExists(path))
+                snapshot = FileSystem.Data.ReadJsonOrDefault<InventorySnapshot>(path);
+        }
+        catch (Exception ex)
+        {
+            Log.Warning($"[InventorySave] Load failed for {steamId}: {ex.Message}");
+        }
+
+        if (snapshot is not null)
+        {
+            Inventory.ApplySnapshot(snapshot);
+        }
+        else
+        {
+            Inventory.ClearAll();
+            Inventory.SetSlotCount(InventorySlotCount);
+
+            foreach (var itemId in DefaultInventoryItemIds)
+                Inventory.AddItem(Item.Create(itemId, 1, canDrop: false, isJobItem: false, canSave: true));
+        }
+
+        _inventorySaveInitialized = true;
+        SavePlayerInventory();
+        SendInventorySnapshotToOwner();
+    }
+
     /// <summary>
     /// Host-only. Writes the current player state to disk. Guarded by
     /// <see cref="_saveInitialized"/> so the save can never be clobbered
@@ -525,6 +843,45 @@ public sealed class Player : Component, ICustomDamagable
         }
     }
 
+    private void SavePlayerInventory()
+    {
+        if (!Networking.IsHost) return;
+        if (!_inventorySaveInitialized) return;
+
+        var steamId = GetOwnerSteamId();
+        if (steamId == 0L) return;
+
+        try
+        {
+            EnsureInventorySaveFolder();
+            FileSystem.Data.WriteJson(GetInventorySavePath(steamId), Inventory.CreateSnapshot(steamId, includeNonSaveItems: false));
+        }
+        catch (Exception ex)
+        {
+            Log.Warning($"[InventorySave] Save failed for {steamId}: {ex.Message}");
+        }
+    }
+
+    private void SendInventorySnapshotToOwner()
+    {
+        if (!Networking.IsHost || Inventory is null)
+            return;
+
+        RpcReceiveInventorySnapshot(Inventory.CreateSnapshotJson(GetOwnerSteamId()));
+    }
+
+    [Rpc.Owner]
+    private void RpcReceiveInventorySnapshot(string snapshotJson)
+    {
+        if (Networking.IsHost)
+            return;
+
+        if (Inventory is null)
+            Inventory = new Inventory(InventorySlotCount);
+        Inventory.ApplySnapshotJson(snapshotJson);
+        ValidateCurrentWeaponInventoryState();
+    }
+
     private void MakeLocalInstance()
     {
         if (!IsProxy)
@@ -540,7 +897,10 @@ public sealed class Player : Component, ICustomDamagable
     protected override void OnStart()
 	{
         MakeLocalInstance();
+        RegisterItemUseHandlers();
+        RegisterJobInventoryEvents();
         HostInitSave();
+        HostInitInventorySave();
         NetworkInit();
     }
 
@@ -552,8 +912,7 @@ public sealed class Player : Component, ICustomDamagable
 
     protected override void OnDestroy()
     {
-        if (Inventory != null)
-            Inventory.OnChanged -= ValidateCurrentWeaponInventoryState;
+        UnhookInventoryEvents();
 
         DestroyLocalInstance();
     }
@@ -724,7 +1083,13 @@ public sealed class Player : Component, ICustomDamagable
         return Vector3.Dot( forward.Normal, direction ) > 0.35f;
     }
 
-    private static Player FindPlayerBySteamId( long steamId )
+    private Player FindCallerPlayer()
+    {
+        var caller = Rpc.Caller;
+        return caller is null ? null : FindPlayerBySteamId(caller.SteamId.Value);
+    }
+
+    public static Player FindPlayerBySteamId( long steamId )
     {
         var scene = Game.ActiveScene;
         if ( scene is null )
@@ -742,6 +1107,26 @@ public sealed class Player : Component, ICustomDamagable
     private static string GetConnectionName( Connection connection )
     {
         return string.IsNullOrWhiteSpace( connection?.DisplayName ) ? "игроку" : connection.DisplayName;
+    }
+
+    private static void NotifyInventoryResult(Connection connection, string message, bool success)
+    {
+        if (connection is null)
+            return;
+
+        using (Rpc.FilterInclude(c => c.SteamId.Value == connection.SteamId.Value))
+        {
+            RpcReceiveInventoryResult(message, success);
+        }
+    }
+
+    [Rpc.Broadcast]
+    private static void RpcReceiveInventoryResult(string message, bool success)
+    {
+        if (success)
+            Notification.Info(message, 3.5f);
+        else
+            Notification.Error(message, 3.5f);
     }
 
     private static void NotifyMoneyResult( Connection connection, string message, bool success )

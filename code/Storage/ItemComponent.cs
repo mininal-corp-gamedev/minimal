@@ -9,6 +9,9 @@ public sealed class ItemComponent : Component, Component.ICollisionListener, Com
     [Property] public ModelRenderer Model { get; set; }
     [Property] public int Count { get; set; } = 1;
     [Property] public SoundEvent PickUpSound { get; set; }
+    [Property, Group("Inventory")] public bool CanDrop { get; set; } = true;
+    [Property, Group("Inventory")] public bool IsJobItem { get; set; } = false;
+    [Property, Group("Inventory")] public bool CanSave { get; set; } = true;
     [Property, Group("Pickup")] public float PickupRadius { get; set; } = 140f;
     [Property, Group("Pickup")] public bool UsePickupMagnet { get; set; } = true;
 
@@ -37,6 +40,26 @@ public sealed class ItemComponent : Component, Component.ICollisionListener, Com
     /// <summary>
     /// Попытка забрать предмет в инвентарь
     /// </summary>
+    public bool RequestPickup(Player player)
+    {
+        if (!player.IsValid())
+            return false;
+
+        if (Networking.IsHost)
+            return player.HostTryPickup(this) > 0;
+
+        RpcRequestPickup(GameObject);
+        return true;
+    }
+
+    public Item CreateItem(int count)
+    {
+        if (ItemDefinition is null)
+            return null;
+
+        return Item.Create(ItemDefinition.Id, count, CanDrop, IsJobItem, CanSave);
+    }
+
     public int TryPickup(Inventory inventory)
     {
         if (inventory is null || ItemDefinition is null)
@@ -61,11 +84,13 @@ public sealed class ItemComponent : Component, Component.ICollisionListener, Com
             // Сколько мы пытаемся положить за раз (не больше стака)
             int tryTake = Math.Min(maxStack, Count);
 
-            // Проверяем, влезет ли хотя бы столько
-            if (!inventory.CanAddItem(ItemDefinition.Id, tryTake))
+            var item = CreateItem(tryTake);
+            if (item is null)
                 break;
 
-            var item = Item.Create(ItemDefinition.Id, tryTake);
+            // Проверяем, влезет ли хотя бы столько
+            if (!inventory.CanAddItem(item))
+                break;
 
             bool fullyAdded = inventory.AddItem(item);
 
@@ -94,29 +119,11 @@ public sealed class ItemComponent : Component, Component.ICollisionListener, Com
         return totalTaken;
     }
 
-    private int CalculateTakeAmount(Inventory inventory)
-    {
-        int maxTry = Count;
-
-        // Быстрая оптимизация: если всё влезает — берём всё
-        if (inventory.CanAddItem(ItemDefinition.Id, maxTry))
-            return maxTry;
-
-        // Иначе подбираем максимум (редко вызывается)
-        for (int i = maxTry; i > 0; i--)
-        {
-            if (inventory.CanAddItem(ItemDefinition.Id, i))
-                return i;
-        }
-
-        return 0;
-    }
-
     void ICollisionListener.OnCollisionStart(Collision collision)
     {
         if (!collision.Other.GameObject.Components.TryGet<Player>(out var ply, FindMode.EverythingInSelfAndAncestors)) return;
 
-        TryPickup(ply.Inventory);
+        RequestPickup(ply);
     }
 
     public bool Press(IPressable.Event e)
@@ -131,6 +138,29 @@ public sealed class ItemComponent : Component, Component.ICollisionListener, Com
         if (ply.IsProxy)
             return false;
 
-        return TryPickup(ply.Inventory) > 0;
+        return RequestPickup(ply);
+    }
+
+    [Rpc.Host]
+    private static void RpcRequestPickup(GameObject itemObject)
+    {
+        if (!Networking.IsHost)
+            return;
+        if (!itemObject.IsValid())
+            return;
+
+        var caller = Rpc.Caller;
+        if (caller is null)
+            return;
+
+        var player = Player.FindPlayerBySteamId(caller.SteamId.Value);
+        if (!player.IsValid())
+            return;
+
+        var item = itemObject.Components.Get<ItemComponent>();
+        if (!item.IsValid())
+            return;
+
+        player.HostTryPickup(item);
     }
 }

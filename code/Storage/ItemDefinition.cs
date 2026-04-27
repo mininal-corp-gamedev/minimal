@@ -12,6 +12,9 @@ public sealed class ItemDefinition : GameResource
     [Property] public Model Model { get; set; }
 
     [Property] public bool CanUse { get; set; } = false;
+    [Property] public bool CanDrop { get; set; } = true;
+    [Property] public bool IsJobItem { get; set; } = false;
+    [Property] public bool CanSave { get; set; } = true;
 
     protected override Bitmap CreateAssetTypeIcon(int width, int height)
     {

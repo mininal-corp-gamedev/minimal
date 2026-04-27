@@ -40,6 +40,26 @@ public sealed class Player : Component, ICustomDamagable
 
     [Sync(SyncFlags.FromHost)] public int AdminRank { get; set; } = 0;
 
+    // ===== Arrest system =====
+    /// <summary>Точка спавна арестованного игрока. Выставляется в редакторе.</summary>
+    [Property, Category("Arrest")] public GameObject ArrestSpawnPoint { get; set; }
+
+    /// <summary>Длительность ареста в секундах.</summary>
+    [Property, Category("Arrest")] public float ArrestDurationSeconds { get; set; } = 120f;
+
+    /// <summary>Радиус взаимодействия наручников (используется хостом для валидации).</summary>
+    [Property, Category("Arrest")] public float ArrestInteractRange { get; set; } = 110f;
+
+    /// <summary>Арестован ли игрок. Меняется только хостом.</summary>
+    [Sync(SyncFlags.FromHost)] public bool IsArrested { get; set; }
+
+    /// <summary>Время до автоматического освобождения. Считается на клиенте, по истечении клиент шлёт RPC хосту.</summary>
+    [Sync(SyncFlags.FromHost)] public TimeUntil ArrestTimeUntilRelease { get; set; }
+
+    private bool _arrestSpeedApplied;
+    private float _origWalkSpeed;
+    private float _origRunSpeed;
+
     private const string PlayerSaveFolder = "players";
     private const int DefaultStartingMoney = 500;
 
@@ -79,7 +99,7 @@ public sealed class Player : Component, ICustomDamagable
 
     public Weapon CurrentWeapon { get; private set; }
     public int CurrentInventorySlotIndex { get; private set; } = -1;
-    public int SelectedHotbarSlotIndex { get; private set; }
+    public int SelectedHotbarSlotIndex { get; private set; } = -1;
     public string CurrentWeaponItemId { get; private set; }
 
     public bool IsLocalPlayer => !IsProxy;
@@ -123,6 +143,7 @@ public sealed class Player : Component, ICustomDamagable
     {
         // Локальные источники урона (окружение и т.п.) — только на авторитетной копии.
         if (IsProxy) return;
+        if (IsArrested) return;
 
         TakeDamageFromWeapon(dmgInfo.Damage, dmgInfo.Attacker);
     }
@@ -173,6 +194,7 @@ public sealed class Player : Component, ICustomDamagable
     private void RpcTakeDamageFromWeapon(float damage, GameObject attacker)
     {
         if (attacker == Local.GameObject) return;
+        if (IsArrested) return;
 
         if (damage <= 0f) return;
 
@@ -195,6 +217,7 @@ public sealed class Player : Component, ICustomDamagable
     public void SwitchWeapon(Weapon wep = null)
     {
         if (IsProxy) return;
+        if (IsArrested && wep.IsValid()) return; // Арестованный не может взять оружие в руки
 
         if (CurrentWeapon.IsValid() && wep == CurrentWeapon) return;
 
@@ -218,6 +241,7 @@ public sealed class Player : Component, ICustomDamagable
     public bool UseInventorySlot(int slotIndex)
     {
         if (IsProxy) return false;
+        if (IsArrested) return false; // Арестованный не может пользоваться предметами
         if (Inventory == null) return false;
         if (slotIndex < 0 || slotIndex >= Inventory.Slots.Count) return false;
 
@@ -263,6 +287,7 @@ public sealed class Player : Component, ICustomDamagable
     private void CheckUseHotbarSlots()
     {
         if (IsProxy) return;
+        if (IsArrested) return; // Арестованный не может переключать слоты/оружие
 
         if (Input.Pressed("Slot1"))
             UseInventorySlot(0);
@@ -370,10 +395,9 @@ public sealed class Player : Component, ICustomDamagable
 
     private void GiveStartingItems()
     {
-        Inventory.AddItem( Item.Create( "usp", 1 ) ); // TODO: Remove starter USP after testing inventory weapon flow.
-        Inventory.AddItem( Item.Create( "ammo_usp", 15 ) );
-        Inventory.AddItem( Item.Create( "ammo_mp5", 20 ) );
-        Inventory.AddItem( Item.Create( "ammo_m4a1", 10 ) );
+        Inventory.AddItem( Item.Create( "handcuff", 1 ) ); // TODO: Remove starter USP after testing inventory weapon flow.
+        Inventory.AddItem(Item.Create("picklock", 1)); // TODO: Remove starter USP after testing inventory weapon flow.
+        Inventory.AddItem(Item.Create("usp", 1)); // TODO: Remove starter USP after testing inventory weapon flow.
     }
 
     private static void RegisterItemUseHandlers()
@@ -384,6 +408,11 @@ public sealed class Player : Component, ICustomDamagable
         ItemUseRegistry.Register("usp", new WepUspUseHandler());
         ItemUseRegistry.Register("mp5", new WepMp5UseHandler());
         ItemUseRegistry.Register("m4a1", new WepM4a1UseHandler());
+        ItemUseRegistry.Register("physgun", new WepPhysgunUseHandler());
+        ItemUseRegistry.Register("toolgun", new WepToolgunUseHandler());
+        ItemUseRegistry.Register("hands", new WepHandsUseHandler());
+        ItemUseRegistry.Register("handcuff", new WepHandcuffUseHandler());
+        ItemUseRegistry.Register("picklock", new WepPicklockUseHandler());
         ItemUseRegistry.Register("ammo_usp", new AmmoUseHandler(AmmoWeaponType.Usp));
         ItemUseRegistry.Register("ammo_mp5", new AmmoUseHandler(AmmoWeaponType.Mp5));
         ItemUseRegistry.Register("ammo_m4a1", new AmmoUseHandler(AmmoWeaponType.M4A1));
@@ -513,6 +542,7 @@ public sealed class Player : Component, ICustomDamagable
 
     protected override void OnFixedUpdate()
     {
+        UpdateArrestEffects();
         CheckUseHotbarSlots();
     }
 
@@ -728,5 +758,170 @@ public sealed class Player : Component, ICustomDamagable
             Notification.Info( message, 3.5f );
         else
             Notification.Error( message, 3.5f );
+    }
+
+    // ===================== ARREST SYSTEM =====================
+
+    /// <summary>
+    /// Локально применяет/снимает эффекты ареста и инициирует автосамоосвобождение
+    /// после истечения таймера (клиент шлёт запрос хосту).
+    /// </summary>
+    private void UpdateArrestEffects()
+    {
+        if (Controller.IsValid())
+        {
+            if (IsArrested && !_arrestSpeedApplied)
+            {
+                _origWalkSpeed = Controller.WalkSpeed;
+                _origRunSpeed = Controller.RunSpeed;
+                Controller.WalkSpeed = _origWalkSpeed * 0.5f;
+                Controller.RunSpeed = _origRunSpeed * 0.5f;
+                _arrestSpeedApplied = true;
+            }
+            else if (!IsArrested && _arrestSpeedApplied)
+            {
+                Controller.WalkSpeed = _origWalkSpeed;
+                Controller.RunSpeed = _origRunSpeed;
+                _arrestSpeedApplied = false;
+            }
+        }
+
+        if (IsProxy) return;
+
+        if (IsArrested)
+        {
+            // Арестованный не должен держать оружие в руках.
+            if (CurrentWeapon.IsValid())
+            {
+                CurrentWeapon.GameObject.Enabled = false;
+                CurrentWeapon = null;
+                CurrentInventorySlotIndex = -1;
+                CurrentWeaponItemId = null;
+                RpcSetHoldType(Renderer, 0);
+            }
+
+            // Время считаем на клиенте; по истечении просим хост освободить.
+            if ((float)ArrestTimeUntilRelease <= 0f)
+                RequestSelfRelease();
+        }
+    }
+
+    /// <summary>Локальный игрок инициирует арест цели через хост.</summary>
+    public void RequestArrestTarget(GameObject targetObj)
+    {
+        if (!targetObj.IsValid()) return;
+        RpcHostArrestTarget(targetObj);
+    }
+
+    /// <summary>Локальный игрок инициирует освобождение цели через хост.</summary>
+    public void RequestReleaseTarget(GameObject targetObj)
+    {
+        if (!targetObj.IsValid()) return;
+        RpcHostReleaseTarget(targetObj);
+    }
+
+    /// <summary>Локальный арестованный игрок просит хост освободить себя по истечении таймера.</summary>
+    public void RequestSelfRelease()
+    {
+        if (IsProxy) return;
+        if (!IsArrested) return;
+        RpcHostSelfRelease();
+    }
+
+    [Rpc.Host]
+    private void RpcHostArrestTarget(GameObject targetObj)
+    {
+        if (!Networking.IsHost) return;
+
+        var caller = Rpc.Caller;
+        if (caller is null) return;
+
+        var attacker = FindPlayerBySteamId(caller.SteamId.Value);
+        if (!attacker.IsValid()) return;
+        if (!targetObj.IsValid()) return;
+        if (!targetObj.Components.TryGet<Player>(out var target, FindMode.EverythingInSelfAndParent)) return;
+        if (target == attacker) return;
+        if (target.IsArrested) return;
+
+        if (Vector3.DistanceBetween(attacker.WorldPosition, target.WorldPosition) > target.ArrestInteractRange)
+            return;
+
+        target.HostArrest();
+    }
+
+    [Rpc.Host]
+    private void RpcHostReleaseTarget(GameObject targetObj)
+    {
+        if (!Networking.IsHost) return;
+
+        var caller = Rpc.Caller;
+        if (caller is null) return;
+
+        var attacker = FindPlayerBySteamId(caller.SteamId.Value);
+        if (!attacker.IsValid()) return;
+        if (!targetObj.IsValid()) return;
+        if (!targetObj.Components.TryGet<Player>(out var target, FindMode.EverythingInSelfAndParent)) return;
+        if (!target.IsArrested) return;
+
+        if (Vector3.DistanceBetween(attacker.WorldPosition, target.WorldPosition) > target.ArrestInteractRange)
+            return;
+
+        target.HostRelease();
+    }
+
+    [Rpc.Host]
+    private void RpcHostSelfRelease()
+    {
+        if (!Networking.IsHost) return;
+
+        var caller = Rpc.Caller;
+        if (caller is null) return;
+
+        var p = FindPlayerBySteamId(caller.SteamId.Value);
+        if (!p.IsValid() || p != this) return;
+        if (!p.IsArrested) return;
+
+        p.HostRelease();
+    }
+
+    /// <summary>Хост: переводит игрока в состояние ареста и телепортирует к точке спавна тюрьмы.</summary>
+    private void HostArrest()
+    {
+        if (!Networking.IsHost) return;
+        if (IsArrested) return;
+
+        IsArrested = true;
+        ArrestTimeUntilRelease = ArrestDurationSeconds;
+
+        var pos = ArrestSpawnPoint.IsValid() ? ArrestSpawnPoint.WorldPosition : WorldPosition;
+        var rot = ArrestSpawnPoint.IsValid() ? ArrestSpawnPoint.WorldRotation : WorldRotation;
+        RpcApplyArrest(pos, rot);
+    }
+
+    /// <summary>Хост: снимает арест и просит клиент респавнуться на обычной точке.</summary>
+    private void HostRelease()
+    {
+        if (!Networking.IsHost) return;
+        if (!IsArrested) return;
+
+        IsArrested = false;
+        ArrestTimeUntilRelease = 0f;
+        RpcApplyRelease();
+    }
+
+    [Rpc.Owner]
+    private void RpcApplyArrest(Vector3 pos, Rotation rot)
+    {
+        if (Controller.IsValid())
+        {
+            WorldPosition = pos;
+            Controller.EyeAngles = rot;
+        }
+    }
+
+    [Rpc.Owner]
+    private void RpcApplyRelease()
+    {
+        SpawnInternal();
     }
 }

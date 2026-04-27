@@ -25,6 +25,13 @@
 				</div>
 			</div>
 		</div>
+		@if ( Player.Local?.IsArrested == true )
+		{
+			<div class="arrest-panel hud-panel">
+				<div class="arrest-title">ARRESTED</div>
+				<div class="arrest-timer">@ArrestSecondsLeft s</div>
+			</div>
+		}
 	</div>
 </root>
 
@@ -36,10 +43,16 @@
 
 	int HealthValue => (int)(Player.Local?.Health ?? 0f);
 
+	int ArrestSecondsLeft => Player.Local != null
+		? Math.Max( 0, (int)Math.Ceiling( (float)Player.Local.ArrestTimeUntilRelease ) )
+		: 0;
+
 	protected override int BuildHash() => System.HashCode.Combine(
 		Player.Local?.Money ?? 0,
 		Player.Local?.Health ?? 0f,
 		Player.Local?.Job?.JobDefinition?.Header,
 		Connection.Local?.DisplayName,
-		Game.SteamId );
+		Game.SteamId,
+		Player.Local?.IsArrested ?? false,
+		ArrestSecondsLeft );
 }

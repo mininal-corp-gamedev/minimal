@@ -16,7 +16,7 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Megashot.Weapons.WeaponPicklock",
+        "__type": "Minimal.Weapons.WeaponPicklock",
         "__guid": "135cec71-b6cc-4a7a-87c4-56c9419620ac",
         "__enabled": true,
         "Flags": 0,
@@ -25,7 +25,7 @@
         "BulletPrefab": null,
         "CanAttackWithoutAmmo": true,
         "ClipSize": 30,
-        "Damage": 1,
+        "Damage": 0,
         "FireDelay": 1,
         "FireSound": "sounds/melee_attack.sound",
         "HasHipFire": false,
@@ -194,8 +194,8 @@
                             "__version": 2,
                             "Flags": 0,
                             "Name": "picklock",
-                            "Position": "-0.898365676,-6.44741011,-2.29127216",
-                            "Rotation": "0.412959576,0.598609149,0.684135616,-0.0555852354",
+                            "Position": "-0.827531993,-6.40781307,-2.37940812",
+                            "Rotation": "0.246923611,0.680548728,0.678222775,0.126076818",
                             "Scale": "0.741878927,0.741878927,0.741878927",
                             "Tags": "",
                             "Enabled": true,

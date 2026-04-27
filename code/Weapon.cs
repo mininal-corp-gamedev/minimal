@@ -81,6 +81,9 @@ public class Weapon : Component
     protected virtual void OnWeaponFixedUpdate() { }
     protected virtual void OnWeaponUpdate() { }
 
+    /// <summary>Хук на ПКМ для ближнего боя (ironsights в этом случае не используются).</summary>
+    protected virtual void OnSecondaryAttack() { }
+
     protected override void OnAwake()
     {
         Log.Trace($"[Weapon] OnAwake {GameObject.Name}");
@@ -313,6 +316,9 @@ public class Weapon : Component
     {
         if (_isPaused) return;
 
+        // Заблокировать управление оружием для арестованного игрока.
+        if (Player.Local?.IsArrested == true) return;
+
         if (_wasJustResumed)
         {
             if (!Input.Down("Attack1")) _attack1WasReleased = true;
@@ -328,6 +334,9 @@ public class Weapon : Component
         bool wantFire = SemiAuto ? Input.Pressed("Attack1") : (Input.Down("Attack1") && _attack1WasReleased);
         if (wantFire)
             PerformFire();
+
+        if (IsMelee && Input.Pressed("Attack2"))
+            OnSecondaryAttack();
 
         if (IsMelee)
             IsIronSight = false;

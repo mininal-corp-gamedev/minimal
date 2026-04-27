@@ -67,7 +67,7 @@
 
 		var currentIndex = player.SelectedHotbarSlotIndex;
 		if ( currentIndex < 0 || currentIndex >= HotbarCount )
-			currentIndex = 0;
+			currentIndex = offset > 0 ? -1 : 0;
 
 		var nextIndex = (currentIndex + offset + HotbarCount) % HotbarCount;
 		player.UseInventorySlot( nextIndex );
@@ -76,6 +76,7 @@
 	protected override int BuildHash()
 	{
 		var hash = System.HashCode.Combine(
+			Time.Now,
 			Player.Local?.CurrentWeapon?.GetHashCode() ?? 0,
 			Player.Local?.CurrentInventorySlotIndex ?? -1,
 			Player.Local?.SelectedHotbarSlotIndex ?? -1 );

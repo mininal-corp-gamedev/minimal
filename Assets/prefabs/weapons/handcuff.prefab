@@ -16,7 +16,7 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Megashot.Weapons.WeaponHandcuff",
+        "__type": "Minimal.Weapons.WeaponHandcuff",
         "__guid": "66563599-7ef4-49ae-9f50-7cf8a74dcf1f",
         "__enabled": true,
         "Flags": 0,
@@ -25,7 +25,7 @@
         "BulletPrefab": null,
         "CanAttackWithoutAmmo": true,
         "ClipSize": 30,
-        "Damage": 25,
+        "Damage": 0,
         "FireDelay": 1,
         "FireSound": null,
         "HasHipFire": false,
@@ -196,7 +196,7 @@
                             "Name": "handcuffs",
                             "Position": "3.96017027,0.710430086,-2.19168735",
                             "Rotation": "-0.953818798,0.25209415,0.159287483,0.0361022167",
-                            "Scale": "0.5,0.5,0.5",
+                            "Scale": "0.600000024,0.600000024,0.600000024",
                             "Tags": "",
                             "Enabled": true,
                             "NetworkMode": 2,

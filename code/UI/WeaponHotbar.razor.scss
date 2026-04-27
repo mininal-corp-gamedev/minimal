@@ -15,11 +15,14 @@ WeaponHotbar {
 	.hotbar {
 		flex-direction: row;
 		align-items: flex-end;
+		min-width: 630px;
+		justify-content: center;
 	}
 
 	.slot {
 		width: $slot-size;
 		height: $slot-size;
+		flex-shrink: 0;
 		margin: 0 3px;
 		background-color: rgba(12, 14, 18, 0.72);
 		border-radius: 10px;

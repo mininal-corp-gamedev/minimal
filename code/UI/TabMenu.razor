@@ -47,6 +47,7 @@
 									var isLimited = job.MaxCount > 0;
 									var atLimit = isLimited && count >= job.MaxCount;
 									var isCurrent = string.Equals( Player.Local?.Job?.JobId, job.Id, StringComparison.Ordinal );
+									var isArrested = Player.Local?.IsArrested == true;
 									var shortDescription = GetShortDescription( job.Description );
 
 									<div class="job-card @(isCurrent ? "current" : "")">
@@ -57,9 +58,9 @@
 										<div class="job-description">@shortDescription</div>
 										<button
 											class="job-take-btn"
-											disabled=@(isCurrent || atLimit)
+											disabled=@(isCurrent || atLimit || isArrested)
 											onclick=@(() => RequestJoinJob( job.Id ))>
-											@(isCurrent ? "Current" : "Take")
+											@(isCurrent ? "Current" : (isArrested ? "Arrested" : "Take"))
 										</button>
 									</div>
 								}
@@ -356,6 +357,12 @@
 		if ( !callerPlayer.IsValid() || !callerPlayer.Job.IsValid() )
 		{
 			NotifyCaller( caller, "Your player is not ready.", false );
+			return;
+		}
+
+		if ( callerPlayer.IsArrested )
+		{
+			NotifyCaller( caller, "You are arrested.", false );
 			return;
 		}
 

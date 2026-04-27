@@ -158,4 +158,28 @@ Hud {
 		justify-content: center;
 		align-items: center;
 	}
+
+	.arrest-panel {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		padding: 10px 14px;
+		margin-top: $hud-gap;
+		background-color: rgba(120, 14, 28, 0.85);
+	}
+
+	.arrest-title {
+		font-size: 15px;
+		font-family: Poppins;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		letter-spacing: 1px;
+	}
+
+	.arrest-timer {
+		font-size: 18px;
+		font-family: Poppins;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+	}
 }

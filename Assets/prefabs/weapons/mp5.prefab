@@ -21,6 +21,7 @@
         "__enabled": true,
         "Flags": 0,
         "Ammo": 0,
+        "AttackRange": 2048,
         "BulletPrefab": {
           "_type": "gameobject",
           "prefab": "prefabs/bullets/bullet.prefab"
@@ -32,6 +33,7 @@
         "FireSound": "sounds/m4a1 shot.sound",
         "HasHipFire": true,
         "HasReload": true,
+        "HoldType": "None",
         "IsIronSight": false,
         "IsMelee": false,
         "OnComponentDestroy": null,
@@ -132,9 +134,9 @@
             "__version": 2,
             "Flags": 0,
             "Name": "ShotPos",
-            "Position": "26.78821,-4.600586,-4.374725",
+            "Position": "26.7882099,-4.60058594,-4.37472486",
             "Rotation": "0,0,0,1",
-            "Scale": "0.1,0.1,0.1",
+            "Scale": "0.100000001,0.100000001,0.100000001",
             "Tags": "",
             "Enabled": true,
             "NetworkMode": 0,
@@ -232,9 +234,9 @@
                 "__version": 2,
                 "Flags": 0,
                 "Name": "reddot_rmr",
-                "Position": "-0.2093971,0.04122078,1.037372",
-                "Rotation": "0.2265605,0.1045582,0.6991411,0.6700296",
-                "Scale": "1.4,1.4,1.4",
+                "Position": "-0.209397107,0.0412207805,1.03737199",
+                "Rotation": "0.226560503,0.1045582,0.699141085,0.670029581",
+                "Scale": "1.39999998,1.39999998,1.39999998",
                 "Tags": "",
                 "Enabled": false,
                 "NetworkMode": 0,
@@ -363,6 +365,7 @@
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
         "IncludedBodies": "",
+        "DeferGeneration": false,
         "CustomBounds": false
       }
     },
@@ -374,7 +377,6 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "drakefruit.m4a1_shot#91284",
     "drakefruit.rifle_reload#91283",
     "facepunch.reddotrmr#145371",
     "facepunch.suppressor9mm#145361",

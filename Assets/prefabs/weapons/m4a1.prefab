@@ -33,6 +33,7 @@
         "FireSound": "sounds/m4a1 shot.sound",
         "HasHipFire": true,
         "HasReload": true,
+        "HoldType": "None",
         "IsIronSight": false,
         "IsMelee": false,
         "OnComponentDestroy": null,
@@ -133,9 +134,9 @@
             "__version": 2,
             "Flags": 0,
             "Name": "ShotPos",
-            "Position": "31.59054,-4.600586,-3.178995",
+            "Position": "31.5905399,-4.60058594,-3.17899489",
             "Rotation": "0,0,0,1",
-            "Scale": "0.1,0.1,0.1",
+            "Scale": "0.100000001,0.100000001,0.100000001",
             "Tags": "",
             "Enabled": true,
             "NetworkMode": 0,
@@ -270,6 +271,7 @@
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
         "IncludedBodies": "",
+        "DeferGeneration": false,
         "CustomBounds": false
       }
     },
@@ -281,7 +283,6 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "drakefruit.m4a1_shot#91284",
     "drakefruit.rifle_reload#91283",
     "facepunch.v_first_person_arms_human#142949",
     "facepunch.v_m4a1#152506"

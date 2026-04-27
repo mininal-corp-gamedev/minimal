@@ -1,0 +1,282 @@
+{
+  "RootObject": {
+    "__guid": "25b1b6af-0c8a-489e-b3e1-d258b00c7df5",
+    "__version": 2,
+    "Flags": 0,
+    "Name": "weed",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 1,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "Sandbox.ModelRenderer",
+        "__guid": "9af4e60d-7f04-49d6-97dc-b4319b03d761",
+        "__enabled": true,
+        "Flags": 0,
+        "BodyGroups": 18446744073709551615,
+        "CreateAttachments": false,
+        "LodOverride": null,
+        "MaterialGroup": null,
+        "MaterialOverride": null,
+        "Materials": null,
+        "Model": "models/props/trim_sheets/pots/pot_02a.vmdl",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "RenderOptions": {
+          "GameLayer": true,
+          "OverlayLayer": false,
+          "BloomLayer": false,
+          "AfterUILayer": false
+        },
+        "RenderType": "On",
+        "Tint": "1,1,1,1"
+      },
+      {
+        "__type": "Sandbox.ModelCollider",
+        "__guid": "ce88c81f-806e-46c1-8b09-a00533d919aa",
+        "__enabled": true,
+        "Flags": 0,
+        "ColliderFlags": 0,
+        "Elasticity": null,
+        "Friction": null,
+        "IsTrigger": false,
+        "Model": "models/props/trim_sheets/pots/pot_02a.vmdl",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OnObjectTriggerEnter": null,
+        "OnObjectTriggerExit": null,
+        "OnTriggerEnter": null,
+        "OnTriggerExit": null,
+        "RollingResistance": null,
+        "Static": false,
+        "Surface": null,
+        "SurfaceVelocity": "0,0,0"
+      },
+      {
+        "__type": "Weed",
+        "__guid": "40a9ae65-aa87-44d9-a440-b45a9902659a",
+        "__enabled": true,
+        "Flags": 0,
+        "GrowTime": 40,
+        "HarvestReward": 100,
+        "MaxInteractDistance": 100,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "PlantRenderer": {
+          "_type": "component",
+          "component_id": "d54855fb-7ee3-448b-b0db-544c2e5e6fb6",
+          "go": "f13d3d0e-242d-4896-a30c-d545034ed392",
+          "component_type": "ModelRenderer"
+        }
+      }
+    ],
+    "Children": [
+      {
+        "__guid": "f13d3d0e-242d-4896-a30c-d545034ed392",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "cannabis",
+        "Position": "0.0231933594,0.470214844,12.2108383",
+        "Rotation": "0,0,0,1",
+        "Scale": "0.100000001,0.100000001,0.100000001",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.ModelRenderer",
+            "__guid": "d54855fb-7ee3-448b-b0db-544c2e5e6fb6",
+            "__enabled": true,
+            "Flags": 0,
+            "BodyGroups": 18446744073709551615,
+            "CreateAttachments": false,
+            "LodOverride": null,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Materials": null,
+            "Model": "models/cannabis/cannabis.vmdl",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Tint": "1,1,1,1"
+          }
+        ],
+        "Children": [
+          {
+            "__guid": "a189bd52-9097-49e2-b2b4-fa144dee62f0",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Sprite",
+            "Position": "-0.231933594,-4.70214844,232.711517",
+            "Rotation": "0,0,0,1",
+            "Scale": "10,10,10",
+            "Tags": "",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Sandbox.SpriteRenderer",
+                "__guid": "de044321-b658-42e5-a8af-9f04d81c9f50",
+                "__enabled": true,
+                "Flags": 0,
+                "__version": 2,
+                "Additive": false,
+                "AlphaCutoff": 0.5,
+                "Billboard": "Always",
+                "Color": "1,1,1,1",
+                "DepthFeather": 0,
+                "FlipHorizontal": false,
+                "FlipVertical": false,
+                "FogStrength": 1,
+                "IsSorted": false,
+                "Lighting": false,
+                "OnAnimationEnd": null,
+                "OnAnimationStart": null,
+                "OnBroadcastMessage": null,
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Opaque": false,
+                "OverlayColor": "1,1,1,0",
+                "PlaybackSpeed": 1,
+                "RenderOptions": {
+                  "GameLayer": true,
+                  "OverlayLayer": false,
+                  "BloomLayer": false,
+                  "AfterUILayer": false
+                },
+                "Shadows": false,
+                "Size": "10,10",
+                "Sprite": {
+                  "$compiler": "embed",
+                  "$source": null,
+                  "data": {
+                    "Animations": [
+                      {
+                        "Name": "Default",
+                        "FrameRate": 15,
+                        "Origin": "0.5,0.5",
+                        "LoopMode": "Loop",
+                        "Frames": [
+                          {
+                            "Texture": {
+                              "$compiler": "texture",
+                              "$source": "text",
+                              "data": {
+                                "Size": "128,128",
+                                "Margin": {
+                                  "Left": 0,
+                                  "Top": 0,
+                                  "Right": 0,
+                                  "Bottom": 0
+                                },
+                                "TextFlags": "Center, DontClip",
+                                "TextScope": {
+                                  "Text": "90%",
+                                  "TextColor": "0.39073,0.90233,0.32316,1",
+                                  "FontName": "Roboto",
+                                  "FontSize": 64,
+                                  "FontWeight": 400,
+                                  "FontItalic": false,
+                                  "FontVariantNumeric": "Normal",
+                                  "LineHeight": 1,
+                                  "LetterSpacing": 0,
+                                  "WordSpacing": 0,
+                                  "FilterMode": "Bilinear",
+                                  "FontSmooth": "Auto",
+                                  "Outline": {
+                                    "Enabled": true,
+                                    "Size": 4,
+                                    "Color": "0,0,0,1"
+                                  },
+                                  "Shadow": {
+                                    "Enabled": true,
+                                    "Size": 4,
+                                    "Color": "0,0,0,1",
+                                    "Offset": "4,4"
+                                  },
+                                  "OutlineUnder": {
+                                    "Enabled": false,
+                                    "Size": 4,
+                                    "Color": "0,1,0,1"
+                                  },
+                                  "ShadowUnder": {
+                                    "Enabled": false,
+                                    "Size": 4,
+                                    "Color": "0,0,0,1",
+                                    "Offset": "4,4"
+                                  }
+                                }
+                              },
+                              "compiled": "textures/generated/text/8e5ed3349992aac.vtex"
+                            },
+                            "BroadcastMessages": []
+                          }
+                        ]
+                      }
+                    ],
+                    "__references": null
+                  },
+                  "compiled": null
+                },
+                "StartingAnimationName": "Default",
+                "TextureFilter": "Bilinear"
+              }
+            ],
+            "Children": []
+          }
+        ]
+      }
+    ]
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [
+    "centuria.cannabisweed#156923",
+    "facepunch.pot_02a#143474"
+  ],
+  "__version": 2
+}

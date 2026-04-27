@@ -34,9 +34,9 @@ public sealed class Player : Component, ICustomDamagable
         get => _money;
         set
         {
-            if ( _money == value ) return;
+            if (_money == value) return;
             _money = value;
-            if ( Networking.IsHost && _saveInitialized )
+            if (Networking.IsHost && _saveInitialized)
                 SavePlayerData();
         }
     }

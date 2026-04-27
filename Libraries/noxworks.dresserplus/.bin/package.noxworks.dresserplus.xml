@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>package.noxworks.dresserplus</name>
+    </assembly>
+    <members>
+        <member name="T:Sandbox.DresserPlus">
+            <summary>
+            Dresses a Citizen or Human using one of four clothing sources (Manual, LocalUser, OwnerUser, Hybrid).
+            Body attributes (height, age, tint) are synced across the network in real time.
+            </summary>
+        </member>
+        <member name="F:Sandbox.DresserPlus.ClothingSource.Manual">
+            <summary>
+            Dresses using manually selected clothing.
+            </summary>
+        </member>
+        <member name="F:Sandbox.DresserPlus.ClothingSource.LocalUser">
+            <summary>
+            Dresses using the local client's avatar.
+            Each client sees their own clothing.
+            </summary>
+        </member>
+        <member name="F:Sandbox.DresserPlus.ClothingSource.OwnerUser">
+            <summary>
+            Dresses using the avatar of this GameObject's network owner.
+            All clients see that same clothing.
+            </summary>
+        </member>
+        <member name="F:Sandbox.DresserPlus.ClothingSource.Hybrid">
+            <summary>
+            Dresses using the avatar of this GameObject's network owner with selected categories stripped and manual clothing applied on top.
+            All clients see that same clothing.
+            </summary>
+        </member>
+        <member name="P:Sandbox.DresserPlus.BodyTarget">
+            <summary>
+            Who we are dressing.
+            This should be the renderer of the body of a Citizen or Human.
+            </summary>
+        </member>
+        <member name="P:Sandbox.DresserPlus.Source">
+            <summary>
+            Where the clothing should be sourced from.
+            </summary>
+        </member>
+        <member name="P:Sandbox.DresserPlus.RemoveUnownedItems">
+            <summary>
+            Strips any clothing items that are not owned in the client's Steam Inventory.
+            Disable only if your game handles ownership checks itself.
+            </summary>
+        </member>
+        <member name="P:Sandbox.DresserPlus.ApplyHeightScale">
+            <summary>
+            Whether the height should be scaled or a standard value for all bodies be used.
+            When false, changing the height scale won't have any effect.
+            </summary>
+        </member>
+        <member name="P:Sandbox.DresserPlus.ManualHeight">
+            <summary>
+            Controls the body's height scale.
+            </summary>
+        </member>
+        <member name="P:Sandbox.DresserPlus.ManualAge">
+            <summary>
+            Controls the body's intensity of skin aging.
+            0 is smooth/young, 1 is wrinkled/aged.
+            </summary>
+        </member>
+        <member name="P:Sandbox.DresserPlus.ManualTint">
+            <summary>
+            Blends the body's skin color along the skin color spectrum.
+            </summary>
+        </member>
+        <member name="P:Sandbox.DresserPlus.Clothing">
+            <summary>
+            Clothing items to dress the body with.
+            </summary>
+        </member>
+        <member name="P:Sandbox.DresserPlus.WorkshopClothing">
+            <summary>
+            Workshop clothing package identifiers to fetch and dress the body with.
+            </summary>
+        </member>
+        <member name="P:Sandbox.DresserPlus.StrippedCategories">
+            <summary>
+            Clothing categories to strip from the owner's avatar before applying manual clothing.
+            </summary>
+        </member>
+        <member name="P:Sandbox.DresserPlus.IsDressing">
+            <summary>
+            True while <see cref="M:Sandbox.DresserPlus.Apply"/> is running asynchronously.
+            </summary>
+        </member>
+        <member name="M:Sandbox.DresserPlus.InstallWorkshopClothing(System.String,System.Threading.CancellationToken)">
+            <summary>
+            Fetches a workshop clothing package by identifier, mounts it, and returns the clothing resource.
+            </summary>
+            <param name="ident">The workshop package identifier.</param>
+            <param name="token">The async operation cancellation token.</param>
+            <returns>The clothing resource, or null if the package was not found or invalid.</returns>
+        </member>
+        <member name="M:Sandbox.DresserPlus.GetClothing(System.Threading.CancellationToken)">
+            <summary>
+            Builds a <see cref="T:Sandbox.ClothingContainer"/> based on the selected <see cref="P:Sandbox.DresserPlus.Source"/>.
+            </summary>
+            <param name="token">The async operation cancellation token.</param>
+            <returns>The built clothing container, or null if the source is not recognized.</returns>
+        </member>
+        <member name="M:Sandbox.DresserPlus.AddManualClothing(Sandbox.ClothingContainer,System.Threading.CancellationToken)">
+            <summary>
+            Adds <see cref="P:Sandbox.DresserPlus.Clothing"/>, <see cref="P:Sandbox.DresserPlus.WorkshopClothing"/>, and body attributes
+            (<see cref="P:Sandbox.DresserPlus.ManualHeight"/>, <see cref="P:Sandbox.DresserPlus.ManualAge"/>, <see cref="P:Sandbox.DresserPlus.ManualTint"/>) to the given <see cref="T:Sandbox.ClothingContainer"/>.
+            </summary>
+            <param name="clothing">The container to add items and attributes to.</param>
+            <param name="token">The async operation cancellation token.</param>
+        </member>
+        <member name="M:Sandbox.DresserPlus.OnManualChange">
+            <summary>
+            Called when <see cref="P:Sandbox.DresserPlus.ManualHeight"/>, <see cref="P:Sandbox.DresserPlus.ManualAge"/>, or <see cref="P:Sandbox.DresserPlus.ManualTint"/> is changed.
+            </summary>
+        </member>
+        <member name="M:Sandbox.DresserPlus.ApplyWhenReady">
+            <summary>
+            Waits for the network owner to be assigned (if required by the current <see cref="P:Sandbox.DresserPlus.Source"/>), then applies clothing.
+            </summary>
+        </member>
+        <member name="M:Sandbox.DresserPlus.ApplyAttributes">
+            <summary>
+            Applies <see cref="P:Sandbox.DresserPlus.ManualHeight"/>, <see cref="P:Sandbox.DresserPlus.ManualAge"/>, and <see cref="P:Sandbox.DresserPlus.ManualTint"/> on the <see cref="P:Sandbox.DresserPlus.BodyTarget"/>.
+            </summary>
+        </member>
+        <member name="M:Sandbox.DresserPlus.ApplyButton">
+            <summary>
+            Button wrapper for <see cref="M:Sandbox.DresserPlus.Apply"/>.
+            </summary>
+        </member>
+        <member name="M:Sandbox.DresserPlus.Apply">
+            <summary>
+            Dresses the <see cref="P:Sandbox.DresserPlus.BodyTarget"/> using the selected <see cref="P:Sandbox.DresserPlus.Source"/>.
+            Cancels any in-progress dressing, fetches the clothing, and applies it asynchronously.
+            </summary>
+        </member>
+        <member name="M:Sandbox.DresserPlus.Apply(System.Collections.Generic.List{Sandbox.ClothingContainer.ClothingEntry})">
+            <summary>
+            Sets <see cref="P:Sandbox.DresserPlus.Clothing"/> to the given items and applies them to the <see cref="P:Sandbox.DresserPlus.BodyTarget"/>.
+            </summary>
+            <param name="clothing">The clothing items to apply.</param>
+        </member>
+        <member name="M:Sandbox.DresserPlus.Clear">
+            <summary>
+            Removes all clothing from the <see cref="P:Sandbox.DresserPlus.BodyTarget"/>, stripping it back to the bare model.
+            </summary>
+        </member>
+        <member name="M:Sandbox.DresserPlus.CancelDressing">
+            <summary>
+            Cancels any in-progress async dressing and disposes the cancellation token.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -102,10 +102,7 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "PlayerPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/player.prefab"
-          },
+          "PlayerPrefab": null,
           "SpawnPoints": [
             {
               "_type": "gameobject",
@@ -138,52 +135,22 @@
           "__guid": "ff6cb711-cebd-4424-96ee-c73b315c2701",
           "__enabled": true,
           "Flags": 0,
-          "BulletPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/bullets/bullet.prefab"
-          },
+          "BulletPrefab": null,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "WeaponHandcuff": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/handcuff.prefab"
-          },
-          "WeaponHands": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/hands.prefab"
-          },
-          "WeaponM4a1Prefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/m4a1.prefab"
-          },
-          "WeaponMp5Prefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/mp5.prefab"
-          },
-          "WeaponPhysgun": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/physgun.prefab"
-          },
-          "WeaponPickaxe": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/pickaxe.prefab"
-          },
-          "WeaponPicklock": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/picklock.prefab"
-          },
-          "WeaponToolgun": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/toolgun.prefab"
-          },
-          "WeaponUspPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/usp.prefab"
-          },
+          "WeaponHandcuff": null,
+          "WeaponHands": null,
+          "WeaponM4a1Prefab": null,
+          "WeaponMp5Prefab": null,
+          "WeaponPhysgun": null,
+          "WeaponPickaxe": null,
+          "WeaponPicklock": null,
+          "WeaponToolgun": null,
+          "WeaponUspPrefab": null,
           "Wep": null
         }
       ],
@@ -708,7 +675,7 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "311.215485,-542.667419,117.677299",
+          "Position": "193.026886,-542.667419,117.677299",
           "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
@@ -726,7 +693,7 @@
           "__version": 2,
           "Flags": 0,
           "Name": "Ply Spawn",
-          "Position": "311.215485,-542.667419,117.677299",
+          "Position": "405.323669,-542.667419,117.677299",
           "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
           "Scale": "1,1,1",
           "Tags": "",
@@ -936,6 +903,190 @@
       }
     },
     {
+      "__guid": "058a389c-bd1d-41d7-a050-9cd248268117",
+      "__version": 2,
+      "__Prefab": "prefabs/door.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+            },
+            "Property": "Name",
+            "Value": "door (1)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+            },
+            "Property": "Position",
+            "Value": "-1421.0708,387.83017,32.2404709"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+            },
+            "Property": "AllowedJobs",
+            "Value": [
+              "jobs/police1.job",
+              "jobs/sheriff.job"
+            ]
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+            },
+            "Property": "BuyPrice",
+            "Value": 50
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+            },
+            "Property": "DoorSecond",
+            "Value": {
+              "_type": "component",
+              "component_id": "48129a02-0d23-4e3f-a4fd-ecf12b744564",
+              "go": "c36d22b3-8ce4-4bc4-9087-5d5533e941c4",
+              "component_type": "Door"
+            }
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+            },
+            "Property": "HasOnlyJobs",
+            "Value": true
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+            },
+            "Property": "Header",
+            "Value": "Полиция"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "6ff64c8d-d72e-4559-88f1-0805701930f5": "058a389c-bd1d-41d7-a050-9cd248268117",
+        "63f9abba-02bd-4247-86f7-08e143c836e7": "9395798c-5b2b-42c4-a55d-c53752b828b8",
+        "6bf6f4c9-7b9a-4f74-b46d-a1e0296515f5": "d7e787a0-0158-4dfc-b683-9a2ea6bc839f",
+        "5841057c-911e-402d-a936-4b4d0728f96c": "62ad81f5-458e-4582-a3c1-9db7e999d9e3",
+        "975f60f4-fb6b-48ed-b322-846386f529c6": "797f253c-3c4a-4b2e-b921-e47108579770",
+        "2eec3323-0b2b-43fc-bf6c-1503eb07df05": "50b93e1a-14aa-4171-a171-24fc22fe15a9",
+        "ac6ef700-0157-43f7-90d5-84d46d9069e6": "e6c7b815-433e-4f56-87b2-f0fc2f721e7a",
+        "4e016627-1674-4521-bcf1-ada81bbc43a8": "21b0a0d5-b560-477b-954a-813248f921e6",
+        "f73f0e36-5dab-48e6-9d43-a47a1aced771": "d04198f4-e73d-403e-997f-3cb38cc0e89c",
+        "4b63a60b-841b-410a-a7b5-52dcaaac18ac": "ce1dae97-e189-4589-bf84-bc0ea2952731"
+      }
+    },
+    {
+      "__guid": "c36d22b3-8ce4-4bc4-9087-5d5533e941c4",
+      "__version": 2,
+      "__Prefab": "prefabs/door.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+            },
+            "Property": "Name",
+            "Value": "door (2)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+            },
+            "Property": "Position",
+            "Value": "-1515.64197,387.83017,32.2404709"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,-0.707106888,-0.70710665"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+            },
+            "Property": "AllowedJobs",
+            "Value": [
+              "jobs/police1.job",
+              "jobs/sheriff.job"
+            ]
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+            },
+            "Property": "BuyPrice",
+            "Value": 50
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+            },
+            "Property": "DoorSecond",
+            "Value": {
+              "_type": "component",
+              "component_id": "9395798c-5b2b-42c4-a55d-c53752b828b8",
+              "go": "058a389c-bd1d-41d7-a050-9cd248268117",
+              "component_type": "Door"
+            }
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+            },
+            "Property": "HasOnlyJobs",
+            "Value": true
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+            },
+            "Property": "Header",
+            "Value": "Полиция"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "6ff64c8d-d72e-4559-88f1-0805701930f5": "c36d22b3-8ce4-4bc4-9087-5d5533e941c4",
+        "63f9abba-02bd-4247-86f7-08e143c836e7": "48129a02-0d23-4e3f-a4fd-ecf12b744564",
+        "6bf6f4c9-7b9a-4f74-b46d-a1e0296515f5": "480c657a-cbb8-4558-94ab-ea5d55a39208",
+        "5841057c-911e-402d-a936-4b4d0728f96c": "429c6619-f85d-4302-a684-9a2cf2bdfff1",
+        "975f60f4-fb6b-48ed-b322-846386f529c6": "534f303a-d0bb-41dd-b724-0054a9c1d0f9",
+        "2eec3323-0b2b-43fc-bf6c-1503eb07df05": "155dcd75-5923-4682-92a2-8889e0cb41f6",
+        "ac6ef700-0157-43f7-90d5-84d46d9069e6": "52bf9d64-2ff2-4155-97b2-1276ac854542",
+        "4e016627-1674-4521-bcf1-ada81bbc43a8": "b5c21364-c9c2-4718-83e8-7a8fd0b69733",
+        "f73f0e36-5dab-48e6-9d43-a47a1aced771": "2dd88919-15b7-4d76-8e4e-5e1702205a77",
+        "4b63a60b-841b-410a-a7b5-52dcaaac18ac": "4d5e10b3-d769-4496-93ea-f99458437601"
+      }
+    },
+    {
       "__guid": "bf090e9c-e51f-4e41-a81c-48f457136696",
       "__version": 2,
       "__Prefab": "prefabs/door.prefab",
@@ -976,7 +1127,7 @@
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "world",
-      "Enabled": true,
+      "Enabled": false,
       "NetworkMode": 2,
       "NetworkFlags": 0,
       "NetworkOrphaned": 0,
@@ -1144,282 +1295,12 @@
       "Children": []
     },
     {
-      "__guid": "35413804-de4a-459d-9951-856a1fac152f",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "weed",
-      "Position": "-2066.62476,5312.95459,17.1127014",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 1,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.ModelRenderer",
-          "__guid": "d595412a-84e9-4049-b08f-69d571c5219a",
-          "__enabled": true,
-          "Flags": 0,
-          "BodyGroups": 18446744073709551615,
-          "CreateAttachments": false,
-          "LodOverride": null,
-          "MaterialGroup": null,
-          "MaterialOverride": null,
-          "Materials": null,
-          "Model": "models/props/trim_sheets/pots/pot_02a.vmdl",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "RenderOptions": {
-            "GameLayer": true,
-            "OverlayLayer": false,
-            "BloomLayer": false,
-            "AfterUILayer": false
-          },
-          "RenderType": "On",
-          "Tint": "1,1,1,1"
-        },
-        {
-          "__type": "Sandbox.ModelCollider",
-          "__guid": "65aca51e-5d51-4636-8e22-3399a9805d40",
-          "__enabled": true,
-          "Flags": 0,
-          "ColliderFlags": 0,
-          "Elasticity": null,
-          "Friction": null,
-          "IsTrigger": false,
-          "Model": "models/props/trim_sheets/pots/pot_02a.vmdl",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OnObjectTriggerEnter": null,
-          "OnObjectTriggerExit": null,
-          "OnTriggerEnter": null,
-          "OnTriggerExit": null,
-          "RollingResistance": null,
-          "Static": false,
-          "Surface": null,
-          "SurfaceVelocity": "0,0,0"
-        },
-        {
-          "__type": "Weed",
-          "__guid": "0f278d02-4457-49e9-9bb7-b4bf1bead2e2",
-          "__enabled": true,
-          "Flags": 0,
-          "GrowTime": 40,
-          "HarvestReward": 100,
-          "MaxInteractDistance": 100,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "PlantRenderer": {
-            "_type": "component",
-            "component_id": "4e851db2-df62-49cd-bab1-f4d9a82c9aab",
-            "go": "a2324daf-4e53-4f28-88b9-885992da80ca",
-            "component_type": "ModelRenderer"
-          }
-        }
-      ],
-      "Children": [
-        {
-          "__guid": "a2324daf-4e53-4f28-88b9-885992da80ca",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "cannabis",
-          "Position": "0.0231933594,0.470214844,12.2108383",
-          "Rotation": "0,0,0,1",
-          "Scale": "0.100000001,0.100000001,0.100000001",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.ModelRenderer",
-              "__guid": "4e851db2-df62-49cd-bab1-f4d9a82c9aab",
-              "__enabled": true,
-              "Flags": 0,
-              "BodyGroups": 18446744073709551615,
-              "CreateAttachments": false,
-              "LodOverride": null,
-              "MaterialGroup": null,
-              "MaterialOverride": null,
-              "Materials": null,
-              "Model": "models/cannabis/cannabis.vmdl",
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "RenderOptions": {
-                "GameLayer": true,
-                "OverlayLayer": false,
-                "BloomLayer": false,
-                "AfterUILayer": false
-              },
-              "RenderType": "On",
-              "Tint": "1,1,1,1"
-            }
-          ],
-          "Children": [
-            {
-              "__guid": "312ed343-6c03-4c32-9232-b60634334456",
-              "__version": 2,
-              "Flags": 0,
-              "Name": "Sprite",
-              "Position": "-0.231933594,-4.70214844,232.711517",
-              "Rotation": "0,0,0,1",
-              "Scale": "10,10,10",
-              "Tags": "",
-              "Enabled": true,
-              "NetworkMode": 2,
-              "NetworkFlags": 0,
-              "NetworkOrphaned": 0,
-              "NetworkTransmit": true,
-              "OwnerTransfer": 1,
-              "Components": [
-                {
-                  "__type": "Sandbox.SpriteRenderer",
-                  "__guid": "dc74a4a3-e742-4736-8f90-995155e4a8e3",
-                  "__enabled": true,
-                  "Flags": 0,
-                  "__version": 2,
-                  "Additive": false,
-                  "AlphaCutoff": 0.5,
-                  "Billboard": "Always",
-                  "Color": "1,1,1,1",
-                  "DepthFeather": 0,
-                  "FlipHorizontal": false,
-                  "FlipVertical": false,
-                  "FogStrength": 1,
-                  "IsSorted": false,
-                  "Lighting": false,
-                  "OnAnimationEnd": null,
-                  "OnAnimationStart": null,
-                  "OnBroadcastMessage": null,
-                  "OnComponentDestroy": null,
-                  "OnComponentDisabled": null,
-                  "OnComponentEnabled": null,
-                  "OnComponentFixedUpdate": null,
-                  "OnComponentStart": null,
-                  "OnComponentUpdate": null,
-                  "Opaque": false,
-                  "OverlayColor": "1,1,1,0",
-                  "PlaybackSpeed": 1,
-                  "RenderOptions": {
-                    "GameLayer": true,
-                    "OverlayLayer": false,
-                    "BloomLayer": false,
-                    "AfterUILayer": false
-                  },
-                  "Shadows": false,
-                  "Size": "10,10",
-                  "Sprite": {
-                    "$compiler": "embed",
-                    "$source": null,
-                    "data": {
-                      "Animations": [
-                        {
-                          "Name": "Default",
-                          "FrameRate": 15,
-                          "Origin": "0.5,0.5",
-                          "LoopMode": "Loop",
-                          "Frames": [
-                            {
-                              "Texture": {
-                                "$compiler": "texture",
-                                "$source": "text",
-                                "data": {
-                                  "Size": "128,128",
-                                  "Margin": {
-                                    "Left": 0,
-                                    "Top": 0,
-                                    "Right": 0,
-                                    "Bottom": 0
-                                  },
-                                  "TextFlags": "Center, DontClip",
-                                  "TextScope": {
-                                    "Text": "90%",
-                                    "TextColor": "0.39073,0.90233,0.32316,1",
-                                    "FontName": "Roboto",
-                                    "FontSize": 64,
-                                    "FontWeight": 400,
-                                    "FontItalic": false,
-                                    "FontVariantNumeric": "Normal",
-                                    "LineHeight": 1,
-                                    "LetterSpacing": 0,
-                                    "WordSpacing": 0,
-                                    "FilterMode": "Bilinear",
-                                    "FontSmooth": "Auto",
-                                    "Outline": {
-                                      "Enabled": true,
-                                      "Size": 4,
-                                      "Color": "0,0,0,1"
-                                    },
-                                    "Shadow": {
-                                      "Enabled": true,
-                                      "Size": 4,
-                                      "Color": "0,0,0,1",
-                                      "Offset": "4,4"
-                                    },
-                                    "OutlineUnder": {
-                                      "Enabled": false,
-                                      "Size": 4,
-                                      "Color": "0,1,0,1"
-                                    },
-                                    "ShadowUnder": {
-                                      "Enabled": false,
-                                      "Size": 4,
-                                      "Color": "0,0,0,1",
-                                      "Offset": "4,4"
-                                    }
-                                  }
-                                },
-                                "compiled": "textures/generated/text/8e5ed3349992aac.vtex"
-                              },
-                              "BroadcastMessages": []
-                            }
-                          ]
-                        }
-                      ],
-                      "__references": null
-                    },
-                    "compiled": null
-                  },
-                  "StartingAnimationName": "Default",
-                  "TextureFilter": "Bilinear"
-                }
-              ],
-              "Children": []
-            }
-          ]
-        }
-      ]
-    },
-    {
       "__guid": "aafcdf3e-a2b6-4dc7-addc-ca654df5d7a3",
       "__version": 2,
       "Flags": 0,
       "Name": "Slot Machine",
-      "Position": "59.4519043,-451.512604,39.9549561",
-      "Rotation": "0,0,0,1",
+      "Position": "-1644.1604,1719.85291,94.7481384",
+      "Rotation": "-0.0607066303,0.0649649128,0.680050969,0.727753282",
       "Scale": "1,1,1",
       "Tags": "",
       "Enabled": true,
@@ -1558,52 +1439,6 @@
       ]
     },
     {
-      "__guid": "7dddcc52-ad07-4391-a804-1fac3ef28ef1",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "handcuffs",
-      "Position": "-1973.66052,5509.23242,40.4966011",
-      "Rotation": "0.707106769,0,0,-0.707106769",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.ModelRenderer",
-          "__guid": "e355b48d-e8b5-4d50-8c6a-b2ce0b58b7dd",
-          "__enabled": true,
-          "Flags": 0,
-          "BodyGroups": 1,
-          "CreateAttachments": false,
-          "LodOverride": null,
-          "MaterialGroup": null,
-          "MaterialOverride": null,
-          "Materials": null,
-          "Model": "props/other/cuffs/handcuffs.vmdl",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "RenderOptions": {
-            "GameLayer": true,
-            "OverlayLayer": false,
-            "BloomLayer": false,
-            "AfterUILayer": false
-          },
-          "RenderType": "On",
-          "Tint": "1,1,1,1"
-        }
-      ],
-      "Children": []
-    },
-    {
       "__guid": "97bb45d2-81d3-4d75-ad04-7df4a0814b06",
       "__version": 2,
       "Flags": 0,
@@ -1612,7 +1447,7 @@
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
       "Tags": "",
-      "Enabled": false,
+      "Enabled": true,
       "NetworkMode": 2,
       "NetworkFlags": 0,
       "NetworkOrphaned": 0,
@@ -1646,7 +1481,2494 @@
       "__version": 2,
       "__Prefab": "prefabs/1.prefab",
       "__PrefabInstancePatch": {
-        "AddedObjects": [],
+        "AddedObjects": [
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "a09c4443-0270-48e6-bbc8-e62d1ae59994"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "0c4bc74b-190c-419f-9c8f-b19df034b7b9"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "623d53ee-023d-45c5-ae1e-50238d702f58"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "a09c4443-0270-48e6-bbc8-e62d1ae59994",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/static/anny/bench_4.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "712925ca-3a75-4f8b-a483-f473ae72fc27"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "0c4bc74b-190c-419f-9c8f-b19df034b7b9"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "a09c4443-0270-48e6-bbc8-e62d1ae59994"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "712925ca-3a75-4f8b-a483-f473ae72fc27",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/static/anny/bench_4.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "8c80684d-47fa-460f-88ad-fa0edbdc10bf"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "e117f910-1a4c-4b5d-82c2-ebe4a3c62438"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "76d18d3d-de0f-41ef-9654-b4e3cfb3a395"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "8c80684d-47fa-460f-88ad-fa0edbdc10bf",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/plant_pot_empty/plant_pot_empty.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "c104b52d-57bb-4b29-9f8f-af13312fcb05"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "e117f910-1a4c-4b5d-82c2-ebe4a3c62438"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "8c80684d-47fa-460f-88ad-fa0edbdc10bf"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "c104b52d-57bb-4b29-9f8f-af13312fcb05",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/plant_pot_empty/plant_pot_empty.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "9ff4077b-6334-4199-8392-b4078f430c74"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "fa3e5f88-99b0-4cf8-8873-f4bcf1695158"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "81e2faf8-ab07-4605-8eca-7a2c8546c3f6"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "9ff4077b-6334-4199-8392-b4078f430c74",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/plant_pot_empty/plant_pot_empty.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "70ac9110-ab23-4bf4-ac47-15688116c1c2"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "fa3e5f88-99b0-4cf8-8873-f4bcf1695158"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "9ff4077b-6334-4199-8392-b4078f430c74"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "70ac9110-ab23-4bf4-ac47-15688116c1c2",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/plant_pot_empty/plant_pot_empty.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "a5f311b8-c331-423e-87b1-50c444948469"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "fb50ad92-510a-413e-8d7c-e94c5c25e088"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "44f12abf-5c58-4b0e-bb51-80143ec0547a"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "a5f311b8-c331-423e-87b1-50c444948469",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/plant_pot_potted/plant_pot_potted.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "7516ed4e-0676-415e-b53b-550b4c1dc9e0"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "fb50ad92-510a-413e-8d7c-e94c5c25e088"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "a5f311b8-c331-423e-87b1-50c444948469"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "7516ed4e-0676-415e-b53b-550b4c1dc9e0",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/plant_pot_potted/plant_pot_potted.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "f7b4aa23-8b87-47b0-b661-0d7100930dc4"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "807180c1-8be6-4ec7-b4bf-4372cc0abb7a"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "f6bc8d4c-2c9c-4db5-9e08-aff2de43d9b2"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "f7b4aa23-8b87-47b0-b661-0d7100930dc4",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/garage_door.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "3c522ffb-9af4-4eac-81b7-a79987366361"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "807180c1-8be6-4ec7-b4bf-4372cc0abb7a"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "f7b4aa23-8b87-47b0-b661-0d7100930dc4"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "3c522ffb-9af4-4eac-81b7-a79987366361",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/garage_door.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "7d676888-d45b-4cd6-84cd-3045e8f851f7"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "d5ec8921-5409-4406-a558-12df0f0c4294"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "1c87cc4b-93ee-45cb-848c-a2bd520b6609"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "7d676888-d45b-4cd6-84cd-3045e8f851f7",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/props/couch/couch_body.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "bd3c5e74-6f9f-4a3b-bc29-0816d58ae0fe"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "d5ec8921-5409-4406-a558-12df0f0c4294"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "7d676888-d45b-4cd6-84cd-3045e8f851f7"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "bd3c5e74-6f9f-4a3b-bc29-0816d58ae0fe",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/props/couch/couch_body.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "a0dfa35e-1b5f-4c5c-98c8-d28df32d287d"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "288b9a9a-7c74-4d5e-b896-1b3ec064334c"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "2ff713af-524b-43ee-b09f-1be765e1a731"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "a0dfa35e-1b5f-4c5c-98c8-d28df32d287d",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/props/trim_sheets/storage/water_drum_01.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "77be5f23-b7d6-4b57-abaf-b2a57cd4ca8a"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "288b9a9a-7c74-4d5e-b896-1b3ec064334c"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "a0dfa35e-1b5f-4c5c-98c8-d28df32d287d"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "77be5f23-b7d6-4b57-abaf-b2a57cd4ca8a",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/props/trim_sheets/storage/water_drum_01.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": false,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "3c21743d-97a4-4ece-9d71-f3a30c031f03"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "288b9a9a-7c74-4d5e-b896-1b3ec064334c"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "77be5f23-b7d6-4b57-abaf-b2a57cd4ca8a"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.Rigidbody",
+              "__guid": "3c21743d-97a4-4ece-9d71-f3a30c031f03",
+              "__enabled": true,
+              "Flags": 0,
+              "AngularDamping": 0,
+              "EnableImpactDamage": true,
+              "EnhancedCcd": false,
+              "Gravity": true,
+              "GravityScale": 1,
+              "ImpactDamage": 0,
+              "LinearDamping": 0,
+              "Locking": {
+                "X": false,
+                "Y": false,
+                "Z": false,
+                "Pitch": false,
+                "Yaw": false,
+                "Roll": false
+              },
+              "MassCenterOverride": "0,0,0",
+              "MassOverride": 0,
+              "MinImpactDamageSpeed": 500,
+              "MotionEnabled": true,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OverrideMassCenter": false,
+              "RigidbodyFlags": 0,
+              "StartAsleep": false
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "ee055865-8916-4c04-a39f-9037c9e50adb"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "6868326b-4138-4336-9c6e-0e3c6fcafd85"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "76db6d40-d29a-4c4e-943d-c9f6738a5664"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "ee055865-8916-4c04-a39f-9037c9e50adb",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/props/weapon_crate/weapon_crate_stacka.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "d16ab12a-5de1-4cf3-9636-e9d074aa12ad"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "6868326b-4138-4336-9c6e-0e3c6fcafd85"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "ee055865-8916-4c04-a39f-9037c9e50adb"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "d16ab12a-5de1-4cf3-9636-e9d074aa12ad",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/props/weapon_crate/weapon_crate_stacka.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "ea8ed69c-3363-46c3-9888-8d356a8695fb"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "6d1cdc15-c52c-4d4c-830f-67cb18d830e2"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "81519798-505b-4309-8f47-83c5c38991ca"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "ea8ed69c-3363-46c3-9888-8d356a8695fb",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "74338bde-368d-4a80-bb9b-8072bae178c0"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "6d1cdc15-c52c-4d4c-830f-67cb18d830e2"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "ea8ed69c-3363-46c3-9888-8d356a8695fb"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "74338bde-368d-4a80-bb9b-8072bae178c0",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "dead80d6-667b-4027-b26d-aaf206187400"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "bba7dd1e-da8a-4320-a054-d8b239560d14"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "bbd54cc6-69dd-44b7-b145-1efa0c1bc9d1"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "dead80d6-667b-4027-b26d-aaf206187400",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "51386654-61e6-4b7d-b3a0-79931dc6a315"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "bba7dd1e-da8a-4320-a054-d8b239560d14"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "dead80d6-667b-4027-b26d-aaf206187400"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "51386654-61e6-4b7d-b3a0-79931dc6a315",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "8fa7077b-07c5-4cc0-9311-69dab8ded97e"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "f2549ded-b41b-4b3e-8c3d-799121dd0a01"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "93a7bc6e-244e-4416-ba22-4490c1940f7a"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "8fa7077b-07c5-4cc0-9311-69dab8ded97e",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "70831f25-b92a-4031-be40-e792e6f73625"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "f2549ded-b41b-4b3e-8c3d-799121dd0a01"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "8fa7077b-07c5-4cc0-9311-69dab8ded97e"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "70831f25-b92a-4031-be40-e792e6f73625",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "eb4d9de2-11c8-4be9-b9e8-49b6da8d4f4f"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "4f3c8c91-b429-411a-9bdf-1b699d7e0671"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "93b915bb-1f62-4811-ae8b-230c7b608a77"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "eb4d9de2-11c8-4be9-b9e8-49b6da8d4f4f",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "4e0d8f55-3dfc-43e4-92db-3aedc15b855d"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "4f3c8c91-b429-411a-9bdf-1b699d7e0671"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "eb4d9de2-11c8-4be9-b9e8-49b6da8d4f4f"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "4e0d8f55-3dfc-43e4-92db-3aedc15b855d",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "4398f509-e218-40b6-b43c-7a4d99e112c7"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "07466b47-b698-4b2f-923f-a362a63653ca"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "175dac86-4895-4be2-91ca-adfbb7625269"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "4398f509-e218-40b6-b43c-7a4d99e112c7",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "550e992b-d7c6-4044-b393-8d8fe4e0d186"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "07466b47-b698-4b2f-923f-a362a63653ca"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "4398f509-e218-40b6-b43c-7a4d99e112c7"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "550e992b-d7c6-4044-b393-8d8fe4e0d186",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "aaac1168-4d23-4706-95c0-4a14f66498ca"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "24034e53-cf4f-4faa-a347-0917fb87e5c3"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "c1bd2408-68e4-475b-8b8d-fac2235168c4"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "aaac1168-4d23-4706-95c0-4a14f66498ca",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "0c8348b3-65b9-4aef-9447-2df451c5e9d3"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "24034e53-cf4f-4faa-a347-0917fb87e5c3"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "aaac1168-4d23-4706-95c0-4a14f66498ca"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "0c8348b3-65b9-4aef-9447-2df451c5e9d3",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "dd126921-5543-4b9e-a611-d65ef4f552a7"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "64c77df2-eb65-4624-8ba3-6f985c5cc396"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "2eb99e86-7f62-4b98-a079-8383a86c947c"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "dd126921-5543-4b9e-a611-d65ef4f552a7",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "c1013f50-8d2f-43f3-ae84-2ac0f0ad746f"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "64c77df2-eb65-4624-8ba3-6f985c5cc396"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "dd126921-5543-4b9e-a611-d65ef4f552a7"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "c1013f50-8d2f-43f3-ae84-2ac0f0ad746f",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "85bf26de-eca4-4e88-b92d-1a2031e98018"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b92b4446-54ad-42ab-9f1a-63ae61c0251c"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "a6fdb5db-5cbb-4c41-a9f4-78687d1379b0"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "85bf26de-eca4-4e88-b92d-1a2031e98018",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "7a7e6e31-484d-43fb-a286-954f2fe830f5"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b92b4446-54ad-42ab-9f1a-63ae61c0251c"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "85bf26de-eca4-4e88-b92d-1a2031e98018"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "7a7e6e31-484d-43fb-a286-954f2fe830f5",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "518da747-9d64-4cec-b017-f76031a22d90"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "a598eed1-9d4e-4d4f-b6e7-7680755c7a2c"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "5677ca90-e2fb-4e85-89ea-6b312bdf4c75"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "518da747-9d64-4cec-b017-f76031a22d90",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "dcf7292d-dd3d-442d-bfe2-f37a0f8923f9"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "a598eed1-9d4e-4d4f-b6e7-7680755c7a2c"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "518da747-9d64-4cec-b017-f76031a22d90"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "dcf7292d-dd3d-442d-bfe2-f37a0f8923f9",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "b32ac907-97c3-4381-b13f-4d2cd8423009"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "e56d5811-dad7-4ee2-9612-c1470a6bbc51"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "ae6ad448-9db2-4a43-8a9b-fac4d2600381"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "b32ac907-97c3-4381-b13f-4d2cd8423009",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "3df1bd59-2baa-494b-8cf6-a565645c9d6a"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "e56d5811-dad7-4ee2-9612-c1470a6bbc51"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "b32ac907-97c3-4381-b13f-4d2cd8423009"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "3df1bd59-2baa-494b-8cf6-a565645c9d6a",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "f159f8c2-f39e-4562-8496-cfc7e121faa7"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "3891b5fe-1c2e-4e3e-98af-3a055b5270e2"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "c2f442c6-d957-4b43-92db-c7c9f6542802"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "f159f8c2-f39e-4562-8496-cfc7e121faa7",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "5e8f2142-b53f-478b-aee6-725550c87f33"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "3891b5fe-1c2e-4e3e-98af-3a055b5270e2"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "f159f8c2-f39e-4562-8496-cfc7e121faa7"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "5e8f2142-b53f-478b-aee6-725550c87f33",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "d0b1941e-e75d-4430-8be1-516b5a7ed299"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "f12608c6-7eeb-446b-9b51-9045648b38ea"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "4bb4665e-5183-439c-a79c-86cc263f4601"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "d0b1941e-e75d-4430-8be1-516b5a7ed299",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/props/ibc_water_tank/ibc_water_tank.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "85275f3c-8fd7-4ec1-9959-42c6f8fd12c1"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "f12608c6-7eeb-446b-9b51-9045648b38ea"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "d0b1941e-e75d-4430-8be1-516b5a7ed299"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "85275f3c-8fd7-4ec1-9959-42c6f8fd12c1",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/props/ibc_water_tank/ibc_water_tank.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "92c749ad-e224-47b3-a971-6afbd11823cb"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "af8e367b-b646-4992-b87d-9a4a9fb95c0a"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "0666f45c-21bb-46d2-b4a7-916830690fa7"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "92c749ad-e224-47b3-a971-6afbd11823cb",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/props/metal_wheel_barrow/metal_wheelbarrow.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "728dae72-cd6f-4d25-8c71-2cdaee644d7c"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "af8e367b-b646-4992-b87d-9a4a9fb95c0a"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "92c749ad-e224-47b3-a971-6afbd11823cb"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "728dae72-cd6f-4d25-8c71-2cdaee644d7c",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/props/metal_wheel_barrow/metal_wheelbarrow.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "f94beca9-22f4-4498-a32e-eac05eac3631"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "93ba7ea0-3ff7-4fda-9d35-5f530033bbf1"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "117b16c1-6b06-4cd2-a605-55b461f837ed"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "f94beca9-22f4-4498-a32e-eac05eac3631",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/trees/oak/tree_oak_medium_a.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "8f8fde15-ddd9-421a-ae62-12aef90ca96a"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "93ba7ea0-3ff7-4fda-9d35-5f530033bbf1"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "f94beca9-22f4-4498-a32e-eac05eac3631"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "8f8fde15-ddd9-421a-ae62-12aef90ca96a",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/trees/oak/tree_oak_medium_a.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "f8091760-ab0a-452a-bef4-9587c0aa0d1b"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "c14bc8f9-dbee-4d6a-86df-d0f574938445"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "e2a2cad3-a287-4a1a-a8c0-a14cd2ac907b"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "f8091760-ab0a-452a-bef4-9587c0aa0d1b",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/trees/oak/tree_oak_small_a.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "e6952e52-cb1c-4bc1-a083-14bd7a319860"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "c14bc8f9-dbee-4d6a-86df-d0f574938445"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "f8091760-ab0a-452a-bef4-9587c0aa0d1b"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "e6952e52-cb1c-4bc1-a083-14bd7a319860",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/trees/oak/tree_oak_small_a.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "9d814e5f-1f82-44d3-bd22-468efd96020c"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "9b018e3a-4a79-4178-a00f-dcf2c528f6ef"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "0bfb0bc4-4e98-4a08-b2ee-a31291745b37"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "9d814e5f-1f82-44d3-bd22-468efd96020c",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/trees/oak/tree_oak_small_a.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "38196bcd-3a9f-4ed3-bfa5-67ab404ec343"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "9b018e3a-4a79-4178-a00f-dcf2c528f6ef"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "9d814e5f-1f82-44d3-bd22-468efd96020c"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "38196bcd-3a9f-4ed3-bfa5-67ab404ec343",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/trees/oak/tree_oak_small_a.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "e3a5f4b3-395a-44d2-a56a-b2cdee202e3c"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "e0dda020-2f03-4742-a46d-29bf355d14d7"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "917a4d67-0949-42c0-8864-4e942ddbf46a"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "e3a5f4b3-395a-44d2-a56a-b2cdee202e3c",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/trees/oak/tree_oak_big_b.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "7773bbf9-28e1-4bd5-8596-aec5ae9643a2"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "e0dda020-2f03-4742-a46d-29bf355d14d7"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "e3a5f4b3-395a-44d2-a56a-b2cdee202e3c"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "7773bbf9-28e1-4bd5-8596-aec5ae9643a2",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/trees/oak/tree_oak_big_b.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "22a0c5f1-e599-408d-99f8-9047f5a6c236"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "afa4ed2a-8420-4290-855e-f307e6cc1285"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "cf7a6cd0-2c3d-4023-a647-4e85522e41cd"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "22a0c5f1-e599-408d-99f8-9047f5a6c236",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/trees/oak/tree_oak_big_b.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "912a19d8-b9cc-4e8f-80e6-e6c72f8cbe31"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "afa4ed2a-8420-4290-855e-f307e6cc1285"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "22a0c5f1-e599-408d-99f8-9047f5a6c236"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "912a19d8-b9cc-4e8f-80e6-e6c72f8cbe31",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/trees/oak/tree_oak_big_b.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "ca8f12be-c2d8-4c3c-966b-de010cfd2aaf"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "764d8f46-3ab6-46c0-8bea-26288390ad8e"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "e8a87321-8930-4f8b-8ba1-835e887e00a6"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "ca8f12be-c2d8-4c3c-966b-de010cfd2aaf",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "b0243a15-5639-4e15-b5bc-150866062f74"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "764d8f46-3ab6-46c0-8bea-26288390ad8e"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "ca8f12be-c2d8-4c3c-966b-de010cfd2aaf"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "b0243a15-5639-4e15-b5bc-150866062f74",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/sbox_props/traffic_cone/traffic_cone.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "beb96af7-8df6-448d-b9cf-fa31e5896d3f"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "4a52f050-302e-4a3a-b741-4f826ae21f70"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "9400aeb8-11db-402b-815e-73ff1e5da4c2"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "beb96af7-8df6-448d-b9cf-fa31e5896d3f",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/manhole/manhole_02.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "ab30ad49-5fe9-49a1-9262-13fea733583b"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "4a52f050-302e-4a3a-b741-4f826ae21f70"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "beb96af7-8df6-448d-b9cf-fa31e5896d3f"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "ab30ad49-5fe9-49a1-9262-13fea733583b",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/manhole/manhole_02.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "b534b2e9-3f7a-4fbf-929d-1e16e0946403"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "8eece3cc-4bb2-4787-99cd-62bd088ad407"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "4ea9d30b-f5e6-451e-8840-b4f581bd5d57"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "b534b2e9-3f7a-4fbf-929d-1e16e0946403",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/manhole/manhole_02.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "da462c82-9c08-47eb-819c-21e629fb5214"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "8eece3cc-4bb2-4787-99cd-62bd088ad407"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "b534b2e9-3f7a-4fbf-929d-1e16e0946403"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "da462c82-9c08-47eb-819c-21e629fb5214",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/manhole/manhole_02.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          }
+        ],
         "RemovedObjects": [
           {
             "Id": {
@@ -2003,16 +4325,7 @@
             }
           }
         ],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "f85a4d64-f4be-48e8-af9d-e42c219a81c2"
-            },
-            "Property": "Enabled",
-            "Value": false
-          }
-        ],
+        "PropertyOverrides": [],
         "MovedObjects": []
       },
       "__PrefabIdToInstanceId": {
@@ -2241,36 +4554,6 @@
         "90d3aa1a-4dea-4a3f-a3f9-cae873f5a5b0": "7a75ec56-de54-4ae8-a5ae-67cfde52c1f8",
         "1d808ba6-2775-4e53-ae29-2a9fbb62cea7": "4693d7b9-7d61-4bea-8776-86bc4877ff32"
       }
-    },
-    {
-      "__guid": "28a1284e-071e-4508-a374-9a59e84c36c8",
-      "__version": 2,
-      "__Prefab": "prefabs/money_printer.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "1896f655-ca6f-451f-bbf6-7119a6d4b38a"
-            },
-            "Property": "Position",
-            "Value": "291.476471,-383.152405,64.0954514"
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "1896f655-ca6f-451f-bbf6-7119a6d4b38a": "28a1284e-071e-4508-a374-9a59e84c36c8",
-        "184f5586-561a-4917-a25c-963514033f26": "a5f81bb1-e978-4fba-99b8-496eec8006ec",
-        "085c6678-9594-4ade-b41a-d8644a43bcf0": "41fa1229-bcab-4dcd-bc7e-59e935861c2b",
-        "cf2e3c7a-0f08-4fc1-827a-f02c0bc19ae1": "f06c3607-59f1-4352-b4e7-da6e3942d71d",
-        "14bac331-7dd3-43a3-b3d3-a81a19514052": "9256c407-2141-4a27-85f0-2b368d4402d7",
-        "bfa2be84-9889-46b5-9148-3bdfc6672343": "4982d08a-e63e-4954-b501-a3c4d0447815",
-        "bd59b4f6-bafc-4f27-a64c-7eecce459f7f": "6cfe8289-d47d-4ba0-ba15-f300ba12293b",
-        "3586f3b2-a5f1-4f9d-b476-11a35f10ba6e": "6a0aafb6-9aec-4402-b2d9-b0f1866e453a"
-      }
     }
   ],
   "SceneProperties": {
@@ -2295,13 +4578,13 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
-      },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "6e9db827-f747-4255-adf0-6b00a9d1ec34"
         }
+      },
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
       },
       "Sandbox.SelectionSetsSystem": {
         "Data": {
@@ -2314,10 +4597,21 @@
   "Title": "minimal",
   "Description": null,
   "__references": [
-    "centuria.cannabisweed#156923",
-    "facepunch.pot_02a#143474",
+    "apetavern.wlb_manhole_lid#45094",
+    "constablezeehond.plantpotempty#164920",
+    "constablezeehond.plantpotpotted#164919",
+    "facepunch.couch_body#139673",
+    "facepunch.ibc_water_tank#143314",
+    "facepunch.metalwheelbarrow#143330",
+    "facepunch.traffic_cone#143946",
+    "facepunch.tree_oak_big_b#145475",
+    "facepunch.tree_oak_medium_a#145473",
+    "facepunch.tree_oak_small_a#145474",
+    "facepunch.water_drum_01#123277",
+    "facepunch.weapon_crate_stacka#143532",
+    "halfpeeps.garage_door#42972",
     "keepitdev.dor#150914",
-    "thebox.handcuffs#203399"
+    "niclude.bench_4#30655"
   ],
   "__version": 3
 }

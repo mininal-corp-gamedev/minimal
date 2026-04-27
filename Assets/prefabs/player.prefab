@@ -20,6 +20,9 @@
         "__guid": "15b93fa3-e192-4f36-a3c5-682e48227985",
         "__enabled": true,
         "Flags": 0,
+        "ArrestDurationSeconds": 120,
+        "ArrestInteractRange": 110,
+        "ArrestSpawnPoint": null,
         "Controller": {
           "_type": "component",
           "component_id": "188a7c51-221c-4f73-b9c4-c78b60ded3fa",
@@ -33,10 +36,7 @@
           "component_type": "Dresser"
         },
         "HitSound": "sounds/voicer-lines/hit.sound",
-        "ItemDropPrefab": {
-          "_type": "gameobject",
-          "prefab": "prefabs/item.prefab"
-        },
+        "ItemDropPrefab": null,
         "Job": {
           "_type": "component",
           "component_id": "0c829d66-91b8-4ffc-b625-7f7e40272131",
@@ -44,10 +44,8 @@
           "component_type": "PlayerJob"
         },
         "MaxDoors": 8,
-        "MoneyDropPrefab": {
-          "_type": "gameobject",
-          "prefab": "prefabs/money.prefab"
-        },
+        "MaxProps": 20,
+        "MoneyDropPrefab": null,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,

@@ -120,8 +120,8 @@
 		}
 	}
 
-	const int HotbarCount = 6;
-	const int SlotsPerRow = 6;
+	const int HotbarCount = 9;
+	const int SlotsPerRow = 9;
 
 	Inventory Inv => Player.Local?.Inventory;
 	int SlotCount => Inv?.Slots?.Count ?? 0;
@@ -162,8 +162,8 @@
 		if ( slot is null || slot.IsEmpty ) return;
 
 		CtxSlotIndex = index;
-		CtxX = Mouse.Position.x;
-		CtxY = Mouse.Position.y;
+		CtxX = GetMousePanelX();
+		CtxY = GetMousePanelY();
 		CtxVisible = true;
 	}
 
@@ -221,11 +221,14 @@
 
 			if ( HoverSlotIndex >= 0 )
 			{
-				TipX = Mouse.Position.x + 16f;
-				TipY = Mouse.Position.y + 16f;
+				TipX = GetMousePanelX() + 16f;
+				TipY = GetMousePanelY() + 16f;
 			}
 		}
 	}
+
+	float GetMousePanelX() => Mouse.Position.x * Panel.ScaleFromScreen;
+	float GetMousePanelY() => Mouse.Position.y * Panel.ScaleFromScreen;
 
 	protected override int BuildHash()
 	{

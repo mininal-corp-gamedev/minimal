@@ -3,7 +3,7 @@
     "__guid": "4d0d08fd-d93f-46ff-a12a-3c797f876769",
     "__version": 2,
     "Flags": 0,
-    "Name": "usp",
+    "Name": "physgun",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -16,24 +16,21 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Megashot.Weapons.WeaponUsp",
+        "__type": "Minimal.Weapons.WeaponUsp",
         "__guid": "d4a57b9a-84cb-44ef-87d5-da0379177d4e",
         "__enabled": true,
         "Flags": 0,
         "Ammo": 0,
         "AttackRange": 2048,
-        "BulletPrefab": {
-          "_type": "gameobject",
-          "prefab": "prefabs/bullets/bullet.prefab"
-        },
-        "CanAttackWithoutAmmo": false,
-        "ClipSize": 12,
-        "Damage": 12,
-        "FireDelay": 0.1,
-        "FireSound": "sounds/m4a1 shot.sound",
+        "BulletPrefab": null,
+        "CanAttackWithoutAmmo": true,
+        "ClipSize": 1,
+        "Damage": 0,
+        "FireDelay": 0,
+        "FireSound": null,
         "HasHipFire": true,
         "HasReload": true,
-        "HoldType": "None",
+        "HoldType": "PhysGun",
         "IsIronSight": false,
         "IsMelee": false,
         "OnComponentDestroy": null,
@@ -43,38 +40,35 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "ReloadDurationSeconds": 1.25,
-        "ReloadSound": "sounds/m4 reload sequence.sound",
-        "SemiAuto": true,
+        "ReloadSound": null,
+        "SemiAuto": false,
         "ShotPos": {
           "_type": "gameobject",
           "go": "36dbaa0a-2d9f-4782-8650-4c605e8dc2a9"
         },
-        "SpawnSpriteFireOnShot": true,
-        "SpriteFirePrefab": {
-          "_type": "gameobject",
-          "prefab": "prefabs/weapons/muzzleflash/pistol_muzzleflash.prefab"
-        },
-        "TotalReserveAmmo": 200,
+        "SpawnSpriteFireOnShot": false,
+        "SpriteFirePrefab": null,
+        "TotalReserveAmmo": 1,
         "Viewmodel": {
           "_type": "component",
-          "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
-          "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
+          "component_id": "4dac270b-fb42-46f8-b902-28235660cce7",
+          "go": "a516f0cf-c8b1-4f42-881b-d626d4316ce1",
           "component_type": "SkinnedModelRenderer"
         }
       }
     ],
     "Children": [
       {
-        "__guid": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
+        "__guid": "a516f0cf-c8b1-4f42-881b-d626d4316ce1",
         "__version": 2,
         "Flags": 0,
-        "Name": "viewmodel",
+        "Name": "v_physgun",
         "Position": "0,0,0",
         "Rotation": "0,0,0,1",
         "Scale": "1,1,1",
         "Tags": "",
         "Enabled": true,
-        "NetworkMode": 0,
+        "NetworkMode": 2,
         "NetworkFlags": 0,
         "NetworkOrphaned": 0,
         "NetworkTransmit": true,
@@ -82,19 +76,19 @@
         "Components": [
           {
             "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "c8ff336a-e934-4098-9c31-ba4f3d823703",
+            "__guid": "4dac270b-fb42-46f8-b902-28235660cce7",
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
-            "BodyGroups": 147,
+            "BodyGroups": 18446744073709551615,
             "BoneMergeTarget": null,
-            "CreateAttachments": true,
+            "CreateAttachments": false,
             "CreateBoneObjects": false,
             "LodOverride": null,
             "MaterialGroup": null,
             "MaterialOverride": null,
             "Materials": null,
-            "Model": "models/weapons/sbox_pistol_usp/v_usp.vmdl",
+            "Model": "models/weapons/sbox_physgun/v_physgun.vmdl",
             "Morphs": {},
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -103,11 +97,11 @@
             "OnComponentStart": null,
             "OnComponentUpdate": null,
             "Parameters": {
-              "bools": {
-                "b_deploy_skip": true
-              },
+              "bools": {},
               "ints": {},
-              "floats": {},
+              "floats": {
+                "aim_pitch": 0
+              },
               "vectors": {},
               "rotations": {}
             },
@@ -134,48 +128,12 @@
             "__version": 2,
             "Flags": 0,
             "Name": "ShotPos",
-            "Position": "19.2185192,-4.60058594,-3.17899489",
+            "Position": "30.9538612,-10.0833168,-6.35598564",
             "Rotation": "0,0,0,1",
             "Scale": "0.100000001,0.100000001,0.100000001",
             "Tags": "",
             "Enabled": true,
             "NetworkMode": 0,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [],
-            "Children": []
-          },
-          {
-            "__guid": "4320d2d9-03a6-431d-b501-9106f0494c90",
-            "__version": 2,
-            "Flags": 8,
-            "Name": "muzzle",
-            "Position": "0,0,0",
-            "Rotation": "0,0,0,1",
-            "Scale": "1,1,1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 2,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [],
-            "Children": []
-          },
-          {
-            "__guid": "434e062e-0fca-4250-984a-bbc80855e0f7",
-            "__version": 2,
-            "Flags": 8,
-            "Name": "eject",
-            "Position": "0,0,0",
-            "Rotation": "0,0,0,1",
-            "Scale": "1,1,1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 2,
             "NetworkFlags": 0,
             "NetworkOrphaned": 0,
             "NetworkTransmit": true,
@@ -210,8 +168,8 @@
             "BodyGroups": 21,
             "BoneMergeTarget": {
               "_type": "component",
-              "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
-              "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
+              "component_id": "4dac270b-fb42-46f8-b902-28235660cce7",
+              "go": "a516f0cf-c8b1-4f42-881b-d626d4316ce1",
               "component_type": "SkinnedModelRenderer"
             },
             "CreateAttachments": false,
@@ -283,9 +241,8 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "drakefruit.rifle_reload#91283",
     "facepunch.v_first_person_arms_human#142949",
-    "facepunch.v_usp#152496"
+    "facepunch.v_physgun#205816"
   ],
   "__version": 2
 }

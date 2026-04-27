@@ -1,6 +1,6 @@
 using Sandbox;
 
-namespace Megashot.Weapons;
+namespace Minimal.Weapons;
 
 /// <summary>
 /// MP5 — автомат, стрельба очередью, средний урон и скорострельность.

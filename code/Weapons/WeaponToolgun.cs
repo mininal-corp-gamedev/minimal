@@ -5,7 +5,7 @@ namespace Minimal.Weapons;
 /// <summary>
 /// Револьвер — одиночная стрельба по нажатию, высокий урон, малая обойма.
 /// </summary>
-public sealed class WeaponRevolver : Weapon
+public sealed class WeaponToolgun : Weapon
 {
     [Property, Category("Ammo")] public override int ClipSize { get; set; } = 6;
     [Property, Category("Ammo")] public override int TotalReserveAmmo { get; set; } = 24;

@@ -5,7 +5,7 @@ namespace Minimal.Weapons;
 /// <summary>
 /// Кирка / ближний бой: без патронов и перезарядки, удар лучом без снарядов.
 /// </summary>
-public sealed class WeaponPickaxe : Weapon
+public sealed class WeaponHands : Weapon
 {
     [Property, Category("Combat")] public override bool IsMelee { get; set; } = true;
     [Property, Category("Reload")] public override bool HasReload { get; set; } = false;

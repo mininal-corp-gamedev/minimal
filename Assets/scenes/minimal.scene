@@ -148,6 +148,14 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
+          "WeaponHandcuff": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/handcuff.prefab"
+          },
+          "WeaponHands": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/hands.prefab"
+          },
           "WeaponM4a1Prefab": {
             "_type": "gameobject",
             "prefab": "prefabs/weapons/m4a1.prefab"
@@ -156,9 +164,21 @@
             "_type": "gameobject",
             "prefab": "prefabs/weapons/mp5.prefab"
           },
+          "WeaponPhysgun": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/physgun.prefab"
+          },
           "WeaponPickaxe": {
             "_type": "gameobject",
             "prefab": "prefabs/weapons/pickaxe.prefab"
+          },
+          "WeaponPicklock": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/picklock.prefab"
+          },
+          "WeaponToolgun": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/toolgun.prefab"
           },
           "WeaponUspPrefab": {
             "_type": "gameobject",

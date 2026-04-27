@@ -1,0 +1,12 @@
+{
+  "Id": "physgun",
+  "Category": "weapons",
+  "Header": "Pjhysgun",
+  "Description": "",
+  "MaxCount": 1,
+  "IconPath": null,
+  "Model": null,
+  "CanUse": true,
+  "__references": [],
+  "__version": 0
+}

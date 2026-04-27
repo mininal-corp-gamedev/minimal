@@ -1,7 +1,7 @@
 ﻿using Ambi.Storage;
 using System;
 
-namespace Megashot.ItemUseHandlers;
+namespace Minimal.ItemUseHandlers;
 
 public sealed class PizzaUseHandler : IItemUseHandler
 {

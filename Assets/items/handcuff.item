@@ -1,0 +1,12 @@
+{
+  "Id": "handcuff",
+  "Category": "weapons",
+  "Header": "Handcuff",
+  "Description": "",
+  "MaxCount": 1,
+  "IconPath": null,
+  "Model": null,
+  "CanUse": true,
+  "__references": [],
+  "__version": 0
+}

@@ -15,12 +15,22 @@ public sealed class WeaponManager : Component
     [Property, Category("Weapon Prefabs")] public GameObject WeaponUspPrefab { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponMp5Prefab { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponM4a1Prefab { get; set; }
+    [Property, Category("Weapon Prefabs")] public GameObject WeaponPhysgun { get; set; }
+    [Property, Category("Weapon Prefabs")] public GameObject WeaponToolgun { get; set; }
+    [Property, Category("Weapon Prefabs")] public GameObject WeaponHands { get; set; }
+    [Property, Category("Weapon Prefabs")] public GameObject WeaponHandcuff { get; set; }
+    [Property, Category("Weapon Prefabs")] public GameObject WeaponPicklock { get; set; }
 
-    /// <summary>Слот ближнего боя (без патронов). Префаб — <see cref="Megashot.Weapons.WeaponPickaxe"/> или <c>Weapon</c> с <c>IsMelee</c>.</summary>
+    /// <summary>Слот ближнего боя (без патронов). Префаб — <see cref="Minimal.Weapons.WeaponPickaxe"/> или <c>Weapon</c> с <c>IsMelee</c>.</summary>
     public Weapon Pickaxe { get; private set; }
     public Weapon Mp5 { get; private set; }
     public Weapon M4A1 { get; private set; }
     public Weapon Usp { get; private set; }
+    public Weapon Physgun { get; private set; }
+    public Weapon Toolgun { get; private set; }
+    public Weapon Hands { get; private set; }
+    public Weapon Handcuff { get; private set; }
+    public Weapon Picklock { get; private set; }
 
     /// <summary>Подходит ли оружие под отображение патронов / перезарядку.</summary>
     public static bool WeaponUsesAmmo(Weapon weapon) => weapon.IsValid() && !weapon.IsMelee;
@@ -55,8 +65,11 @@ public sealed class WeaponManager : Component
         M4A1 = SpawnWeapon(WeaponM4a1Prefab, camera, "M4A1");
         Usp = SpawnWeapon(WeaponUspPrefab, camera, "USP");
         Pickaxe = SpawnWeapon(WeaponPickaxe, camera, "Pickaxe");
-        //Sword = SpawnWeapon(WeaponSword, camera, "Sword");
-        //SwordUranium = SpawnWeapon(WeaponSwordUranium, camera, "Uranium");
+        Physgun = SpawnWeapon(WeaponPhysgun, camera, "Physgun");
+        Toolgun = SpawnWeapon(WeaponToolgun, camera, "Toolgun");
+        Hands = SpawnWeapon(WeaponHands, camera, "Hands");
+        Handcuff = SpawnWeapon(WeaponHandcuff, camera, "Handcuff");
+        Picklock = SpawnWeapon(WeaponPicklock, camera, "Picklock");
 
         Log.Info("[WeaponManager] Spawned all weapons");
     }

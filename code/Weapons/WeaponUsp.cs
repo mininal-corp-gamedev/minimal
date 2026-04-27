@@ -1,6 +1,6 @@
 using Sandbox;
 
-namespace Megashot.Weapons;
+namespace Minimal.Weapons;
 
 /// <summary>
 /// USP — пистолет, одиночные выстрелы или короткая очередь, малый урон, быстрая перезарядка.

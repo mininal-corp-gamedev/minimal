@@ -2,7 +2,7 @@
 
 using Sandbox;
 
-namespace Megashot.ItemUseHandlers;
+namespace Minimal.ItemUseHandlers;
 
 public sealed class WepMp5UseHandler : IItemUseHandler
 {

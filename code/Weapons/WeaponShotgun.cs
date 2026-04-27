@@ -1,7 +1,7 @@
 using Sandbox;
 using System;
 
-namespace Megashot.Weapons;
+namespace Minimal.Weapons;
 
 /// <summary>
 /// Дробовик — за один выстрел выпускает несколько дробинок со спредом, каждая наносит урон.

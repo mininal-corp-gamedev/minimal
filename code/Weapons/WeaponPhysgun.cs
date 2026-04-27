@@ -5,7 +5,7 @@ namespace Minimal.Weapons;
 /// <summary>
 /// MP5 — автомат, стрельба очередью, средний урон и скорострельность.
 /// </summary>
-public sealed class WeaponMp5 : Weapon
+public sealed class WeaponPhysgun : Weapon
 {
     [Property, Category("Ammo")] public override int ClipSize { get; set; } = 30;
     [Property, Category("Ammo")] public override int TotalReserveAmmo { get; set; } = 90;

@@ -1,6 +1,6 @@
 using Ambi.Storage;
 
-namespace Megashot.ItemUseHandlers;
+namespace Minimal.ItemUseHandlers;
 
 /// <summary>
 /// Использование патронов: пополняет TotalReserveAmmo у оружия этой семьи.

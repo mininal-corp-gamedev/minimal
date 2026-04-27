@@ -2,7 +2,7 @@
 
 using Sandbox;
 
-namespace Megashot.ItemUseHandlers;
+namespace Minimal.ItemUseHandlers;
 
 public sealed class WepM4a1UseHandler : IItemUseHandler
 {

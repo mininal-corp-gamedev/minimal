@@ -1,6 +1,6 @@
 using Sandbox;
 
-namespace Megashot.Weapons;
+namespace Minimal.Weapons;
 
 /// <summary>
 /// M4A1 — штурмовая винтовка, стрельба очередью, больший урон и дальность.

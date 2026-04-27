@@ -1,6 +1,6 @@
 using Ambi.Storage;
 using Ambi.Utils;
-using Megashot.ItemUseHandlers;
+using Minimal.ItemUseHandlers;
 using Sandbox;
 using System;
 using System.Text.Json.Serialization;

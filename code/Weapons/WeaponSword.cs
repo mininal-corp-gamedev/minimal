@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace Megashot.Weapons;
+namespace Minimal.Weapons;
 
 /// <summary>
 /// Кирка / ближний бой: без патронов и перезарядки, удар лучом без снарядов.

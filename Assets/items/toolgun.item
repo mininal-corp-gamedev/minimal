@@ -1,0 +1,12 @@
+{
+  "Id": "toolgun",
+  "Category": "weapons",
+  "Header": "Toolgun",
+  "Description": "",
+  "MaxCount": 1,
+  "IconPath": null,
+  "Model": null,
+  "CanUse": true,
+  "__references": [],
+  "__version": 0
+}

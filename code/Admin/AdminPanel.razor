@@ -239,6 +239,17 @@
 
 	protected override void OnUpdate()
 	{
+		if ( CurrentRank <= 0 )
+		{
+			IsOpen = false;
+
+#pragma warning disable CS0612
+			Mouse.Visible = false;
+#pragma warning restore CS0612
+
+			return;
+		}
+
 		if ( Input.Pressed( "AdminPanel" ) )
 		{
 			IsOpen = !IsOpen;

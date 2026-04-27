@@ -72,6 +72,19 @@
 		AddTyped( text, timeAlive, NotificationType.Error );
 	}
 
+	public static void SlotWin( int payout, int multiplier, float timeAlive = 2.2f )
+	{
+		var safePayout = Math.Max( 0, payout );
+		var safeMultiplier = Math.Max( 1, multiplier );
+		Info( $"Slot win: +${safePayout} (x{safeMultiplier})", timeAlive );
+	}
+
+	public static void SlotLose( int betCost, float timeAlive = 2.2f )
+	{
+		var safeBet = Math.Max( 0, betCost );
+		Error( $"Slot lose: -${safeBet}. Multiplier reset.", timeAlive );
+	}
+
 	private static void AddTyped( string text, float timeAlive, NotificationType type )
 	{
 		var normalized = NormalizeText( text );

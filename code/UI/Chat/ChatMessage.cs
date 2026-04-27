@@ -8,17 +8,19 @@ public sealed class ChatMessage
 	public string SenderName { get; init; }
 	public string Text { get; init; }
 	public bool IsSystem { get; init; }
+	public ChatMessageType Type { get; init; }
 	public ulong? SteamId { get; init; }
 	public DateTime SentAt { get; init; }
 	public double CreatedAtSeconds { get; init; }
 
-	public static ChatMessage CreatePlayer( string senderName, ulong? steamId, string text )
+	public static ChatMessage CreatePlayer( string senderName, ulong? steamId, string text, ChatMessageType type = ChatMessageType.Local )
 	{
 		return new ChatMessage
 		{
 			SenderName = string.IsNullOrWhiteSpace( senderName ) ? "Player" : senderName.Trim(),
 			Text = text,
 			IsSystem = false,
+			Type = type,
 			SteamId = steamId,
 			SentAt = DateTime.Now,
 			CreatedAtSeconds = Time.Now
@@ -32,6 +34,7 @@ public sealed class ChatMessage
 			SenderName = "System",
 			Text = text,
 			IsSystem = true,
+			Type = ChatMessageType.System,
 			SteamId = null,
 			SentAt = DateTime.Now,
 			CreatedAtSeconds = Time.Now
@@ -40,6 +43,16 @@ public sealed class ChatMessage
 
 	public int BuildHash()
 	{
-		return HashCode.Combine( SenderName, Text, IsSystem, SteamId, SentAt );
+		return HashCode.Combine( SenderName, Text, IsSystem, Type, SteamId, SentAt );
 	}
+}
+
+public enum ChatMessageType
+{
+	Local,
+	Ooc,
+	Me,
+	Roll,
+	Report,
+	System
 }

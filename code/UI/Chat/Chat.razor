@@ -3,7 +3,6 @@
 @using System
 @using System.Collections.Generic
 @using System.Linq
-@using System.Threading.Tasks;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -13,9 +12,16 @@
 			<div class="message-list" @ref="MessageListRef">
 				@foreach ( var message in VisibleMessages )
 				{
-					<div class="chat-message @(message.IsSystem ? "system-message" : "player-message")">
+					<div class="chat-message @(message.IsSystem ? "system-message" : "player-message") @GetMessageTypeClass( message )">
 						<div class="message-row">
-							<span class="message-sender">@GetSenderLabel( message ):</span>
+							@if ( message.Type == ChatMessageType.Ooc )
+							{
+								<span class="ooc-badge">OOC</span>
+							}
+							@if ( message.Type != ChatMessageType.Me )
+							{
+								<span class="message-sender">@GetSenderLabel( message )@GetSenderSeparator( message )</span>
+							}
 							<span class="message-text">@message.Text</span>
 							<span class="message-time">@message.SentAt.ToString( "HH:mm" )</span>
 						</div>
@@ -43,17 +49,19 @@
 	[Property] public int MaxMessageLength { get; set; } = 160;
 	[Property] public float SendCooldownSeconds { get; set; } = 0.25f;
 	[Property] public int MaxStoredMessages { get; set; } = 200;
+	[Property] public float MessageRadius { get; set; } = 400f;
 
 	private readonly List<ChatMessage> Messages = new();
 	private readonly Dictionary<ulong, double> HostNextAllowedSendAt = new();
 
 	private bool IsChatOpen;
+	private bool WasChatOpenLastFrame;
 	private string PendingText = "";
 	private double LocalNextAllowedSendAt;
 	private bool NeedsInputFocus;
 	private bool NeedsScrollToBottom;
-	private int ScrollSnapRetriesLeft;
-	private int ScrollRequestVersion;
+	private int KeepScrollSnappedFrames;
+	private float LastObservedScrollSizeY;
 	private TextEntry ChatInputRef;
 	private Panel MessageListRef;
 
@@ -115,9 +123,9 @@
 		IsChatOpen = true;
 		NeedsInputFocus = true;
 		NeedsScrollToBottom = true;
-		ScrollSnapRetriesLeft = 8;
-		ScrollRequestVersion++;
-		_ = EnsureScrollAfterLayoutAsync( ScrollRequestVersion );
+		KeepScrollSnappedFrames = 32;
+		LastObservedScrollSizeY = 0f;
+		StateHasChanged();
 	}
 
 	private void CloseChat()
@@ -126,14 +134,28 @@
 		PendingText = string.Empty;
 		NeedsInputFocus = false;
 		NeedsScrollToBottom = true;
-		ScrollSnapRetriesLeft = 0;
-		ScrollRequestVersion++;
+		KeepScrollSnappedFrames = 0;
+		LastObservedScrollSizeY = 0f;
 	}
 
 	private string GetSenderLabel( ChatMessage message )
 	{
 		return message.SenderName;
 	}
+
+	private static string GetSenderSeparator( ChatMessage message )
+	{
+		return ":";
+	}
+
+	private static string GetMessageTypeClass( ChatMessage message ) => message.Type switch
+	{
+		ChatMessageType.Ooc => "ooc-message",
+		ChatMessageType.Me => "me-message",
+		ChatMessageType.Roll => "roll-message",
+		ChatMessageType.Report => "report-message",
+		_ => ""
+	};
 
 	private void SubmitOrClose()
 	{
@@ -187,13 +209,156 @@
 		if ( !PassHostValidation( caller, message, out var normalized ) )
 			return;
 
-		BroadcastPlayerMessage( caller.DisplayName, caller.SteamId, normalized );
+		var sender = FindPlayerBySteamId( caller.SteamId.Value );
+		if ( !sender.IsValid() )
+			return;
+
+		if ( normalized.StartsWith( "/" ) )
+			HandleHostCommand( caller, sender, normalized );
+		else
+			SendLocalMessage( caller, sender, normalized, ChatMessageType.Local );
 	}
 
 	[Rpc.Broadcast]
-	private void BroadcastPlayerMessage( string senderName, ulong steamId, string message )
+	private void BroadcastChatMessage( string senderName, long steamId, string message, ChatMessageType type )
 	{
-		AddMessage( ChatMessage.CreatePlayer( senderName, steamId, message ) );
+		if ( type == ChatMessageType.System )
+		{
+			AddMessage( ChatMessage.CreateSystem( message ) );
+			return;
+		}
+
+		var safeSteamId = steamId > 0 ? (ulong?)steamId : null;
+		AddMessage( ChatMessage.CreatePlayer( senderName, safeSteamId, message, type ) );
+	}
+
+	private void HandleHostCommand( Connection caller, Player sender, string message )
+	{
+		var commandLine = message[1..].TrimStart();
+		if ( commandLine.Length <= 0 )
+			return;
+
+		if ( commandLine.StartsWith( "/" ) )
+		{
+			SendGlobalMessage( caller, commandLine[1..].Trim(), ChatMessageType.Ooc );
+			return;
+		}
+
+		var parts = commandLine.Split( ' ', 2, StringSplitOptions.RemoveEmptyEntries );
+		var command = parts.Length > 0 ? parts[0].ToLowerInvariant() : "";
+		var args = parts.Length > 1 ? parts[1].Trim() : "";
+
+		switch ( command )
+		{
+			case "ooc":
+				SendGlobalMessage( caller, args, ChatMessageType.Ooc );
+				break;
+			case "me":
+				if ( args.Length <= 0 )
+					return;
+
+				SendLocalMessage( caller, sender, $"{caller.DisplayName} {args}", ChatMessageType.Me );
+				break;
+			case "roll":
+				var roll = Game.Random.Int( 0, 100 );
+				SendLocalMessage( caller, sender, $"rolls {roll}/100", ChatMessageType.Roll );
+				break;
+			case "report":
+				SendReportMessage( caller, args );
+				break;
+			default:
+				SendToCaller( caller, "Unknown command.", ChatMessageType.System );
+				break;
+		}
+	}
+
+	private void SendGlobalMessage( Connection caller, string message, ChatMessageType type )
+	{
+		var normalized = NormalizeText( message );
+		if ( normalized.Length <= 0 )
+			return;
+
+		BroadcastChatMessage( caller.DisplayName, caller.SteamId.Value, normalized, type );
+	}
+
+	private void SendLocalMessage( Connection caller, Player sender, string message, ChatMessageType type )
+	{
+		var normalized = NormalizeText( message );
+		if ( normalized.Length <= 0 )
+			return;
+
+		var recipients = GetPlayersInMessageRadius( sender )
+			.Select( x => x.GameObject.Network.Owner?.SteamId.Value ?? 0L )
+			.Where( x => x > 0L )
+			.ToHashSet();
+
+		using ( Rpc.FilterInclude( connection => recipients.Contains( connection.SteamId.Value ) ) )
+		{
+			BroadcastChatMessage( caller.DisplayName, caller.SteamId.Value, normalized, type );
+		}
+	}
+
+	private void SendReportMessage( Connection caller, string reason )
+	{
+		var text = $"SteamId {caller.SteamId.Value} ({caller.DisplayName}) called for help.";
+		var normalizedReason = NormalizeText( reason );
+		if ( normalizedReason.Length > 0 )
+			text += $" Reason: {normalizedReason}";
+
+		var recipients = GetAllPlayers()
+			.Where( x => x.AdminRank > 0 )
+			.Select( x => x.GameObject.Network.Owner?.SteamId.Value ?? 0L )
+			.Where( x => x > 0L )
+			.ToHashSet();
+
+		using ( Rpc.FilterInclude( connection => recipients.Contains( connection.SteamId.Value ) ) )
+		{
+			BroadcastChatMessage( "Report", caller.SteamId.Value, text, ChatMessageType.Report );
+		}
+
+		SendToCaller( caller, "Report sent.", ChatMessageType.System );
+	}
+
+	private void SendToCaller( Connection caller, string message, ChatMessageType type )
+	{
+		using ( Rpc.FilterInclude( connection => connection.SteamId == caller.SteamId ) )
+		{
+			BroadcastChatMessage( "System", 0L, message, type );
+		}
+	}
+
+	private IEnumerable<Player> GetPlayersInMessageRadius( Player sender )
+	{
+		var radius = MathF.Max( 1f, MessageRadius );
+		foreach ( var player in GetAllPlayers() )
+		{
+			if ( !player.IsValid() || player.GameObject.Network.Owner is null )
+				continue;
+
+			if ( Vector3.DistanceBetween( sender.WorldPosition, player.WorldPosition ) <= radius )
+				yield return player;
+		}
+	}
+
+	private static IEnumerable<Player> GetAllPlayers()
+	{
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			yield break;
+
+		foreach ( var player in scene.GetAllComponents<Player>() )
+			yield return player;
+	}
+
+	private static Player FindPlayerBySteamId( long steamId )
+	{
+		foreach ( var player in GetAllPlayers() )
+		{
+			if ( player.GameObject.Network.Owner?.SteamId.Value == steamId )
+				return player;
+		}
+
+		return null;
 	}
 
 	private bool PassHostValidation( Connection caller, string message, out string normalized )
@@ -217,22 +382,8 @@
 			return;
 
 		MessageListRef.ScrollVelocity = Vector2.Zero;
-		MessageListRef.ScrollOffset = new Vector2( MessageListRef.ScrollOffset.x, MessageListRef.ScrollSize.y );
+		MessageListRef.ScrollOffset = MessageListRef.ScrollSize;
 		MessageListRef.TryScrollToBottom();
-	}
-
-	private async Task EnsureScrollAfterLayoutAsync( int version )
-	{
-		// Wait a few frames because the full message list and scroll size
-		// can be rebuilt right after opening the chat panel.
-		for ( var i = 0; i < 8; i++ )
-		{
-			await Task.DelaySeconds( 0f );
-			if ( version != ScrollRequestVersion || !IsChatOpen )
-				return;
-
-			SnapScrollToBottom();
-		}
 	}
 
 	protected override void OnStart()
@@ -250,6 +401,14 @@
 				OpenChat();
 		}
 
+		if ( IsChatOpen && !WasChatOpenLastFrame )
+		{
+			NeedsScrollToBottom = true;
+			KeepScrollSnappedFrames = Math.Max( KeepScrollSnappedFrames, 32 );
+			LastObservedScrollSizeY = 0f;
+			StateHasChanged();
+		}
+
 		if ( IsChatOpen && Input.EscapePressed )
 		{
 			CloseChat();
@@ -259,20 +418,37 @@
 		{
 			ChatInputRef.Focus();
 			NeedsInputFocus = false;
+			NeedsScrollToBottom = true;
+			KeepScrollSnappedFrames = Math.Max( KeepScrollSnappedFrames, 32 );
+			StateHasChanged();
+		}
+
+		WasChatOpenLastFrame = IsChatOpen;
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( IsChatOpen && MessageListRef.IsValid() )
+		{
+			var currentScrollSizeY = MessageListRef.ScrollSize.y;
+			if ( currentScrollSizeY > LastObservedScrollSizeY + 0.5f )
+				KeepScrollSnappedFrames = Math.Max( KeepScrollSnappedFrames, 12 );
+
+			LastObservedScrollSizeY = currentScrollSizeY;
 		}
 
 		if ( NeedsScrollToBottom && MessageListRef.IsValid() )
 		{
+			StateHasChanged();
 			SnapScrollToBottom();
 			NeedsScrollToBottom = false;
 		}
 
-		// After opening chat, keep snapping for a few ticks so it still works
-		// when message layout/scroll size updates one frame later.
-		if ( IsChatOpen && ScrollSnapRetriesLeft > 0 && MessageListRef.IsValid() )
+		if ( IsChatOpen && KeepScrollSnappedFrames > 0 && MessageListRef.IsValid() )
 		{
+			StateHasChanged();
 			SnapScrollToBottom();
-			ScrollSnapRetriesLeft--;
+			KeepScrollSnappedFrames--;
 		}
 	}
 

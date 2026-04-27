@@ -1347,7 +1347,7 @@
       "__guid": "aafcdf3e-a2b6-4dc7-addc-ca654df5d7a3",
       "__version": 2,
       "Flags": 0,
-      "Name": "ColorSlot",
+      "Name": "Slot Machine",
       "Position": "59.4519043,-451.512604,39.9549561",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
@@ -1410,9 +1410,82 @@
           "Static": false,
           "Surface": null,
           "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "SlotMachine",
+          "__guid": "d77ab27c-c356-490f-9568-9476e27d6969",
+          "__enabled": true,
+          "Flags": 0,
+          "BetCost": 100,
+          "MaxDistance": 120,
+          "MaxMultiplier": 20,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "SpinDuration": 1.1,
+          "WinChance": 0.45
         }
       ],
-      "Children": []
+      "Children": [
+        {
+          "__guid": "4d5d16bd-8b2e-4ffa-8973-02a7c523c8a4",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "World Panel",
+          "Position": "-1.50419235,0,64.5790863",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.WorldPanel",
+              "__guid": "49915ccc-0656-43d5-9eef-fb08e37487fc",
+              "__enabled": true,
+              "Flags": 0,
+              "HorizontalAlign": "Center",
+              "InteractionRange": 1000,
+              "LookAtCamera": false,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "PanelSize": "512,600",
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderScale": 1,
+              "VerticalAlign": "Center"
+            },
+            {
+              "__type": "Sandbox.SlotMachineWorldPanel",
+              "__guid": "94a69733-b07d-4116-b977-6d89ff0060c9",
+              "__enabled": true,
+              "Flags": 0,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null
+            }
+          ],
+          "Children": []
+        }
+      ]
     },
     {
       "__guid": "7dddcc52-ad07-4391-a804-1fac3ef28ef1",

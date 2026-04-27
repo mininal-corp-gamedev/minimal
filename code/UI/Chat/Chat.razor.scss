@@ -17,7 +17,7 @@ Chat {
 	}
 
 	.chat-panel {
-		width: 460px;
+		width: 560px;
 		min-height: 170px;
 		max-height: 460px;
 		flex-direction: column;
@@ -51,6 +51,11 @@ Chat {
 		.scrollbar-placeholder {
 			opacity: 0;
 		}
+
+		.chat-message {
+			background-color: rgba(0, 0, 0, 0.58);
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+		}
 	}
 
 	.message-area {
@@ -68,6 +73,7 @@ Chat {
 		gap: 6px;
 		padding-right: 6px;
 		overflow-y: scroll;
+		overflow-x: hidden;
 	}
 
 	.scrollbar-placeholder {
@@ -93,26 +99,56 @@ Chat {
 
 	.message-sender {
 		color: #ff436c;
-		font-size: 14px;
+		font-size: 15px;
 		font-family: Montserrat;
-		font-weight: 700;
+		font-weight: 800;
+		text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
 	}
 
 	.system-message .message-sender {
 		color: #f2c94c;
 	}
 
+	.ooc-badge {
+		padding: 2px 6px;
+		border-radius: 999px;
+		background-color: rgba(255, 67, 108, 0.18);
+		color: #ff436c;
+		font-size: 11px;
+		font-family: Montserrat;
+		font-weight: 800;
+		flex-shrink: 0;
+	}
+
+	.me-message .message-sender,
+	.me-message .message-text {
+		color: #c084fc;
+	}
+
+	.roll-message .message-sender,
+	.roll-message .message-text {
+		color: #f2c94c;
+	}
+
+	.report-message .message-sender,
+	.report-message .message-text {
+		color: #ef4444;
+	}
+
 	.message-text {
 		color: rgba(255, 255, 255, 0.94);
-		font-size: 14px;
+		font-size: 15px;
 		font-family: Montserrat;
+		font-weight: 700;
+		text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
 	}
 
 	.message-time {
 		margin-left: auto;
 		padding: 2px 6px;
-		font-size: 11px;
+		font-size: 12px;
 		font-family: Montserrat;
+		font-weight: 700;
 		color: rgba(255, 255, 255, 0.72);
 		background-color: rgba(255, 255, 255, 0.1);
 		border-radius: 999px;

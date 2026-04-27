@@ -16,8 +16,8 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Minimal.Weapons.WeaponUsp",
-        "__guid": "d4a57b9a-84cb-44ef-87d5-da0379177d4e",
+        "__type": "Minimal.Weapons.WeaponPhysgun",
+        "__guid": "0bf23f0f-d310-4ae6-89b0-e55ab3259cd3",
         "__enabled": true,
         "Flags": 0,
         "Ammo": 0,
@@ -39,7 +39,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "ReloadDurationSeconds": 1.25,
+        "ReloadDurationSeconds": 2,
         "ReloadSound": null,
         "SemiAuto": false,
         "ShotPos": {

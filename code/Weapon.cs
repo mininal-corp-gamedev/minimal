@@ -60,6 +60,13 @@ public class Weapon : Component
 
     [Property] public bool IsIronSight { get; set; } = false;
 
+    /// <summary>
+    /// Использовать ли стандартный обработчик ввода (огонь/перезарядка/прицеливание).
+    /// Спец-оружие вроде Physgun/Toolgun возвращает false и реализует свой ввод
+    /// в <see cref="OnWeaponFixedUpdate"/>.
+    /// </summary>
+    protected virtual bool UseDefaultCombatInput => true;
+
     protected bool _isReloading = false;
     private bool _isPaused = false;
     private bool _wasJustResumed = false;
@@ -327,6 +334,8 @@ public class Weapon : Component
             if (_attack1WasReleased && _attack2WasReleased && _reloadWasReleased)
                 _wasJustResumed = false;
         }
+
+        if (!UseDefaultCombatInput) return;
 
         if (!IsMelee && Input.Pressed("Reload") && _reloadWasReleased)
             Reload();

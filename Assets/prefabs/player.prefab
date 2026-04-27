@@ -33,18 +33,21 @@
           "component_type": "Dresser"
         },
         "HitSound": "sounds/voicer-lines/hit.sound",
+        "ItemDropPrefab": null,
         "Job": {
           "_type": "component",
           "component_id": "0c829d66-91b8-4ffc-b625-7f7e40272131",
           "go": "70709696-00d3-4b3a-a540-a7da2fcf0471",
           "component_type": "PlayerJob"
         },
+        "MaxDoors": 8,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
+        "Renderer": null,
         "WorldHud": {
           "_type": "component",
           "component_id": "30bcf53b-4115-487c-80bb-387d61c32651",
@@ -380,7 +383,7 @@
             "OnTriggerExit": null,
             "Radius": 11.313708,
             "RollingResistance": null,
-            "Start": "0,0,60.68629",
+            "Start": "0,0,60.6862907",
             "Static": false,
             "Surface": null,
             "SurfaceVelocity": "0,0,0"
@@ -419,7 +422,7 @@
         "__version": 2,
         "Flags": 0,
         "Name": "World Hud",
-        "Position": "0,0,80.29511",
+        "Position": "0,0,80.2951126",
         "Rotation": "0,0,0,1",
         "Scale": "1,1,1",
         "Tags": "",
@@ -486,6 +489,7 @@
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
         "IncludedBodies": "",
+        "DeferGeneration": false,
         "CustomBounds": false
       }
     },

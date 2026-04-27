@@ -2,6 +2,7 @@ using Ambi.Storage;
 using Megashot.ItemUseHandlers;
 using Sandbox;
 using System;
+using System.Text.Json.Serialization;
 
 public sealed class Player : Component, Component.IDamageable
 {
@@ -20,8 +21,29 @@ public sealed class Player : Component, Component.IDamageable
 
     [Sync(SyncFlags.FromHost)] public float Health { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public float MaxHealth { get; set; } = 100f;
-    [Sync(SyncFlags.FromHost)] public int Money { get; set; } = 0;
+
+    private int _money;
+    [Sync(SyncFlags.FromHost)]
+    public int Money
+    {
+        get => _money;
+        set
+        {
+            if ( _money == value ) return;
+            _money = value;
+            if ( Networking.IsHost && _saveInitialized )
+                SavePlayerData();
+        }
+    }
+
     [Sync(SyncFlags.FromHost)] public int AdminRank { get; set; } = 0;
+
+    private const string PlayerSaveFolder = "players";
+    private const int DefaultStartingMoney = 500;
+
+    // Host-only gate. Until the save is loaded on the host, Money writes
+    // must not overwrite the file on disk.
+    private bool _saveInitialized;
 
     /// <summary>
     /// Number of doors currently owned (gameplay-wise) by this player.
@@ -60,6 +82,12 @@ public sealed class Player : Component, Component.IDamageable
     public bool IsLocalPlayer => !IsProxy;
 
     private static bool _itemUseHandlersRegistered;
+
+    public sealed class PlayerSaveData
+    {
+        [JsonPropertyName( "steamId" )] public long SteamId { get; set; }
+        [JsonPropertyName( "money" )] public int Money { get; set; }
+    }
 
     public void Spawn()
     {
@@ -353,6 +381,93 @@ public sealed class Player : Component, Component.IDamageable
         AdminManager.RpcRequestRankInit();
     }
 
+    private long GetOwnerSteamId()
+    {
+        return GameObject.Network.Owner?.SteamId.Value ?? 0L;
+    }
+
+    private static string GetPlayerSavePath( long steamId ) => $"{PlayerSaveFolder}/{steamId}.json";
+
+    private static void EnsurePlayerSaveFolder()
+    {
+        FileSystem.Data.CreateDirectory( PlayerSaveFolder );
+    }
+
+    /// <summary>
+    /// Host-only. Loads save for the owning SteamId, applies it to this Player,
+    /// and unlocks further persistence. If no save exists, issues the starting money.
+    /// </summary>
+    private void HostInitSave()
+    {
+        if ( !Networking.IsHost ) return;
+
+        var steamId = GetOwnerSteamId();
+        if ( steamId == 0L )
+        {
+            Log.Warning( "[PlayerSave] Cannot init save: owner SteamId is 0." );
+            return;
+        }
+
+        EnsurePlayerSaveFolder();
+
+        PlayerSaveData data = null;
+        try
+        {
+            var path = GetPlayerSavePath( steamId );
+            if ( FileSystem.Data.FileExists( path ) )
+                data = FileSystem.Data.ReadJsonOrDefault<PlayerSaveData>( path );
+        }
+        catch ( Exception ex )
+        {
+            Log.Warning( $"[PlayerSave] Load failed for {steamId}: {ex.Message}" );
+        }
+
+        if ( data is null )
+        {
+            data = new PlayerSaveData
+            {
+                SteamId = steamId,
+                Money = DefaultStartingMoney
+            };
+        }
+
+        // Apply to this player (bypasses persistence because _saveInitialized is still false).
+        _money = data.Money;
+        _saveInitialized = true;
+
+        // Persist a fresh copy so new players get a file immediately.
+        SavePlayerData();
+    }
+
+    /// <summary>
+    /// Host-only. Writes the current player state to disk. Guarded by
+    /// <see cref="_saveInitialized"/> so the save can never be clobbered
+    /// before it has been loaded.
+    /// </summary>
+    private void SavePlayerData()
+    {
+        if ( !Networking.IsHost ) return;
+        if ( !_saveInitialized ) return;
+
+        var steamId = GetOwnerSteamId();
+        if ( steamId == 0L ) return;
+
+        try
+        {
+            EnsurePlayerSaveFolder();
+            var data = new PlayerSaveData
+            {
+                SteamId = steamId,
+                Money = _money
+            };
+            FileSystem.Data.WriteJson( GetPlayerSavePath( steamId ), data );
+        }
+        catch ( Exception ex )
+        {
+            Log.Warning( $"[PlayerSave] Save failed for {steamId}: {ex.Message}" );
+        }
+    }
+
     private void MakeLocalInstance()
     {
         if (!IsProxy)
@@ -368,6 +483,7 @@ public sealed class Player : Component, Component.IDamageable
     protected override void OnStart()
 	{
         MakeLocalInstance();
+        HostInitSave();
         NetworkInit();
     }
 

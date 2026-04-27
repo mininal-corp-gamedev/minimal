@@ -60,6 +60,10 @@ public sealed class Player : Component, ICustomDamagable
     private float _origWalkSpeed;
     private float _origRunSpeed;
 
+    // ===== Lockpick cooldown =====
+    /// <summary>Время до окончания кулдауна на взлом дверей. Хост авторитетен.</summary>
+    [Sync(SyncFlags.FromHost)] public TimeUntil LockpickCooldown { get; set; }
+
     private const string PlayerSaveFolder = "players";
     private const int DefaultStartingMoney = 500;
 

@@ -75,6 +75,17 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	/// <summary>Speed of the open/close rotation animation in degrees per second.</summary>
 	[Property] public float AnimationSpeed { get; set; } = 90f;
 
+	// ===== Lockpick =====
+
+	/// <summary>How long (seconds) the player cooldown lasts after a lockpick attempt.</summary>
+	[Property, Category( "Lockpick" )] public float LockpickCooldownSeconds { get; set; } = 60f;
+
+	/// <summary>Chance (0..1) for a lockpick attempt to succeed.</summary>
+	[Property, Category( "Lockpick" ), Range( 0f, 1f )] public float LockpickSuccessChance { get; set; } = 0.5f;
+
+	/// <summary>Maximum distance between the picker and the door for the host to accept an attempt.</summary>
+	[Property, Category( "Lockpick" )] public float LockpickInteractRange { get; set; } = 120f;
+
 	private float _currentYaw;
 	private Rotation _baseRotation;
 	private TimeUntil _brokenLockout;
@@ -349,6 +360,98 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	public void RpcRequestBreak()
 	{
 		Break();
+	}
+
+	// ===================== LOCKPICK =====================
+
+	/// <summary>True if this door is currently a valid candidate for a fresh lockpick attempt.</summary>
+	public bool CanBeLockpicked()
+	{
+		if ( IsBlocked ) return false;
+		if ( IsBroken ) return false;
+		if ( LockState != DoorLockState.Locked ) return false;
+		// Только покупные (с владельцем) или job-двери — на остальных замок не имеет смысла.
+		if ( !HasOnlyJobs && !HasOwner ) return false;
+		return true;
+	}
+
+	/// <summary>Client request: try to start a lockpick attempt on this door. Host-authoritative.</summary>
+	[Rpc.Host]
+	public void RpcRequestLockpick()
+	{
+		if ( !Networking.IsHost ) return;
+
+		var caller = Rpc.Caller;
+		if ( caller is null ) return;
+
+		var picker = FindPlayerBySteamId( caller.SteamId );
+		if ( !picker.IsValid() ) return;
+		if ( picker.IsArrested ) return;
+
+		if ( !CanBeLockpicked() )
+		{
+			NotifyLockpicker( caller, "Эту дверь нельзя взломать.", NotificationType.Warn, 3.0f );
+			return;
+		}
+
+		if ( picker.LockpickCooldown > 0f )
+		{
+			var secondsLeft = (float)picker.LockpickCooldown;
+			NotifyLockpicker( caller, $"Подожди {secondsLeft:0}с перед следующей попыткой.", NotificationType.Warn, 2.5f );
+			return;
+		}
+
+		if ( Vector3.DistanceBetween( picker.WorldPosition, WorldPosition ) > LockpickInteractRange )
+		{
+			NotifyLockpicker( caller, "Слишком далеко от двери.", NotificationType.Warn, 2.5f );
+			return;
+		}
+
+		var cooldown = MathF.Max( 0.5f, LockpickCooldownSeconds );
+
+		// Бросок 50/50 происходит сразу, результат сразу отправляется клиенту.
+		var roll = Game.Random.Float( 0f, 1f );
+		var success = roll < MathF.Max( 0f, MathF.Min( 1f, LockpickSuccessChance ) );
+
+		// Устанавливаем кулдаун на игроке
+		picker.LockpickCooldown = cooldown;
+
+		if ( success )
+		{
+			// Сразу разблокируем и открываем дверь
+			LockState = DoorLockState.Unlocked;
+			if ( DoorSecond.IsValid() && DoorSecond.LockState == DoorLockState.Locked )
+				DoorSecond.LockState = DoorLockState.Unlocked;
+			Open();
+
+			NotifyLockpicker( caller, $"Взлом удался! Дверь открыта. Следующая попытка через {cooldown:0}с.", NotificationType.Info, 3.5f );
+		}
+		else
+		{
+			NotifyLockpicker( caller, $"Взлом не удался. Следующая попытка через {cooldown:0}с.", NotificationType.Error, 3.5f );
+		}
+	}
+
+	private static void NotifyLockpicker( Connection target, string text, NotificationType type, float aliveSeconds )
+	{
+		if ( target is null ) return;
+
+		using ( Rpc.FilterInclude( c => c.SteamId.Value == target.SteamId.Value ) )
+		{
+			RpcShowLockpickNotification( text, (int)type, aliveSeconds );
+		}
+	}
+
+	[Rpc.Broadcast]
+	private static void RpcShowLockpickNotification( string text, int type, float aliveSeconds )
+	{
+		var t = (NotificationType)type;
+		switch ( t )
+		{
+			case NotificationType.Warn: Notification.Warn( text, aliveSeconds ); break;
+			case NotificationType.Error: Notification.Error( text, aliveSeconds ); break;
+			default: Notification.Info( text, aliveSeconds ); break;
+		}
 	}
 
 	[Rpc.Broadcast]

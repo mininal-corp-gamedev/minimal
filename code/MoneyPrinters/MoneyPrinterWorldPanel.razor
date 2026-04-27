@@ -18,6 +18,9 @@
 				<div class="money">@MoneyText</div>
 			</div>
 
+			<div class="rate-label">Health</div>
+			<div class="rate-value">@HealthText</div>
+
 			@if ( IsFull )
 			{
 				<div class="status full">FULL</div>
@@ -37,6 +40,10 @@
 	int StoredMoney => Math.Max( 0, Printer?.StoredMoney ?? 0 );
 	int MaxMoney => Math.Max( 1, Printer?.MaxMoney ?? 1 );
 	bool IsFull => Printer is not null && StoredMoney >= MaxMoney;
+
+	float Health => MathF.Max( 0f, Printer?.Health ?? 0f );
+	float MaxHealth => MathF.Max( 1f, Printer?.MaxHealth ?? 1f );
+	string HealthText => $"{MathF.Ceiling( Health )} / {MathF.Ceiling( MaxHealth )}";
 
 	float RatePerMinute => Printer is { TickInterval: > 0f } p
 		? p.MoneyPerTick * (60f / p.TickInterval)
@@ -74,5 +81,6 @@
 		MaxMoney,
 		IsFull,
 		RatePerMinute,
-		FooterText );
+		FooterText,
+		HealthText );
 }

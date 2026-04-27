@@ -609,14 +609,14 @@
           "__guid": "465cddde-0ec9-4252-b5d0-8f159d5cb4dd",
           "__enabled": true,
           "Flags": 0,
-          "LeftMouseAction": "Attack1",
+          "LeftMouseAction": "Interact",
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "RightMouseAction": "Attack2",
+          "RightMouseAction": "Interact",
           "VRHandSource": "Left"
         }
       ],

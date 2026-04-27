@@ -1,3 +1,4 @@
+using Ambi.Utils;
 using Sandbox;
 using System;
 
@@ -5,7 +6,7 @@ using System;
 /// Базовый класс для всех денежных принтеров.
 /// Вся логика здесь — наследники только дают название.
 /// </summary>
-public class MoneyPrinterBase : Component, Component.IPressable, Component.IDamageable
+public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagable
 {
     // ─────────────────────────────────────────────
     //  Инспектор — настраивается в редакторе
@@ -18,6 +19,7 @@ public class MoneyPrinterBase : Component, Component.IPressable, Component.IDama
     [Sync( SyncFlags.FromHost )][Property, Group( "Stats" )] public float  MaxDistance  { get; set; } = 100f;
 
     [Sync( SyncFlags.FromHost )][Property, Group( "Health" )] public float MaxHealth { get; set; } = 100f;
+    [Sync( SyncFlags.FromHost )][Property, Group( "Health" )] public float Health      { get; set; } = 100f;
 
     /// <summary>Таймер для UI. Принтер больше не удаляется при истечении.</summary>
     [Sync( SyncFlags.FromHost )][Property, Group( "Lifetime" )] public float Lifetime { get; set; } = 60f;
@@ -30,7 +32,6 @@ public class MoneyPrinterBase : Component, Component.IPressable, Component.IDama
 
     [Sync( SyncFlags.FromHost )] public int   StoredMoney { get; protected set; } = 0;
     [Sync( SyncFlags.FromHost )] public bool  IsWorking   { get; protected set; } = true;
-    [Sync( SyncFlags.FromHost )] public float Health      { get; protected set; }
 
     /// <summary>Значение таймера для UI (объект больше не удаляется по времени).</summary>
     [Sync( SyncFlags.FromHost )] public float TimeLeft { get; protected set; }
@@ -112,9 +113,29 @@ public class MoneyPrinterBase : Component, Component.IPressable, Component.IDama
 
     public void OnDamage( in DamageInfo dmgInfo )
     {
-        if ( !Networking.IsHost ) return;
+        // На хосте применяем урон сразу, иначе пробрасываем через RPC.
+        if ( Networking.IsHost )
+        {
+            ApplyDamage( dmgInfo.Damage );
+            return;
+        }
 
-        Health = MathF.Max( 0f, Health - dmgInfo.Damage );
+        RpcApplyDamage( dmgInfo.Damage );
+    }
+
+    [Rpc.Host]
+    private void RpcApplyDamage( float damage )
+    {
+        if ( !Networking.IsHost ) return;
+        ApplyDamage( damage );
+    }
+
+    private void ApplyDamage( float damage )
+    {
+        if ( damage <= 0f ) return;
+        if ( Health <= 0f ) return;
+
+        Health = MathF.Max( 0f, Health - damage );
         RefreshVisual();
 
         if ( Health <= 0f )

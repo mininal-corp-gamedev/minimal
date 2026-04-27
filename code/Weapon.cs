@@ -1,3 +1,4 @@
+using Ambi.Utils;
 using Sandbox;
 using System;
 using System.Threading.Tasks;
@@ -236,7 +237,7 @@ public class Weapon : Component
                 return;
             }
 
-            if (go.Components.TryGet<IDamageable>(out var damageable, FindMode.EverythingInSelfAndParent))
+            if (go.Components.TryGet<ICustomDamagable>(out var damageable, FindMode.EverythingInSelfAndParent))
             {
                 damageable.OnDamage(new DamageInfo
                 {

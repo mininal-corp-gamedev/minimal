@@ -1,10 +1,11 @@
 using Ambi.Storage;
+using Ambi.Utils;
 using Megashot.ItemUseHandlers;
 using Sandbox;
 using System;
 using System.Text.Json.Serialization;
 
-public sealed class Player : Component, Component.IDamageable
+public sealed class Player : Component, ICustomDamagable
 {
     public static Player Local { get; private set; }
 
@@ -153,12 +154,16 @@ public sealed class Player : Component, Component.IDamageable
     [Rpc.Broadcast]
     private void RpcOnPlayerHit(SkinnedModelRenderer renderer)
     {
+        //if (!renderer.IsValid()) return;
+
         renderer.Set("hit", true);
     }
 
     [Rpc.Broadcast]
     private void RpcSetHoldType(SkinnedModelRenderer renderer, int holdType)
     {
+        //if (!renderer.IsValid()) return;
+
         renderer?.Set("holdtype", holdType);
     }
 

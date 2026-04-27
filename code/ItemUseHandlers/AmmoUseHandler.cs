@@ -1,56 +1,50 @@
-using System;
-using System.Collections.Generic;
 using Ambi.Storage;
-using Sandbox;
 
 namespace Megashot.ItemUseHandlers;
 
 /// <summary>
-/// Использование патронов: пополняет TotalReserveAmmo на 2*ClipSize у всех оружий семьи, если в инвентаре есть хотя бы одно оружие этой семьи (или подтип purple/gold).
+/// Использование патронов: пополняет TotalReserveAmmo у оружия этой семьи.
 /// </summary>
 public sealed class AmmoUseHandler : IItemUseHandler
 {
-    private readonly string[] _weaponItemIds;
-    private readonly int _clipSize;
-    private readonly Func<IEnumerable<Weapon>> _getWeapons;
+    private readonly AmmoWeaponType _weaponType;
 
-    public AmmoUseHandler(string[] weaponItemIds, int clipSize, Func<IEnumerable<Weapon>> getWeapons)
+    public AmmoUseHandler(AmmoWeaponType weaponType)
     {
-        _weaponItemIds = weaponItemIds ?? Array.Empty<string>();
-        _clipSize = clipSize;
-        _getWeapons = getWeapons;
+        _weaponType = weaponType;
     }
 
     public bool Use(Item item, Player caller)
     {
-        //if (caller?.Inventory == null)
-        //    return false;
-
-        //bool hasWeapon = false;
-        //foreach (var weaponId in _weaponItemIds)
-        //{
-        //    if (caller.Inventory.GetTotalCount(weaponId) > 0)
-        //    {
-        //        hasWeapon = true;
-        //        break;
-        //    }
-        //}
-
-        //if (!hasWeapon)
-        //    return false;
-
-        var weapons = _getWeapons?.Invoke();
-        if (weapons == null)
+        var weapon = GetWeapon();
+        if (!weapon.IsValid())
             return false;
 
-        int toAdd = _clipSize * 2;
-        foreach (var weapon in weapons)
-        {
-            if (weapon.IsValid())
-                weapon.TotalReserveAmmo += toAdd;
-        }
+        weapon.TotalReserveAmmo += weapon.ClipSize * 2;
 
         item.Remove(1);
         return true;
     }
+
+    private Weapon GetWeapon()
+    {
+        var manager = WeaponManager.Instance;
+        if (!manager.IsValid())
+            return null;
+
+        return _weaponType switch
+        {
+            AmmoWeaponType.Usp => manager.Usp,
+            AmmoWeaponType.Mp5 => manager.Mp5,
+            AmmoWeaponType.M4A1 => manager.M4A1,
+            _ => null
+        };
+    }
+}
+
+public enum AmmoWeaponType
+{
+    Usp,
+    Mp5,
+    M4A1
 }

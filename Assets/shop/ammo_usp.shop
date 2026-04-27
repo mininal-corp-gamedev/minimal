@@ -1,4 +1,5 @@
 {
+  "Id": "ammo_usp",
   "Header": "USP (Ammo)",
   "Category": "Ammo",
   "Description": "",
@@ -6,11 +7,12 @@
   "Price": 200,
   "IconPath": "icons/items/default.vtex",
   "Model": null,
+  "SpawnPrefab": null,
   "IsAllowEveryone": false,
   "JobsAllow": [
     "jobs/gun_dealer.job"
   ],
-  "HasPostSpawned": false,
+  "HasPostPurchased": false,
   "__references": [],
   "__version": 0
 }

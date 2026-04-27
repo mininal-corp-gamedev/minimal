@@ -32,6 +32,7 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
 
     [Sync( SyncFlags.FromHost )] public int   StoredMoney { get; protected set; } = 0;
     [Sync( SyncFlags.FromHost )] public bool  IsWorking   { get; protected set; } = true;
+    [Sync( SyncFlags.FromHost )] public Player PlayerOwner { get; private set; }
 
     /// <summary>Значение таймера для UI (объект больше не удаляется по времени).</summary>
     [Sync( SyncFlags.FromHost )] public float TimeLeft { get; protected set; }
@@ -42,6 +43,12 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
 
     private TimeUntil _nextTick;
     private TimeUntil _lifetimeTimer;
+
+    public void SetOwner( Player owner )
+    {
+        if ( !Networking.IsHost ) return;
+        PlayerOwner = owner;
+    }
 
     // ─────────────────────────────────────────────
     //  Жизненный цикл
@@ -207,6 +214,12 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
         if ( ply is null )
         {
             Log.Warning( $"RpcOnTakeMoney: player not found for {Rpc.Caller.DisplayName}" );
+            return;
+        }
+
+        if ( printer.PlayerOwner.IsValid() && printer.PlayerOwner != ply )
+        {
+            Log.Warning( $"RpcOnTakeMoney: {Rpc.Caller.DisplayName} is not the printer owner" );
             return;
         }
 

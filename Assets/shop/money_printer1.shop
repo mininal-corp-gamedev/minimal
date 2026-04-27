@@ -1,14 +1,16 @@
 {
+  "Id": "money_printer1",
   "Header": "Money Printer",
   "Category": "Other",
-  "Description": "",
+  "Description": "Creates a money printer in front of you.",
   "ItemDefinition": null,
   "Price": 10,
   "IconPath": "icons/items/default.vtex",
   "Model": null,
+  "SpawnPrefab": "prefabs/money_printer.prefab",
   "IsAllowEveryone": true,
   "JobsAllow": [],
-  "HasPostSpawned": false,
+  "HasPostPurchased": true,
   "__references": [],
   "__version": 0
 }

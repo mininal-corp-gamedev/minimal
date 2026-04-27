@@ -3,6 +3,8 @@
 @using System;
 @using System.Collections.Generic;
 @using System.Linq;
+@using Minimal.Shop;
+@using Ambi.Storage;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -68,7 +70,40 @@
 					{
 						<div class="page">
 							<div class="page-title">Shop</div>
-							<div class="page-placeholder">Shop items will be listed here.</div>
+							<div class="shop-grid">
+								@foreach ( var shop in VisibleShopItems )
+								{
+									var canAfford = (Player.Local?.Money ?? 0) >= shop.Price;
+									var canFitItem = CanFitShopItem( shop );
+									var hasPurchaseAction = HasShopPurchaseAction( shop );
+									var disabled = !canAfford || !canFitItem || !hasPurchaseAction;
+									var shortDescription = GetShortDescription( shop.Description );
+									var status = GetShopStatus( shop, canAfford, canFitItem, hasPurchaseAction );
+
+									<div class="shop-card @(disabled ? "locked" : "")">
+										<div class="shop-card-main">
+											<div class="shop-icon" style="@(GetShopIconStyle( shop ))"></div>
+											<div class="shop-info">
+												<div class="shop-head">
+													<div class="shop-title">@shop.Header</div>
+													<div class="shop-price">$@shop.Price</div>
+												</div>
+												<div class="shop-category">@shop.Category</div>
+												<div class="shop-description">@shortDescription</div>
+											</div>
+										</div>
+										<div class="shop-actions">
+											<div class="shop-status @(disabled ? "bad" : "good")">@status</div>
+											<button
+												class="shop-buy-btn"
+												disabled=@disabled
+												onclick=@(() => RequestPurchase( shop ))>
+												Buy
+											</button>
+										</div>
+									</div>
+								}
+							</div>
 						</div>
 					}
 					else if ( ActiveTab == 2 )
@@ -115,8 +150,11 @@
 	int ActiveTab { get; set; } = 0;
 	List<Connection> CachedPlayers { get; set; } = new();
 	List<JobDefinition> AvailableJobs { get; set; } = new();
+	List<ShopDefinition> AvailableShopItems { get; set; } = new();
+	IEnumerable<ShopDefinition> VisibleShopItems => AvailableShopItems.Where( IsShopAllowed );
 	int PlayersVersion { get; set; } = 0;
 	int JobsVersion { get; set; } = 0;
+	int ShopVersion { get; set; } = 0;
 
 	void SelectPlayersTab()
 	{
@@ -134,6 +172,17 @@
 			.ToList();
 
 		JobsVersion++;
+	}
+
+	private void LoadShop()
+	{
+		AvailableShopItems = ResourceLibrary
+			.GetAll<ShopDefinition>()
+			.OrderBy( x => x.Category )
+			.ThenBy( x => x.Header )
+			.ToList();
+
+		ShopVersion++;
 	}
 
 	private static string GetShortDescription( string description )
@@ -180,6 +229,106 @@
 			return;
 
 		RpcRequestJoinJob( normalized );
+	}
+
+	private bool IsShopAllowed( ShopDefinition shop )
+	{
+		if ( shop is null )
+			return false;
+
+		if ( shop.IsAllowEveryone )
+			return true;
+
+		var localJob = Player.Local?.Job?.JobDefinition;
+		if ( localJob is null || shop.JobsAllow is null || shop.JobsAllow.Count == 0 )
+			return false;
+
+		return shop.JobsAllow.Any( x => x is not null && string.Equals( x.Id, localJob.Id, StringComparison.Ordinal ) );
+	}
+
+	private bool CanFitShopItem( ShopDefinition shop )
+	{
+		var itemId = shop?.ItemDefinition?.Id;
+		if ( string.IsNullOrWhiteSpace( itemId ) )
+			return true;
+
+		return Player.Local?.Inventory?.CanAddItem( itemId, 1 ) ?? false;
+	}
+
+	private bool HasShopPurchaseAction( ShopDefinition shop )
+	{
+		return shop is not null && (shop.ItemDefinition is not null || shop.HasPostPurchased);
+	}
+
+	private string GetShopStatus( ShopDefinition shop, bool canAfford, bool canFitItem, bool hasPurchaseAction )
+	{
+		if ( !canAfford )
+			return "Not enough money";
+
+		if ( !canFitItem )
+			return "Inventory full";
+
+		if ( !hasPurchaseAction )
+			return "Unavailable";
+
+		if ( shop?.HasPostPurchased == true && shop.ItemDefinition is null )
+			return "Spawns in world";
+
+		return "Available";
+	}
+
+	private string GetShopIconStyle( ShopDefinition shop )
+	{
+		var icon = string.IsNullOrWhiteSpace( shop?.IconPath ) ? "icons/items/default.vtex" : shop.IconPath;
+		return $"background-image: url({icon})";
+	}
+
+	private int GetInventoryHash()
+	{
+		var inventory = Player.Local?.Inventory;
+		if ( inventory is null )
+			return 0;
+
+		var hash = 17;
+		foreach ( var slot in inventory.Slots )
+		{
+			hash = HashCode.Combine( hash, slot.Item?.Id, slot.Item?.Count ?? 0 );
+		}
+
+		return hash;
+	}
+
+	private void RequestPurchase( ShopDefinition shop )
+	{
+		var normalized = (shop?.Id ?? string.Empty).Trim();
+		if ( normalized.Length <= 0 )
+			return;
+
+		if ( !IsShopAllowed( shop ) )
+		{
+			Notification.Error( "Your job cannot buy this.", 3.5f );
+			return;
+		}
+
+		if ( (Player.Local?.Money ?? 0) < shop.Price )
+		{
+			Notification.Error( $"Need ${shop.Price}.", 3.5f );
+			return;
+		}
+
+		if ( !CanFitShopItem( shop ) )
+		{
+			Notification.Error( "Inventory is full.", 3.5f );
+			return;
+		}
+
+		if ( !HasShopPurchaseAction( shop ) )
+		{
+			Notification.Error( "Shop item is unavailable.", 3.5f );
+			return;
+		}
+
+		ShopManager.RpcRequestPurchase( normalized );
 	}
 
 	[Rpc.Host]
@@ -275,6 +424,7 @@
 	protected override void OnStart()
 	{
 		LoadJobs();
+		LoadShop();
 	}
 
 	protected override void OnUpdate()
@@ -295,11 +445,15 @@
 		hash.Add( Player.Local?.Money ?? 0 );
 		hash.Add( Player.Local?.Job?.JobId );
 		hash.Add( Player.Local?.Job?.JobDefinition?.Header );
+		hash.Add( GetInventoryHash() );
 		hash.Add( Connection.Local?.DisplayName );
 		hash.Add( Connection.All.Count );
 		hash.Add( GetJobsPopulationHash() );
 		hash.Add( AvailableJobs.Count );
+		hash.Add( AvailableShopItems.Count );
+		hash.Add( VisibleShopItems.Count() );
 		hash.Add( JobsVersion );
+		hash.Add( ShopVersion );
 		hash.Add( PlayersVersion );
 		return hash.ToHashCode();
 	}

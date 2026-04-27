@@ -253,6 +253,144 @@ TabMenu {
 			color: rgba(255, 255, 255, 0.45);
 		}
 	}
+	/* ── Shop tab ── */
+
+	.shop-grid {
+		width: 100%;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-content: flex-start;
+	}
+
+	.shop-card {
+		width: 32%;
+		min-height: 190px;
+		flex-grow: 0;
+		flex-shrink: 0;
+		margin-bottom: 16px;
+		padding: 14px;
+		flex-direction: column;
+		justify-content: space-between;
+		background-color: rgba(255, 255, 255, 0.04);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 10px;
+
+		&.locked {
+			background-color: rgba(255, 255, 255, 0.025);
+		}
+	}
+
+	.shop-card-main {
+		flex-direction: row;
+		min-height: 110px;
+	}
+
+	.shop-icon {
+		width: 70px;
+		height: 70px;
+		flex-shrink: 0;
+		margin-right: 14px;
+		border-radius: 8px;
+		background-color: rgba(255, 255, 255, 0.08);
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+	}
+
+	.shop-info {
+		flex-grow: 1;
+		flex-direction: column;
+		min-width: 0;
+	}
+
+	.shop-head {
+		flex-direction: row;
+		align-items: flex-start;
+		margin-bottom: 3px;
+	}
+
+	.shop-title {
+		flex-grow: 1;
+		font-family: Poppins;
+		font-size: 16px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		margin-right: 8px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.shop-price {
+		flex-shrink: 0;
+		font-family: Poppins;
+		font-size: 15px;
+		font-weight: 800;
+		color: #ffd7e2;
+	}
+
+	.shop-category {
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 700;
+		color: #ff436c;
+		margin-bottom: 8px;
+	}
+
+	.shop-description {
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 400;
+		color: rgba(255, 255, 255, 0.68);
+	}
+
+	.shop-actions {
+		flex-direction: row;
+		align-items: center;
+		margin-top: 12px;
+	}
+
+	.shop-status {
+		flex-grow: 1;
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.55);
+
+		&.good {
+			color: rgba(178, 255, 204, 0.78);
+		}
+
+		&.bad {
+			color: rgba(255, 255, 255, 0.42);
+		}
+	}
+
+	.shop-buy-btn {
+		width: 96px;
+		height: 36px;
+		flex-shrink: 0;
+		border-radius: 8px;
+		background-color: rgba(255, 67, 108, 0.20);
+		border: 1px solid rgba(255, 67, 108, 0.55);
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 700;
+		color: #ffd7e2;
+		justify-content: center;
+		align-items: center;
+
+		&:hover {
+			background-color: rgba(255, 67, 108, 0.32);
+		}
+
+		&[disabled] {
+			background-color: rgba(255, 255, 255, 0.08);
+			border-color: rgba(255, 255, 255, 0.16);
+			color: rgba(255, 255, 255, 0.45);
+		}
+	}
 	/* ── Profile tab ── */
 
 	.profile-card {

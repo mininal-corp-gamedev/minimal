@@ -1,0 +1,94 @@
+DropMoneyConfirmPanel {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	pointer-events: none;
+
+	.money-confirm-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba(0, 0, 0, 0.34);
+		backdrop-filter: blur(4px) saturate(75%);
+		pointer-events: all;
+	}
+
+	.money-confirm-panel {
+		width: 360px;
+		flex-direction: column;
+		padding: 22px;
+		background-color: rgba(20, 20, 24, 0.94);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 8px;
+		box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
+	}
+
+	.panel-title {
+		font-family: Poppins;
+		font-size: 24px;
+		font-weight: 900;
+		color: rgba(255, 255, 255, 0.96);
+	}
+
+	.panel-subtitle {
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.58);
+		margin-top: 5px;
+		margin-bottom: 18px;
+	}
+
+	.field-label {
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 800;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.66);
+		margin-bottom: 6px;
+	}
+
+	.money-input {
+		height: 42px;
+		padding: 0 12px;
+		background-color: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: 6px;
+		color: white;
+		font-family: Poppins;
+		font-size: 16px;
+		font-weight: 700;
+	}
+
+	.actions {
+		flex-direction: row;
+		justify-content: flex-end;
+		gap: 10px;
+		margin-top: 18px;
+	}
+
+	button {
+		height: 38px;
+		min-width: 110px;
+		padding: 0 14px;
+		border-radius: 6px;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 800;
+		color: white;
+	}
+
+	.secondary {
+		background-color: rgba(255, 255, 255, 0.1);
+	}
+
+	.primary {
+		background-color: #34a853;
+	}
+}

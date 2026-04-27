@@ -10,12 +10,9 @@
 		<div class="context-overlay">
 			<div class="context-wheel">
 				<div class="wheel-ring"></div>
-				<div class="wheel-line diagonal-a"></div>
-				<div class="wheel-line diagonal-b"></div>
-
 				@foreach ( var action in Actions )
 				{
-					<button class="context-action @action.PositionClass @(ActiveAction == action.Id ? "active" : "")" onclick=@(() => SelectAction( action.Id ))>
+					<button class="context-action @action.PositionClass @(ActiveAction == action.Id ? "active" : "")" onclick=@(() => RunAction( action.Id ))>
 						<div class="action-icon @action.IconClass"></div>
 						<div class="action-title">@action.Title</div>
 						<div class="action-subtitle">@action.Subtitle</div>
@@ -29,7 +26,7 @@
 				</div>
 			</div>
 
-			<div class="context-hint">Click action to preview. Press C to close.</div>
+			<div class="context-hint">Нажми действие или C, чтобы закрыть.</div>
 		</div>
 	}
 </root>
@@ -37,14 +34,12 @@
 @code
 {
 	bool IsOpen { get; set; }
-	string ActiveAction { get; set; } = "money";
+	string ActiveAction { get; set; } = "drop_money";
 
 	static readonly ContextAction[] Actions =
 	{
-		new( "money", "Drop Money", "Share cash", "Give nearby player money.", "pos-top", "money" ),
-		new( "surrender", "Surrender", "Hands up", "Show that you are not resisting.", "pos-right", "surrender" ),
-		new( "sit", "Sit Down", "Rest here", "Take a seat on the ground.", "pos-bottom", "sit" ),
-		new( "status", "Status", "Your info", "View your current role status.", "pos-left", "status" )
+		new( "drop_money", "Выкинуть деньги", "Наличные", "Выкинуть сумму перед собой.", "pos-left", "money" ),
+		new( "transfer_money", "Передать деньги", "Игрок напротив", "Передать сумму игроку, на которого смотришь.", "pos-right", "money" )
 	};
 
 	ContextAction SelectedAction
@@ -61,16 +56,38 @@
 		}
 	}
 
-	void SelectAction( string id )
+	void RunAction( string id )
 	{
 		ActiveAction = id;
+		Close();
+
+		if ( id == "drop_money" )
+		{
+			DropMoneyConfirmPanel.Open();
+			return;
+		}
+
+		if ( id == "transfer_money" )
+			TransferMoneyConfirmPanel.TryOpenForLookTarget();
+	}
+
+	void Close()
+	{
+		IsOpen = false;
+
+#pragma warning disable CS0612
+		Mouse.Visible = false;
+#pragma warning restore CS0612
 	}
 
 	protected override void OnUpdate()
 	{
 		if ( Input.Pressed( "Context" ) )
 		{
-			IsOpen = !IsOpen;
+			if ( IsOpen )
+				Close();
+			else
+				IsOpen = true;
 
 #pragma warning disable CS0612
 			Mouse.Visible = IsOpen;

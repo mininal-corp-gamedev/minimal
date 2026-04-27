@@ -1,0 +1,162 @@
+@using Sandbox
+@using Sandbox.UI
+@using System
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen )
+	{
+		<div class="money-confirm-overlay">
+			<div class="money-confirm-panel" @ref="FocusSinkRef">
+				<div class="panel-title">Передать деньги</div>
+				<div class="panel-subtitle">Получатель: @TargetName</div>
+
+				<div class="field-label">Сумма</div>
+				<TextEntry class="money-input" Value:bind="@AmountInput" Placeholder="Например: 250" onsubmit="@Submit"></TextEntry>
+
+				<div class="actions">
+					<button class="secondary" onclick=@Close>Закрыть</button>
+					<button class="primary" onclick=@Submit>Передать</button>
+				</div>
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	public static TransferMoneyConfirmPanel Instance { get; private set; }
+
+	private const float TraceDistance = 160f;
+
+	private bool IsOpen { get; set; }
+	private string AmountInput { get; set; } = "";
+	private long TargetSteamId { get; set; }
+	private string TargetName { get; set; } = "";
+	private Panel FocusSinkRef { get; set; }
+
+	public static void TryOpenForLookTarget()
+	{
+		if ( !TryFindLookTarget( out var target ) )
+		{
+			Notification.Error( "Перед тобой нет игрока.", 3.5f );
+			return;
+		}
+
+		var connection = target.GameObject.Network.Owner;
+		if ( connection is null || connection.SteamId.Value <= 0 )
+		{
+			Notification.Error( "Не удалось определить игрока.", 3.5f );
+			return;
+		}
+
+		EnsureInstance();
+		Instance?.OpenInternal( connection.SteamId.Value, connection.DisplayName );
+	}
+
+	private static void EnsureInstance()
+	{
+		if ( Instance.IsValid() )
+			return;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return;
+
+		var panelObject = scene.CreateObject();
+		panelObject.Name = "TransferMoneyConfirmPanel";
+		panelObject.Components.Create<TransferMoneyConfirmPanel>();
+	}
+
+	private static bool TryFindLookTarget( out Player target )
+	{
+		target = null;
+
+		var local = Player.Local;
+		if ( !local.IsValid() || !local.Controller.IsValid() || local.Scene is null )
+			return false;
+
+		var eye = local.Controller.EyeTransform;
+		var trace = local.Scene.Trace
+			.Ray( eye.Position, eye.Position + eye.Forward * TraceDistance )
+			.IgnoreGameObjectHierarchy( local.GameObject )
+			.Run();
+
+		if ( !trace.Hit || !trace.GameObject.IsValid() )
+			return false;
+
+		if ( !trace.GameObject.Components.TryGet<Player>( out var ply, FindMode.EverythingInSelfAndParent ) )
+			return false;
+
+		if ( ply == local )
+			return false;
+
+		target = ply;
+		return true;
+	}
+
+	private void OpenInternal( long targetSteamId, string targetName )
+	{
+		TargetSteamId = targetSteamId;
+		TargetName = string.IsNullOrWhiteSpace( targetName ) ? "Игрок" : targetName;
+		AmountInput = "";
+		IsOpen = true;
+
+#pragma warning disable CS0612
+		Mouse.Visible = true;
+#pragma warning restore CS0612
+	}
+
+	private void Close()
+	{
+		IsOpen = false;
+		FocusSinkRef?.Focus();
+
+#pragma warning disable CS0612
+		Mouse.Visible = false;
+#pragma warning restore CS0612
+	}
+
+	private void Submit()
+	{
+		FocusSinkRef?.Focus();
+
+		if ( TargetSteamId <= 0 )
+		{
+			Notification.Error( "Игрок не выбран.", 3.5f );
+			return;
+		}
+
+		if ( !TryParseAmount( AmountInput, out var amount ) )
+		{
+			Notification.Error( "Укажи корректную сумму.", 3.5f );
+			return;
+		}
+
+		Close();
+		Player.Local?.RequestTransferMoney( TargetSteamId, amount );
+	}
+
+	private static bool TryParseAmount( string text, out int amount )
+	{
+		amount = 0;
+		return int.TryParse( (text ?? "").Trim(), out amount ) && amount > 0;
+	}
+
+	protected override void OnStart()
+	{
+		if ( Instance.IsValid() && Instance != this )
+			return;
+
+		Instance = this;
+	}
+
+	protected override void OnDestroy()
+	{
+		if ( Instance == this )
+			Instance = null;
+	}
+
+	protected override int BuildHash() => HashCode.Combine( IsOpen, AmountInput, TargetSteamId, TargetName );
+}

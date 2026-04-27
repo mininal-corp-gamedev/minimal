@@ -44,6 +44,10 @@
           "component_type": "PlayerJob"
         },
         "MaxDoors": 8,
+        "MoneyDropPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefabs/money.prefab"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,

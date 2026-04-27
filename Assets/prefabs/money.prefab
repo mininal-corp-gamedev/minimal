@@ -39,7 +39,7 @@
         "MaterialGroup": null,
         "MaterialOverride": null,
         "Materials": null,
-        "Model": "modelsmaterials/ad_moneystack.vmdl",
+        "Model": "models/money/batch_clean.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -90,15 +90,15 @@
         "StartAsleep": false
       },
       {
-        "__type": "Sandbox.ModelCollider",
-        "__guid": "658b7f98-3909-459d-9218-46346208da5f",
+        "__type": "Sandbox.BoxCollider",
+        "__guid": "76ec8525-3d41-436b-8319-d88c6e7a1bac",
         "__enabled": true,
         "Flags": 0,
+        "Center": "0.010594964,-0.0122814178,0.393267483",
         "ColliderFlags": 0,
         "Elasticity": null,
         "Friction": null,
         "IsTrigger": false,
-        "Model": "modelsmaterials/ad_moneystack.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -110,6 +110,7 @@
         "OnTriggerEnter": null,
         "OnTriggerExit": null,
         "RollingResistance": null,
+        "Scale": "2.03510952,5.00375271,0.799604595",
         "Static": false,
         "Surface": null,
         "SurfaceVelocity": "0,0,0"
@@ -144,7 +145,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "ceestudios.fmoneystack#67425"
+    "opengameartcco.moneybatchclean#95928"
   ],
   "__version": 2
 }

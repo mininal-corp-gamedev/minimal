@@ -15,6 +15,7 @@ public sealed class Player : Component, ICustomDamagable
     [Property] public PlayerWorldHud WorldHud { get; private set; }
     [Property, Sync(SyncFlags.FromHost)] public PlayerJob Job { get; private set; }
     [Property] public GameObject ItemDropPrefab { get; private set; }
+    [Property] public GameObject MoneyDropPrefab { get; private set; }
     [Property, Category("Sounds")] public SoundEvent HitSound { get; set; }
 
     /// <summary>Maximum number of doors this player can own at once.</summary>
@@ -78,6 +79,7 @@ public sealed class Player : Component, ICustomDamagable
 
     public Weapon CurrentWeapon { get; private set; }
     public int CurrentInventorySlotIndex { get; private set; } = -1;
+    public int SelectedHotbarSlotIndex { get; private set; }
     public string CurrentWeaponItemId { get; private set; }
 
     public bool IsLocalPlayer => !IsProxy;
@@ -218,6 +220,9 @@ public sealed class Player : Component, ICustomDamagable
         if (IsProxy) return false;
         if (Inventory == null) return false;
         if (slotIndex < 0 || slotIndex >= Inventory.Slots.Count) return false;
+
+        if (slotIndex >= 0 && slotIndex < 9)
+            SelectedHotbarSlotIndex = slotIndex;
 
         var slot = Inventory.Slots[slotIndex];
         if (slot.IsEmpty || slot.Item == null)
@@ -371,9 +376,9 @@ public sealed class Player : Component, ICustomDamagable
         ItemUseRegistry.Register("usp", new WepUspUseHandler());
         ItemUseRegistry.Register("mp5", new WepMp5UseHandler());
         ItemUseRegistry.Register("m4a1", new WepM4a1UseHandler());
-        ItemUseRegistry.Register("ammo_usp", new AmmoUseHandler(new[] { "usp" }, 12, () => new[] { WeaponManager.Instance?.Usp }));
-        ItemUseRegistry.Register("ammo_mp5", new AmmoUseHandler(new[] { "mp5" }, 30, () => new[] { WeaponManager.Instance?.Mp5 }));
-        ItemUseRegistry.Register("ammo_m4a1", new AmmoUseHandler(new[] { "m4a1" }, 30, () => new[] { WeaponManager.Instance?.M4A1 }));
+        ItemUseRegistry.Register("ammo_usp", new AmmoUseHandler(AmmoWeaponType.Usp));
+        ItemUseRegistry.Register("ammo_mp5", new AmmoUseHandler(AmmoWeaponType.Mp5));
+        ItemUseRegistry.Register("ammo_m4a1", new AmmoUseHandler(AmmoWeaponType.M4A1));
 
         _itemUseHandlersRegistered = true;
     }
@@ -523,5 +528,197 @@ public sealed class Player : Component, ICustomDamagable
     private void RpcNotifyTakeBox( int amount )
     {
         Notification.Info( $"Ты лутанул ${amount}", 3.5f );
+    }
+
+    public void RequestDropMoney( int amount )
+    {
+        if ( amount <= 0 ) return;
+        RpcRequestDropMoney( amount );
+    }
+
+    public void RequestTransferMoney( long targetSteamId, int amount )
+    {
+        if ( targetSteamId <= 0 || amount <= 0 ) return;
+        RpcRequestTransferMoney( targetSteamId, amount );
+    }
+
+    [Rpc.Host]
+    private void RpcRequestDropMoney( int amount )
+    {
+        if ( !Networking.IsHost ) return;
+
+        var caller = Rpc.Caller;
+        if ( caller is null ) return;
+
+        var player = FindPlayerBySteamId( caller.SteamId.Value );
+        if ( !player.IsValid() )
+        {
+            NotifyMoneyResult( caller, "Твой игрок ещё не готов.", false );
+            return;
+        }
+
+        if ( amount <= 0 )
+        {
+            NotifyMoneyResult( caller, "Некорректная сумма.", false );
+            return;
+        }
+
+        if ( player.Money < amount )
+        {
+            NotifyMoneyResult( caller, "Недостаточно денег.", false );
+            return;
+        }
+
+        if ( !player.MoneyDropPrefab.IsValid() )
+        {
+            NotifyMoneyResult( caller, "Префаб денег не настроен.", false );
+            return;
+        }
+
+        if ( !TrySpawnDroppedMoney( player, caller, amount ) )
+        {
+            NotifyMoneyResult( caller, "Не удалось выкинуть деньги.", false );
+            return;
+        }
+
+        player.Money -= amount;
+        NotifyMoneyResult( caller, $"Ты выкинул ${amount}.", true );
+    }
+
+    [Rpc.Host]
+    private void RpcRequestTransferMoney( long targetSteamId, int amount )
+    {
+        if ( !Networking.IsHost ) return;
+
+        var caller = Rpc.Caller;
+        if ( caller is null ) return;
+
+        var player = FindPlayerBySteamId( caller.SteamId.Value );
+        if ( !player.IsValid() )
+        {
+            NotifyMoneyResult( caller, "Твой игрок ещё не готов.", false );
+            return;
+        }
+
+        if ( amount <= 0 )
+        {
+            NotifyMoneyResult( caller, "Некорректная сумма.", false );
+            return;
+        }
+
+        if ( player.Money < amount )
+        {
+            NotifyMoneyResult( caller, "Недостаточно денег.", false );
+            return;
+        }
+
+        if ( targetSteamId == caller.SteamId.Value )
+        {
+            NotifyMoneyResult( caller, "Нельзя передать деньги себе.", false );
+            return;
+        }
+
+        var target = FindPlayerBySteamId( targetSteamId );
+        if ( !target.IsValid() )
+        {
+            NotifyMoneyResult( caller, "Игрок для передачи не найден.", false );
+            return;
+        }
+
+        if ( !CanTransferToTarget( player, target ) )
+        {
+            NotifyMoneyResult( caller, "Игрок слишком далеко или не перед тобой.", false );
+            return;
+        }
+
+        player.Money -= amount;
+        target.Money += amount;
+
+        var targetConnection = target.GameObject.Network.Owner;
+        NotifyMoneyResult( caller, $"Ты передал ${amount} игроку {GetConnectionName( targetConnection )}.", true );
+
+        if ( targetConnection is not null )
+            NotifyMoneyResult( targetConnection, $"{caller.DisplayName} передал тебе ${amount}.", true );
+    }
+
+    private static bool TrySpawnDroppedMoney( Player player, Connection owner, int amount )
+    {
+        var forward = player.Controller.IsValid()
+            ? player.Controller.EyeTransform.Forward
+            : player.WorldRotation.Forward;
+
+        var yawForward = new Vector3( forward.x, forward.y, 0f );
+        if ( yawForward.LengthSquared <= 0.001f )
+            yawForward = player.WorldRotation.Forward;
+
+        yawForward = yawForward.Normal;
+
+        var spawnPosition = player.WorldPosition + yawForward * 70f + Vector3.Up * 28f;
+        var moneyObject = player.MoneyDropPrefab.Clone( spawnPosition, Rotation.LookAt( yawForward ) );
+        if ( !moneyObject.IsValid() )
+            return false;
+
+        var money = moneyObject.Components.Get<MoneyDropped>();
+        if ( money.IsValid() )
+            money.Money = amount;
+
+        moneyObject.NetworkSpawn( owner );
+        return true;
+    }
+
+    private static bool CanTransferToTarget( Player player, Player target )
+    {
+        if ( !player.IsValid() || !target.IsValid() )
+            return false;
+
+        if ( Vector3.DistanceBetween( player.WorldPosition, target.WorldPosition ) > 190f )
+            return false;
+
+        var forward = player.Controller.IsValid()
+            ? player.Controller.EyeTransform.Forward
+            : player.WorldRotation.Forward;
+
+        var direction = (target.WorldPosition - player.WorldPosition).Normal;
+        return Vector3.Dot( forward.Normal, direction ) > 0.35f;
+    }
+
+    private static Player FindPlayerBySteamId( long steamId )
+    {
+        var scene = Game.ActiveScene;
+        if ( scene is null )
+            return null;
+
+        foreach ( var player in scene.GetAllComponents<Player>() )
+        {
+            if ( player.GameObject.Network.Owner?.SteamId.Value == steamId )
+                return player;
+        }
+
+        return null;
+    }
+
+    private static string GetConnectionName( Connection connection )
+    {
+        return string.IsNullOrWhiteSpace( connection?.DisplayName ) ? "игроку" : connection.DisplayName;
+    }
+
+    private static void NotifyMoneyResult( Connection connection, string message, bool success )
+    {
+        if ( connection is null )
+            return;
+
+        using ( Rpc.FilterInclude( c => c.SteamId.Value == connection.SteamId.Value ) )
+        {
+            RpcReceiveMoneyResult( message, success );
+        }
+    }
+
+    [Rpc.Broadcast]
+    private static void RpcReceiveMoneyResult( string message, bool success )
+    {
+        if ( success )
+            Notification.Info( message, 3.5f );
+        else
+            Notification.Error( message, 3.5f );
     }
 }

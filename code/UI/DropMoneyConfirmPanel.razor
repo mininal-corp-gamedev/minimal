@@ -1,0 +1,110 @@
+@using Sandbox
+@using Sandbox.UI
+@using System
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen )
+	{
+		<div class="money-confirm-overlay">
+			<div class="money-confirm-panel" @ref="FocusSinkRef">
+				<div class="panel-title">Выкинуть деньги</div>
+				<div class="panel-subtitle">Сумма будет создана перед тобой.</div>
+
+				<div class="field-label">Сумма</div>
+				<TextEntry class="money-input" Value:bind="@AmountInput" Placeholder="Например: 250" onsubmit="@Submit"></TextEntry>
+
+				<div class="actions">
+					<button class="secondary" onclick=@Close>Закрыть</button>
+					<button class="primary" onclick=@Submit>Выкинуть</button>
+				</div>
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	public static DropMoneyConfirmPanel Instance { get; private set; }
+
+	private bool IsOpen { get; set; }
+	private string AmountInput { get; set; } = "";
+	private Panel FocusSinkRef { get; set; }
+
+	public static void Open()
+	{
+		EnsureInstance();
+		Instance?.OpenInternal();
+	}
+
+	private static void EnsureInstance()
+	{
+		if ( Instance.IsValid() )
+			return;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return;
+
+		var panelObject = scene.CreateObject();
+		panelObject.Name = "DropMoneyConfirmPanel";
+		panelObject.Components.Create<DropMoneyConfirmPanel>();
+	}
+
+	private void OpenInternal()
+	{
+		AmountInput = "";
+		IsOpen = true;
+
+#pragma warning disable CS0612
+		Mouse.Visible = true;
+#pragma warning restore CS0612
+	}
+
+	private void Close()
+	{
+		IsOpen = false;
+		FocusSinkRef?.Focus();
+
+#pragma warning disable CS0612
+		Mouse.Visible = false;
+#pragma warning restore CS0612
+	}
+
+	private void Submit()
+	{
+		FocusSinkRef?.Focus();
+
+		if ( !TryParseAmount( AmountInput, out var amount ) )
+		{
+			Notification.Error( "Укажи корректную сумму.", 3.5f );
+			return;
+		}
+
+		Close();
+		Player.Local?.RequestDropMoney( amount );
+	}
+
+	private static bool TryParseAmount( string text, out int amount )
+	{
+		amount = 0;
+		return int.TryParse( (text ?? "").Trim(), out amount ) && amount > 0;
+	}
+
+	protected override void OnStart()
+	{
+		if ( Instance.IsValid() && Instance != this )
+			return;
+
+		Instance = this;
+	}
+
+	protected override void OnDestroy()
+	{
+		if ( Instance == this )
+			Instance = null;
+	}
+
+	protected override int BuildHash() => HashCode.Combine( IsOpen, AmountInput );
+}

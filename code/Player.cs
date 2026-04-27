@@ -524,10 +524,4 @@ public sealed class Player : Component, ICustomDamagable
     {
         Notification.Info( $"Ты лутанул ${amount}", 3.5f );
     }
-
-    [Rpc.Owner]
-    public void RpcColorSlotResult( bool won, bool resultGreen, bool noMoney )
-    {
-        ColorSlotState.Instance?.OnResult( won, resultGreen, noMoney );
-    }
 }

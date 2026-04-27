@@ -371,32 +371,8 @@
           "OnComponentUpdate": null
         },
         {
-          "__type": "Sandbox.Casino.ColorSlotPanel",
-          "__guid": "d834eefd-9bf8-45c2-a260-977229fa678e",
-          "__enabled": true,
-          "Flags": 0,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null
-        },
-        {
           "__type": "Sandbox.InventoryPanel",
           "__guid": "0e936a5a-d9f2-43a4-acaa-6983a4152f19",
-          "__enabled": true,
-          "Flags": 0,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null
-        },
-        {
-          "__type": "ColorSlotState",
-          "__guid": "7d09c490-296a-4b1d-aeee-5eba31569447",
           "__enabled": true,
           "Flags": 0,
           "OnComponentDestroy": null,
@@ -582,13 +558,13 @@
           "RenderTexture": null,
           "TargetEye": "None",
           "Viewport": "0,0,1,1",
-          "ZFar": 10000,
+          "ZFar": 5000,
           "ZNear": 1
         },
         {
           "__type": "Sandbox.Bloom",
           "__guid": "d73ef723-c888-41d4-802e-f797c79318be",
-          "__enabled": true,
+          "__enabled": false,
           "Flags": 0,
           "__version": 1,
           "Filter": "Bilinear",
@@ -1371,7 +1347,7 @@
       "__guid": "aafcdf3e-a2b6-4dc7-addc-ca654df5d7a3",
       "__version": 2,
       "Flags": 0,
-      "Name": "ColorSlot (1)",
+      "Name": "ColorSlot",
       "Position": "59.4519043,-451.512604,39.9549561",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
@@ -1434,19 +1410,6 @@
           "Static": false,
           "Surface": null,
           "SurfaceVelocity": "0,0,0"
-        },
-        {
-          "__type": "ColorSlot",
-          "__guid": "6c5b83cb-e549-4944-9c1e-60c49d779014",
-          "__enabled": true,
-          "Flags": 0,
-          "BetAmount": 50,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null
         }
       ],
       "Children": []

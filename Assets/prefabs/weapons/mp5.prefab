@@ -16,7 +16,7 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Megashot.Weapons.WeaponMp5",
+        "__type": "Minimal.Weapons.WeaponMp5",
         "__guid": "aecc89bb-c398-446e-875f-4622fd7b291d",
         "__enabled": true,
         "Flags": 0,
@@ -33,7 +33,7 @@
         "FireSound": "sounds/m4a1 shot.sound",
         "HasHipFire": true,
         "HasReload": true,
-        "HoldType": "None",
+        "HoldType": "Rifle",
         "IsIronSight": false,
         "IsMelee": false,
         "OnComponentDestroy": null,

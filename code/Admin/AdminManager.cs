@@ -264,7 +264,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 			return;
 		}
 
-		target.AdminRespawn();
+		target.HostTriggerRespawn();
 		NotifyCaller( caller, $"Respawned {GetPlayerName( target )}.", AdminNotifyType.Info );
 	}
 
@@ -423,7 +423,9 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		}
 
 		SaveReturnTransform( admin );
-		admin.WorldPosition = target.WorldPosition + target.WorldRotation.Backward * 64f;
+		var gotoPos = target.WorldPosition + target.WorldRotation.Backward * 64f;
+		var gotoRot = Rotation.LookAt( target.WorldPosition - gotoPos );
+		admin.HostTeleport( gotoPos, gotoRot );
 		NotifyCaller( caller, $"Teleported to {GetPlayerName( target )}.", AdminNotifyType.Info );
 	}
 
@@ -450,7 +452,9 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		}
 
 		SaveReturnTransform( target );
-		target.WorldPosition = admin.WorldPosition + admin.WorldRotation.Forward * 64f;
+		var tpPos = admin.WorldPosition + admin.WorldRotation.Forward * 64f;
+		var tpRot = Rotation.LookAt( admin.WorldPosition - tpPos );
+		target.HostTeleport( tpPos, tpRot );
 		NotifyCaller( caller, $"Teleported {GetPlayerName( target )} to you.", AdminNotifyType.Info );
 	}
 
@@ -475,7 +479,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 			return;
 		}
 
-		target.WorldTransform = transform;
+		target.HostTeleport( transform.Position, transform.Rotation );
 		ReturnTransforms.Remove( steamId );
 		NotifyCaller( caller, $"Returned {GetPlayerName( target )}.", AdminNotifyType.Info );
 	}

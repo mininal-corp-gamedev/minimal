@@ -9,7 +9,7 @@
     "Scale": "2,2,2",
     "Tags": "",
     "Enabled": true,
-    "NetworkMode": 0,
+    "NetworkMode": 1,
     "NetworkFlags": 0,
     "NetworkOrphaned": 0,
     "NetworkTransmit": true,

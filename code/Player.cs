@@ -138,7 +138,75 @@ public sealed class Player : Component, ICustomDamagable
     {
         if (!Networking.IsHost) return;
 
-        SpawnInternal();
+        HostTriggerRespawn();
+    }
+
+    /// <summary>
+    /// Хост: запросить респавн этого игрока. Если игрок принадлежит хосту — спавним
+    /// прямо здесь; иначе шлём <see cref="RpcOwnerSpawn"/> владельцу, потому что
+    /// <see cref="PlayerController"/> авторитетен на стороне владельца, и
+    /// телепорт/смена угла камеры с хоста для прокси не «прилипают».
+    /// </summary>
+    public void HostTriggerRespawn()
+    {
+        if (!Networking.IsHost) return;
+
+        if (!IsProxy)
+        {
+            SpawnInternal();
+            return;
+        }
+
+        // Точку спавна выбираем на хосте, чтобы у владельца не было десинка.
+        var spawnPoint = SpawnManager.Instance?.GetRandomPlayerSpawn();
+        if (!spawnPoint.IsValid()) return;
+
+        Health = MaxHealth;
+        WorldHud?.WorldHudRefresh();
+        Job?.NotifySpawned();
+
+        RpcOwnerSpawn(spawnPoint.WorldPosition, spawnPoint.WorldRotation);
+    }
+
+    /// <summary>
+    /// Хост: телепортировать игрока. Для прокси шлём RPC владельцу, потому что
+    /// у host-authority transform-апдейты для не-host игрока перетираются
+    /// движением контроллера на стороне владельца.
+    /// </summary>
+    public void HostTeleport(Vector3 position, Rotation rotation)
+    {
+        if (!Networking.IsHost) return;
+
+        if (!IsProxy)
+        {
+            WorldPosition = position;
+            if (Controller.IsValid())
+                Controller.EyeAngles = rotation;
+            return;
+        }
+
+        RpcOwnerTeleport(position, rotation);
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerSpawn(Vector3 position, Rotation rotation)
+    {
+        if (Networking.IsHost) return;
+
+        WorldPosition = position;
+        if (Controller.IsValid())
+            Controller.EyeAngles = rotation;
+        WorldHud?.WorldHudRefresh();
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerTeleport(Vector3 position, Rotation rotation)
+    {
+        if (Networking.IsHost) return;
+
+        WorldPosition = position;
+        if (Controller.IsValid())
+            Controller.EyeAngles = rotation;
     }
 
     private void SpawnInternal()
@@ -156,20 +224,27 @@ public sealed class Player : Component, ICustomDamagable
 
     public void OnDamage(in DamageInfo dmgInfo)
     {
-        // Локальные источники урона (окружение и т.п.) — только на авторитетной копии.
-        if (IsProxy) return;
+        // Server (host) authority: урон применяет ТОЛЬКО хост; клиент только просит.
         if (IsArrested) return;
 
         TakeDamageFromWeapon(dmgInfo.Damage, dmgInfo.Attacker);
     }
 
     /// <summary>
-    /// Урон от оружия другого игрока. <c>[Rpc.Owner]</c> доставляет вызов на машину владельца этого Player,
-    /// где <c>[Sync] Health</c> можно записать и изменение синхронизируется всем.
+    /// Запрос на урон. Применять Health может только хост (он — Sync-владелец).
+    /// На хосте применяем сразу, на клиенте отправляем <see cref="RpcRequestDamage"/>.
     /// </summary>
     public void TakeDamageFromWeapon(float damage, GameObject attacker = null)
     {
-        RpcTakeDamageFromWeapon(damage, attacker);
+        if (damage <= 0f) return;
+
+        if (Networking.IsHost)
+        {
+            HostApplyDamage(damage, attacker);
+            return;
+        }
+
+        RpcRequestDamage(damage, attacker);
     }
 
     [Rpc.Broadcast]
@@ -205,13 +280,29 @@ public sealed class Player : Component, ICustomDamagable
         renderer?.Set("holdtype", holdType);
     }
 
-    [Rpc.Owner]
-    private void RpcTakeDamageFromWeapon(float damage, GameObject attacker)
+    /// <summary>
+    /// Запрос урона от клиента к хосту. Только хост авторитетен по
+    /// <see cref="Health"/> (<c>Sync(SyncFlags.FromHost)</c>), поэтому клиент
+    /// не может писать здоровье сам — иначе изменение не разойдётся по сети
+    /// (что и было причиной «клиент не дамажит клиента»).
+    /// </summary>
+    [Rpc.Host]
+    private void RpcRequestDamage(float damage, GameObject attacker)
     {
-        if (attacker == Local.GameObject) return;
-        if (IsArrested) return;
+        if (!Networking.IsHost) return;
+        HostApplyDamage(damage, attacker);
+    }
 
+    private void HostApplyDamage(float damage, GameObject attacker)
+    {
+        if (!Networking.IsHost) return;
+        if (IsArrested) return;
         if (damage <= 0f) return;
+        if (Health <= 0f) return;
+
+        // Само-урон через одно и то же оружие/трейс невозможен (трейс игнорирует
+        // владельца), но на всякий случай отбрасываем явный self-hit.
+        if (attacker.IsValid() && attacker == GameObject) return;
 
         Health = Math.Max(0f, Health - damage);
         WorldHud?.WorldHudRefresh();
@@ -219,13 +310,27 @@ public sealed class Player : Component, ICustomDamagable
         RpcOnPlayerHit(Renderer);
 
         if (Health <= 0f)
-            Die();
+            HostDie();
     }
 
+    /// <summary>Смерть. На хосте триггерим респавн (для прокси — через RPC владельцу).</summary>
+    private void HostDie()
+    {
+        if (!Networking.IsHost) return;
+
+        HostTriggerRespawn();
+    }
+
+    /// <summary>Совместимость со старым API (вызывалось локально владельцем).</summary>
     public void Die()
     {
-        if (IsProxy) return;
+        if (Networking.IsHost)
+        {
+            HostDie();
+            return;
+        }
 
+        if (IsProxy) return;
         Spawn();
     }
 
@@ -633,7 +738,7 @@ public sealed class Player : Component, ICustomDamagable
         return taken;
     }
 
-    [Rpc.Host]
+    [Rpc.Broadcast]
     private void DressForHost(Dresser dresser)
     {
         Log.Info($"Dresser from: {Rpc.Caller.DisplayName} - {dresser.Network.Owner.DisplayName}");

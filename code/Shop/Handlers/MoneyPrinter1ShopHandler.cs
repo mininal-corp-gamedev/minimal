@@ -35,11 +35,20 @@ public sealed class MoneyPrinter1ShopHandler : IShopPurchaseHandler
 		if ( !printerObject.IsValid() )
 			return false;
 
-		var printer = printerObject.Components.Get<MoneyPrinterBase>();
+		var printer = printerObject.Components.Get<MoneyPrinterBase>( FindMode.EverythingInSelfAndDescendants );
 		if ( printer.IsValid() )
 			printer.SetOwner( buyer );
 
-		printerObject.NetworkSpawn(context.Buyer.Network.Owner);
+		// PropCustom мы НЕ ставим намеренно: с ним physgun (ЛКМ) разрешил бы захват
+		// принтера, а по требованию принтер должен браться только gravitygun-ом (ПКМ).
+		// Доступ для gravitygun обеспечивается отдельной веткой в WeaponPhysgun
+		// (по наличию MoneyPrinterBase + Network.Owner).
+
+		// Сетевого владельца назначаем покупателю, иначе он не сможет
+		// манипулировать физикой принтера (physgun/gravitygun проверяют
+		// rb.GameObject.Network.Owner == Connection.Local).
+		// Берём Connection из контекста (как PropsMenu использует caller).
+		printerObject.NetworkSpawn( context.Connection );
 		return true;
 	}
 }

@@ -314,10 +314,22 @@ public sealed class WeaponPhysgun : Weapon
         // Только объекты, которыми владеет локальный игрок.
         if (rb.GameObject.Network.Owner != Connection.Local) return false;
 
-        // Physgun работает только по кастомным пропам (PropCustom). Всё остальное
-        // (ящики, мусорки, NPC, системные физ-объекты) руками не трогаем.
-        var propCustom = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors);
-        if (!propCustom.IsValid()) return false;
+        // Фильтр по типу объекта зависит от режима:
+        //  * Physgun (ЛКМ) — только кастомные пропы (PropCustom). Денежные принтеры
+        //    и прочие игровые сущности руками держать нельзя.
+        //  * GravityGun (ПКМ) — пропы И денежные принтеры (MoneyPrinterBase).
+        //    Принтер берётся только так, по требованию дизайна.
+        var hasPropCustom = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors).IsValid();
+        var hasMoneyPrinter = rb.GameObject.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors).IsValid();
+
+        if (mode == GrabMode.Physgun)
+        {
+            if (!hasPropCustom) return false;
+        }
+        else // GravityGun
+        {
+            if (!hasPropCustom && !hasMoneyPrinter) return false;
+        }
 
         _grabbed = rb;
         _mode = mode;

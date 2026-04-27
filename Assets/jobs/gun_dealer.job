@@ -1,0 +1,12 @@
+{
+  "Id": "gun_dealer",
+  "Header": "Gun Dealer",
+  "Category": "Civil",
+  "Description": "",
+  "MaxCount": 2,
+  "HasPostSpawned": false,
+  "HasPostDemote": false,
+  "HasPostJoined": false,
+  "__references": [],
+  "__version": 0
+}

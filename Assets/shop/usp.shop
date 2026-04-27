@@ -1,0 +1,16 @@
+{
+  "Header": "USP",
+  "Category": "Weapon",
+  "Description": "",
+  "ItemDefinition": "items/usp.item",
+  "Price": 200,
+  "IconPath": "icons/items/default.vtex",
+  "Model": null,
+  "IsAllowEveryone": false,
+  "JobsAllow": [
+    "jobs/gun_dealer.job"
+  ],
+  "HasPostSpawned": false,
+  "__references": [],
+  "__version": 0
+}

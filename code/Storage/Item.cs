@@ -6,6 +6,8 @@ public sealed class Item
 {
     public string Id { get; }
     public int Count { get; private set; }
+    public bool CanDrop { get; set; } = true;
+    public bool CanSave { get; set; } = true;
 
     public ItemDefinition Definition => ItemDatabase.Get(Id);
 

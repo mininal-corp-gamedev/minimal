@@ -1,9 +1,9 @@
 {
-  "Id": "police1",
-  "Header": "The Officer",
+  "Id": "sheriff",
+  "Header": "The Sheriff",
   "Category": "Police",
   "Description": "",
-  "MaxCount": 4,
+  "MaxCount": 1,
   "HasPostSpawned": false,
   "HasPostDemote": true,
   "HasPostJoined": true,

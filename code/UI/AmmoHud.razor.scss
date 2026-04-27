@@ -1,4 +1,4 @@
-$ammo-green: #4fd945;
+$ammo-pink: #ff436c;
 
 AmmoHud
 {
@@ -33,12 +33,12 @@ AmmoHud
 		font-size: 32px;
 		font-family: Poppins;
 		font-weight: 700;
-		color: $ammo-green;
+		color: $ammo-pink;
 	}
 
 	.ammo-value.empty
 	{
-		color: rgba(79, 217, 69, 0.45);
+		color: rgba(255, 67, 108, 0.45);
 	}
 
 	.ammo-label

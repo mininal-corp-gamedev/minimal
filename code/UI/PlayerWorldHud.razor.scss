@@ -1,4 +1,4 @@
-$health-green: #4fd945;
+$health-pink: #ff436c;
 
 PlayerWorldHud {
 	position: absolute;
@@ -14,7 +14,7 @@ PlayerWorldHud {
 	.title {
 		font-size: 28px;
 		font-family: Poppins;
-		color: $health-green;
+		color: $health-pink;
 		text-stroke: 3px rgba( 0, 0, 0, 0.88 );
 		margin-bottom: 6px;
 	}
@@ -23,8 +23,8 @@ PlayerWorldHud {
 		position: relative;
 		width: 160px;
 		height: 18px;
-		background-color: rgba( 61, 156, 235, 0.15 );
-		border: 2px solid $health-green;
+		background-color: rgba( 255, 67, 108, 0.15 );
+		border: 2px solid $health-pink;
 		border-radius: 9px;
 		overflow: hidden;
 	}
@@ -34,7 +34,7 @@ PlayerWorldHud {
 		left: 0;
 		top: 0;
 		bottom: 0;
-		background-color: $health-green;
+		background-color: $health-pink;
 		border-radius: 9px;
 	}
 

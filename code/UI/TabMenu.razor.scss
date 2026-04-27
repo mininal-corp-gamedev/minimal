@@ -1,7 +1,7 @@
 $tm-panel-bg:    rgba(5, 8, 20, 1.0);
 $tm-sidebar-bg:  rgba(3,  5,  14, 1.0);
-$tm-accent:      rgba(45, 95, 210, 0.80);
-$tm-accent-hover:rgba(60, 115, 240, 0.90);
+$tm-accent:      rgba(255, 67, 108, 0.80);
+$tm-accent-hover:rgba(255, 67, 108, 0.95);
 $tm-text:        rgba(255, 255, 255, 0.92);
 $tm-text-dim:    rgba(255, 255, 255, 0.75);
 $tm-divider:     rgba(255, 255, 255, 0.07);
@@ -53,7 +53,7 @@ TabMenu {
 		font-family: Poppins;
 		font-size: 17px;
 		font-weight: 700;
-		color: #82d97a;
+		color: #ff436c;
 		padding-left: 24px;
 		padding-right: 16px;
 		justify-content: flex-start;
@@ -64,8 +64,8 @@ TabMenu {
 		}
 
 		&.active {
-			background-color: rgba(130, 217, 122, 0.12);
-			color: #82d97a;
+			background-color: rgba(255, 67, 108, 0.14);
+			color: #ff436c;
 		}
 	}
 	/* ── Sidebar sections ── */
@@ -93,7 +93,7 @@ TabMenu {
 		font-family: Poppins;
 		font-size: 12px;
 		font-weight: 600;
-		color: #82d97a;
+		color: #ff436c;
 		margin-bottom: 5px;
 	}
 
@@ -191,8 +191,8 @@ TabMenu {
 		justify-content: space-between;
 
 		&.current {
-			border-color: rgba(130, 217, 122, 0.55);
-			background-color: rgba(130, 217, 122, 0.08);
+			border-color: rgba(255, 67, 108, 0.55);
+			background-color: rgba(255, 67, 108, 0.10);
 		}
 	}
 
@@ -228,17 +228,17 @@ TabMenu {
 	.job-take-btn {
 		height: 36px;
 		border-radius: 8px;
-		background-color: rgba(130, 217, 122, 0.18);
-		border: 1px solid rgba(130, 217, 122, 0.55);
+		background-color: rgba(255, 67, 108, 0.20);
+		border: 1px solid rgba(255, 67, 108, 0.55);
 		font-family: Poppins;
 		font-size: 13px;
 		font-weight: 700;
-		color: rgba(220, 255, 217, 0.95);
+		color: #ffd7e2;
 		justify-content: center;
 		align-items: center;
 
 		&:hover {
-			background-color: rgba(130, 217, 122, 0.28);
+			background-color: rgba(255, 67, 108, 0.32);
 		}
 
 		&[disabled] {

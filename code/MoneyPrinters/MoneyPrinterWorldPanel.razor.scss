@@ -1,8 +1,8 @@
-$panel-blue: #0b6de3;
-$panel-blue-dark: #095ec2;
+$panel-pink: #ff436c;
+$panel-pink-dark: #d6315a;
 $inner-dark: #111215;
 $line-gray: #303744;
-$money-blue: #105eb0;
+$money-pink: #ff436c;
 
 MoneyPrinterWorldPanel {
 	position: absolute;
@@ -18,8 +18,8 @@ MoneyPrinterWorldPanel {
 	.printer-panel {
 		width: 290px;
 		height: 270px;
-		background-color: $panel-blue;
-		border: 3px solid #8bb8f2;
+		background-color: $panel-pink;
+		border: 3px solid #ffd7e2;
 		flex-direction: column;
 		overflow: hidden;
 	}
@@ -30,16 +30,16 @@ MoneyPrinterWorldPanel {
 		justify-content: center;
 		align-items: center;
 		font-size: 20px;
-		color: #f4f7ff;
+		color: #fff5f8;
 		text-stroke: 1px rgba( 0, 0, 0, 0.45 );
-		background-color: $panel-blue;
+		background-color: $panel-pink;
 		white-space: nowrap;
 	}
 
 	.footer {
 		height: 40px;
 		font-size: 19px;
-		background-color: $panel-blue-dark;
+		background-color: $panel-pink-dark;
 	}
 
 	.body {
@@ -56,7 +56,7 @@ MoneyPrinterWorldPanel {
 	.rate-label {
 		justify-content: center;
 		align-items: center;
-		color: #b9c9db;
+		color: #ffd7e2;
 		font-size: 12px;
 		font-weight: 700;
 		white-space: nowrap;
@@ -81,19 +81,19 @@ MoneyPrinterWorldPanel {
 	}
 
 	.money-label {
-		color: #b9c9db;
+		color: #ffd7e2;
 		font-size: 12px;
 		text-transform: uppercase;
 	}
 
 	.money {
 		height: 52px;
-		background-color: $money-blue;
-		border: 2px solid #3092ff;
+		background-color: $money-pink;
+		border: 2px solid #ffd7e2;
 		justify-content: center;
 		align-items: center;
 		font-size: 26px;
-		color: #dff0ff;
+		color: #fff5f8;
 		//white-space: nowrap;
 		//overflow: hidden;
 	}

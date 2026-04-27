@@ -1,5 +1,5 @@
-$context-green: #4fd945;
-$context-green-soft: rgba(79, 217, 69, 0.22);
+$context-pink: #ff436c;
+$context-pink-soft: rgba(255, 67, 108, 0.22);
 $context-bg: rgba(24, 19, 18, 0.72);
 $context-text: rgba(255, 255, 255, 0.94);
 $context-dim: rgba(255, 255, 255, 0.58);
@@ -37,7 +37,7 @@ ContextMenu {
 		align-items: center;
 		justify-content: center;
 		background-color: $context-bg;
-		border: 2px solid rgba(79, 217, 69, 0.42);
+		border: 2px solid rgba(255, 67, 108, 0.42);
 		box-shadow: 0 12px 60px rgba(0, 0, 0, 0.55);
 	}
 
@@ -49,8 +49,8 @@ ContextMenu {
 		height: $center-size;
 		transform: translateX( -50% ) translateY( -50% );
 		border-radius: 999px;
-		background-color: rgba(79, 217, 69, 0.78);
-		border: 1px solid rgba(154, 242, 143, 0.36);
+		background-color: rgba(255, 67, 108, 0.78);
+		border: 1px solid rgba(255, 215, 226, 0.36);
 	}
 
 	.wheel-line {
@@ -84,12 +84,12 @@ ContextMenu {
 		transition: all 0.08s ease-out;
 
 		&:hover {
-			background-color: $context-green-soft;
+			background-color: $context-pink-soft;
 			transform: scale( 1.06 );
 		}
 
 		&.active {
-			background-color: rgba(79, 217, 69, 0.28);
+			background-color: rgba(255, 67, 108, 0.28);
 		}
 	}
 
@@ -193,8 +193,8 @@ ContextMenu {
 		align-items: center;
 		justify-content: center;
 		padding: 18px;
-		background-color: rgba(79, 217, 69, 0.82);
-		border: 1px solid rgba(154, 242, 143, 0.35);
+		background-color: rgba(255, 67, 108, 0.82);
+		border: 1px solid rgba(255, 215, 226, 0.35);
 	}
 
 	.center-kicker {

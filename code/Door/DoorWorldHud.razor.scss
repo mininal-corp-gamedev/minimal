@@ -1,7 +1,6 @@
 $panel-bg: rgba(12, 14, 18, 0.85);
 $panel-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
-$accent-green: #4fd945;
-$accent-red: #e0594b;
+$accent-pink: #ff436c;
 $btn-bg: rgba(255, 255, 255, 0.08);
 $btn-bg-hover: rgba(255, 255, 255, 0.20);
 $btn-border: rgba(255, 255, 255, 0.14);
@@ -94,7 +93,7 @@ DoorWorldHud {
 
 		.btn-price {
 			margin-left: 8px;
-			color: $accent-green;
+			color: $accent-pink;
 			font-weight: 800;
 			justify-content: center;
 			align-items: center;
@@ -106,27 +105,23 @@ DoorWorldHud {
 		}
 
 		&.buy:hover {
-			background-color: rgba(79, 217, 69, 0.22);
-			border-color: $accent-green;
+			background-color: rgba(255, 67, 108, 0.22);
+			border-color: $accent-pink;
 		}
 
 		&.sell:hover {
-			background-color: rgba(224, 89, 75, 0.22);
-			border-color: $accent-red;
-
-			.btn-price {
-				color: $accent-red;
-			}
+			background-color: rgba(255, 67, 108, 0.22);
+			border-color: $accent-pink;
 		}
 
 		&.lock:hover {
-			background-color: rgba(224, 89, 75, 0.22);
-			border-color: $accent-red;
+			background-color: rgba(255, 67, 108, 0.22);
+			border-color: $accent-pink;
 		}
 
 		&.unlock:hover {
-			background-color: rgba(79, 217, 69, 0.22);
-			border-color: $accent-green;
+			background-color: rgba(255, 67, 108, 0.22);
+			border-color: $accent-pink;
 		}
 	}
 }

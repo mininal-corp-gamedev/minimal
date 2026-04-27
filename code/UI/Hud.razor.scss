@@ -2,7 +2,7 @@ $hud-panel-width: 340px;
 $hud-panel-bg: rgba(12, 14, 18, 0.72);
 $hud-panel-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
 $hud-gap: 6px;
-$health-green: #4fd945;
+$health-pink: #ff436c;
 
 Hud {
 	position: absolute;
@@ -140,7 +140,7 @@ Hud {
 		left: 0;
 		top: 0;
 		bottom: 0;
-		background-color: $health-green;
+		background-color: $health-pink;
 		border-radius: 11px;
 	}
 

@@ -52,6 +52,12 @@
 
 	protected override void OnUpdate()
 	{
+		// Physgun сам потребляет колёсико для изменения дистанции захвата —
+		// в этом случае не трогаем хотбар, иначе при попытке отдалить/приблизить
+		// объект игрок случайно переключит слот.
+		if ( Player.Local?.CurrentWeapon is Minimal.Weapons.WeaponPhysgun )
+			return;
+
 		var wheel = Input.MouseWheel.y;
 		if ( wheel > 0f )
 			UseHotbarSlotOffset( 1 );

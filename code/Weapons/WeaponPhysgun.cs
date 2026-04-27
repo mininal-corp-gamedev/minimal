@@ -74,6 +74,14 @@ public sealed class WeaponPhysgun : Weapon
     /// </summary>
     private bool _preventReselect;
 
+    /// <summary>
+    /// Угол камеры, который мы фиксируем на время крутки объекта (Reload в physgun).
+    /// Захватывается на кадре нажатия Reload и каждый следующий кадр восстанавливается,
+    /// чтобы движение мыши крутило объект, а не камеру.
+    /// </summary>
+    private Angles _spinSavedEyeAngles;
+    private bool _spinCameraLocked;
+
     protected override void OnWeaponStart()
     {
         HoldType = WeaponHoldType.PhysGun;
@@ -95,6 +103,14 @@ public sealed class WeaponPhysgun : Weapon
         ValidateGrabbed();
         HandleInput();
         UpdateGrabbed();
+    }
+
+    protected override void OnWeaponUpdate()
+    {
+        // Крутка объекта работает по «живой» дельте мыши, поэтому делаем её
+        // на каждом кадре, а не в FixedUpdate (где Input.AnalogLook повторяется
+        // между двумя физическими шагами одного кадра).
+        UpdateSpin();
     }
 
     private void ValidateGrabbed()
@@ -188,11 +204,8 @@ public sealed class WeaponPhysgun : Weapon
             Input.MouseWheel = Vector2.Zero;
         }
 
-        // Reload — крутить объект.
-        if (Input.Down("Reload"))
-        {
-            HandleSpin(snapping: Input.Down("Run"));
-        }
+        // Сама крутка по AnalogLook делается в OnWeaponUpdate (UpdateSpin) — там
+        // живая дельта мыши и можно корректно зафиксировать камеру.
     }
 
     private void HandleGravityGunInput(bool rmbDown, bool lmbPressed)
@@ -213,9 +226,40 @@ public sealed class WeaponPhysgun : Weapon
         }
     }
 
-    /// <summary>Накапливаем поворот объекта по AnalogLook (как у физгана в s&amp;box-sandbox).</summary>
-    private void HandleSpin(bool snapping)
+    /// <summary>
+    /// Крутка объекта по движению мыши (Reload зажат + physgun-режим).
+    /// Камера на это время фиксируется, чтобы мышь крутила объект, а не игрока.
+    /// </summary>
+    private void UpdateSpin()
     {
+        if (!Player.Local.IsValid() || !Player.Local.Controller.IsValid())
+        {
+            _spinCameraLocked = false;
+            return;
+        }
+
+        // Крутить можно только в physgun-режиме при активном захвате.
+        bool canSpin = _mode == GrabMode.Physgun
+            && _grabbed.IsValid()
+            && Input.Down("Reload");
+
+        if (!canSpin)
+        {
+            _spinCameraLocked = false;
+            return;
+        }
+
+        // Захватили камеру в момент нажатия Reload (или первого валидного кадра крутки).
+        if (!_spinCameraLocked || Input.Pressed("Reload"))
+        {
+            _spinSavedEyeAngles = Player.Local.Controller.EyeAngles;
+            _spinCameraLocked = true;
+        }
+
+        bool snapping = Input.Down("Run");
+
+        // Дельта мыши за кадр; инвертируем, чтобы вверх/вправо = крутить объект,
+        // как в Facepunch-Physgun.
         var look = Input.AnalogLook * -1f;
 
         if (snapping)
@@ -230,13 +274,20 @@ public sealed class WeaponPhysgun : Weapon
         if (snapping)
         {
             // Конвертируем в worldspace по yaw игрока, снэпим, возвращаем обратно.
-            var eyeYaw = Rotation.FromYaw(Player.Local.Controller.EyeAngles.yaw);
+            var eyeYaw = Rotation.FromYaw(_spinSavedEyeAngles.yaw);
             var spinWorld = eyeYaw * spinRotation;
             var snapped = spinWorld.Angles().SnapToGrid(SnapAngleDegrees);
             spinRotation = eyeYaw.Inverse * Rotation.From(snapped);
         }
 
         _grabOffset = spinRotation;
+
+        // Возвращаем угол камеры — даже если PlayerController в этом кадре уже
+        // успел применить дельту мыши, мы перезаписываем результат.
+        Player.Local.Controller.EyeAngles = _spinSavedEyeAngles;
+
+        // Чтобы другие потребители (если такие есть) тоже не реагировали.
+        Input.AnalogLook = default;
     }
 
     // ============================ ЗАХВАТ ============================
@@ -266,30 +317,38 @@ public sealed class WeaponPhysgun : Weapon
         _grabbed = rb;
         _mode = mode;
 
-        // Точка захвата в локальных координатах объекта.
         var bodyTransform = rb.WorldTransform;
-        _localOffset = bodyTransform.PointToLocal(tr.HitPosition);
-
-        if (mode == GrabMode.GravityGun)
-        {
-            // Подтягиваем близко, поворот объекта запоминаем относительно полного взгляда.
-            _grabDistance = GravityGunHoldDistance;
-            _grabOffset = eye.Rotation.Inverse * bodyTransform.Rotation;
-        }
-        else
-        {
-            // Physgun: удерживаем на той же дистанции, где попали.
-            var hitDistance = Vector3.DistanceBetween(origin, tr.HitPosition);
-            _grabDistance = MathF.Max(MinHoldDistance, MathF.Min(MaxHoldDistance, hitDistance));
-            // Поворот объекта запоминаем относительно yaw игрока (чтобы при наклоне головы он не падал).
-            var yaw = Rotation.FromYaw(Player.Local.Controller.EyeAngles.yaw);
-            _grabOffset = yaw.Inverse * bodyTransform.Rotation;
-        }
 
         // Если объект был заморожен — снимаем заморозку, иначе двигать его не получится.
         if (!rb.MotionEnabled)
         {
             rb.MotionEnabled = true;
+        }
+
+        if (mode == GrabMode.GravityGun)
+        {
+            // Gravitygun «сразу берёт к себе»: захват по центру объекта (origin),
+            // мгновенное обнуление физики и телепорт к точке удержания.
+            // Без телепорта тело успевает упасть/удариться об пол на первых кадрах,
+            // пока скорость только-только разгоняет его к цели.
+            _localOffset = Vector3.Zero;
+            _grabDistance = GravityGunHoldDistance;
+            _grabOffset = eye.Rotation.Inverse * bodyTransform.Rotation;
+
+            var snapPos = origin + dir * GravityGunHoldDistance;
+            rb.Velocity = Vector3.Zero;
+            rb.AngularVelocity = Vector3.Zero;
+            rb.WorldPosition = snapPos;
+        }
+        else
+        {
+            // Physgun: удерживаем за точку, в которую попали, на той же дистанции.
+            _localOffset = bodyTransform.PointToLocal(tr.HitPosition);
+            var hitDistance = Vector3.DistanceBetween(origin, tr.HitPosition);
+            _grabDistance = MathF.Max(MinHoldDistance, MathF.Min(MaxHoldDistance, hitDistance));
+            // Поворот объекта запоминаем относительно yaw игрока (чтобы при наклоне головы он не падал).
+            var yaw = Rotation.FromYaw(Player.Local.Controller.EyeAngles.yaw);
+            _grabOffset = yaw.Inverse * bodyTransform.Rotation;
         }
 
         return true;
@@ -308,6 +367,7 @@ public sealed class WeaponPhysgun : Weapon
         _grabDistance = 0f;
         _grabOffset = Rotation.Identity;
         _localOffset = Vector3.Zero;
+        _spinCameraLocked = false;
     }
 
     // ============================ ДВИЖЕНИЕ ============================

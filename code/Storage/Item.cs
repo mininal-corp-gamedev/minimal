@@ -17,7 +17,7 @@ public sealed class Item
         Count = count;
     }
 
-    public int MaxCount => Definition.MaxCount;
+    public int MaxCount => Math.Max(1, Definition?.MaxCount ?? 1);
     public bool CanUse => Definition.CanUse;
 
     public void Add(int amount)
@@ -33,6 +33,7 @@ public sealed class Item
     public static Item Create(string id, int count)
     {
         var def = ItemDatabase.Get(id);
-        return new Item(id, count = Math.Min(count, def.MaxCount));
+        var maxCount = Math.Max(1, def?.MaxCount ?? 1);
+        return new Item(id, count = Math.Min(count, maxCount));
     }
 }

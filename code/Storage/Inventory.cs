@@ -165,6 +165,10 @@ public sealed class Inventory
             return true;
 
         var def = ItemDatabase.Get(id);
+        if (def is null)
+            return false;
+
+        var maxCount = Math.Max(1, def.MaxCount);
         int remaining = amount;
 
         foreach (var slot in _slots)
@@ -175,7 +179,7 @@ public sealed class Inventory
             if (slot.Item.Id != id)
                 continue;
 
-            int freeSpace = def.MaxCount - slot.Item.Count;
+            int freeSpace = maxCount - slot.Item.Count;
             if (freeSpace <= 0)
                 continue;
 
@@ -192,7 +196,7 @@ public sealed class Inventory
                 emptySlots++;
         }
 
-        int maxFromEmptySlots = emptySlots * def.MaxCount;
+        int maxFromEmptySlots = emptySlots * maxCount;
 
         return remaining <= maxFromEmptySlots;
     }

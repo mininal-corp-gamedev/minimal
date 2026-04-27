@@ -3,7 +3,7 @@ using System;
 
 namespace Ambi.Storage;
 
-public sealed class ItemComponent : Component, Component.ICollisionListener
+public sealed class ItemComponent : Component, Component.ICollisionListener, Component.IPressable
 {
     [Property] public ItemDefinition ItemDefinition { get; set; }
     [Property] public ModelRenderer Model { get; set; }
@@ -49,13 +49,17 @@ public sealed class ItemComponent : Component, Component.ICollisionListener
         }
 
         var def = ItemDatabase.Get(ItemDefinition.Id);
+        if (def is null)
+            return 0;
+
+        var maxStack = Math.Max(1, def.MaxCount);
 
         int totalTaken = 0;
 
         while (Count > 0)
         {
             // Сколько мы пытаемся положить за раз (не больше стака)
-            int tryTake = Math.Min(def.MaxCount, Count);
+            int tryTake = Math.Min(maxStack, Count);
 
             // Проверяем, влезет ли хотя бы столько
             if (!inventory.CanAddItem(ItemDefinition.Id, tryTake))
@@ -112,6 +116,21 @@ public sealed class ItemComponent : Component, Component.ICollisionListener
     {
         if (!collision.Other.GameObject.Components.TryGet<Player>(out var ply, FindMode.EverythingInSelfAndAncestors)) return;
 
-        //TryPickup(ply.Inventory);
+        TryPickup(ply.Inventory);
+    }
+
+    public bool Press(IPressable.Event e)
+    {
+        var source = e.Source?.GameObject;
+        if (!source.IsValid())
+            return false;
+
+        if (!source.Components.TryGet<Player>(out var ply, FindMode.EverythingInSelfAndParent))
+            return false;
+
+        if (ply.IsProxy)
+            return false;
+
+        return TryPickup(ply.Inventory) > 0;
     }
 }

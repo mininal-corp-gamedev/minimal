@@ -321,12 +321,18 @@ public sealed class Player : Component, ICustomDamagable
         if (count <= 0) return;
         if (slot.IsEmpty) return;
         if (slot.Item.Count < count) return;
+        if (!ItemDropPrefab.IsValid()) return;
 
         var item = slot.Item;
 
         var pos = WorldPosition + Controller.EyeTransform.Forward * 90f + Controller.EyeTransform.Up * 80f; // Slightly above so it doesn't get stuck in ground
         var gameObj = ItemDropPrefab.Clone(pos);
         var itemComponent = gameObj.GetComponent<ItemComponent>();
+        if (!itemComponent.IsValid())
+        {
+            gameObj.Destroy();
+            return;
+        }
 
         itemComponent.Count = count;
         itemComponent.ItemDefinition = item.Definition;
@@ -340,10 +346,12 @@ public sealed class Player : Component, ICustomDamagable
             gameObj.GetComponent<ModelCollider>(true).Model = item.Definition.Model;
         }
 
+        gameObj.NetworkSpawn(GameObject.Network.Owner);
+
         Inventory.RemoveItem(slot, count);
         ValidateCurrentWeaponInventoryState();
 
-        Notification.Make($"Relic dropped: {item.Definition.Header}", 10f);
+        Notification.Make($"You dropped: {item.Definition.Header}", 10f);
     }
 
     [Rpc.Host]

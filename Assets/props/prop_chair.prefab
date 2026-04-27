@@ -16,6 +16,18 @@
     "OwnerTransfer": 1,
     "Components": [
       {
+        "__type": "PropCustom",
+        "__guid": "4f4f1937-0fac-4733-ad2f-1eb9aabe4403",
+        "__enabled": true,
+        "Flags": 0,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
+      },
+      {
         "__type": "Sandbox.ModelRenderer",
         "__guid": "cce12d18-ad08-4abd-81f0-17a32e2a55cb",
         "__enabled": true,

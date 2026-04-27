@@ -1,0 +1,237 @@
+$pm-panel-bg: rgba(5, 8, 20, 1.0);
+$pm-side-bg: rgba(3, 5, 14, 1.0);
+$pm-accent: rgba(255, 67, 108, 0.80);
+$pm-accent-hover: rgba(255, 67, 108, 0.95);
+$pm-text: rgba(255, 255, 255, 0.92);
+$pm-text-dim: rgba(255, 255, 255, 0.68);
+$pm-divider: rgba(255, 255, 255, 0.08);
+$pm-shadow: 0 10px 48px rgba(0, 0, 0, 0.80);
+
+PropsMenu {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+
+	.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.76);
+		justify-content: center;
+		align-items: center;
+		pointer-events: all;
+		backdrop-filter: blur(12px);
+	}
+
+	.pm-panel {
+		width: 1560px;
+		height: 860px;
+		flex-direction: row;
+		background-color: $pm-panel-bg;
+		border-radius: 14px;
+		box-shadow: $pm-shadow;
+	}
+
+	.props-area {
+		flex-grow: 1;
+		flex-direction: column;
+		padding: 40px 44px;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+
+	.page-head {
+		flex-direction: row;
+		align-items: flex-start;
+		margin-bottom: 28px;
+	}
+
+	.page-title {
+		font-family: Poppins;
+		font-size: 28px;
+		font-weight: 700;
+		color: $pm-text;
+	}
+
+	.props-limit {
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.45);
+		margin-bottom: 14px;
+	}
+
+	.refresh-btn {
+		width: 104px;
+		height: 36px;
+		flex-shrink: 0;
+		margin-left: auto;
+		border-radius: 8px;
+		background-color: rgba(255, 67, 108, 0.16);
+		border: 1px solid rgba(255, 67, 108, 0.46);
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 700;
+		color: #ffd7e2;
+		justify-content: center;
+		align-items: center;
+
+		&:hover {
+			background-color: rgba(255, 67, 108, 0.28);
+		}
+	}
+
+	.props-grid {
+		width: 100%;
+		flex-direction: row;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		align-content: flex-start;
+	}
+
+	.prop-card {
+		width: 32%;
+		min-height: 178px;
+		flex-grow: 0;
+		flex-shrink: 0;
+		margin-bottom: 16px;
+		padding: 14px;
+		flex-direction: column;
+		justify-content: space-between;
+		background-color: rgba(255, 255, 255, 0.04);
+		border: 1px solid $pm-divider;
+		border-radius: 10px;
+	}
+
+	.prop-title {
+		font-family: Poppins;
+		font-size: 16px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.prop-category {
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 700;
+		color: #ff436c;
+		margin-top: 4px;
+		margin-bottom: 8px;
+	}
+
+	.prop-description {
+		flex-grow: 1;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 400;
+		color: $pm-text-dim;
+		margin-bottom: 12px;
+	}
+
+	.spawn-btn {
+		width: 100%;
+		height: 36px;
+		border-radius: 8px;
+		background-color: rgba(255, 67, 108, 0.20);
+		border: 1px solid rgba(255, 67, 108, 0.55);
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 700;
+		color: #ffd7e2;
+		justify-content: center;
+		align-items: center;
+
+		&:hover {
+			background-color: rgba(255, 67, 108, 0.32);
+		}
+
+		&[disabled] {
+			background-color: rgba(255, 255, 255, 0.08);
+			border-color: rgba(255, 255, 255, 0.16);
+			color: rgba(255, 255, 255, 0.45);
+		}
+	}
+
+	.empty-state {
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 600;
+		color: $pm-text-dim;
+	}
+
+	.tool-strip {
+		width: 150px;
+		flex-shrink: 0;
+		flex-direction: column;
+		align-items: center;
+		padding: 18px 12px 0;
+		background-color: $pm-side-bg;
+		border-left: 1px solid $pm-divider;
+	}
+
+	.tool-btn {
+		width: 126px;
+		height: 42px;
+		flex-shrink: 0;
+		margin-bottom: 10px;
+		border-radius: 8px;
+		background-color: transparent;
+		border: 1px solid rgba(255, 255, 255, 0.10);
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.52);
+		padding-left: 12px;
+		padding-right: 12px;
+		justify-content: flex-start;
+		align-items: center;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.05);
+			color: rgba(255, 255, 255, 0.84);
+		}
+
+		&.active {
+			background-color: rgba(255, 67, 108, 0.14);
+			border-color: rgba(255, 67, 108, 0.54);
+			color: #ff436c;
+		}
+	}
+
+	.tool-content {
+		width: 300px;
+		flex-shrink: 0;
+		flex-direction: column;
+		padding: 28px 24px;
+		background-color: rgba(3, 5, 14, 0.96);
+		border-radius: 0 14px 14px 0;
+		border-left: 1px solid $pm-divider;
+	}
+
+	.tool-title {
+		font-family: Poppins;
+		font-size: 22px;
+		font-weight: 700;
+		color: $pm-text;
+		margin-bottom: 10px;
+	}
+
+	.tool-text {
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 400;
+		color: $pm-text-dim;
+		margin-bottom: 18px;
+	}
+
+}

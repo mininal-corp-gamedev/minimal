@@ -1,0 +1,286 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen )
+	{
+		<div class="overlay">
+			<div class="pm-panel">
+				<div class="props-area">
+					<div class="page-head">
+						<div>
+							<div class="page-title">Props</div>
+						</div>
+						<button class="refresh-btn" onclick=@(() => LoadProps())>Refresh</button>
+					</div>
+
+					@if ( AvailableProps.Count == 0 )
+					{
+						<div class="empty-state">No props found in assets/props.</div>
+					}
+					else
+					{
+						<div class="props-limit">Props limit: @GetOwnedPropsCount() / @GetMaxProps()</div>
+						<div class="props-grid">
+							@foreach ( var prop in AvailableProps )
+							{
+								<div class="prop-card">
+									<div class="prop-title">@GetPropHeader( prop )</div>
+									<div class="prop-category">@prop.Category</div>
+									<div class="prop-description">@GetShortDescription( prop.Description )</div>
+									<button
+										class="spawn-btn"
+										disabled=@(!CanRequestSpawn( prop ))
+										onclick=@(() => RequestSpawn( prop ))>
+										Spawn
+									</button>
+								</div>
+							}
+						</div>
+					}
+				</div>
+
+				<div class="tool-strip">
+					<button class="tool-btn @(ActiveTool == 0 ? "active" : "")" onclick=@(() => ActiveTool = 0)>Rope</button>
+					<button class="tool-btn @(ActiveTool == 1 ? "active" : "")" onclick=@(() => ActiveTool = 1)>Weld</button>
+					<button class="tool-btn @(ActiveTool == 2 ? "active" : "")" onclick=@(() => ActiveTool = 2)>Construction</button>
+					<button class="tool-btn @(ActiveTool == 3 ? "active" : "")" onclick=@(() => ActiveTool = 3)>No Collide</button>
+				</div>
+
+				<div class="tool-content">
+					<div class="tool-title">@GetToolTitle()</div>
+					<div class="tool-text">@GetToolDescription()</div>
+				</div>
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	bool IsOpen { get; set; } = false;
+	int ActiveTool { get; set; } = 0;
+	List<PropDefinition> AvailableProps { get; set; } = new();
+	int PropsVersion { get; set; } = 0;
+
+	private const float SpawnTraceDistance = 420f;
+	private const float FallbackSpawnDistance = 120f;
+	private const float SpawnSurfaceOffset = 24f;
+
+	private void LoadProps()
+	{
+		AvailableProps = ResourceLibrary
+			.GetAll<PropDefinition>()
+			.Where( x => x is not null )
+			.OrderBy( x => x.Category )
+			.ThenBy( x => GetPropHeader( x ) )
+			.ToList();
+
+		PropsVersion++;
+	}
+
+	private void RequestSpawn( PropDefinition prop )
+	{
+		if ( !CanRequestSpawn( prop ) )
+			return;
+		if ( !Player.Local.IsValid() || !Player.Local.Controller.IsValid() )
+			return;
+
+		var eye = Player.Local.Controller.EyeTransform;
+		RpcRequestSpawnProp( prop.Id, eye.Position, eye.Forward );
+	}
+
+	private bool CanRequestSpawn( PropDefinition prop )
+	{
+		return prop is not null
+			&& !string.IsNullOrWhiteSpace( prop.Id )
+			&& prop.Prefab.IsValid()
+			&& Player.Local.IsValid()
+			&& GetOwnedPropsCount() < GetMaxProps();
+	}
+
+	private int GetOwnedPropsCount()
+	{
+		return Player.Local?.OwnedPropsCount ?? 0;
+	}
+
+	private int GetMaxProps()
+	{
+		return Math.Max( 0, Player.Local?.MaxProps ?? 0 );
+	}
+
+	private static string GetPropHeader( PropDefinition prop )
+	{
+		if ( prop is null )
+			return "Unknown";
+
+		if ( !string.IsNullOrWhiteSpace( prop.Header ) )
+			return prop.Header;
+
+		return string.IsNullOrWhiteSpace( prop.Id ) ? "Unknown" : prop.Id;
+	}
+
+	private static string GetShortDescription( string description )
+	{
+		var text = (description ?? string.Empty).Trim();
+		if ( text.Length <= 0 )
+			return "No description";
+
+		const int maxLen = 120;
+		return text.Length <= maxLen ? text : $"{text[..maxLen]}...";
+	}
+
+	private string GetToolTitle()
+	{
+		return ActiveTool switch
+		{
+			0 => "Rope",
+			1 => "Weld",
+			2 => "Construction",
+			3 => "No Collide",
+			_ => "Tool"
+		};
+	}
+
+	private string GetToolDescription()
+	{
+		return ActiveTool switch
+		{
+			0 => "A rope constraint between two objects.",
+			1 => "Locks two props together.",
+			2 => "Build helpers for spawned props.",
+			3 => "Disables collisions between selected props.",
+			_ => "Select a tool."
+		};
+	}
+
+	[Rpc.Host]
+	private static void RpcRequestSpawnProp( string propId, Vector3 eyePosition, Vector3 eyeForward )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		var caller = Rpc.Caller;
+		if ( caller is null )
+			return;
+
+		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
+		if ( !player.IsValid() || !player.Controller.IsValid() )
+		{
+			NotifyCaller( caller, "Your player is not ready.", false );
+			return;
+		}
+
+		if ( player.OwnedPropsCount >= player.MaxProps )
+		{
+			NotifyCaller( caller, $"Prop limit reached ({player.MaxProps}).", false );
+			return;
+		}
+
+		var normalized = (propId ?? string.Empty).Trim();
+		var prop = ResourceLibrary
+			.GetAll<PropDefinition>()
+			.FirstOrDefault( x => x is not null && string.Equals( x.Id, normalized, StringComparison.Ordinal ) );
+
+		if ( prop is null || !prop.Prefab.IsValid() )
+		{
+			NotifyCaller( caller, "Prop not found.", false );
+			return;
+		}
+
+		var forward = eyeForward.LengthSquared > 0.001f ? eyeForward.Normal : player.Controller.EyeTransform.Forward;
+		if ( Vector3.DistanceBetween( player.WorldPosition, eyePosition ) > 220f )
+			eyePosition = player.Controller.EyeTransform.Position;
+
+		var trace = player.Scene.Trace
+			.Ray( eyePosition, eyePosition + forward * SpawnTraceDistance )
+			.IgnoreGameObjectHierarchy( player.GameObject )
+			.WithoutTags( "player", "bullet" )
+			.Run();
+
+		var spawnPosition = trace.Hit
+			? trace.HitPosition + trace.Normal * SpawnSurfaceOffset
+			: player.WorldPosition + forward * FallbackSpawnDistance + Vector3.Up * SpawnSurfaceOffset;
+
+		var yawForward = new Vector3( forward.x, forward.y, 0f );
+		if ( yawForward.LengthSquared <= 0.001f )
+			yawForward = player.WorldRotation.Forward;
+		yawForward = yawForward.Normal;
+
+		var gameObj = prop.Prefab.Clone( spawnPosition, Rotation.LookAt( yawForward ) );
+		if ( !gameObj.IsValid() )
+		{
+			NotifyCaller( caller, "Could not spawn prop.", false );
+			return;
+		}
+
+		var propCustom = gameObj.Components.Get<PropCustom>( FindMode.EverythingInSelfAndDescendants );
+		if ( !propCustom.IsValid() )
+			propCustom = gameObj.Components.Create<PropCustom>();
+
+		if ( propCustom.IsValid() )
+			propCustom.SetOwner( player );
+
+		gameObj.NetworkSpawn( caller );
+		NotifyCaller( caller, $"Spawned: {GetPropHeader( prop )}.", true );
+	}
+
+	private static void NotifyCaller( Connection caller, string text, bool success )
+	{
+		using ( Rpc.FilterInclude( x => x.SteamId.Value == caller.SteamId.Value ) )
+		{
+			RpcReceiveSpawnResult( text, success );
+		}
+	}
+
+	[Rpc.Broadcast]
+	private static void RpcReceiveSpawnResult( string text, bool success )
+	{
+		if ( success )
+			Notification.Info( text, 3.5f );
+		else
+			Notification.Error( text, 3.5f );
+	}
+
+	protected override void OnStart()
+	{
+		LoadProps();
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( Input.Pressed( "PropsMenu" ) )
+			IsOpen = !IsOpen;
+
+#pragma warning disable CS0612
+		Mouse.Visible = IsOpen;
+#pragma warning restore CS0612
+	}
+
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( IsOpen );
+		hash.Add( ActiveTool );
+		hash.Add( AvailableProps.Count );
+		hash.Add( PropsVersion );
+		hash.Add( Player.Local?.OwnedPropsCount ?? 0 );
+		hash.Add( Player.Local?.MaxProps ?? 0 );
+
+		foreach ( var prop in AvailableProps )
+		{
+			hash.Add( prop.Id );
+			hash.Add( prop.Header );
+			hash.Add( prop.Category );
+			hash.Add( prop.Description );
+			hash.Add( prop.Prefab );
+		}
+
+		return hash.ToHashCode();
+	}
+}

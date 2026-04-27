@@ -314,6 +314,11 @@ public sealed class WeaponPhysgun : Weapon
         // Только объекты, которыми владеет локальный игрок.
         if (rb.GameObject.Network.Owner != Connection.Local) return false;
 
+        // Physgun работает только по кастомным пропам (PropCustom). Всё остальное
+        // (ящики, мусорки, NPC, системные физ-объекты) руками не трогаем.
+        var propCustom = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors);
+        if (!propCustom.IsValid()) return false;
+
         _grabbed = rb;
         _mode = mode;
 

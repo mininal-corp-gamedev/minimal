@@ -21,6 +21,9 @@ public sealed class Player : Component, ICustomDamagable
     /// <summary>Maximum number of doors this player can own at once.</summary>
     [Property] public int MaxDoors { get; set; } = 8;
 
+    /// <summary>Maximum number of spawned props this player can own at once.</summary>
+    [Property] public int MaxProps { get; set; } = 20;
+
     [Sync(SyncFlags.FromHost)] public float Health { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public float MaxHealth { get; set; } = 100f;
 
@@ -260,6 +263,25 @@ public sealed class Player : Component, ICustomDamagable
 
         RpcRequestUseInventorySlot(slotIndex);
         return true;
+    }
+
+    public int OwnedPropsCount
+    {
+        get
+        {
+            var count = 0;
+
+            foreach ( var go in Scene.GetAllObjects( true ) )
+            {
+                if ( !go.Components.TryGet<PropCustom>( out var prop ) )
+                    continue;
+
+                if ( prop.PlayerOwner == this )
+                    count++;
+            }
+
+            return count;
+        }
     }
 
     [Rpc.Host]

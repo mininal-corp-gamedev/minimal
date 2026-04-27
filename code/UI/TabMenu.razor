@@ -38,7 +38,30 @@
 					{
 						<div class="page">
 							<div class="page-title">Jobs</div>
-							<div class="page-placeholder">Available jobs will be listed here.</div>
+							<div class="jobs-grid">
+								@foreach ( var job in AvailableJobs )
+								{
+									var count = GetJobPlayersCount( job.Id );
+									var isLimited = job.MaxCount > 0;
+									var atLimit = isLimited && count >= job.MaxCount;
+									var isCurrent = string.Equals( Player.Local?.Job?.JobId, job.Id, StringComparison.Ordinal );
+									var shortDescription = GetShortDescription( job.Description );
+
+									<div class="job-card @(isCurrent ? "current" : "")">
+										<div class="job-head">
+											<div class="job-title">@job.Header</div>
+											<div class="job-limit">@(isLimited ? $"{count}/{job.MaxCount}" : "No limit")</div>
+										</div>
+										<div class="job-description">@shortDescription</div>
+										<button
+											class="job-take-btn"
+											disabled=@(isCurrent || atLimit)
+											onclick=@(() => RequestJoinJob( job.Id ))>
+											@(isCurrent ? "Current" : "Take")
+										</button>
+									</div>
+								}
+							</div>
 						</div>
 					}
 					else if ( ActiveTab == 1 )
@@ -74,7 +97,7 @@
 								<div class="help-row"><div class="help-key">WASD</div><div class="help-desc">Movement</div></div>
 								<div class="help-row"><div class="help-key">Space</div><div class="help-desc">Jump</div></div>
 								<div class="help-row"><div class="help-key">F</div><div class="help-desc">Interact</div></div>
-								<div class="help-row"><div class="help-key">1 – 6</div><div class="help-desc">Use hotbar item</div></div>
+								<div class="help-row"><div class="help-key">1 – 9</div><div class="help-desc">Use hotbar item</div></div>
 								<div class="help-row"><div class="help-key">Enter</div><div class="help-desc">Open chat</div></div>
 							</div>
 						</div>
@@ -91,13 +114,167 @@
 	bool IsOpen { get; set; } = false;
 	int ActiveTab { get; set; } = 0;
 	List<Connection> CachedPlayers { get; set; } = new();
+	List<JobDefinition> AvailableJobs { get; set; } = new();
 	int PlayersVersion { get; set; } = 0;
+	int JobsVersion { get; set; } = 0;
 
 	void SelectPlayersTab()
 	{
 		ActiveTab = 2;
 		CachedPlayers = Connection.All.ToList();
 		PlayersVersion++;
+	}
+
+	private void LoadJobs()
+	{
+		AvailableJobs = ResourceLibrary
+			.GetAll<JobDefinition>()
+			.OrderBy( x => x.Category )
+			.ThenBy( x => x.Header )
+			.ToList();
+
+		JobsVersion++;
+	}
+
+	private static string GetShortDescription( string description )
+	{
+		var text = (description ?? string.Empty).Trim();
+		if ( text.Length <= 0 )
+			return "No description";
+
+		const int maxLen = 110;
+		return text.Length <= maxLen ? text : $"{text[..maxLen]}...";
+	}
+
+	private int GetJobPlayersCount( string jobId )
+	{
+		var scene = Game.ActiveScene;
+		if ( scene is null || string.IsNullOrWhiteSpace( jobId ) )
+			return 0;
+
+		var count = 0;
+		foreach ( var player in scene.GetAllComponents<Player>() )
+		{
+			if ( string.Equals( player?.Job?.JobId, jobId, StringComparison.Ordinal ) )
+				count++;
+		}
+
+		return count;
+	}
+
+	private int GetJobsPopulationHash()
+	{
+		var hash = 17;
+		foreach ( var job in AvailableJobs )
+		{
+			hash = HashCode.Combine( hash, job.Id, GetJobPlayersCount( job.Id ) );
+		}
+
+		return hash;
+	}
+
+	private void RequestJoinJob( string jobId )
+	{
+		var normalized = (jobId ?? string.Empty).Trim();
+		if ( normalized.Length <= 0 )
+			return;
+
+		RpcRequestJoinJob( normalized );
+	}
+
+	[Rpc.Host]
+	private static void RpcRequestJoinJob( string jobId )
+	{
+		var caller = Rpc.Caller;
+		if ( caller is null )
+			return;
+
+		var normalized = (jobId ?? string.Empty).Trim();
+		if ( string.IsNullOrEmpty( normalized ) )
+		{
+			NotifyCaller( caller, "Job id is empty.", false );
+			return;
+		}
+
+		var jobDefinition = JobDatabase.Get( normalized );
+		if ( jobDefinition is null )
+		{
+			NotifyCaller( caller, "Job not found.", false );
+			return;
+		}
+
+		var callerPlayer = FindPlayerBySteamId( caller.SteamId.Value );
+		if ( !callerPlayer.IsValid() || !callerPlayer.Job.IsValid() )
+		{
+			NotifyCaller( caller, "Your player is not ready.", false );
+			return;
+		}
+
+		if ( string.Equals( callerPlayer.Job.JobId, normalized, StringComparison.Ordinal ) )
+		{
+			NotifyCaller( caller, "You already have this job.", true );
+			return;
+		}
+
+		if ( jobDefinition.MaxCount > 0 )
+		{
+			var usedSlots = 0;
+			var scene = Game.ActiveScene;
+			if ( scene is not null )
+			{
+				foreach ( var player in scene.GetAllComponents<Player>() )
+				{
+					if ( string.Equals( player?.Job?.JobId, normalized, StringComparison.Ordinal ) )
+						usedSlots++;
+				}
+			}
+
+			if ( usedSlots >= jobDefinition.MaxCount )
+			{
+				NotifyCaller( caller, $"No free slots for {jobDefinition.Header}.", false );
+				return;
+			}
+		}
+
+		callerPlayer.Job.SetJob( normalized );
+		NotifyCaller( caller, $"You joined: {jobDefinition.Header}.", true );
+	}
+
+	private static Player FindPlayerBySteamId( long steamId )
+	{
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return null;
+
+		foreach ( var player in scene.GetAllComponents<Player>() )
+		{
+			if ( player.GameObject.Network.Owner?.SteamId.Value == steamId )
+				return player;
+		}
+
+		return null;
+	}
+
+	private static void NotifyCaller( Connection caller, string text, bool success )
+	{
+		using ( Rpc.FilterInclude( x => x.SteamId.Value == caller.SteamId.Value ) )
+		{
+			RpcReceiveJoinJobResult( text, success );
+		}
+	}
+
+	[Rpc.Broadcast]
+	private static void RpcReceiveJoinJobResult( string text, bool success )
+	{
+		if ( success )
+			Notification.Info( text, 3.5f );
+		else
+			Notification.Error( text, 3.5f );
+	}
+
+	protected override void OnStart()
+	{
+		LoadJobs();
 	}
 
 	protected override void OnUpdate()
@@ -110,11 +287,20 @@
 #pragma warning restore CS0612
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine(
-		IsOpen,
-		ActiveTab,
-		Player.Local?.Money ?? 0,
-		Player.Local?.Job?.JobDefinition?.Header,
-		Connection.Local?.DisplayName,
-		PlayersVersion );
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( IsOpen );
+		hash.Add( ActiveTab );
+		hash.Add( Player.Local?.Money ?? 0 );
+		hash.Add( Player.Local?.Job?.JobId );
+		hash.Add( Player.Local?.Job?.JobDefinition?.Header );
+		hash.Add( Connection.Local?.DisplayName );
+		hash.Add( Connection.All.Count );
+		hash.Add( GetJobsPopulationHash() );
+		hash.Add( AvailableJobs.Count );
+		hash.Add( JobsVersion );
+		hash.Add( PlayersVersion );
+		return hash.ToHashCode();
+	}
 }

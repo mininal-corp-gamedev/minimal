@@ -73,7 +73,7 @@ public sealed class Player : Component, Component.IDamageable
     }
     public int CactusCount { get; set; } = 0;
     public bool IsAlive => Health > 0;
-    public Inventory Inventory { get; set; } = new(10);
+    public Inventory Inventory { get; set; } = new(20);
 
     public Weapon CurrentWeapon { get; private set; }
     public int CurrentInventorySlotIndex { get; private set; } = -1;
@@ -266,6 +266,12 @@ public sealed class Player : Component, Component.IDamageable
             UseInventorySlot(4);
         else if (Input.Pressed("Slot6"))
             UseInventorySlot(5);
+        else if (Input.Pressed("Slot7"))
+            UseInventorySlot(6);
+        else if (Input.Pressed("Slot8"))
+            UseInventorySlot(7);
+        else if (Input.Pressed("Slot9"))
+            UseInventorySlot(8);
     }
 
     private void ValidateCurrentWeaponInventoryState()

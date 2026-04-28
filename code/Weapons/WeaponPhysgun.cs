@@ -81,6 +81,8 @@ public sealed class WeaponPhysgun : Weapon
     /// </summary>
     private Angles _spinSavedEyeAngles;
     private bool _spinCameraLocked;
+    private bool _spinLookControlsOverridden;
+    private bool _spinPreviousUseLookControls;
 
     protected override void OnWeaponStart()
     {
@@ -234,9 +236,11 @@ public sealed class WeaponPhysgun : Weapon
     {
         if (!Player.Local.IsValid() || !Player.Local.Controller.IsValid())
         {
-            _spinCameraLocked = false;
+            UnlockSpinCamera();
             return;
         }
+
+        var controller = Player.Local.Controller;
 
         // Крутить можно только в physgun-режиме при активном захвате.
         bool canSpin = _mode == GrabMode.Physgun
@@ -245,16 +249,18 @@ public sealed class WeaponPhysgun : Weapon
 
         if (!canSpin)
         {
-            _spinCameraLocked = false;
+            UnlockSpinCamera();
             return;
         }
 
         // Захватили камеру в момент нажатия Reload (или первого валидного кадра крутки).
         if (!_spinCameraLocked || Input.Pressed("Reload"))
         {
-            _spinSavedEyeAngles = Player.Local.Controller.EyeAngles;
+            _spinSavedEyeAngles = controller.EyeAngles;
             _spinCameraLocked = true;
         }
+
+        LockSpinCamera(controller);
 
         bool snapping = Input.Down("Run");
 
@@ -282,12 +288,32 @@ public sealed class WeaponPhysgun : Weapon
 
         _grabOffset = spinRotation;
 
-        // Возвращаем угол камеры — даже если PlayerController в этом кадре уже
-        // успел применить дельту мыши, мы перезаписываем результат.
-        Player.Local.Controller.EyeAngles = _spinSavedEyeAngles;
+        // Страховочный фикс: если контроллер уже успел применить look в этом кадре,
+        // возвращаем сохранённый угол. На следующих кадрах UseLookControls выключен,
+        // поэтому камера больше не борется с physgun за один и тот же ввод.
+        controller.EyeAngles = _spinSavedEyeAngles;
 
         // Чтобы другие потребители (если такие есть) тоже не реагировали.
         Input.AnalogLook = default;
+    }
+
+    private void LockSpinCamera(PlayerController controller)
+    {
+        if (!controller.IsValid()) return;
+        if (_spinLookControlsOverridden) return;
+
+        _spinPreviousUseLookControls = controller.UseLookControls;
+        controller.UseLookControls = false;
+        _spinLookControlsOverridden = true;
+    }
+
+    private void UnlockSpinCamera()
+    {
+        if (_spinLookControlsOverridden && Player.Local.IsValid() && Player.Local.Controller.IsValid())
+            Player.Local.Controller.UseLookControls = _spinPreviousUseLookControls;
+
+        _spinLookControlsOverridden = false;
+        _spinCameraLocked = false;
     }
 
     // ============================ ЗАХВАТ ============================
@@ -384,7 +410,7 @@ public sealed class WeaponPhysgun : Weapon
         _grabDistance = 0f;
         _grabOffset = Rotation.Identity;
         _localOffset = Vector3.Zero;
-        _spinCameraLocked = false;
+        UnlockSpinCamera();
     }
 
     // ============================ ДВИЖЕНИЕ ============================
@@ -461,4 +487,3 @@ public sealed class WeaponPhysgun : Weapon
         _grabbed.MotionEnabled = false;
     }
 }
-

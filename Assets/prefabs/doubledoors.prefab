@@ -1,0 +1,230 @@
+{
+  "RootObject": {
+    "__guid": "c1a4b49e-2bcc-48d7-aae4-a7461c8bc07f",
+    "__version": 2,
+    "Flags": 0,
+    "Name": "doubledoors",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [],
+    "Children": [
+      {
+        "__guid": "3951451a-977e-4358-baa9-404a10d2e390",
+        "__version": 2,
+        "__Prefab": "prefabs/door.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+              },
+              "Property": "Name",
+              "Value": "door (1)"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+              },
+              "Property": "Position",
+              "Value": "66.6584473,25.0595703,-18.0017128"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+              },
+              "Property": "Scale",
+              "Value": "1,1.04999995,1"
+            },
+            {
+              "Target": {
+                "Type": "Component",
+                "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+              },
+              "Property": "AllowedJobs",
+              "Value": [
+                "jobs/police1.job",
+                "jobs/sheriff.job"
+              ]
+            },
+            {
+              "Target": {
+                "Type": "Component",
+                "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+              },
+              "Property": "BuyPrice",
+              "Value": 50
+            },
+            {
+              "Target": {
+                "Type": "Component",
+                "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+              },
+              "Property": "DoorSecond",
+              "Value": {
+                "_type": "component",
+                "component_id": "e000ed38-7ac8-400c-918d-97eef9903cf8",
+                "go": "129e73dd-2d68-4b5b-bf6f-9f967d9424e2",
+                "component_type": "Door"
+              }
+            },
+            {
+              "Target": {
+                "Type": "Component",
+                "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+              },
+              "Property": "Header",
+              "Value": "Полиция"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "6ff64c8d-d72e-4559-88f1-0805701930f5": "3951451a-977e-4358-baa9-404a10d2e390",
+          "63f9abba-02bd-4247-86f7-08e143c836e7": "d258d973-8d55-419e-a27b-4c8a8b170627",
+          "6bf6f4c9-7b9a-4f74-b46d-a1e0296515f5": "801a96eb-d07b-456e-8630-d72928f7e973",
+          "5841057c-911e-402d-a936-4b4d0728f96c": "81ecbba9-22f7-4bb4-a09c-b633b80d23c8",
+          "975f60f4-fb6b-48ed-b322-846386f529c6": "7a748e78-9e05-4327-a7ee-21d11cac4fe8",
+          "2eec3323-0b2b-43fc-bf6c-1503eb07df05": "1aec9310-dccd-4bdf-8026-bd036e74c8e4",
+          "ac6ef700-0157-43f7-90d5-84d46d9069e6": "8493e17b-04ec-4992-b9a6-b1a704ddbc68",
+          "4e016627-1674-4521-bcf1-ada81bbc43a8": "8b683784-abae-4e12-97a2-bda75df2623c",
+          "f73f0e36-5dab-48e6-9d43-a47a1aced771": "314c968c-b41b-489d-a7c2-f56e397103b0",
+          "4b63a60b-841b-410a-a7b5-52dcaaac18ac": "fc585557-404b-43ff-b76a-2c84df6956d9"
+        }
+      },
+      {
+        "__guid": "129e73dd-2d68-4b5b-bf6f-9f967d9424e2",
+        "__version": 2,
+        "__Prefab": "prefabs/door.prefab",
+        "__PrefabInstancePatch": {
+          "AddedObjects": [],
+          "RemovedObjects": [],
+          "PropertyOverrides": [
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+              },
+              "Property": "Name",
+              "Value": "door (2)"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+              },
+              "Property": "Position",
+              "Value": "-31.4570312,25.0596313,-18.0017166"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+              },
+              "Property": "Rotation",
+              "Value": "0,0,-0.707106888,-0.70710665"
+            },
+            {
+              "Target": {
+                "Type": "GameObject",
+                "IdValue": "6ff64c8d-d72e-4559-88f1-0805701930f5"
+              },
+              "Property": "Scale",
+              "Value": "1,1.04999995,1"
+            },
+            {
+              "Target": {
+                "Type": "Component",
+                "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+              },
+              "Property": "AllowedJobs",
+              "Value": []
+            },
+            {
+              "Target": {
+                "Type": "Component",
+                "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+              },
+              "Property": "BuyPrice",
+              "Value": 50
+            },
+            {
+              "Target": {
+                "Type": "Component",
+                "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+              },
+              "Property": "DoorSecond",
+              "Value": {
+                "_type": "component",
+                "component_id": "d258d973-8d55-419e-a27b-4c8a8b170627",
+                "go": "3951451a-977e-4358-baa9-404a10d2e390",
+                "component_type": "Door"
+              }
+            },
+            {
+              "Target": {
+                "Type": "Component",
+                "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+              },
+              "Property": "Header",
+              "Value": "Полиция"
+            }
+          ],
+          "MovedObjects": []
+        },
+        "__PrefabIdToInstanceId": {
+          "6ff64c8d-d72e-4559-88f1-0805701930f5": "129e73dd-2d68-4b5b-bf6f-9f967d9424e2",
+          "63f9abba-02bd-4247-86f7-08e143c836e7": "e000ed38-7ac8-400c-918d-97eef9903cf8",
+          "6bf6f4c9-7b9a-4f74-b46d-a1e0296515f5": "7feeb654-e7f4-4699-bc73-161bb406514e",
+          "5841057c-911e-402d-a936-4b4d0728f96c": "d66dfe1d-bc89-44d8-9fd6-4fb3091c35f3",
+          "975f60f4-fb6b-48ed-b322-846386f529c6": "afdec814-9e99-486c-89a1-1c9e9ee32f10",
+          "2eec3323-0b2b-43fc-bf6c-1503eb07df05": "d6aa3cbc-8910-48cc-8a64-ccdcd721fea4",
+          "ac6ef700-0157-43f7-90d5-84d46d9069e6": "5ccfe4e0-bf93-4e80-b52a-ca958b2e9b15",
+          "4e016627-1674-4521-bcf1-ada81bbc43a8": "8cb7ee3f-948e-4a0c-bc3e-bcf821344498",
+          "f73f0e36-5dab-48e6-9d43-a47a1aced771": "dc9da35e-42c7-4c61-b827-57a958dbe1d0",
+          "4b63a60b-841b-410a-a7b5-52dcaaac18ac": "c8d38b7e-08fc-41e1-bb97-b822ef88b0b5"
+        }
+      }
+    ],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [],
+  "__version": 2
+}

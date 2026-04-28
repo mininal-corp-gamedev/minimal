@@ -148,27 +148,75 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "WeaponHandcuff": null,
-          "WeaponHands": null,
-          "WeaponM4a1Prefab": null,
-          "WeaponMp5Prefab": null,
-          "WeaponPhysgun": null,
+          "WeaponHandcuff": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/handcuff.prefab"
+          },
+          "WeaponHands": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/hands.prefab"
+          },
+          "WeaponM4a1Prefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/m4a1.prefab"
+          },
+          "WeaponMp5Prefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/mp5.prefab"
+          },
+          "WeaponPhysgun": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/physgun.prefab"
+          },
           "WeaponPickaxe": {
             "_type": "gameobject",
-            "prefab": "prefabs/money_printer.prefab"
+            "prefab": "prefabs/weapons/pickaxe.prefab"
           },
-          "WeaponPicklock": null,
-          "WeaponToolgun": null,
-          "WeaponUspPrefab": null,
+          "WeaponPicklock": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/picklock.prefab"
+          },
+          "WeaponToolgun": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/toolgun.prefab"
+          },
+          "WeaponUspPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/usp.prefab"
+          },
           "Wep": null,
-          "WorldWeaponHandcuff": null,
-          "WorldWeaponM4a1Prefab": null,
-          "WorldWeaponMp5Prefab": null,
-          "WorldWeaponPhysgun": null,
-          "WorldWeaponPickaxe": null,
-          "WorldWeaponPicklock": null,
-          "WorldWeaponToolgun": null,
-          "WorldWeaponUspPrefab": null
+          "WorldWeaponHandcuff": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/handcuff.prefab"
+          },
+          "WorldWeaponM4a1Prefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/m4a1.prefab"
+          },
+          "WorldWeaponMp5Prefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/mp5.prefab"
+          },
+          "WorldWeaponPhysgun": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/physgun.prefab"
+          },
+          "WorldWeaponPickaxe": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/pickaxe.prefab"
+          },
+          "WorldWeaponPicklock": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/picklock.prefab"
+          },
+          "WorldWeaponToolgun": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/toolgun.prefab"
+          },
+          "WorldWeaponUspPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/weapons/usp.prefab"
+          }
         }
       ],
       "Children": []
@@ -16521,13 +16569,13 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
-      },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "72a0fb77-53f6-4759-9a60-08e7e463f9eb"
         }
+      },
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
       },
       "Sandbox.SelectionSetsSystem": {
         "Data": {

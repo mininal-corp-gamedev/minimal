@@ -35,6 +35,9 @@
           "go": "70709696-00d3-4b3a-a540-a7da2fcf0471",
           "component_type": "Dresser"
         },
+        "FallDamageSpawnGraceSeconds": 1.5,
+        "FatalFallDamage": 120,
+        "FatalFallDistance": 1150,
         "HitSound": "sounds/voicer-lines/hit.sound",
         "ItemDropPrefab": {
           "_type": "gameobject",
@@ -64,6 +67,8 @@
           "go": "f907b6cc-697d-4a0e-aa04-9d3cb163e166",
           "component_type": "SkinnedModelRenderer"
         },
+        "RespawnDelaySeconds": 5,
+        "SafeFallDistance": 420,
         "WorldHud": {
           "_type": "component",
           "component_id": "30bcf53b-4115-487c-80bb-387d61c32651",
@@ -265,7 +270,7 @@
         "__guid": "5c75715f-6f3c-4fb4-9ac3-d305e2c74bbc",
         "__enabled": true,
         "Flags": 0,
-        "Distance": 12988,
+        "Distance": 6000,
         "Falloff": [
           {
             "x": 0.5,
@@ -361,7 +366,7 @@
         ],
         "Children": [
           {
-            "__guid": "c9325149-32cb-48a3-94e5-b03660e4795c",
+            "__guid": "e9082a8f-460d-4a98-9953-c9e719a4336e",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - y_front_pants_white",
@@ -378,7 +383,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "483ad6bd-e965-4bfd-af1b-875ac0cbcf62",
+                "__guid": "e4589a4f-3a19-4866-a24d-ea5effde5e5d",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,

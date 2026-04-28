@@ -119,6 +119,11 @@ public sealed class Player : Component, ICustomDamagable
 
     public bool IsLocalPlayer => !IsProxy;
 
+    [Sync] public bool PhysgunBeamActive { get; private set; }
+    [Sync] public Vector3 PhysgunBeamStart { get; private set; }
+    [Sync] public Vector3 PhysgunBeamEnd { get; private set; }
+    [Sync] public Vector3 PhysgunBeamBend { get; private set; }
+
     private static bool _itemUseHandlersRegistered;
 
     public sealed class PlayerSaveData
@@ -1111,11 +1116,82 @@ public sealed class Player : Component, ICustomDamagable
         CheckUseHotbarSlots();
     }
 
+    protected override void OnUpdate()
+    {
+        DrawPhysgunBeam();
+    }
+
     protected override void OnDestroy()
     {
         UnhookInventoryEvents();
 
         DestroyLocalInstance();
+    }
+
+    public void SetPhysgunBeam(bool active, Vector3 start = default, Vector3 end = default, Vector3 bend = default)
+    {
+        if (IsProxy)
+            return;
+
+        PhysgunBeamActive = active;
+        PhysgunBeamStart = start;
+        PhysgunBeamEnd = end;
+        PhysgunBeamBend = bend;
+    }
+
+    private void DrawPhysgunBeam()
+    {
+        if (!PhysgunBeamActive)
+            return;
+
+        var start = PhysgunBeamStart;
+        var end = PhysgunBeamEnd;
+        if ((end - start).LengthSquared <= 1f)
+            return;
+
+        var bend = PhysgunBeamBend;
+        var p1 = LerpVector(start, end, 0.35f) + bend;
+        var p2 = LerpVector(start, end, 0.70f) + bend;
+
+        var previousColor = Gizmo.Draw.Color;
+        var previousThickness = Gizmo.Draw.LineThickness;
+
+        DrawPhysgunBeamCurve(start, p1, p2, end, new Color(0.20f, 0.85f, 1f, 0.22f), 7f);
+        DrawPhysgunBeamCurve(start, p1, p2, end, new Color(0.45f, 0.95f, 1f, 0.95f), 2.5f);
+
+        Gizmo.Draw.Color = previousColor;
+        Gizmo.Draw.LineThickness = previousThickness;
+    }
+
+    private static void DrawPhysgunBeamCurve(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Color color, float thickness)
+    {
+        const int segments = 18;
+
+        Gizmo.Draw.Color = color;
+        Gizmo.Draw.LineThickness = thickness;
+
+        var previous = p0;
+        for (var i = 1; i <= segments; i++)
+        {
+            var t = i / (float)segments;
+            var point = CubicBezier(p0, p1, p2, p3, t);
+            Gizmo.Draw.Line(previous, point);
+            previous = point;
+        }
+    }
+
+    private static Vector3 CubicBezier(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
+    {
+        var u = 1f - t;
+        return p0 * (u * u * u)
+            + p1 * (3f * u * u * t)
+            + p2 * (3f * u * t * t)
+            + p3 * (t * t * t);
+    }
+
+    private static Vector3 LerpVector(Vector3 a, Vector3 b, float t)
+    {
+        return a + (b - a) * t;
     }
 
 

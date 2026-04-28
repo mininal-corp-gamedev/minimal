@@ -37,6 +37,10 @@ public sealed class WeaponPhysgun : Weapon
     [Property, Category("Physgun")] public float LaunchForce { get; set; } = 1500f;
     [Property, Category("Physgun")] public float SnapAngleDegrees { get; set; } = 45f;
     [Property, Category("Physgun")] public float RotationLerp { get; set; } = 0.5f;
+    [Property, Category("Physgun Beam")] public float BeamMaxLength { get; set; } = 1024f;
+    [Property, Category("Physgun Beam")] public float BeamSag { get; set; } = 48f;
+    [Property, Category("Physgun Beam")] public float BeamMoveBendScale { get; set; } = 0.035f;
+    [Property, Category("Physgun Beam")] public float BeamMaxBend { get; set; } = 140f;
 
     // Physgun не использует систему патронов и перезарядку.
     protected override bool UseDefaultCombatInput => false;
@@ -83,6 +87,9 @@ public sealed class WeaponPhysgun : Weapon
     private bool _spinCameraLocked;
     private bool _spinLookControlsOverridden;
     private bool _spinPreviousUseLookControls;
+    private Vector3 _beamLastEnd;
+    private Vector3 _beamBend;
+    private bool _beamHasLastEnd;
 
     protected override void OnWeaponStart()
     {
@@ -105,6 +112,7 @@ public sealed class WeaponPhysgun : Weapon
         ValidateGrabbed();
         HandleInput();
         UpdateGrabbed();
+        UpdateBeamState();
     }
 
     protected override void OnWeaponUpdate()
@@ -410,7 +418,88 @@ public sealed class WeaponPhysgun : Weapon
         _grabDistance = 0f;
         _grabOffset = Rotation.Identity;
         _localOffset = Vector3.Zero;
+        ResetBeamState();
         UnlockSpinCamera();
+    }
+
+    private void UpdateBeamState()
+    {
+        if (_mode == GrabMode.None || !_grabbed.IsValid())
+        {
+            ResetBeamState();
+            return;
+        }
+
+        var player = Player.Local;
+        if (!player.IsValid() || !player.Controller.IsValid())
+        {
+            ResetBeamState();
+            return;
+        }
+
+        var eye = player.Controller.EyeTransform;
+        var start = ShotPos.IsValid() ? ShotPos.WorldPosition : eye.Position;
+        var end = GetBeamEndPosition();
+        end = ClampBeamEnd(start, end);
+
+        var dt = MathF.Max(Time.Delta, 0.001f);
+        var endVelocity = _beamHasLastEnd ? (end - _beamLastEnd) / dt : Vector3.Zero;
+        _beamLastEnd = end;
+        _beamHasLastEnd = true;
+
+        var distance = Vector3.DistanceBetween(start, end);
+        var sag = Vector3.Down * MathF.Min(BeamSag, distance * 0.08f);
+        var moveBend = -endVelocity * BeamMoveBendScale;
+        var desiredBend = ClampVectorLength(sag + moveBend, BeamMaxBend);
+
+        _beamBend = LerpVector(_beamBend, desiredBend, 0.35f);
+        player.SetPhysgunBeam(true, start, end, _beamBend);
+    }
+
+    private Vector3 GetBeamEndPosition()
+    {
+        if (!_grabbed.IsValid())
+            return Vector3.Zero;
+
+        if (_mode == GrabMode.GravityGun)
+            return _grabbed.WorldPosition;
+
+        return _grabbed.WorldTransform.PointToWorld(_localOffset);
+    }
+
+    private Vector3 ClampBeamEnd(Vector3 start, Vector3 end)
+    {
+        var maxLength = MathF.Max(1f, MathF.Min(MaxRange, BeamMaxLength));
+        var delta = end - start;
+        if (delta.Length <= maxLength)
+            return end;
+
+        return start + delta.Normal * maxLength;
+    }
+
+    private static Vector3 ClampVectorLength(Vector3 value, float maxLength)
+    {
+        maxLength = MathF.Max(0f, maxLength);
+        if (maxLength <= 0f || value.Length <= maxLength)
+            return value;
+
+        return value.Normal * maxLength;
+    }
+
+    private static Vector3 LerpVector(Vector3 a, Vector3 b, float t)
+    {
+        return a + (b - a) * t;
+    }
+
+    private void ResetBeamState()
+    {
+        var hadBeam = _beamHasLastEnd;
+        _beamLastEnd = Vector3.Zero;
+        _beamBend = Vector3.Zero;
+        _beamHasLastEnd = false;
+
+        if (Player.Local.IsValid() && (hadBeam || Player.Local.PhysgunBeamActive))
+            Player.Local.SetPhysgunBeam(false);
     }
 
     // ============================ ДВИЖЕНИЕ ============================

@@ -1,0 +1,60 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="safe-crack-panel @VisualState">
+		<div class="topline">
+			<div class="title">Safe Crack</div>
+			<div class="jackpot">$@Jackpot</div>
+		</div>
+
+		<div class="locks">
+			<div class="lock @GetLockClass( 1 )">
+				<div class="lock-index">I</div>
+				<div class="lock-state">@GetLockState( 1 )</div>
+			</div>
+			<div class="lock @GetLockClass( 2 )">
+				<div class="lock-index">II</div>
+				<div class="lock-state">@GetLockState( 2 )</div>
+			</div>
+			<div class="lock @GetLockClass( 3 )">
+				<div class="lock-index">III</div>
+				<div class="lock-state">@GetLockState( 3 )</div>
+			</div>
+		</div>
+
+		<div class="stats">
+			<div class="stat">
+				<div class="label">Next lock</div>
+				<div class="value">@ChanceText</div>
+			</div>
+			<div class="stat">
+				<div class="label">Cash find</div>
+				<div class="value">$@SmallPayout</div>
+			</div>
+		</div>
+
+		<div class="status">@StatusText</div>
+		<div class="hint">E Crack</div>
+	</div>
+</root>
+
+@code
+{
+	SafeCrackSlotMachine Machine => Components.Get<SafeCrackSlotMachine>( FindMode.EverythingInSelfAndAncestors );
+
+	int LocksOpened => Math.Clamp( Machine?.LocalLocksOpened ?? 0, 0, 3 );
+	int Jackpot => Math.Max( 0, Machine?.LocalJackpotPayout ?? 0 );
+	int SmallPayout => Math.Max( 0, Machine?.LocalSmallPayout ?? 0 );
+	string ChanceText => Math.Clamp( Machine?.LocalNextOpenChance ?? 0f, 0f, 1f ).ToString( "P0" );
+	string StatusText => string.IsNullOrWhiteSpace( Machine?.LocalStatusText ) ? "Ready" : Machine.LocalStatusText;
+	string VisualState => Machine?.LocalVisualState ?? "idle";
+
+	string GetLockClass( int lockNumber ) => LocksOpened >= lockNumber ? "open" : "closed";
+	string GetLockState( int lockNumber ) => LocksOpened >= lockNumber ? "OPEN" : "LOCK";
+
+	protected override int BuildHash() => HashCode.Combine( LocksOpened, Jackpot, SmallPayout, ChanceText, StatusText, VisualState );
+}

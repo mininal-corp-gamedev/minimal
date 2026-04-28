@@ -21,6 +21,15 @@ public sealed class WeaponManager : Component
     [Property, Category("Weapon Prefabs")] public GameObject WeaponHandcuff { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponPicklock { get; set; }
 
+    [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponPickaxe { get; set; }
+    [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponUspPrefab { get; set; }
+    [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponMp5Prefab { get; set; }
+    [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponM4a1Prefab { get; set; }
+    [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponPhysgun { get; set; }
+    [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponToolgun { get; set; }
+    [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponHandcuff { get; set; }
+    [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponPicklock { get; set; }
+
     /// <summary>Слот ближнего боя (без патронов). Префаб — <see cref="Minimal.Weapons.WeaponPickaxe"/> или <c>Weapon</c> с <c>IsMelee</c>.</summary>
     public Weapon Pickaxe { get; private set; }
     public Weapon Mp5 { get; private set; }

@@ -12,7 +12,7 @@
 				<div class="wheel-ring"></div>
 				@foreach ( var action in Actions )
 				{
-					<button class="context-action @action.PositionClass @(ActiveAction == action.Id ? "active" : "")" onclick=@(() => RunAction( action.Id ))>
+					<button class="context-action @action.PositionClass @(ActiveAction == action.Id ? "active" : "")" onmouseover=@(() => ActiveAction = action.Id) onclick=@(() => RunAction( action.Id ))>
 						<div class="action-icon @action.IconClass"></div>
 						<div class="action-title">@action.Title</div>
 						<div class="action-subtitle">@action.Subtitle</div>
@@ -20,9 +20,7 @@
 				}
 
 				<div class="center-info">
-					<div class="center-kicker">CONTEXT</div>
-					<div class="center-title">@SelectedAction.Title</div>
-					<div class="center-text">@SelectedAction.Description</div>
+					<div class="center-label">Действие</div>
 				</div>
 			</div>
 
@@ -38,23 +36,9 @@
 
 	static readonly ContextAction[] Actions =
 	{
-		new( "drop_money", "Выкинуть деньги", "Наличные", "Выкинуть сумму перед собой.", "pos-left", "money" ),
-		new( "transfer_money", "Передать деньги", "Игрок напротив", "Передать сумму игроку, на которого смотришь.", "pos-right", "money" )
+		new( "drop_money", "Выкинуть деньги", "Наличные", "pos-left", "money" ),
+		new( "transfer_money", "Передать деньги", "Игрок напротив", "pos-right", "money" )
 	};
-
-	ContextAction SelectedAction
-	{
-		get
-		{
-			foreach ( var action in Actions )
-			{
-				if ( action.Id == ActiveAction )
-					return action;
-			}
-
-			return Actions[0];
-		}
-	}
 
 	void RunAction( string id )
 	{
@@ -73,32 +57,34 @@
 
 	void Close()
 	{
-		IsOpen = false;
+		SetOpen( false );
+	}
 
-#pragma warning disable CS0612
-		Mouse.Visible = false;
-#pragma warning restore CS0612
+		private void SetOpen( bool open )
+	{
+		IsOpen = open;
+
+		var crosshair = Scene.GetAllComponents<Crosshair>().FirstOrDefault();
+		if ( crosshair is not null )
+			crosshair.SetVisible( !open );
+
+	#pragma warning disable CS0612
+		Mouse.Visible = open;
+	#pragma warning restore CS0612
 	}
 
 	protected override void OnUpdate()
 	{
 		if ( Input.Pressed( "Context" ) )
 		{
-			if ( IsOpen )
-				Close();
-			else
-				IsOpen = true;
-
-#pragma warning disable CS0612
-			Mouse.Visible = IsOpen;
-#pragma warning restore CS0612
+			SetOpen( !IsOpen );
 		}
 
 		if ( IsOpen )
 		{
-#pragma warning disable CS0612
+	#pragma warning disable CS0612
 			Mouse.Visible = true;
-#pragma warning restore CS0612
+	#pragma warning restore CS0612
 		}
 	}
 
@@ -114,16 +100,14 @@
 		public string Id { get; }
 		public string Title { get; }
 		public string Subtitle { get; }
-		public string Description { get; }
 		public string PositionClass { get; }
 		public string IconClass { get; }
 
-		public ContextAction( string id, string title, string subtitle, string description, string positionClass, string iconClass )
+		public ContextAction( string id, string title, string subtitle, string positionClass, string iconClass )
 		{
 			Id = id;
 			Title = title;
 			Subtitle = subtitle;
-			Description = description;
 			PositionClass = positionClass;
 			IconClass = iconClass;
 		}

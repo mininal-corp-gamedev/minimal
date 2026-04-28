@@ -8,7 +8,7 @@
 	<div class="hotbar">
 		@for ( int i = 0; i < HotbarCount; i++ )
 		{
-			var slot = GetSlot( i );
+			Slot slot = GetSlot( i );
 			<div class="slot @SlotClass( i ) @(slot is not null && !slot.IsEmpty ? "has-item" : "")">
 				<div class="slot-key">@(i + 1)</div>
 				@if ( slot is not null && !slot.IsEmpty )

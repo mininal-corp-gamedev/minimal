@@ -458,13 +458,22 @@
 		LoadShop();
 	}
 
-	protected override void OnUpdate()
+	private void SetOpen( bool open )
+	{
+		IsOpen = open;
+
+		var crosshair = Scene.GetAllComponents<Crosshair>().FirstOrDefault();
+		if ( crosshair is not null )
+			crosshair.SetVisible( !IsOpen );
+	}
+
+		protected override void OnUpdate()
 	{
 		if ( Input.Pressed( "Score" ) )
-			IsOpen = !IsOpen;
+			SetOpen( !IsOpen );
 
 #pragma warning disable CS0612
-		Mouse.Visible = IsOpen;
+	Mouse.Visible = IsOpen;
 #pragma warning restore CS0612
 	}
 

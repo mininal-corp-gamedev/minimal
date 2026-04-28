@@ -4,9 +4,12 @@
   "Header": "Handcuff",
   "Description": "",
   "MaxCount": 1,
-  "IconPath": null,
+  "IconPath": "icons/weapons/handcuff.vtex",
   "Model": null,
   "CanUse": true,
+  "CanDrop": true,
+  "IsJobItem": false,
+  "CanSave": true,
   "__references": [],
   "__version": 0
 }

@@ -4,9 +4,12 @@
   "Header": "Патроны MP5",
   "Description": "Патроны для MP5. Использовать — пополнить запас (2 магазина).",
   "MaxCount": 30,
-  "IconPath": "icons/items/default.vtex",
+  "IconPath": "icons/weapons/mp5.vtex",
   "Model": null,
   "CanUse": true,
+  "CanDrop": true,
+  "IsJobItem": false,
+  "CanSave": true,
   "__references": [],
   "__version": 0
 }

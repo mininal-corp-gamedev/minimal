@@ -1,0 +1,13 @@
+{
+  "Id": "shelving",
+  "Header": "Shelving",
+  "Category": "civil",
+  "Description": "Just shelving",
+  "Price": 100,
+  "Prefab": {
+    "_type": "gameobject",
+    "prefab": "props/industrial_ shelving_01.prefab"
+  },
+  "__references": [],
+  "__version": 0
+}

@@ -9,22 +9,22 @@ PlayerWorldHud {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	font-weight: bold;
+	font-weight: 700;
 
 	.title {
 		font-size: 28px;
-		font-family: Poppins;
+		font-family: Montserrat;
 		color: $health-pink;
-		text-stroke: 3px rgba( 0, 0, 0, 0.88 );
+		text-shadow: 0 2px 4px rgba( 0, 0, 0, 0.78 );
 		margin-bottom: 1px;
 	}
 
 	.job {
 		font-size: 16px;
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-weight: 600;
 		color: #ffffff;
-		text-stroke: 2px rgba( 0, 0, 0, 0.82 );
+		text-shadow: 0 1px 3px rgba( 0, 0, 0, 0.72 );
 		margin-bottom: 6px;
 	}
 
@@ -54,10 +54,10 @@ PlayerWorldHud {
 		top: 0;
 		bottom: 0;
 		font-size: 10px;
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-weight: 600;
 		color: #ffffff;
-		text-stroke: 2px rgba( 0, 0, 0, 0.75 );
+		text-shadow: 0 1px 2px rgba( 0, 0, 0, 0.68 );
 		justify-content: center;
 		align-items: center;
 	}

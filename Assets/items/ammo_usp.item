@@ -4,9 +4,12 @@
   "Header": "Патроны USP",
   "Description": "Патроны для USP. Использовать — пополнить запас (2 магазина).",
   "MaxCount": 30,
-  "IconPath": "icons/items/default.vtex",
+  "IconPath": "icons/weapons/usp.vtex",
   "Model": null,
   "CanUse": true,
+  "CanDrop": true,
+  "IsJobItem": false,
+  "CanSave": true,
   "__references": [],
   "__version": 0
 }

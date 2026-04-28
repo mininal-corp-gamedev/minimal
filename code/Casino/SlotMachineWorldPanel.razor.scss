@@ -7,7 +7,7 @@ SlotMachineWorldPanel
 	bottom: 0;
 	justify-content: center;
 	align-items: center;
-	font-family: Poppins;
+	font-family: Montserrat;
 	color: #f6f6f6;
 
 	.slot-panel
@@ -54,7 +54,7 @@ SlotMachineWorldPanel
 		color: rgba( 255, 255, 255, 0.55 );
 		font-weight: 600;
 		text-transform: uppercase;
-		letter-spacing: 1px;
+		letter-spacing: 0;
 	}
 
 	.multiplier
@@ -63,7 +63,7 @@ SlotMachineWorldPanel
 		align-items: center;
 		justify-content: center;
 		font-size: 58px;
-		font-weight: 800;
+		font-weight: 700;
 		white-space: nowrap;
 		color: #ff436c;
 		text-shadow: 0 2px 4px rgba( 0, 0, 0, 0.6 );
@@ -106,7 +106,7 @@ SlotMachineWorldPanel
 		align-items: center;
 		justify-content: center;
 		text-transform: uppercase;
-		letter-spacing: 1px;
+		letter-spacing: 0;
 	}
 
 	.slot-panel.spinning .slot-core

@@ -5,7 +5,7 @@ using Sandbox;
 using System;
 using System.Text.Json.Serialization;
 
-public sealed class Player : Component, ICustomDamagable
+public sealed class Player : Component, ICustomDamagable, PlayerController.IEvents
 {
     public static Player Local { get; private set; }
 
@@ -26,6 +26,15 @@ public sealed class Player : Component, ICustomDamagable
 
     [Sync(SyncFlags.FromHost)] public float Health { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public float MaxHealth { get; set; } = 100f;
+    [Sync(SyncFlags.FromHost)] public bool IsDead { get; private set; }
+    [Sync(SyncFlags.FromHost)] public TimeUntil DeathTimeUntilRespawn { get; private set; }
+    [Sync(SyncFlags.FromHost)] public string DeathMessage { get; private set; } = "";
+
+    [Property, Category("Death")] public float RespawnDelaySeconds { get; set; } = 5f;
+    [Property, Category("Fall Damage")] public float SafeFallDistance { get; set; } = 420f;
+    [Property, Category("Fall Damage")] public float FatalFallDistance { get; set; } = 1150f;
+    [Property, Category("Fall Damage")] public float FatalFallDamage { get; set; } = 120f;
+    [Property, Category("Fall Damage")] public float FallDamageSpawnGraceSeconds { get; set; } = 1.5f;
 
     private int _money;
     [Sync(SyncFlags.FromHost)]
@@ -80,6 +89,16 @@ public sealed class Player : Component, ICustomDamagable
     private bool _inventoryEventsHooked;
     private bool _deferInventorySync;
     private bool _inventoryChangedWhileDeferred;
+    private bool _ignoreNextFallDamage = true;
+    private TimeUntil _fallDamageGraceUntil;
+    private TimeUntil _nextFallDamageAllowed;
+    private GameObject _deathRagdollObject;
+    private bool _deathControlsApplied;
+    private bool _deathPrevUseInputControls;
+    private bool _deathPrevUseLookControls;
+    private bool _deathPrevUseCameraControls;
+    private bool _deathColliderApplied;
+    private bool _deathPrevColliderEnabled;
     private static bool _jobInventoryEventsRegistered;
 
     /// <summary>
@@ -109,13 +128,14 @@ public sealed class Player : Component, ICustomDamagable
         }
     }
     public int CactusCount { get; set; } = 0;
-    public bool IsAlive => Health > 0;
+    public bool IsAlive => Health > 0 && !IsDead;
     public Inventory Inventory { get; set; } = new(InventorySlotCount);
 
     public Weapon CurrentWeapon { get; private set; }
     public int CurrentInventorySlotIndex { get; private set; } = -1;
     public int SelectedHotbarSlotIndex { get; private set; } = -1;
     public string CurrentWeaponItemId { get; private set; }
+    [Sync(SyncFlags.FromHost)] public string EquippedWeaponItemId { get; private set; } = "";
 
     public bool IsLocalPlayer => !IsProxy;
 
@@ -125,6 +145,44 @@ public sealed class Player : Component, ICustomDamagable
     [Sync] public Vector3 PhysgunBeamBend { get; private set; }
 
     private static bool _itemUseHandlersRegistered;
+    private GameObject _worldWeaponObject;
+    private string _worldWeaponItemId;
+    private string _worldWeaponFailedItemId;
+    private bool _worldWeaponUsesAuthoredPrefab;
+
+    private sealed class WorldWeaponVisualDefinition
+    {
+        public Vector3 PositionOffset { get; }
+        public Rotation RotationOffset { get; }
+        public float Scale { get; }
+
+        public WorldWeaponVisualDefinition(Vector3 positionOffset, Rotation rotationOffset, float scale = 1f)
+        {
+            PositionOffset = positionOffset;
+            RotationOffset = rotationOffset;
+            Scale = scale;
+        }
+    }
+
+    private static readonly Dictionary<string, WorldWeaponVisualDefinition> WorldWeaponVisuals = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["usp"] = new(new Vector3(-17f, 2f, 0f), Rotation.Identity, 0.9f),
+        ["mp5"] = new(new Vector3(-24f, 3f, 0f), Rotation.Identity, 0.9f),
+        ["m4a1"] = new(new Vector3(-29f, 3f, 0f), Rotation.Identity, 0.9f),
+        ["physgun"] = new(new Vector3(-8f, 2f, 4f), Rotation.Identity, 0.65f),
+        ["toolgun"] = new(new Vector3(-17f, 3f, 0f), Rotation.Identity, 0.9f),
+        ["pickaxe"] = new(new Vector3(-5f, 0f, 0f), Rotation.Identity),
+        ["picklock"] = new(new Vector3(-5f, 0f, 0f), Rotation.Identity),
+        ["handcuff"] = new(new Vector3(-4f, 0f, 0f), Rotation.Identity, 0.75f)
+    };
+
+    private static readonly string[] WeaponVisualBoneNames =
+    {
+        "hold_R",
+        "hand_R",
+        "weapon_R",
+        "ValveBiped.Bip01_R_Hand"
+    };
 
     public sealed class PlayerSaveData
     {
@@ -159,6 +217,7 @@ public sealed class Player : Component, ICustomDamagable
         if (!IsProxy)
         {
             SpawnInternal();
+            RpcClearDeathRagdoll();
             return;
         }
 
@@ -167,10 +226,15 @@ public sealed class Player : Component, ICustomDamagable
         if (!spawnPoint.IsValid()) return;
 
         Health = MaxHealth;
+        IsDead = false;
+        DeathTimeUntilRespawn = 0f;
+        DeathMessage = "";
+        ResetFallDamageGrace();
         WorldHud?.WorldHudRefresh();
         Job?.NotifySpawned();
 
         RpcOwnerSpawn(spawnPoint.WorldPosition, spawnPoint.WorldRotation);
+        RpcClearDeathRagdoll();
     }
 
     /// <summary>
@@ -201,6 +265,11 @@ public sealed class Player : Component, ICustomDamagable
         WorldPosition = position;
         if (Controller.IsValid())
             Controller.EyeAngles = rotation;
+        IsDead = false;
+        DeathTimeUntilRespawn = 0f;
+        DeathMessage = "";
+        RestoreDeathState();
+        ResetFallDamageGrace();
         WorldHud?.WorldHudRefresh();
     }
 
@@ -220,6 +289,11 @@ public sealed class Player : Component, ICustomDamagable
         if (!spawnPoint.IsValid()) return;
 
         Health = MaxHealth;
+        IsDead = false;
+        DeathTimeUntilRespawn = 0f;
+        DeathMessage = "";
+        RestoreDeathState();
+        ResetFallDamageGrace();
         WorldHud?.WorldHudRefresh();
         WorldPosition = spawnPoint.WorldPosition;
         Controller.EyeAngles = spawnPoint.WorldRotation;
@@ -239,17 +313,17 @@ public sealed class Player : Component, ICustomDamagable
     /// Запрос на урон. Применять Health может только хост (он — Sync-владелец).
     /// На хосте применяем сразу, на клиенте отправляем <see cref="RpcRequestDamage"/>.
     /// </summary>
-    public void TakeDamageFromWeapon(float damage, GameObject attacker = null)
+    public void TakeDamageFromWeapon(float damage, GameObject attacker = null, string deathMessage = null)
     {
         if (damage <= 0f) return;
 
         if (Networking.IsHost)
         {
-            HostApplyDamage(damage, attacker);
+            HostApplyDamage(damage, attacker, deathMessage);
             return;
         }
 
-        RpcRequestDamage(damage, attacker);
+        RpcRequestDamage(damage, attacker, deathMessage);
     }
 
     [Rpc.Broadcast]
@@ -292,18 +366,18 @@ public sealed class Player : Component, ICustomDamagable
     /// (что и было причиной «клиент не дамажит клиента»).
     /// </summary>
     [Rpc.Host]
-    private void RpcRequestDamage(float damage, GameObject attacker)
+    private void RpcRequestDamage(float damage, GameObject attacker, string deathMessage)
     {
         if (!Networking.IsHost) return;
-        HostApplyDamage(damage, attacker);
+        HostApplyDamage(damage, attacker, deathMessage);
     }
 
-    private void HostApplyDamage(float damage, GameObject attacker)
+    private void HostApplyDamage(float damage, GameObject attacker, string deathMessage = null)
     {
         if (!Networking.IsHost) return;
         if (IsArrested) return;
         if (damage <= 0f) return;
-        if (Health <= 0f) return;
+        if (Health <= 0f || IsDead) return;
 
         // Само-урон через одно и то же оружие/трейс невозможен (трейс игнорирует
         // владельца), но на всякий случай отбрасываем явный self-hit.
@@ -315,15 +389,255 @@ public sealed class Player : Component, ICustomDamagable
         RpcOnPlayerHit(Renderer);
 
         if (Health <= 0f)
-            HostDie();
+            HostDie(BuildDeathMessage(attacker, deathMessage));
     }
 
-    /// <summary>Смерть. На хосте триггерим респавн (для прокси — через RPC владельцу).</summary>
-    private void HostDie()
+    /// <summary>Смерть. Хост показывает владельцу экран смерти и откладывает респавн.</summary>
+    private void HostDie(string deathMessage = null)
+    {
+        if (!Networking.IsHost) return;
+        if (IsDead) return;
+
+        IsDead = true;
+        Health = 0f;
+        DeathTimeUntilRespawn = MathF.Max(0.1f, RespawnDelaySeconds);
+        DeathMessage = string.IsNullOrWhiteSpace(deathMessage) ? "Вы умерли." : deathMessage;
+        HostSetEquippedWeaponItemId(null);
+        WorldHud?.WorldHudRefresh();
+
+        RpcOwnerDied(DeathMessage, (float)DeathTimeUntilRespawn);
+        RpcCreateDeathRagdoll();
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerDied(string deathMessage, float respawnDelay)
+    {
+        IsDead = true;
+        Health = 0f;
+        DeathTimeUntilRespawn = MathF.Max(0.1f, respawnDelay);
+        DeathMessage = string.IsNullOrWhiteSpace(deathMessage) ? "Вы умерли." : deathMessage;
+
+        if (CurrentWeapon.IsValid())
+            CurrentWeapon.GameObject.Enabled = false;
+
+        ApplyDeathControls();
+    }
+
+    [Rpc.Broadcast]
+    private void RpcCreateDeathRagdoll()
+    {
+        CreateDeathRagdoll();
+    }
+
+    [Rpc.Broadcast]
+    private void RpcClearDeathRagdoll()
+    {
+        RestoreDeathState();
+    }
+
+    private void HostUpdateDeathRespawn()
+    {
+        if (!Networking.IsHost) return;
+        if (!IsDead) return;
+        if ((float)DeathTimeUntilRespawn > 0f) return;
+
+        HostTriggerRespawn();
+    }
+
+    private static string BuildDeathMessage(GameObject attacker, string fallback)
+    {
+        if (!string.IsNullOrWhiteSpace(fallback))
+            return fallback;
+
+        var attackerName = GetAttackerDisplayName(attacker);
+        if (!string.IsNullOrWhiteSpace(attackerName))
+            return $"Вас убил - \"{attackerName}\"";
+
+        return "Вы умерли.";
+    }
+
+    private static string GetAttackerDisplayName(GameObject attacker)
+    {
+        if (!attacker.IsValid())
+            return null;
+
+        var go = attacker;
+        while (go.IsValid())
+        {
+            if (go.Components.TryGet<Player>(out var player, FindMode.EverythingInSelfAndParent))
+            {
+                var ownerName = player.GameObject.Network.Owner?.DisplayName;
+                if (!string.IsNullOrWhiteSpace(ownerName))
+                    return ownerName;
+            }
+
+            go = go.Parent;
+        }
+
+        return null;
+    }
+
+    private void CreateDeathRagdoll()
+    {
+        DestroyDeathRagdoll();
+
+        if (CurrentWeapon.IsValid())
+            CurrentWeapon.GameObject.Enabled = false;
+
+        if (!IsProxy)
+            ApplyDeathControls();
+
+        if (!Controller.IsValid())
+            return;
+
+        _deathRagdollObject = Controller.CreateRagdoll($"{GameObject.Name}_ragdoll");
+        ApplyDeathColliderState();
+
+        if (Renderer.IsValid())
+            Renderer.Enabled = false;
+    }
+
+    private void ApplyDeathColliderState()
+    {
+        if (_deathColliderApplied || !Controller.IsValid() || !Controller.ColliderObject.IsValid())
+            return;
+
+        _deathPrevColliderEnabled = Controller.ColliderObject.Enabled;
+        Controller.ColliderObject.Enabled = false;
+        _deathColliderApplied = true;
+    }
+
+    private void ApplyDeathControls()
+    {
+        if (_deathControlsApplied || !Controller.IsValid())
+            return;
+
+        _deathPrevUseInputControls = Controller.UseInputControls;
+        _deathPrevUseLookControls = Controller.UseLookControls;
+        _deathPrevUseCameraControls = Controller.UseCameraControls;
+
+        Controller.UseInputControls = false;
+        Controller.UseLookControls = false;
+        Controller.UseCameraControls = false;
+        Controller.WishVelocity = Vector3.Zero;
+
+        if (Controller.Body.IsValid())
+            Controller.Body.Velocity = Vector3.Zero;
+
+        _deathControlsApplied = true;
+    }
+
+    private void RestoreDeathState()
+    {
+        DestroyDeathRagdoll();
+
+        if (Renderer.IsValid())
+            Renderer.Enabled = true;
+
+        RestoreDeathColliderState();
+        RestoreDeathControls();
+
+        if (CurrentWeapon.IsValid() && IsAlive && !IsArrested)
+            CurrentWeapon.GameObject.Enabled = true;
+    }
+
+    private void RestoreDeathColliderState()
+    {
+        if (!_deathColliderApplied || !Controller.IsValid() || !Controller.ColliderObject.IsValid())
+            return;
+
+        Controller.ColliderObject.Enabled = _deathPrevColliderEnabled;
+        _deathColliderApplied = false;
+    }
+
+    private void RestoreDeathControls()
+    {
+        if (!_deathControlsApplied || !Controller.IsValid())
+            return;
+
+        Controller.UseInputControls = _deathPrevUseInputControls;
+        Controller.UseLookControls = _deathPrevUseLookControls;
+        Controller.UseCameraControls = _deathPrevUseCameraControls;
+        _deathControlsApplied = false;
+    }
+
+    private void DestroyDeathRagdoll()
+    {
+        if (_deathRagdollObject.IsValid())
+            _deathRagdollObject.Destroy();
+
+        _deathRagdollObject = null;
+    }
+
+    public void OnLanded(float distance, Vector3 impactVelocity)
+    {
+        if (IsArrested || IsDead || Health <= 0f) return;
+        if (distance <= SafeFallDistance) return;
+        if (!Networking.IsHost && IsProxy) return;
+
+        if (Networking.IsHost)
+        {
+            HostApplyFallDamage(distance);
+            return;
+        }
+
+        RpcRequestFallDamage(distance);
+    }
+
+    [Rpc.Host]
+    private void RpcRequestFallDamage(float distance)
     {
         if (!Networking.IsHost) return;
 
-        HostTriggerRespawn();
+        var caller = Rpc.Caller;
+        if (caller is null) return;
+
+        var player = FindPlayerBySteamId(caller.SteamId.Value);
+        if (!player.IsValid() || player != this) return;
+
+        player.HostApplyFallDamage(distance);
+    }
+
+    private void HostApplyFallDamage(float distance)
+    {
+        if (!Networking.IsHost) return;
+        if (!_nextFallDamageAllowed) return;
+        if (IsArrested || IsDead || Health <= 0f) return;
+        if (ShouldIgnoreFallDamage()) return;
+
+        var damage = CalculateFallDamage(distance);
+        if (damage <= 0f) return;
+
+        _nextFallDamageAllowed = 0.2f;
+        HostApplyDamage(damage, null, "Вы умерли от падения с высоты.");
+    }
+
+    private float CalculateFallDamage(float distance)
+    {
+        var safeDistance = MathF.Max(0f, SafeFallDistance);
+        var fatalDistance = MathF.Max(safeDistance + 1f, FatalFallDistance);
+        var clampedDistance = Math.Clamp(distance, safeDistance, fatalDistance);
+        var fallPercent = (clampedDistance - safeDistance) / (fatalDistance - safeDistance);
+
+        return MathF.Ceiling(fallPercent * MathF.Max(0f, FatalFallDamage));
+    }
+
+    private void ResetFallDamageGrace()
+    {
+        _ignoreNextFallDamage = true;
+        _fallDamageGraceUntil = MathF.Max(0f, FallDamageSpawnGraceSeconds);
+        _nextFallDamageAllowed = 0.2f;
+    }
+
+    private bool ShouldIgnoreFallDamage()
+    {
+        if (_ignoreNextFallDamage)
+        {
+            _ignoreNextFallDamage = false;
+            return true;
+        }
+
+        return (float)_fallDamageGraceUntil > 0f;
     }
 
     /// <summary>Совместимость со старым API (вызывалось локально владельцем).</summary>
@@ -336,12 +650,27 @@ public sealed class Player : Component, ICustomDamagable
         }
 
         if (IsProxy) return;
-        Spawn();
+        RpcRequestDie();
+    }
+
+    [Rpc.Host]
+    private void RpcRequestDie()
+    {
+        if (!Networking.IsHost) return;
+
+        var caller = Rpc.Caller;
+        if (caller is null) return;
+
+        var player = FindPlayerBySteamId(caller.SteamId.Value);
+        if (!player.IsValid() || player != this) return;
+
+        player.HostDie();
     }
 
     public void SwitchWeapon(Weapon wep = null)
     {
         if (IsProxy) return;
+        if (!IsAlive && wep.IsValid()) return;
         if (IsArrested && wep.IsValid()) return; // Арестованный не может взять оружие в руки
 
         if (CurrentWeapon.IsValid() && wep == CurrentWeapon) return;
@@ -363,9 +692,18 @@ public sealed class Player : Component, ICustomDamagable
         RpcSetHoldType(Renderer, (int)CurrentWeapon.HoldType);
     }
 
+    private void HostSetEquippedWeaponItemId(string itemId)
+    {
+        if (!Networking.IsHost)
+            return;
+
+        EquippedWeaponItemId = string.IsNullOrWhiteSpace(itemId) ? "" : itemId;
+    }
+
     public bool UseInventorySlot(int slotIndex)
     {
         if (IsProxy) return false;
+        if (!IsAlive) return false;
         if (IsArrested) return false; // Арестованный не может пользоваться предметами
 
         if (Networking.IsHost)
@@ -429,6 +767,8 @@ public sealed class Player : Component, ICustomDamagable
         var slot = Inventory.Slots[slotIndex];
         if (slot.IsEmpty || slot.Item == null)
         {
+            HostSetEquippedWeaponItemId(null);
+
             if (CurrentWeapon.IsValid())
                 SwitchWeapon();
 
@@ -456,6 +796,7 @@ public sealed class Player : Component, ICustomDamagable
         {
             CurrentInventorySlotIndex = slotIndex;
             CurrentWeaponItemId = itemId;
+            HostSetEquippedWeaponItemId(itemId);
         }
 
         ValidateCurrentWeaponInventoryState();
@@ -520,6 +861,7 @@ public sealed class Player : Component, ICustomDamagable
     private void CheckUseHotbarSlots()
     {
         if (IsProxy) return;
+        if (!IsAlive) return;
         if (IsArrested) return; // Арестованный не может переключать слоты/оружие
 
         if (Input.Pressed("Slot1"))
@@ -556,6 +898,7 @@ public sealed class Player : Component, ICustomDamagable
 
         CurrentInventorySlotIndex = -1;
         CurrentWeaponItemId = null;
+        HostSetEquippedWeaponItemId(null);
         SwitchWeapon();
     }
 
@@ -1097,8 +1440,176 @@ public sealed class Player : Component, ICustomDamagable
             Local = null;
     }
 
+    private void UpdateWorldWeaponVisual()
+    {
+        if (!IsProxy || IsArrested || string.IsNullOrWhiteSpace(EquippedWeaponItemId))
+        {
+            DestroyWorldWeaponVisual();
+            return;
+        }
+
+        if (!WorldWeaponVisuals.TryGetValue(EquippedWeaponItemId, out var definition))
+        {
+            DestroyWorldWeaponVisual();
+            return;
+        }
+
+        if (_worldWeaponFailedItemId == EquippedWeaponItemId)
+        {
+            if (!string.Equals(_worldWeaponItemId, EquippedWeaponItemId, StringComparison.OrdinalIgnoreCase))
+                DestroyWorldWeaponVisual();
+            return;
+        }
+
+        if (!EnsureWorldWeaponVisual(EquippedWeaponItemId, definition))
+            return;
+
+        UpdateWorldWeaponTransform(definition);
+    }
+
+    private bool EnsureWorldWeaponVisual(string itemId, WorldWeaponVisualDefinition definition)
+    {
+        if (_worldWeaponObject.IsValid()
+            && string.Equals(_worldWeaponItemId, itemId, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        DestroyWorldWeaponVisual();
+
+        var prefab = GetWorldWeaponPrefab(itemId, out var usesAuthoredPrefab);
+        if (!prefab.IsValid())
+        {
+            _worldWeaponFailedItemId = itemId;
+            Log.Warning($"[Player] World weapon prefab not found for '{itemId}'");
+            return false;
+        }
+
+        _worldWeaponObject = prefab.Clone();
+        _worldWeaponObject.Name = $"world_weapon_{itemId}";
+        _worldWeaponObject.Parent = GameObject;
+        _worldWeaponObject.LocalPosition = Vector3.Zero;
+        _worldWeaponObject.LocalRotation = Rotation.Identity;
+        _worldWeaponObject.LocalScale = Vector3.One * definition.Scale;
+
+        PrepareWorldWeaponClone(_worldWeaponObject);
+
+        _worldWeaponItemId = itemId;
+        _worldWeaponFailedItemId = null;
+        _worldWeaponUsesAuthoredPrefab = usesAuthoredPrefab;
+        Log.Info($"[Player] World weapon visual '{itemId}' cloned from {(usesAuthoredPrefab ? "world" : "view")} prefab");
+        return true;
+    }
+
+    private static GameObject GetWorldWeaponPrefab(string itemId, out bool usesAuthoredPrefab)
+    {
+        usesAuthoredPrefab = false;
+
+        var manager = WeaponManager.Instance;
+        if (!manager.IsValid())
+            return null;
+
+        var worldPrefab = itemId switch
+        {
+            "usp" => manager.WorldWeaponUspPrefab,
+            "mp5" => manager.WorldWeaponMp5Prefab,
+            "m4a1" => manager.WorldWeaponM4a1Prefab,
+            "physgun" => manager.WorldWeaponPhysgun,
+            "toolgun" => manager.WorldWeaponToolgun,
+            "pickaxe" => manager.WorldWeaponPickaxe,
+            "picklock" => manager.WorldWeaponPicklock,
+            "handcuff" => manager.WorldWeaponHandcuff,
+            _ => null
+        };
+
+        if (worldPrefab.IsValid())
+        {
+            usesAuthoredPrefab = true;
+            return worldPrefab;
+        }
+
+        return itemId switch
+        {
+            "usp" => manager.WeaponUspPrefab,
+            "mp5" => manager.WeaponMp5Prefab,
+            "m4a1" => manager.WeaponM4a1Prefab,
+            "physgun" => manager.WeaponPhysgun,
+            "toolgun" => manager.WeaponToolgun,
+            "pickaxe" => manager.WeaponPickaxe,
+            "picklock" => manager.WeaponPicklock,
+            "handcuff" => manager.WeaponHandcuff,
+            _ => null
+        };
+    }
+
+    private static void PrepareWorldWeaponClone(GameObject obj)
+    {
+        if (!obj.IsValid())
+            return;
+
+        if (obj.Components.TryGet<Weapon>(out var weapon))
+            weapon.Enabled = false;
+
+        DisableWorldWeaponArms(obj);
+    }
+
+    private static void DisableWorldWeaponArms(GameObject obj)
+    {
+        if (!obj.IsValid())
+            return;
+
+        if (string.Equals(obj.Name, "arms", StringComparison.OrdinalIgnoreCase))
+            obj.Enabled = false;
+
+        foreach (var child in obj.Children)
+            DisableWorldWeaponArms(child);
+    }
+
+    private void UpdateWorldWeaponTransform(WorldWeaponVisualDefinition definition)
+    {
+        if (!_worldWeaponObject.IsValid() || !Renderer.IsValid())
+            return;
+
+        if (!TryGetWeaponVisualBaseTransform(out var transform))
+            return;
+
+        var positionOffset = _worldWeaponUsesAuthoredPrefab ? Vector3.Zero : definition.PositionOffset;
+        var rotationOffset = _worldWeaponUsesAuthoredPrefab ? Rotation.Identity : definition.RotationOffset;
+        var scale = _worldWeaponUsesAuthoredPrefab ? 1f : definition.Scale;
+
+        _worldWeaponObject.WorldPosition = transform.Position + transform.Rotation * positionOffset;
+        _worldWeaponObject.WorldRotation = transform.Rotation * rotationOffset;
+        _worldWeaponObject.LocalScale = Vector3.One * scale;
+    }
+
+    private bool TryGetWeaponVisualBaseTransform(out Transform transform)
+    {
+        transform = default;
+
+        if (Renderer.IsValid())
+        {
+            foreach (var boneName in WeaponVisualBoneNames)
+            {
+                if (Renderer.TryGetBoneTransform(boneName, out transform))
+                    return true;
+            }
+        }
+
+        transform = new Transform(WorldPosition + Vector3.Up * 48f + WorldRotation.Forward * 12f, WorldRotation, 1f);
+        return true;
+    }
+
+    private void DestroyWorldWeaponVisual()
+    {
+        if (_worldWeaponObject.IsValid())
+            _worldWeaponObject.Destroy();
+
+        _worldWeaponObject = null;
+        _worldWeaponItemId = null;
+        _worldWeaponUsesAuthoredPrefab = false;
+    }
+
     protected override void OnStart()
 	{
+        GameObject.Tags.Add( "player" );
         MakeLocalInstance();
         RegisterItemUseHandlers();
         RegisterJobInventoryEvents();
@@ -1112,12 +1623,14 @@ public sealed class Player : Component, ICustomDamagable
 
     protected override void OnFixedUpdate()
     {
+        HostUpdateDeathRespawn();
         UpdateArrestEffects();
         CheckUseHotbarSlots();
     }
 
     protected override void OnUpdate()
     {
+        UpdateWorldWeaponVisual();
         DrawPhysgunBeam();
     }
 
@@ -1125,6 +1638,8 @@ public sealed class Player : Component, ICustomDamagable
     {
         UnhookInventoryEvents();
 
+        RestoreDeathState();
+        DestroyWorldWeaponVisual();
         DestroyLocalInstance();
     }
 
@@ -1157,6 +1672,7 @@ public sealed class Player : Component, ICustomDamagable
         var previousThickness = Gizmo.Draw.LineThickness;
 
         DrawPhysgunBeamCurve(start, p1, p2, end, new Color(0.20f, 0.85f, 1f, 0.22f), 7f);
+        DrawPhysgunBeamFlicker(start, p1, p2, end);
         DrawPhysgunBeamCurve(start, p1, p2, end, new Color(0.45f, 0.95f, 1f, 0.95f), 2.5f);
 
         Gizmo.Draw.Color = previousColor;
@@ -1180,6 +1696,48 @@ public sealed class Player : Component, ICustomDamagable
         }
     }
 
+    private static void DrawPhysgunBeamFlicker(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
+    {
+        const int sparks = 7;
+
+        var length = Vector3.DistanceBetween(p0, p3);
+        var amplitude = MathF.Min(14f, MathF.Max(3f, length * 0.018f));
+        var timeSeed = MathF.Floor(Time.Now * 18f);
+
+        Gizmo.Draw.Color = new Color(0.78f, 1f, 1f, 0.72f);
+        Gizmo.Draw.LineThickness = 1.35f;
+
+        for (var i = 0; i < sparks; i++)
+        {
+            var seed = i * 19.19f + timeSeed * 3.71f;
+            if (Hash01(seed) < 0.32f)
+                continue;
+
+            var t0 = (i + 1f) / (sparks + 2f);
+            var t1 = MathF.Min(0.98f, t0 + 0.035f + Hash01(seed + 4.4f) * 0.04f);
+            var a = CubicBezier(p0, p1, p2, p3, t0);
+            var c = CubicBezier(p0, p1, p2, p3, t1);
+            var dir = c - a;
+            if (dir.LengthSquared <= 0.001f)
+                continue;
+
+            dir = dir.Normal;
+            var side = CrossVector(dir, Vector3.Up);
+            if (side.LengthSquared <= 0.001f)
+                side = CrossVector(dir, Vector3.Right);
+
+            side = side.LengthSquared > 0.001f ? side.Normal : Vector3.Right;
+            var up = CrossVector(side, dir);
+            up = up.LengthSquared > 0.001f ? up.Normal : Vector3.Up;
+
+            var offset = (side * (Hash01(seed + 8.8f) - 0.5f) + up * (Hash01(seed + 12.2f) - 0.5f)) * amplitude;
+            var b = LerpVector(a, c, 0.5f) + offset;
+
+            Gizmo.Draw.Line(a, b);
+            Gizmo.Draw.Line(b, c);
+        }
+    }
+
     private static Vector3 CubicBezier(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
     {
         var u = 1f - t;
@@ -1192,6 +1750,21 @@ public sealed class Player : Component, ICustomDamagable
     private static Vector3 LerpVector(Vector3 a, Vector3 b, float t)
     {
         return a + (b - a) * t;
+    }
+
+    private static Vector3 CrossVector(Vector3 a, Vector3 b)
+    {
+        return new Vector3(
+            a.y * b.z - a.z * b.y,
+            a.z * b.x - a.x * b.z,
+            a.x * b.y - a.y * b.x
+        );
+    }
+
+    private static float Hash01(float value)
+    {
+        var s = MathF.Sin(value * 12.9898f) * 43758.5453f;
+        return s - MathF.Floor(s);
     }
 
 
@@ -1463,6 +2036,7 @@ public sealed class Player : Component, ICustomDamagable
                 CurrentWeapon = null;
                 CurrentInventorySlotIndex = -1;
                 CurrentWeaponItemId = null;
+                HostSetEquippedWeaponItemId(null);
                 RpcSetHoldType(Renderer, 0);
             }
 
@@ -1558,6 +2132,7 @@ public sealed class Player : Component, ICustomDamagable
 
         IsArrested = true;
         ArrestTimeUntilRelease = ArrestDurationSeconds;
+        HostSetEquippedWeaponItemId(null);
 
         var pos = ArrestSpawnPoint.IsValid() ? ArrestSpawnPoint.WorldPosition : WorldPosition;
         var rot = ArrestSpawnPoint.IsValid() ? ArrestSpawnPoint.WorldRotation : WorldRotation;

@@ -50,7 +50,7 @@ Hud {
 	.job-name {
 		flex-grow: 1;
 		font-size: 16px;
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-weight: 600;
 		color: rgba(255, 255, 255, 0.92);
 	}
@@ -68,7 +68,7 @@ Hud {
 
 	.money-value {
 		font-size: 18px;
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-weight: 700;
 		color: rgba(255, 255, 255, 0.95);
 		flex-shrink: 0;
@@ -101,7 +101,7 @@ Hud {
 
 	.player-name {
 		font-size: 15px;
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-weight: 600;
 		color: rgba(255, 255, 255, 0.95);
 		margin-bottom: 8px;
@@ -151,7 +151,7 @@ Hud {
 		top: 0;
 		bottom: 0;
 		font-size: 13px;
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-weight: 700;
 		color: rgba(255, 255, 255, 0.95);
 		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
@@ -170,16 +170,66 @@ Hud {
 
 	.arrest-title {
 		font-size: 15px;
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-weight: 700;
 		color: rgba(255, 255, 255, 0.95);
-		letter-spacing: 1px;
+		letter-spacing: 0;
 	}
 
 	.arrest-timer {
 		font-size: 18px;
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-weight: 700;
 		color: rgba(255, 255, 255, 0.95);
+	}
+
+	.death-screen {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba(18, 22, 25, 0.42);
+	}
+
+	.death-window {
+		width: 380px;
+		min-height: 156px;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 26px 30px;
+		background-color: rgba(18, 22, 25, 0.94);
+		border: 1px solid rgba(255, 67, 108, 0.78);
+		border-top: 4px solid #ff436c;
+		border-radius: 8px;
+		box-shadow: 0 18px 48px rgba(0, 0, 0, 0.5);
+	}
+
+	.death-title {
+		font-size: 24px;
+		font-family: Montserrat;
+		font-weight: 700;
+		color: #ff436c;
+		margin-bottom: 12px;
+	}
+
+	.death-message {
+		max-width: 100%;
+		font-size: 16px;
+		font-family: Montserrat;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.94);
+		text-align: center;
+		margin-bottom: 16px;
+	}
+
+	.death-respawn {
+		font-size: 14px;
+		font-family: Montserrat;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.72);
 	}
 }

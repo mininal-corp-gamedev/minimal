@@ -33,6 +33,16 @@
 			</div>
 		}
 	</div>
+	@if ( Player.Local?.IsDead == true )
+	{
+		<div class="death-screen">
+			<div class="death-window">
+				<div class="death-title">Вы погибли</div>
+				<div class="death-message">@DeathMessage</div>
+				<div class="death-respawn">Респавн через @DeathSecondsLeft s</div>
+			</div>
+		</div>
+	}
 </root>
 
 @code
@@ -47,12 +57,29 @@
 		? Math.Max( 0, (int)Math.Ceiling( (float)Player.Local.ArrestTimeUntilRelease ) )
 		: 0;
 
-	protected override int BuildHash() => System.HashCode.Combine(
-		Player.Local?.Money ?? 0,
-		Player.Local?.Health ?? 0f,
-		Player.Local?.Job?.JobDefinition?.Header,
-		Connection.Local?.DisplayName,
-		Game.SteamId,
-		Player.Local?.IsArrested ?? false,
-		ArrestSecondsLeft );
+	int DeathSecondsLeft => Player.Local != null
+		? Math.Max( 0, (int)Math.Ceiling( (float)Player.Local.DeathTimeUntilRespawn ) )
+		: 0;
+
+	string DeathMessage => string.IsNullOrWhiteSpace( Player.Local?.DeathMessage )
+		? "Вы умерли."
+		: Player.Local.DeathMessage;
+
+	protected override int BuildHash()
+	{
+		var hash = System.HashCode.Combine(
+			Player.Local?.Money ?? 0,
+			Player.Local?.Health ?? 0f,
+			Player.Local?.Job?.JobDefinition?.Header,
+			Connection.Local?.DisplayName,
+			Game.SteamId,
+			Player.Local?.IsArrested ?? false,
+			ArrestSecondsLeft );
+
+		return System.HashCode.Combine(
+			hash,
+			Player.Local?.IsDead ?? false,
+			DeathSecondsLeft,
+			Player.Local?.DeathMessage );
+	}
 }

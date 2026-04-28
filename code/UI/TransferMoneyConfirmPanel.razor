@@ -96,12 +96,25 @@
 		return true;
 	}
 
+		private void SetOpen( bool open )
+	{
+		IsOpen = open;
+
+		var crosshair = Scene.GetAllComponents<Crosshair>().FirstOrDefault();
+		if ( crosshair is not null )
+			crosshair.SetVisible( !open );
+
+	#pragma warning disable CS0612
+		Mouse.Visible = open;
+	#pragma warning restore CS0612
+	}
+
 	private void OpenInternal( long targetSteamId, string targetName )
 	{
 		TargetSteamId = targetSteamId;
 		TargetName = string.IsNullOrWhiteSpace( targetName ) ? "Игрок" : targetName;
 		AmountInput = "";
-		IsOpen = true;
+		SetOpen(true);
 
 #pragma warning disable CS0612
 		Mouse.Visible = true;
@@ -110,7 +123,7 @@
 
 	private void Close()
 	{
-		IsOpen = false;
+		SetOpen(false);
 		FocusSinkRef?.Focus();
 
 #pragma warning disable CS0612

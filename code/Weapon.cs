@@ -133,6 +133,7 @@ public class Weapon : Component
     /// <summary>Можно ли сейчас произвести выстрел. Переопределяй в наследниках для своей логики.</summary>
     protected virtual bool CanFire()
     {
+        if (Player.Local is null || !Player.Local.IsAlive) return false;
         if (!_timeUntilNextFire) return false;
         if (State == WeaponState.Reload) return false;
         if (UsesAmmunition && Ammo <= 0) return false;

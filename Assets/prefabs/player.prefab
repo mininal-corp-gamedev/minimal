@@ -36,7 +36,10 @@
           "component_type": "Dresser"
         },
         "HitSound": "sounds/voicer-lines/hit.sound",
-        "ItemDropPrefab": null,
+        "ItemDropPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefabs/item.prefab"
+        },
         "Job": {
           "_type": "component",
           "component_id": "0c829d66-91b8-4ffc-b625-7f7e40272131",
@@ -45,7 +48,10 @@
         },
         "MaxDoors": 8,
         "MaxProps": 20,
-        "MoneyDropPrefab": null,
+        "MoneyDropPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefabs/money.prefab"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -313,7 +319,7 @@
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
-            "BodyGroups": 681,
+            "BodyGroups": 649,
             "BoneMergeTarget": null,
             "CreateAttachments": false,
             "CreateBoneObjects": false,
@@ -353,7 +359,77 @@
             "UseAnimGraph": true
           }
         ],
-        "Children": []
+        "Children": [
+          {
+            "__guid": "c9325149-32cb-48a3-94e5-b03660e4795c",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Clothing - y_front_pants_white",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "clothing",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Sandbox.SkinnedModelRenderer",
+                "__guid": "483ad6bd-e965-4bfd-af1b-875ac0cbcf62",
+                "__enabled": true,
+                "Flags": 0,
+                "AnimationGraph": null,
+                "BodyGroups": 18446744073709551615,
+                "BoneMergeTarget": {
+                  "_type": "component",
+                  "component_id": "5a0e0ab6-7965-4d83-97e7-f8d9bce09def",
+                  "go": "f907b6cc-697d-4a0e-aa04-9d3cb163e166",
+                  "component_type": "SkinnedModelRenderer"
+                },
+                "CreateAttachments": false,
+                "CreateBoneObjects": false,
+                "LodOverride": null,
+                "MaterialGroup": null,
+                "MaterialOverride": null,
+                "Materials": null,
+                "Model": "models/citizen_clothes/underwear/y_front_pants/models/y_front_pants_m_human.vmdl",
+                "Morphs": {},
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Parameters": {
+                  "bools": {},
+                  "ints": {},
+                  "floats": {},
+                  "vectors": {},
+                  "rotations": {}
+                },
+                "PlaybackRate": 1,
+                "RenderOptions": {
+                  "GameLayer": true,
+                  "OverlayLayer": false,
+                  "BloomLayer": false,
+                  "AfterUILayer": false
+                },
+                "RenderType": "On",
+                "Sequence": {
+                  "Name": null,
+                  "Looping": true,
+                  "Blending": false
+                },
+                "Tint": "1,1,1,1",
+                "UseAnimGraph": true
+              }
+            ],
+            "Children": []
+          }
+        ]
       },
       {
         "__guid": "6495156d-198d-487e-9d6a-d7d5b14a6cb4",

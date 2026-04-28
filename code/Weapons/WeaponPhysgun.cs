@@ -28,6 +28,8 @@ namespace Minimal.Weapons;
 /// </summary>
 public sealed class WeaponPhysgun : Weapon
 {
+    private const string HeldCollisionTag = "physgun_held";
+
     [Property, Category("Physgun")] public float MaxRange { get; set; } = 1024f;
     [Property, Category("Physgun")] public float MinHoldDistance { get; set; } = 60f;
     [Property, Category("Physgun")] public float MaxHoldDistance { get; set; } = 1024f;
@@ -37,10 +39,18 @@ public sealed class WeaponPhysgun : Weapon
     [Property, Category("Physgun")] public float LaunchForce { get; set; } = 1500f;
     [Property, Category("Physgun")] public float SnapAngleDegrees { get; set; } = 45f;
     [Property, Category("Physgun")] public float RotationLerp { get; set; } = 0.5f;
+    [Property, Category("Physgun")] public float SeekRadius { get; set; } = 28f;
     [Property, Category("Physgun Beam")] public float BeamMaxLength { get; set; } = 1024f;
     [Property, Category("Physgun Beam")] public float BeamSag { get; set; } = 48f;
     [Property, Category("Physgun Beam")] public float BeamMoveBendScale { get; set; } = 0.035f;
     [Property, Category("Physgun Beam")] public float BeamMaxBend { get; set; } = 140f;
+    [Property, Category("Physgun Beam")] public float BeamSeekIdleBend { get; set; } = 18f;
+    [Property, Category("Physgun Beam")] public float BeamSeekNoiseSpeed { get; set; } = 5f;
+    [Property, Category("Physgun Safety")] public float ReleasePlayerPadding { get; set; } = 6f;
+    [Property, Category("Physgun Safety")] public float ReleasePushSpeed { get; set; } = 120f;
+    [Property, Category("Physgun Safety")] public int ReleaseMaxResolveIterations { get; set; } = 6;
+    [Property, Category("Physgun Safety")] public float HeldPlayerPadding { get; set; } = 12f;
+    [Property, Category("Physgun Safety")] public int HeldMaxResolveIterations { get; set; } = 4;
 
     // Physgun не использует систему патронов и перезарядку.
     protected override bool UseDefaultCombatInput => false;
@@ -48,6 +58,8 @@ public sealed class WeaponPhysgun : Weapon
     private enum GrabMode
     {
         None,
+        /// <summary>ЛКМ зажат, луч активен, ждём первый валидный объект под прицелом.</summary>
+        PhysgunSeek,
         /// <summary>ЛКМ — обычный physgun: держим на расстоянии _grabDistance.</summary>
         Physgun,
         /// <summary>ПКМ — gravitygun: подтягиваем близко и держим.</summary>
@@ -90,6 +102,8 @@ public sealed class WeaponPhysgun : Weapon
     private Vector3 _beamLastEnd;
     private Vector3 _beamBend;
     private bool _beamHasLastEnd;
+    private bool _grabbedHadHeldCollisionTag;
+    private bool _beamSeekActive;
 
     protected override void OnWeaponStart()
     {
@@ -100,13 +114,13 @@ public sealed class WeaponPhysgun : Weapon
 
     protected override void OnDisabled()
     {
-        ResetGrab();
+        ResetGrab(resolvePlayerOverlap: true);
     }
 
     protected override void OnWeaponFixedUpdate()
     {
         if (!Player.Local.IsValid()) return;
-        if (Player.Local.IsArrested) { ResetGrab(); return; }
+        if (Player.Local.IsArrested) { ResetGrab(resolvePlayerOverlap: true); return; }
         if (!Player.Local.Controller.IsValid()) return;
 
         ValidateGrabbed();
@@ -125,7 +139,7 @@ public sealed class WeaponPhysgun : Weapon
 
     private void ValidateGrabbed()
     {
-        if (_mode == GrabMode.None) return;
+        if (_mode == GrabMode.None || _mode == GrabMode.PhysgunSeek) return;
 
         if (!_grabbed.IsValid() || !_grabbed.GameObject.IsValid())
         {
@@ -168,10 +182,16 @@ public sealed class WeaponPhysgun : Weapon
 
             if (lmbPressed)
             {
-                TryStartGrab(GrabMode.Physgun);
+                BeginPhysgunSeek();
                 return;
             }
 
+            return;
+        }
+
+        if (_mode == GrabMode.PhysgunSeek)
+        {
+            HandlePhysgunSeekInput(lmbDown);
             return;
         }
 
@@ -218,13 +238,24 @@ public sealed class WeaponPhysgun : Weapon
         // живая дельта мыши и можно корректно зафиксировать камеру.
     }
 
+    private void HandlePhysgunSeekInput(bool lmbDown)
+    {
+        if (!lmbDown)
+        {
+            EndSeek();
+            return;
+        }
+
+        TryStartGrab(GrabMode.Physgun);
+    }
+
     private void HandleGravityGunInput(bool rmbDown, bool lmbPressed)
     {
         // ЛКМ — швырнуть.
         if (lmbPressed)
         {
             LaunchGrabbed();
-            EndGrab();
+            EndGrab(preserveVelocity: true);
             return;
         }
 
@@ -326,47 +357,32 @@ public sealed class WeaponPhysgun : Weapon
 
     // ============================ ЗАХВАТ ============================
 
+    private void BeginPhysgunSeek()
+    {
+        _mode = GrabMode.PhysgunSeek;
+        _beamSeekActive = true;
+        TryStartGrab(GrabMode.Physgun);
+    }
+
+    private void EndSeek()
+    {
+        ResetGrab();
+        _preventReselect = true;
+    }
+
     private bool TryStartGrab(GrabMode mode)
     {
         var eye = Player.Local.Controller.EyeTransform;
         var origin = eye.Position;
         var dir = eye.Forward;
 
-        var tr = Scene.Trace
-            .Ray(origin, origin + dir * MaxRange)
-            .IgnoreGameObjectHierarchy(Player.Local.GameObject)
-            .WithoutTags("bullet", "player")
-            .Run();
-
-        if (!tr.Hit) return false;
-        if (!tr.GameObject.IsValid()) return false;
-
-        // Ищем Rigidbody на самом GameObject или его родителях (на случай комплексных префабов).
-        var rb = tr.GameObject.Components.Get<Rigidbody>(FindMode.EverythingInSelfAndAncestors);
-        if (!rb.IsValid()) return false;
-
-        // Только объекты, которыми владеет локальный игрок.
-        if (rb.GameObject.Network.Owner != Connection.Local) return false;
-
-        // Фильтр по типу объекта зависит от режима:
-        //  * Physgun (ЛКМ) — только кастомные пропы (PropCustom). Денежные принтеры
-        //    и прочие игровые сущности руками держать нельзя.
-        //  * GravityGun (ПКМ) — пропы И денежные принтеры (MoneyPrinterBase).
-        //    Принтер берётся только так, по требованию дизайна.
-        var hasPropCustom = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors).IsValid();
-        var hasMoneyPrinter = rb.GameObject.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors).IsValid();
-
-        if (mode == GrabMode.Physgun)
-        {
-            if (!hasPropCustom) return false;
-        }
-        else // GravityGun
-        {
-            if (!hasPropCustom && !hasMoneyPrinter) return false;
-        }
+        if (!TryFindGrabTarget(mode, origin, dir, out var tr, out var rb))
+            return false;
 
         _grabbed = rb;
         _mode = mode;
+        _beamSeekActive = false;
+        EnableHeldCollisionMode(rb);
 
         var bodyTransform = rb.WorldTransform;
 
@@ -405,25 +421,271 @@ public sealed class WeaponPhysgun : Weapon
         return true;
     }
 
-    private void EndGrab()
+    private bool TryFindGrabTarget(GrabMode mode, Vector3 origin, Vector3 dir, out SceneTraceResult tr, out Rigidbody rb)
     {
-        ResetGrab();
+        tr = TraceGrabRay(origin, dir, 0f);
+        if (TryGetGrabRigidbody(tr, mode, out rb))
+            return true;
+
+        // Если центральный луч уже упёрся в мир, не даём радиусному trace'у
+        // "магнититься" к соседним поверхностям и расходиться с визуальным лучом.
+        if (tr.Hit || mode != GrabMode.Physgun || SeekRadius <= 0f)
+        {
+            rb = null;
+            return false;
+        }
+
+        tr = TraceGrabRay(origin, dir, SeekRadius);
+        return TryGetGrabRigidbody(tr, mode, out rb);
+    }
+
+    private SceneTraceResult TraceGrabRay(Vector3 origin, Vector3 dir, float radius)
+    {
+        return Scene.Trace
+            .Ray(origin, origin + dir * MaxRange)
+            .Radius(MathF.Max(0f, radius))
+            .IgnoreGameObjectHierarchy(Player.Local.GameObject)
+            .WithoutTags("bullet", "player")
+            .Run();
+    }
+
+    private bool TryGetGrabRigidbody(SceneTraceResult tr, GrabMode mode, out Rigidbody rb)
+    {
+        rb = null;
+
+        if (!tr.Hit || !tr.GameObject.IsValid())
+            return false;
+
+        // Ищем Rigidbody на самом GameObject или его родителях (на случай комплексных префабов).
+        rb = tr.GameObject.Components.Get<Rigidbody>(FindMode.EverythingInSelfAndAncestors);
+        if (!rb.IsValid())
+            return false;
+
+        // Только объекты, которыми владеет локальный игрок.
+        if (rb.GameObject.Network.Owner != Connection.Local)
+            return false;
+
+        // Фильтр по типу объекта зависит от режима:
+        //  * Physgun (ЛКМ) — только кастомные пропы (PropCustom). Денежные принтеры
+        //    и прочие игровые сущности руками держать нельзя.
+        //  * GravityGun (ПКМ) — пропы И денежные принтеры (MoneyPrinterBase).
+        //    Принтер берётся только так, по требованию дизайна.
+        var hasPropCustom = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors).IsValid();
+        var hasMoneyPrinter = rb.GameObject.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors).IsValid();
+
+        if (mode == GrabMode.Physgun)
+            return hasPropCustom;
+
+        return hasPropCustom || hasMoneyPrinter;
+    }
+
+    private void EndGrab(bool preserveVelocity = false)
+    {
+        ResetGrab(resolvePlayerOverlap: true, preserveVelocity: preserveVelocity);
         _preventReselect = true;
     }
 
-    private void ResetGrab()
+    private void ResetGrab(bool resolvePlayerOverlap = false, bool preserveVelocity = false)
     {
+        if (resolvePlayerOverlap)
+            ResolveGrabbedPlayerOverlaps(preserveVelocity);
+
+        DisableHeldCollisionMode(_grabbed);
+
         _mode = GrabMode.None;
         _grabbed = null;
         _grabDistance = 0f;
         _grabOffset = Rotation.Identity;
         _localOffset = Vector3.Zero;
+        _beamSeekActive = false;
         ResetBeamState();
         UnlockSpinCamera();
     }
 
+    private void EnableHeldCollisionMode(Rigidbody rb)
+    {
+        if (!rb.IsValid() || !rb.GameObject.IsValid()) return;
+
+        _grabbedHadHeldCollisionTag = rb.GameObject.Tags.Has(HeldCollisionTag);
+        rb.GameObject.Tags.Add(HeldCollisionTag);
+    }
+
+    private void DisableHeldCollisionMode(Rigidbody rb)
+    {
+        if (rb.IsValid() && rb.GameObject.IsValid() && !_grabbedHadHeldCollisionTag)
+            rb.GameObject.Tags.Remove(HeldCollisionTag);
+
+        _grabbedHadHeldCollisionTag = false;
+    }
+
+    private void ResolveGrabbedPlayerOverlaps(bool preserveVelocity)
+    {
+        var rb = _grabbed;
+        if (!rb.IsValid() || !rb.GameObject.IsValid()) return;
+
+        var moved = false;
+        var maxIterations = Math.Max(1, ReleaseMaxResolveIterations);
+
+        for (var iteration = 0; iteration < maxIterations; iteration++)
+        {
+            if (!TryFindPlayerReleaseOffset(rb, out var offset))
+                break;
+
+            rb.WorldPosition += offset;
+            moved = true;
+        }
+
+        if (!moved)
+            return;
+
+        if (!preserveVelocity)
+        {
+            rb.Velocity = Vector3.Zero;
+            rb.AngularVelocity = Vector3.Zero;
+            return;
+        }
+
+        if (rb.Velocity.LengthSquared <= 1f)
+            rb.Velocity = GetSafeReleaseDirection(rb) * ReleasePushSpeed;
+    }
+
+    private bool TryFindPlayerReleaseOffset(Rigidbody rb, out Vector3 offset)
+    {
+        offset = Vector3.Zero;
+        var propBounds = GetRigidBodyBounds(rb);
+
+        foreach (var go in Scene.GetAllObjects(true))
+        {
+            if (!go.Components.TryGet<Player>(out var player))
+                continue;
+
+            if (!player.IsValid() || !player.Controller.IsValid())
+                continue;
+
+            var playerBounds = player.Controller.BodyBox().Grow(ReleasePlayerPadding);
+            if (!propBounds.Overlaps(playerBounds))
+                continue;
+
+            offset = GetHorizontalSeparationOffset(propBounds, playerBounds, ReleasePlayerPadding);
+            if (offset.LengthSquared <= 0.001f)
+                offset = GetFallbackReleaseDirection(rb, player) * MathF.Max(16f, ReleasePlayerPadding + 8f);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private BBox GetRigidBodyBounds(Rigidbody rb)
+    {
+        if (rb.PhysicsBody is not null)
+            return rb.PhysicsBody.GetBounds();
+
+        return rb.GetWorldBounds();
+    }
+
+    private Vector3 GetHorizontalSeparationOffset(BBox propBounds, BBox playerBounds, float padding)
+    {
+        padding = MathF.Max(0f, padding);
+
+        var moveRight = playerBounds.Maxs.x - propBounds.Mins.x + padding;
+        var moveLeft = playerBounds.Mins.x - propBounds.Maxs.x - padding;
+        var moveForward = playerBounds.Maxs.y - propBounds.Mins.y + padding;
+        var moveBack = playerBounds.Mins.y - propBounds.Maxs.y - padding;
+
+        var moveX = MathF.Abs(moveRight) < MathF.Abs(moveLeft) ? moveRight : moveLeft;
+        var moveY = MathF.Abs(moveForward) < MathF.Abs(moveBack) ? moveForward : moveBack;
+
+        return MathF.Abs(moveX) < MathF.Abs(moveY)
+            ? new Vector3(moveX, 0f, 0f)
+            : new Vector3(0f, moveY, 0f);
+    }
+
+    private Vector3 GetFallbackReleaseDirection(Rigidbody rb, Player player)
+    {
+        var away = rb.WorldPosition - player.WorldPosition;
+        away.z = 0f;
+
+        if (away.LengthSquared > 0.001f)
+            return away.Normal;
+
+        if (Player.Local.IsValid() && Player.Local.Controller.IsValid())
+        {
+            var forward = Player.Local.Controller.EyeTransform.Forward;
+            forward.z = 0f;
+            if (forward.LengthSquared > 0.001f)
+                return forward.Normal;
+        }
+
+        return Vector3.Right;
+    }
+
+    private Vector3 GetSafeReleaseDirection(Rigidbody rb)
+    {
+        if (!Player.Local.IsValid())
+            return Vector3.Right;
+
+        var away = rb.WorldPosition - Player.Local.WorldPosition;
+        away.z = 0f;
+        return away.LengthSquared > 0.001f ? away.Normal : Vector3.Right;
+    }
+
+    private Vector3 ResolveHeldPlayerOverlaps(Rigidbody rb, Vector3 desiredBodyPos)
+    {
+        if (!rb.IsValid())
+            return desiredBodyPos;
+
+        var currentBounds = GetRigidBodyBounds(rb);
+        var desiredOffset = desiredBodyPos - rb.WorldPosition;
+        var resolvedOffset = desiredOffset;
+        var maxIterations = Math.Max(1, HeldMaxResolveIterations);
+
+        for (var iteration = 0; iteration < maxIterations; iteration++)
+        {
+            var desiredBounds = currentBounds.Translate(resolvedOffset);
+            if (!TryFindPlayerOverlapOffset(desiredBounds, MathF.Max(ReleasePlayerPadding, HeldPlayerPadding), out var pushOffset))
+                break;
+
+            resolvedOffset += pushOffset;
+        }
+
+        return rb.WorldPosition + resolvedOffset;
+    }
+
+    private bool TryFindPlayerOverlapOffset(BBox propBounds, float padding, out Vector3 offset)
+    {
+        offset = Vector3.Zero;
+
+        foreach (var go in Scene.GetAllObjects(true))
+        {
+            if (!go.Components.TryGet<Player>(out var player))
+                continue;
+
+            if (!player.IsValid() || !player.Controller.IsValid())
+                continue;
+
+            var playerBounds = player.Controller.BodyBox().Grow(padding);
+            if (!propBounds.Overlaps(playerBounds))
+                continue;
+
+            offset = GetHorizontalSeparationOffset(propBounds, playerBounds, padding);
+            if (offset.LengthSquared <= 0.001f)
+                offset = GetFallbackReleaseDirection(_grabbed, player) * MathF.Max(16f, padding + 8f);
+
+            return true;
+        }
+
+        return false;
+    }
+
     private void UpdateBeamState()
     {
+        if (_mode == GrabMode.PhysgunSeek && _beamSeekActive)
+        {
+            UpdateSeekingBeamState();
+            return;
+        }
+
         if (_mode == GrabMode.None || !_grabbed.IsValid())
         {
             ResetBeamState();
@@ -454,6 +716,55 @@ public sealed class WeaponPhysgun : Weapon
 
         _beamBend = LerpVector(_beamBend, desiredBend, 0.35f);
         player.SetPhysgunBeam(true, start, end, _beamBend);
+    }
+
+    private void UpdateSeekingBeamState()
+    {
+        var player = Player.Local;
+        if (!player.IsValid() || !player.Controller.IsValid())
+        {
+            ResetBeamState();
+            return;
+        }
+
+        var eye = player.Controller.EyeTransform;
+        var start = ShotPos.IsValid() ? ShotPos.WorldPosition : eye.Position;
+        var end = eye.Position + eye.Forward * MathF.Max(1f, MathF.Min(MaxRange, BeamMaxLength));
+
+        var visualTrace = Scene.Trace
+            .Ray(eye.Position, eye.Position + eye.Forward * MaxRange)
+            .IgnoreGameObjectHierarchy(player.GameObject)
+            .WithoutTags("bullet", "player")
+            .Run();
+
+        if (visualTrace.Hit)
+            end = ClampBeamEnd(start, visualTrace.HitPosition);
+
+        var desiredBend = GetSeekingBeamBend(eye, start, end);
+        _beamBend = LerpVector(_beamBend, desiredBend, 0.25f);
+        _beamLastEnd = end;
+        _beamHasLastEnd = true;
+        player.SetPhysgunBeam(true, start, end, _beamBend);
+    }
+
+    private Vector3 GetSeekingBeamBend(Transform eye, Vector3 start, Vector3 end)
+    {
+        var delta = end - start;
+        var dir = delta.LengthSquared > 0.001f ? delta.Normal : eye.Forward;
+        var side = CrossVector(dir, Vector3.Up);
+        if (side.LengthSquared <= 0.001f)
+            side = CrossVector(dir, Vector3.Right);
+
+        side = side.LengthSquared > 0.001f ? side.Normal : Vector3.Right;
+        var up = CrossVector(side, dir);
+        up = up.LengthSquared > 0.001f ? up.Normal : Vector3.Up;
+
+        var t = Time.Now * MathF.Max(0.1f, BeamSeekNoiseSpeed);
+        var lengthFactor = MathF.Min(1f, delta.Length / MathF.Max(1f, BeamMaxLength));
+        var pulse = 0.75f + MathF.Sin(t * 1.7f) * 0.25f;
+        var idleBend = MathF.Max(0f, BeamSeekIdleBend) * lengthFactor * pulse;
+
+        return (side * MathF.Sin(t * 1.31f) + up * MathF.Cos(t * 0.83f)) * idleBend;
     }
 
     private Vector3 GetBeamEndPosition()
@@ -489,6 +800,15 @@ public sealed class WeaponPhysgun : Weapon
     private static Vector3 LerpVector(Vector3 a, Vector3 b, float t)
     {
         return a + (b - a) * t;
+    }
+
+    private static Vector3 CrossVector(Vector3 a, Vector3 b)
+    {
+        return new Vector3(
+            a.y * b.z - a.z * b.y,
+            a.z * b.x - a.x * b.z,
+            a.x * b.y - a.y * b.x
+        );
     }
 
     private void ResetBeamState()
@@ -535,6 +855,7 @@ public sealed class WeaponPhysgun : Weapon
         var desiredBodyPos = targetPos - offsetWorld;
 
         var rb = _grabbed;
+        desiredBodyPos = ResolveHeldPlayerOverlaps(rb, desiredBodyPos);
 
         // Поворачиваем напрямую (плавно), угловую скорость зануляем — иначе физика будет дёргать.
         rb.WorldRotation = Rotation.Slerp(rb.WorldRotation, targetRot, MathF.Min(1f, RotationLerp));

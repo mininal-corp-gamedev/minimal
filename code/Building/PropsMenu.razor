@@ -254,14 +254,23 @@
 		LoadProps();
 	}
 
+		private void SetOpen( bool open )
+	{
+		IsOpen = open;
+
+		var crosshair = Scene.GetAllComponents<Crosshair>().FirstOrDefault();
+		if ( crosshair is not null )
+			crosshair.SetVisible( !open );
+
+	#pragma warning disable CS0612
+		Mouse.Visible = open;
+	#pragma warning restore CS0612
+	}
+
 	protected override void OnUpdate()
 	{
 		if ( Input.Pressed( "PropsMenu" ) )
-			IsOpen = !IsOpen;
-
-#pragma warning disable CS0612
-		Mouse.Visible = IsOpen;
-#pragma warning restore CS0612
+			SetOpen(!IsOpen);
 	}
 
 	protected override int BuildHash()

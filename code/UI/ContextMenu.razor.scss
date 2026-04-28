@@ -79,17 +79,19 @@ ContextMenu {
 		align-items: center;
 		justify-content: center;
 		background-color: transparent;
+		border: 1px solid transparent;
 		border-radius: 12px;
 		padding: 8px;
-		transition: all 0.08s ease-out;
+		transition: background-color 0.08s ease-out, border-color 0.08s ease-out;
 
 		&:hover {
 			background-color: $context-pink-soft;
-			transform: scale( 1.06 );
+			border-color: rgba(255, 215, 226, 0.22);
 		}
 
 		&.active {
 			background-color: rgba(255, 67, 108, 0.28);
+			border-color: rgba(255, 215, 226, 0.32);
 		}
 	}
 
@@ -99,7 +101,7 @@ ContextMenu {
 		transform: translateX( -50% );
 
 		&:hover {
-			transform: translateX( -50% ) scale( 1.06 );
+			transform: translateX( -50% );
 		}
 	}
 
@@ -109,7 +111,7 @@ ContextMenu {
 		transform: translateY( -50% );
 
 		&:hover {
-			transform: translateY( -50% ) scale( 1.06 );
+			transform: translateY( -50% );
 		}
 	}
 
@@ -119,7 +121,7 @@ ContextMenu {
 		transform: translateX( -50% );
 
 		&:hover {
-			transform: translateX( -50% ) scale( 1.06 );
+			transform: translateX( -50% );
 		}
 	}
 
@@ -129,7 +131,7 @@ ContextMenu {
 		transform: translateY( -50% );
 
 		&:hover {
-			transform: translateY( -50% ) scale( 1.06 );
+			transform: translateY( -50% );
 		}
 	}
 
@@ -161,18 +163,18 @@ ContextMenu {
 	}
 
 	.action-title {
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-size: 14px;
-		font-weight: 800;
+		font-weight: 700;
 		color: $context-text;
 		text-align: center;
 		text-transform: uppercase;
 		white-space: nowrap;
-		text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
 	}
 
 	.action-subtitle {
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-size: 11px;
 		font-weight: 600;
 		color: $context-dim;
@@ -197,34 +199,14 @@ ContextMenu {
 		border: 1px solid rgba(255, 215, 226, 0.35);
 	}
 
-	.center-kicker {
-		font-family: Poppins;
-		font-size: 10px;
-		font-weight: 800;
-		color: rgba(255, 255, 255, 0.62);
-		text-align: center;
-		text-transform: uppercase;
-		margin-bottom: 4px;
-	}
-
-	.center-title {
-		font-family: Poppins;
-		font-size: 14px;
-		font-weight: 900;
+	.center-label {
+		font-family: Montserrat;
+		font-size: 18px;
+		font-weight: 700;
 		color: $context-text;
 		text-align: center;
-		text-transform: uppercase;
-		margin-bottom: 6px;
 		white-space: nowrap;
-	}
-
-	.center-text {
-		font-family: Poppins;
-		font-size: 11px;
-		font-weight: 600;
-		line-height: 15px;
-		color: rgba(255, 255, 255, 0.66);
-		text-align: center;
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.42);
 	}
 
 	.context-hint {
@@ -232,7 +214,7 @@ ContextMenu {
 		left: 50%;
 		bottom: 54px;
 		transform: translateX( -50% );
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-size: 14px;
 		font-weight: 700;
 		color: rgba(255, 255, 255, 0.9);

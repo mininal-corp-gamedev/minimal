@@ -1,0 +1,53 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="risk-ladder-panel @VisualState">
+		<div class="topline">
+			<div class="title">Risk Ladder</div>
+			<div class="step">STEP @Step</div>
+		</div>
+
+		<div class="bank-block">
+			<div class="label">Bank</div>
+			<div class="bank">$@Bank</div>
+		</div>
+
+		<div class="next-row">
+			<div class="next-card">
+				<div class="label">Next</div>
+				<div class="value">@NextText</div>
+			</div>
+			<div class="next-card">
+				<div class="label">Chance</div>
+				<div class="value">@ChanceText</div>
+			</div>
+		</div>
+
+		<div class="status">@StatusText</div>
+
+		<div class="actions">
+			<div class="action risk">E Risk</div>
+			<div class="action cashout">Cashout Button</div>
+		</div>
+	</div>
+</root>
+
+@code
+{
+	RiskLadderSlotMachine Machine => Components.Get<RiskLadderSlotMachine>( FindMode.EverythingInSelfAndAncestors );
+
+	int Step => Math.Max( 0, Machine?.LocalStep ?? 0 );
+	int Bank => Math.Max( 0, Machine?.LocalBank ?? 0 );
+	int NextPayout => Math.Max( 0, Machine?.LocalNextPayout ?? 0 );
+	bool AtMaxStep => Machine?.LocalAtMaxStep ?? false;
+	string NextText => AtMaxStep ? "MAX" : $"${NextPayout}";
+	string ChanceText => AtMaxStep ? "Cashout" : Math.Clamp( Machine?.LocalNextWinChance ?? 0f, 0f, 1f ).ToString( "P0" );
+	string StatusText => string.IsNullOrWhiteSpace( Machine?.LocalStatusText ) ? "Ready" : Machine.LocalStatusText;
+	string VisualState => Machine?.LocalVisualState ?? "idle";
+
+	protected override int BuildHash() => HashCode.Combine( Step, Bank, NextPayout, AtMaxStep, ChanceText, StatusText, VisualState );
+}

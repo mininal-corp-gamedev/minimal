@@ -56,9 +56,9 @@ InventoryPanel {
 	}
 
 	.inv-title {
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-size: 20px;
-		font-weight: 800;
+		font-weight: 700;
 		color: $inv-text;
 		text-transform: uppercase;
 	}
@@ -71,7 +71,7 @@ InventoryPanel {
 		justify-content: center;
 		background-color: rgba(255, 255, 255, 0.06);
 		border-radius: 8px;
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-size: 16px;
 		font-weight: 700;
 		color: rgba(255, 255, 255, 0.6);
@@ -84,13 +84,13 @@ InventoryPanel {
 	}
 
 	.inv-section-label {
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-size: 11px;
 		font-weight: 700;
 		color: $inv-dim;
 		text-transform: uppercase;
 		margin-bottom: 10px;
-		letter-spacing: 1px;
+		letter-spacing: 0;
 	}
 
 	.inv-row {
@@ -142,9 +142,9 @@ InventoryPanel {
 		position: absolute;
 		right: 4px;
 		bottom: 2px;
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-size: 12px;
-		font-weight: 800;
+		font-weight: 700;
 		color: rgba(255, 255, 255, 0.9);
 		text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
 		pointer-events: none;
@@ -163,7 +163,7 @@ InventoryPanel {
 	}
 
 	.tip-name {
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-size: 13px;
 		font-weight: 700;
 		color: rgba(255, 255, 255, 0.95);
@@ -171,7 +171,7 @@ InventoryPanel {
 	}
 
 	.tip-count {
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-size: 11px;
 		font-weight: 600;
 		color: rgba(255, 255, 255, 0.52);
@@ -196,7 +196,7 @@ InventoryPanel {
 		flex-direction: row;
 		align-items: center;
 		padding: 8px 14px;
-		font-family: Poppins;
+		font-family: Montserrat;
 		font-size: 13px;
 		font-weight: 600;
 		color: rgba(255, 255, 255, 0.88);

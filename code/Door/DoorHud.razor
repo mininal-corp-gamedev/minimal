@@ -1,0 +1,267 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( Door is null )
+	{
+	}
+	else
+	{
+		<div class="overlay">
+			<div class="panel-wrap">
+				<div class="close-row">
+					<div class="close-btn" onclick=@OnClose>✕</div>
+				</div>
+				<div class="panel">
+					@if ( Door.IsBlocked )
+					{
+						@if ( !string.IsNullOrWhiteSpace( Door.Header ) )
+						{
+							<div class="header-only">@Door.Header</div>
+						}
+					}
+					else if ( Door.HasOnlyJobs )
+					{
+						<div class="title">@Door.Header</div>
+						@if ( Door.IsLocalPlayerJobAllowed )
+						{
+							<div class="actions">
+								@if ( Door.LockState == Door.DoorLockState.Locked )
+								{
+									<button class="btn unlock" onclick=@OnUnlock>
+										<div class="btn-label">Unlock</div>
+									</button>
+								}
+								else
+								{
+									<button class="btn lock" onclick=@OnLock>
+										<div class="btn-label">Lock</div>
+									</button>
+								}
+							</div>
+						}
+					}
+					else if ( !Door.HasOwner )
+					{
+						<div class="title">@Door.Header</div>
+						<div class="actions">
+							<button class="btn buy" onclick=@OnBuy>
+								<div class="btn-label">Buy</div>
+								<div class="btn-price">$@Door.BuyPrice</div>
+							</button>
+						</div>
+					}
+					else
+					{
+						<div class="title">@Door.OwnerDisplayName</div>
+						@if ( Door.IsLocalPlayerOwner )
+						{
+							<div class="actions">
+								@if ( Door.LockState == Door.DoorLockState.Locked )
+								{
+									<button class="btn unlock" onclick=@OnUnlock>
+										<div class="btn-label">Unlock</div>
+									</button>
+								}
+								else
+								{
+									<button class="btn lock" onclick=@OnLock>
+										<div class="btn-label">Lock</div>
+									</button>
+								}
+								<button class="btn sell" onclick=@OnSell>
+									<div class="btn-label">Sell</div>
+									<div class="btn-price">$@Door.SellPrice</div>
+								</button>
+								@if ( Door.CanHaveRoommates )
+								{
+									<button class="btn roommate" onclick=@OnRoommate>
+										<div class="btn-label">Сожитель</div>
+									</button>
+								}
+							</div>
+						}
+					}
+					@if ( ShowRoommateList && Door.IsLocalPlayerOwner && Door.CanHaveRoommates )
+					{
+						<div class="roommate-list">
+							<div class="roommate-header">Сожители</div>
+							@foreach ( var conn in AvailablePlayers )
+							{
+								var sid = conn.SteamId.Value;
+								var jobName = GetPlayerJobName( conn );
+								var isOwner = sid == Door.OwnerSteamId;
+								var isRoommate = Door.IsRoommate( sid );
+								<div class="roommate-row">
+									<div class="roommate-avatar" style="background-image: url( avatar:@sid )"></div>
+									<div class="roommate-info">
+										<div class="roommate-name">@conn.DisplayName</div>
+										<div class="roommate-job">
+											@if ( isOwner )
+											{
+												<span>Владелец</span>
+											}
+											else if ( isRoommate )
+											{
+												<span>Сожитель · @jobName</span>
+											}
+											else
+											{
+												<span>@jobName</span>
+											}
+										</div>
+									</div>
+									@if ( isOwner )
+									{
+									}
+									else if ( isRoommate )
+									{
+										<button class="roommate-del-btn" onclick=@(() => OnRemoveRoommate( conn ))>Delete</button>
+									}
+									else
+									{
+										<button class="roommate-add-btn" onclick=@(() => OnAddRoommate( conn ))>Add</button>
+									}
+								</div>
+							}
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	[Property] public Door Door { get; set; }
+
+	bool IsOpen => Door is not null;
+	private TimeUntil _canOpenCooldown;
+	bool ShowRoommateList { get; set; } = false;
+	List<Connection> AvailablePlayers { get; set; } = new();
+
+	public bool CanOpen => _canOpenCooldown;
+
+	protected override void OnUpdate()
+	{
+		if ( Door is null ) return;
+
+		// Intentionally no "Reload" here: WeaponKeys opens the menu on Reload, and closing it
+		// on the same press causes a race where the panel opens and closes in the same frame.
+		if ( Input.Pressed( "Score" ) || Input.Pressed( "Jump" ) )
+		{
+			OnClose();
+		}
+	}
+
+	void OnBuy()
+	{
+		Door?.RpcRequestBuy();
+		OnClose();
+	}
+
+	void OnSell()
+	{
+		Door?.RpcRequestSell();
+		OnClose();
+	}
+
+	void OnLock()
+	{
+		Door?.RpcRequestLock();
+		OnClose();
+	}
+
+	void OnUnlock()
+	{
+		Door?.RpcRequestUnlock();
+		OnClose();
+	}
+
+	void OnRoommate()
+	{
+		ShowRoommateList = !ShowRoommateList;
+		if ( ShowRoommateList )
+			RefreshAvailablePlayers();
+	}
+
+	void RefreshAvailablePlayers()
+	{
+		AvailablePlayers = Connection.All
+			.Where( c => c is not null )
+			.OrderByDescending( c => c.SteamId.Value == (Door?.OwnerSteamId ?? 0L) )
+			.ThenBy( c => c.DisplayName )
+			.ToList();
+	}
+
+	void OnAddRoommate( Connection conn )
+	{
+		if ( conn is null || Door is null ) return;
+		Door.RpcRequestAddRoommate( conn.SteamId.Value );
+		RefreshAvailablePlayers();
+	}
+
+	void OnRemoveRoommate( Connection conn )
+	{
+		if ( conn is null || Door is null ) return;
+		Door.RpcRequestRemoveRoommate( conn.SteamId.Value );
+		RefreshAvailablePlayers();
+	}
+
+	string GetPlayerJobName( Connection connection )
+	{
+		if ( connection is null )
+			return "No Job";
+
+		return FindPlayerBySteamId( connection.SteamId.Value )?.Job?.JobDefinition?.Header ?? "No Job";
+	}
+
+	private static Player FindPlayerBySteamId( long steamId )
+	{
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return null;
+
+		foreach ( var player in scene.GetAllComponents<Player>() )
+		{
+			if ( player.GameObject.Network.Owner?.SteamId.Value == steamId )
+				return player;
+		}
+
+		return null;
+	}
+
+	void OnClose()
+	{
+		Door = null;
+		_canOpenCooldown = 0.25f;
+		ShowRoommateList = false;
+	}
+
+	protected override int BuildHash()
+	{
+		var h = new HashCode();
+		h.Add( Door );
+		h.Add( Door?.Header );
+		h.Add( Door?.IsBlocked );
+		h.Add( Door?.HasOnlyJobs );
+		h.Add( Door?.IsLocalPlayerJobAllowed );
+		h.Add( Door?.HasOwner );
+		h.Add( Door?.OwnerDisplayName );
+		h.Add( Door?.LockState );
+		h.Add( Door?.IsLocalPlayerOwner );
+		h.Add( Door?.BuyPrice );
+		h.Add( Door?.RoommateIdsSerialized );
+		h.Add( Door?.CanHaveRoommates );
+		h.Add( ShowRoommateList );
+		h.Add( AvailablePlayers.Count );
+		return h.ToHashCode();
+	}
+}

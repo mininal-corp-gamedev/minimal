@@ -1,0 +1,251 @@
+$panel-bg: rgba(12, 14, 18, 0.85);
+$panel-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+$accent-pink: #ff436c;
+$btn-bg: rgba(255, 255, 255, 0.08);
+$btn-bg-hover: rgba(255, 255, 255, 0.20);
+$btn-border: rgba(255, 255, 255, 0.14);
+$btn-border-hover: rgba(255, 255, 255, 0.40);
+
+DoorHud {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	font-family: Poppins;
+
+	.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.76);
+		justify-content: center;
+		align-items: center;
+		pointer-events: all;
+		backdrop-filter: blur(12px);
+	}
+
+	.panel-wrap {
+		flex-direction: column;
+		align-items: stretch;
+		min-width: 320px;
+		max-width: 520px;
+	}
+
+	.close-row {
+		flex-direction: row;
+		justify-content: flex-end;
+		align-items: center;
+		margin-bottom: 10px;
+		margin-right: -8px;
+	}
+
+	.panel {
+		flex-direction: column;
+		background-color: $panel-bg;
+		border-radius: 14px;
+		box-shadow: $panel-shadow;
+		padding: 24px 28px;
+		align-items: stretch;
+	}
+
+	.close-btn {
+		width: 40px;
+		height: 40px;
+		background-color: rgba(255, 67, 108, 0.20);
+		border: 2px solid rgba(255, 67, 108, 0.55);
+		border-radius: 12px;
+		font-size: 20px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		transition: background-color 0.12s linear, border-color 0.12s linear;
+		pointer-events: all;
+
+		&:hover {
+			background-color: rgba(255, 67, 108, 0.32);
+			border-color: rgba(255, 67, 108, 0.75);
+		}
+	}
+
+	.header-only {
+		padding: 16px 24px;
+		background-color: $panel-bg;
+		border-radius: 12px;
+		font-size: 24px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		box-shadow: $panel-shadow;
+		justify-content: center;
+		align-items: center;
+		white-space: nowrap;
+	}
+
+	.title {
+		font-size: 22px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 18px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.actions {
+		flex-direction: row;
+		justify-content: center;
+		align-items: stretch;
+		gap: 8px;
+	}
+
+	.btn {
+		flex-grow: 1;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 12px 16px;
+		border-radius: 10px;
+		font-size: 16px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		background-color: $btn-bg;
+		border: 2px solid $btn-border;
+		cursor: pointer;
+		transition: background-color 0.12s linear, border-color 0.12s linear, color 0.12s linear;
+
+		.btn-label {
+			justify-content: center;
+			align-items: center;
+		}
+
+		.btn-price {
+			margin-left: 8px;
+			color: $accent-pink;
+			font-weight: 800;
+			justify-content: center;
+			align-items: center;
+		}
+
+		&:hover {
+			background-color: $btn-bg-hover;
+			border-color: $btn-border-hover;
+		}
+
+		&.buy:hover {
+			background-color: rgba(255, 67, 108, 0.22);
+			border-color: $accent-pink;
+		}
+
+		&.sell:hover {
+			background-color: rgba(255, 67, 108, 0.22);
+			border-color: $accent-pink;
+		}
+
+		&.lock:hover {
+			background-color: rgba(255, 67, 108, 0.22);
+			border-color: $accent-pink;
+		}
+
+		&.unlock:hover {
+			background-color: rgba(255, 67, 108, 0.22);
+			border-color: $accent-pink;
+		}
+
+		&.roommate:hover {
+			background-color: rgba(67, 255, 108, 0.22);
+			border-color: rgba(67, 255, 108, 0.55);
+		}
+	}
+
+	.roommate-list {
+		flex-direction: column;
+		margin-top: 16px;
+		padding-top: 16px;
+		border-top: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	.roommate-header {
+		font-size: 14px;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.75);
+		justify-content: center;
+		align-items: center;
+		margin-bottom: 12px;
+	}
+
+	.roommate-row {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		padding: 8px 12px;
+		background-color: rgba(255, 255, 255, 0.05);
+		border-radius: 8px;
+		margin-bottom: 8px;
+	}
+
+	.roommate-avatar {
+		width: 32px;
+		height: 32px;
+		background-size: cover;
+		background-position: center;
+		border-radius: 50%;
+		margin-right: 12px;
+	}
+
+	.roommate-info {
+		flex-direction: column;
+		flex-grow: 1;
+	}
+
+	.roommate-name {
+		font-size: 14px;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.95);
+	}
+
+	.roommate-job {
+		font-size: 12px;
+		font-weight: 500;
+		color: rgba(255, 255, 255, 0.6);
+	}
+
+	.roommate-add-btn {
+		padding: 6px 16px;
+		background-color: rgba(67, 255, 108, 0.20);
+		border: 2px solid rgba(67, 255, 108, 0.55);
+		border-radius: 8px;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(67, 255, 108, 0.95);
+		cursor: pointer;
+		transition: background-color 0.12s linear, border-color 0.12s linear;
+
+		&:hover {
+			background-color: rgba(67, 255, 108, 0.32);
+			border-color: rgba(67, 255, 108, 0.75);
+		}
+	}
+
+	.roommate-del-btn {
+		padding: 6px 16px;
+		background-color: rgba(255, 67, 108, 0.20);
+		border: 2px solid rgba(255, 67, 108, 0.55);
+		border-radius: 8px;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(255, 120, 140, 0.95);
+		cursor: pointer;
+		transition: background-color 0.12s linear, border-color 0.12s linear;
+
+		&:hover {
+			background-color: rgba(255, 67, 108, 0.32);
+			border-color: rgba(255, 67, 108, 0.75);
+		}
+	}
+}

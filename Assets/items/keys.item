@@ -1,0 +1,15 @@
+{
+  "Id": "keys",
+  "Category": "weapons",
+  "Header": "Ключи",
+  "Description": "ПКМ - открыть, ЛКМ - закрыть",
+  "MaxCount": 1,
+  "IconPath": "icons/weapons/keys.vtex",
+  "Model": null,
+  "CanUse": true,
+  "CanDrop": false,
+  "IsJobItem": false,
+  "CanSave": true,
+  "__references": [],
+  "__version": 0
+}

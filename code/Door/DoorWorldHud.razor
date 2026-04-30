@@ -1,7 +1,6 @@
 @using Sandbox;
 @using Sandbox.UI;
 @using System;
-
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -22,21 +21,20 @@
 			<div class="title">@Door.Header</div>
 			@if ( Door.IsLocalPlayerJobAllowed )
 			{
-				<div class="actions">
+				<div class="status">
 					@if ( Door.LockState == Door.DoorLockState.Locked )
 					{
-						<button class="btn unlock" onclick=@OnUnlock>
-							<div class="btn-label">Unlock</div>
-						</button>
+						<div class="status-locked">Locked</div>
 					}
 					else
 					{
-						<button class="btn lock" onclick=@OnLock>
-							<div class="btn-label">Lock</div>
-						</button>
+						<div class="status-unlocked">Unlocked</div>
 					}
 				</div>
-				<div class="hint">Press F to interact</div>
+			}
+			else
+			{
+				<div class="status-restricted">Job Restricted</div>
 			}
 		</div>
 	}
@@ -44,40 +42,29 @@
 	{
 		<div class="panel">
 			<div class="title">@Door.Header</div>
-			<div class="actions">
-				<button class="btn buy" onclick=@OnBuy>
-					<div class="btn-label">Buy</div>
-					<div class="btn-price">$@Door.BuyPrice</div>
-				</button>
-			</div>
-			<div class="hint">Press F to interact</div>
+			<div class="price">$@Door.BuyPrice</div>
 		</div>
 	}
 	else
 	{
 		<div class="panel">
 			<div class="title">@Door.OwnerDisplayName</div>
-			@if ( Door.IsLocalPlayerOwner )
+			@if ( Door.IsLocalPlayerOwner || Door.IsLocalPlayerRoommate )
 			{
-				<div class="actions">
+				<div class="status">
 					@if ( Door.LockState == Door.DoorLockState.Locked )
 					{
-						<button class="btn unlock" onclick=@OnUnlock>
-							<div class="btn-label">Unlock</div>
-						</button>
+						<div class="status-locked">Locked</div>
 					}
 					else
 					{
-						<button class="btn lock" onclick=@OnLock>
-							<div class="btn-label">Lock</div>
-						</button>
+						<div class="status-unlocked">Unlocked</div>
 					}
-					<button class="btn sell" onclick=@OnSell>
-						<div class="btn-label">Sell</div>
-						<div class="btn-price">$@Door.SellPrice</div>
-					</button>
 				</div>
-				<div class="hint">Press F to interact</div>
+				@if ( Door.IsLocalPlayerRoommate && !Door.IsLocalPlayerOwner )
+				{
+					<div class="status-roommate">Вы добавлены!</div>
+				}
 			}
 		</div>
 	}
@@ -87,25 +74,7 @@
 {
 	[Property] public Door Door { get; set; }
 
-	void OnBuy()
-	{
-		Door?.RpcRequestBuy();
-	}
-
-	void OnSell()
-	{
-		Door?.RpcRequestSell();
-	}
-
-	void OnLock()
-	{
-		Door?.RpcRequestLock();
-	}
-
-	void OnUnlock()
-	{
-		Door?.RpcRequestUnlock();
-	}
+	public void WorldHudRefresh() => StateHasChanged();
 
 	protected override int BuildHash()
 	{
@@ -119,6 +88,7 @@
 		h.Add( Door?.OwnerDisplayName );
 		h.Add( Door?.LockState );
 		h.Add( Door?.IsLocalPlayerOwner );
+		h.Add( Door?.IsLocalPlayerRoommate );
 		h.Add( Door?.BuyPrice );
 		return h.ToHashCode();
 	}

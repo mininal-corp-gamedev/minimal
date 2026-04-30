@@ -192,7 +192,37 @@
       "__version": 2,
       "__Prefab": "prefabs/managers.prefab",
       "__PrefabInstancePatch": {
-        "AddedObjects": [],
+        "AddedObjects": [
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "ebb7c758-103c-4dba-9fc8-5d4f4b5f515c"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "1eb7475f-1c69-4490-90c5-e0137be5e753"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "f2c128dc-5efe-402c-8dcc-6ace485f0460"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.DoorHud",
+              "__guid": "ebb7c758-103c-4dba-9fc8-5d4f4b5f515c",
+              "__enabled": true,
+              "Flags": 0,
+              "Door": null,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null
+            }
+          }
+        ],
         "RemovedObjects": [],
         "PropertyOverrides": [
           {
@@ -205,6 +235,14 @@
               "_type": "gameobject",
               "go": "6ef5726e-03f3-43de-96b4-f444cf294ade"
             }
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "bfa99d0c-d2e8-43e1-b19b-faa0754a35dc"
+            },
+            "Property": "Flags",
+            "Value": 0
           }
         ],
         "MovedObjects": []
@@ -544,7 +582,13 @@
         "6ff64c8d-d72e-4559-88f1-0805701930f5": "ae5ba8d3-7b83-4970-a306-43ab7dcba627",
         "63f9abba-02bd-4247-86f7-08e143c836e7": "287a46d6-1bc9-47df-96a6-c6588936a240",
         "6bf6f4c9-7b9a-4f74-b46d-a1e0296515f5": "4e66cff6-f0ef-42bd-aa23-e14d507fd75a",
-        "5841057c-911e-402d-a936-4b4d0728f96c": "8ec1ddb8-b5e8-482c-b068-c7312f54bf24"
+        "5841057c-911e-402d-a936-4b4d0728f96c": "8ec1ddb8-b5e8-482c-b068-c7312f54bf24",
+        "021b5fce-9d36-4b38-b53a-636cf62677ec": "bf278af5-f00e-4818-a4fc-7dde00199149",
+        "7335af2b-70c3-4893-b06a-cda5baf8976a": "0311cdb7-0972-4931-a49e-361200f535c0",
+        "4dd3bdc6-4f80-4c22-b2c5-1e2dbaf596f9": "9d37c2ca-5624-4aed-981c-5c4032565d74",
+        "163c73f2-5977-49fc-9d34-fefb8e5326da": "5bfdf479-47c5-4570-a919-3905bbaae5ec",
+        "ef4bce64-7fd9-452a-a5e3-3e91ecd06e19": "4832cdab-11d6-47c1-8f29-28396df56acb",
+        "962b8ead-3c10-49c6-aad5-15f28b236aed": "6a6a1feb-7ea3-4ba0-b3e7-98ce87d4a79f"
       }
     },
     {
@@ -586,7 +630,13 @@
         "6ff64c8d-d72e-4559-88f1-0805701930f5": "b0b16a1e-6fb0-47bc-8cde-542831567d87",
         "63f9abba-02bd-4247-86f7-08e143c836e7": "393f187c-36bd-495f-9a45-f18b3c4cdd83",
         "6bf6f4c9-7b9a-4f74-b46d-a1e0296515f5": "50750e70-421a-49be-860c-f718eb972781",
-        "5841057c-911e-402d-a936-4b4d0728f96c": "ee8f1803-2aa5-4a82-99f4-8199bd1ee8bc"
+        "5841057c-911e-402d-a936-4b4d0728f96c": "ee8f1803-2aa5-4a82-99f4-8199bd1ee8bc",
+        "021b5fce-9d36-4b38-b53a-636cf62677ec": "3049cfe1-90c7-4ce1-8772-4d11ca85fe55",
+        "7335af2b-70c3-4893-b06a-cda5baf8976a": "c841714a-e143-4310-b823-59ae9603f205",
+        "4dd3bdc6-4f80-4c22-b2c5-1e2dbaf596f9": "1083e689-8a66-4747-a397-70cd60b6a9f9",
+        "163c73f2-5977-49fc-9d34-fefb8e5326da": "fd39fb19-eaf5-401a-8e3c-840dfde93312",
+        "ef4bce64-7fd9-452a-a5e3-3e91ecd06e19": "3f3ea74e-926f-4c1e-8d65-4241e9854c39",
+        "962b8ead-3c10-49c6-aad5-15f28b236aed": "16e8940d-2831-4ea5-aacf-22c4d82d10f6"
       }
     },
     {
@@ -628,7 +678,13 @@
         "6ff64c8d-d72e-4559-88f1-0805701930f5": "36bb3ef3-d922-49d5-bda3-f12c8357e07b",
         "63f9abba-02bd-4247-86f7-08e143c836e7": "ddb8cbb6-061a-4884-a94f-d3044800841e",
         "6bf6f4c9-7b9a-4f74-b46d-a1e0296515f5": "92175e25-438a-4489-b519-0d2681d71ba6",
-        "5841057c-911e-402d-a936-4b4d0728f96c": "ca112ac9-2457-4667-80b6-d217e93676f9"
+        "5841057c-911e-402d-a936-4b4d0728f96c": "ca112ac9-2457-4667-80b6-d217e93676f9",
+        "021b5fce-9d36-4b38-b53a-636cf62677ec": "72118a06-5516-44d2-9f0a-79f611fa7c72",
+        "7335af2b-70c3-4893-b06a-cda5baf8976a": "c91a9ed6-9074-4960-8f53-a419a6a31d0b",
+        "4dd3bdc6-4f80-4c22-b2c5-1e2dbaf596f9": "f76dafb7-ba62-4af5-b8a0-91601e099ece",
+        "163c73f2-5977-49fc-9d34-fefb8e5326da": "fcc6db38-2494-4054-8529-bbf158e0ad51",
+        "ef4bce64-7fd9-452a-a5e3-3e91ecd06e19": "df43906a-a299-49ba-ac4a-ddb0f0b4eeae",
+        "962b8ead-3c10-49c6-aad5-15f28b236aed": "111b4cc6-5ac2-4ef2-986b-021628138d05"
       }
     },
     {
@@ -662,6 +718,14 @@
             },
             "Property": "Rotation",
             "Value": "0,0,-0.707106769,0.707106769"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
+            },
+            "Property": "Header",
+            "Value": "Hui"
           }
         ],
         "MovedObjects": []
@@ -670,7 +734,13 @@
         "6ff64c8d-d72e-4559-88f1-0805701930f5": "21068e33-7310-483f-98ba-632cac7dde06",
         "63f9abba-02bd-4247-86f7-08e143c836e7": "36414488-e5a0-4eab-b8e4-ced4e1aafc47",
         "6bf6f4c9-7b9a-4f74-b46d-a1e0296515f5": "2ce5463c-7d34-4d8c-9091-310c9ff3373d",
-        "5841057c-911e-402d-a936-4b4d0728f96c": "51291103-b860-4a53-90a9-4fb8df1f28c3"
+        "5841057c-911e-402d-a936-4b4d0728f96c": "51291103-b860-4a53-90a9-4fb8df1f28c3",
+        "021b5fce-9d36-4b38-b53a-636cf62677ec": "8ccb68fc-1ce4-4ab7-a56d-c3abe47337a6",
+        "7335af2b-70c3-4893-b06a-cda5baf8976a": "e762d508-cf5f-4e44-9ebc-5a42d0e20239",
+        "4dd3bdc6-4f80-4c22-b2c5-1e2dbaf596f9": "b7cf04d0-4b4c-4d60-b795-fd2ee2ac60ea",
+        "163c73f2-5977-49fc-9d34-fefb8e5326da": "5183ce33-e849-415d-a812-05aaa19f13e3",
+        "ef4bce64-7fd9-452a-a5e3-3e91ecd06e19": "4fecbe55-b82b-491d-9f47-f6c4bb3052a3",
+        "962b8ead-3c10-49c6-aad5-15f28b236aed": "0e398409-e1c3-42b8-b534-70a48fc791be"
       }
     }
   ],

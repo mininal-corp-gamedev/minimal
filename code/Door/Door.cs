@@ -11,6 +11,8 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	/// <summary>Display name shown on the world HUD when the door has no owner or is blocked.</summary>
 	[Property] public string Header { get; set; } = "Door";
 
+	[Property] public DoorWorldHud WorldHud { get; set; }
+
 	/// <summary>If true, the door is admin-blocked: it cannot be bought, sold, locked, or unlocked. Only the header is shown on the HUD.</summary>
 	[Property] public bool IsBlocked { get; set; } = false;
 
@@ -44,6 +46,53 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	/// <summary>Display name of the gameplay owner, or empty string if none.</summary>
 	public string OwnerDisplayName => PlayerOwner.IsValid() ? ( PlayerOwner.Network.Owner?.DisplayName ?? "" ) : "";
 
+	/// <summary>SteamId of the gameplay owner, or 0 if none.</summary>
+	public long OwnerSteamId => PlayerOwner.IsValid() && PlayerOwner.Network.Owner is not null ? PlayerOwner.Network.Owner.SteamId.Value : 0L;
+
+	// ===== Roommates =====
+
+	/// <summary>Host-authoritative, network-synced, semicolon-separated list of roommate SteamIds.</summary>
+	[Sync] public string RoommateIdsSerialized { get; private set; } = "";
+
+	/// <summary>Parsed enumeration of roommate SteamIds.</summary>
+	public IEnumerable<long> RoommateIds
+	{
+		get
+		{
+			if ( string.IsNullOrWhiteSpace( RoommateIdsSerialized ) ) yield break;
+			var parts = RoommateIdsSerialized.Split( ';', StringSplitOptions.RemoveEmptyEntries );
+			foreach ( var part in parts )
+			{
+				if ( long.TryParse( part, out var id ) && id != 0L )
+					yield return id;
+			}
+		}
+	}
+
+	/// <summary>True if the door type supports roommates (not blocked and not job-only).</summary>
+	public bool CanHaveRoommates => !IsBlocked && !HasOnlyJobs;
+
+	public bool IsRoommate( long steamId )
+	{
+		if ( steamId == 0L ) return false;
+		foreach ( var id in RoommateIds )
+			if ( id == steamId ) return true;
+		return false;
+	}
+
+	/// <summary>True on the local client if the local player is listed as a roommate of this door.</summary>
+	public bool IsLocalPlayerRoommate
+	{
+		get
+		{
+			var conn = Connection.Local;
+			if ( conn is null ) return false;
+			return IsRoommate( conn.SteamId.Value );
+		}
+	}
+
+	private bool IsRoommate( ulong steamId ) => IsRoommate( unchecked( (long)steamId ) );
+
 	/// <summary>Returns true if the given player currently holds one of the <see cref="AllowedJobs"/> (only meaningful when <see cref="HasOnlyJobs"/> is true).</summary>
 	public bool IsJobAllowed( Player player )
 	{
@@ -75,6 +124,27 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	/// <summary>Speed of the open/close rotation animation in degrees per second.</summary>
 	[Property] public float AnimationSpeed { get; set; } = 90f;
 
+	/// <summary>Sound played (broadcast to all clients at the door position) when this door opens.</summary>
+	[Property, Category( "Sounds" )] public SoundEvent OpenSound { get; set; }
+
+	/// <summary>Sound played (broadcast to all clients at the door position) when this door closes.</summary>
+	[Property, Category( "Sounds" )] public SoundEvent CloseSound { get; set; }
+
+	/// <summary>
+	/// True on the local client if the local player may lock/unlock this door with the Keys weapon:
+	/// job-allowed for job doors, or owner/roommate for player-owned doors.
+	/// </summary>
+	public bool CanBeControlledByLocalPlayer
+	{
+		get
+		{
+			if ( IsBlocked ) return false;
+			if ( HasOnlyJobs ) return IsLocalPlayerJobAllowed;
+			if ( !HasOwner ) return false;
+			return IsLocalPlayerOwner || IsLocalPlayerRoommate;
+		}
+	}
+
 	// ===== Lockpick =====
 
 	/// <summary>How long (seconds) the player cooldown lasts after a lockpick attempt.</summary>
@@ -97,6 +167,9 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	{
 		_baseRotation = LocalRotation;
 		_currentYaw = State == DoorState.Open ? 90f : 0f;
+
+		if ( WorldHud.IsValid() )
+			WorldHud.Door = this;
 	}
 
 	protected override void OnUpdate()
@@ -152,6 +225,9 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		State = DoorState.Open;
 		IsPlayingAnimation = true;
 
+		if ( OpenSound.IsValid() )
+			RpcPlaySoundAtDoor( OpenSound );
+
 		DoorSecond?.Open();
 	}
 
@@ -170,6 +246,9 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		State = DoorState.Closed;
 		IsPlayingAnimation = true;
+
+		if ( CloseSound.IsValid() )
+			RpcPlaySoundAtDoor( CloseSound );
 
 		DoorSecond?.Close();
 	}
@@ -192,6 +271,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		if ( !HasOnlyJobs && !HasOwner ) return;
 
 		LockState = DoorLockState.Locked;
+		WorldHud?.WorldHudRefresh();
 
 		DoorSecond?.Lock();
 	}
@@ -212,6 +292,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		if ( !HasOnlyJobs && !HasOwner ) return;
 
 		LockState = DoorLockState.Unlocked;
+		WorldHud?.WorldHudRefresh();
 
 		DoorSecond?.Unlock();
 	}
@@ -233,7 +314,9 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 			return IsJobAllowed( caller );
 		}
 
-		return IsOwnedBy( steamId );
+		if ( IsOwnedBy( steamId ) ) return true;
+		if ( IsRoommate( steamId ) ) return true;
+		return false;
 	}
 
 	/// <summary>Buys the door for the given player. Host-authoritative: validates blocked state, ownership, and funds.</summary>
@@ -249,6 +332,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		buyer.Money -= BuyPrice;
 		PlayerOwner = buyer;
+		WorldHud?.WorldHudRefresh();
 
 		// Mirror ownership to the paired door without charging again.
 		if ( DoorSecond.IsValid() && !DoorSecond.HasOwner )
@@ -287,12 +371,15 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		PlayerOwner = null;
 		LockState = DoorLockState.Unlocked;
+		RoommateIdsSerialized = "";
+		WorldHud?.WorldHudRefresh();
 
 		// Clear ownership on the paired door without refunding again.
 		if ( partner.IsValid() && partner.HasOwner )
 		{
 			partner.PlayerOwner = null;
 			partner.LockState = DoorLockState.Unlocked;
+			partner.RoommateIdsSerialized = "";
 		}
 	}
 
@@ -325,9 +412,79 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		var ownerConn = PlayerOwner.Network.Owner;
 		if ( ownerConn is null || ownerConn.SteamId != channel.SteamId ) return;
 
-		// Owner left the game — release the door.
+		// Owner left the game — release the door and clear roommates.
 		PlayerOwner = null;
 		LockState = DoorLockState.Unlocked;
+		RoommateIdsSerialized = "";
+
+		if ( DoorSecond.IsValid() )
+		{
+			DoorSecond.PlayerOwner = null;
+			DoorSecond.LockState = DoorLockState.Unlocked;
+			DoorSecond.RoommateIdsSerialized = "";
+		}
+	}
+
+	/// <summary>Host-authoritative: add a roommate by SteamId. Only the current owner may call.</summary>
+	[Rpc.Host]
+	public void RpcRequestAddRoommate( long steamId )
+	{
+		if ( !Networking.IsHost ) return;
+		if ( !CanHaveRoommates ) return;
+		if ( !HasOwner ) return;
+		if ( !IsOwnedBy( Rpc.Caller.SteamId ) ) return; // only the owner can add
+		if ( steamId == 0L ) return;
+		if ( steamId == OwnerSteamId ) return; // cannot add self
+
+		var set = new HashSet<long>( RoommateIds );
+		if ( !set.Add( steamId ) ) return; // already a roommate
+
+		var serialized = string.Join( ";", set );
+		RoommateIdsSerialized = serialized;
+
+		if ( DoorSecond.IsValid() )
+			DoorSecond.RoommateIdsSerialized = serialized;
+	}
+
+	/// <summary>Host-authoritative: remove a roommate by SteamId. Only the current owner may call.</summary>
+	[Rpc.Host]
+	public void RpcRequestRemoveRoommate( long steamId )
+	{
+		if ( !Networking.IsHost ) return;
+		if ( !CanHaveRoommates ) return;
+		if ( !HasOwner ) return;
+		if ( !IsOwnedBy( Rpc.Caller.SteamId ) ) return; // only the owner can remove
+		if ( steamId == 0L ) return;
+
+		var set = new HashSet<long>( RoommateIds );
+		if ( !set.Remove( steamId ) ) return;
+
+		var serialized = string.Join( ";", set );
+		RoommateIdsSerialized = serialized;
+
+		if ( DoorSecond.IsValid() )
+			DoorSecond.RoommateIdsSerialized = serialized;
+	}
+
+	/// <summary>Broadcast-play a sound at this door's world position on all clients.</summary>
+	[Rpc.Broadcast]
+	public void RpcPlaySoundAtDoor( SoundEvent sound )
+	{
+		if ( !sound.IsValid() ) return;
+		Sound.Play( sound, WorldPosition );
+	}
+
+	/// <summary>
+	/// Client → Host → Broadcast: play the "hit" sound at the door for everyone.
+	/// Used when a player who is neither the owner nor a roommate tries to interact
+	/// with the Keys weapon — they only hit the door without changing state.
+	/// </summary>
+	[Rpc.Host]
+	public void RpcRequestHit( SoundEvent hitSound )
+	{
+		if ( !Networking.IsHost ) return;
+		if ( !hitSound.IsValid() ) return;
+		RpcPlaySoundAtDoor( hitSound );
 	}
 
 	private Player FindPlayerBySteamId( ulong steamId )

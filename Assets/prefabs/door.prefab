@@ -25,6 +25,7 @@
         ],
         "AnimationSpeed": 90,
         "BuyPrice": 50,
+        "CloseSound": "sounds/door/door_latch3.sound",
         "DoorSecond": null,
         "HasOnlyJobs": false,
         "Header": "",
@@ -37,7 +38,9 @@
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
-        "OnComponentUpdate": null
+        "OnComponentUpdate": null,
+        "OpenSound": "sounds/door/door_latch3.sound",
+        "WorldHud": null
       },
       {
         "__type": "Sandbox.ModelRenderer",
@@ -93,7 +96,130 @@
         "SurfaceVelocity": "0,0,0"
       }
     ],
-    "Children": [],
+    "Children": [
+      {
+        "__guid": "021b5fce-9d36-4b38-b53a-636cf62677ec",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Forward",
+        "Position": "1.08747196,-22.6637135,61.0255432",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.WorldPanel",
+            "__guid": "7335af2b-70c3-4893-b06a-cda5baf8976a",
+            "__enabled": true,
+            "Flags": 0,
+            "HorizontalAlign": "Center",
+            "InteractionRange": 1000,
+            "LookAtCamera": false,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PanelSize": "512,512",
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderScale": 1,
+            "VerticalAlign": "Center"
+          },
+          {
+            "__type": "Sandbox.DoorWorldHud",
+            "__guid": "962b8ead-3c10-49c6-aad5-15f28b236aed",
+            "__enabled": true,
+            "Flags": 0,
+            "Door": {
+              "_type": "component",
+              "component_id": "63f9abba-02bd-4247-86f7-08e143c836e7",
+              "go": "6ff64c8d-d72e-4559-88f1-0805701930f5",
+              "component_type": "Door"
+            },
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "4dd3bdc6-4f80-4c22-b2c5-1e2dbaf596f9",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Backward",
+        "Position": "-1.06925392,-22.6637135,61.0255585",
+        "Rotation": "0,0,1,-4.37113883E-08",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.WorldPanel",
+            "__guid": "163c73f2-5977-49fc-9d34-fefb8e5326da",
+            "__enabled": true,
+            "Flags": 0,
+            "HorizontalAlign": "Center",
+            "InteractionRange": 1000,
+            "LookAtCamera": false,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PanelSize": "512,512",
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderScale": 1,
+            "VerticalAlign": "Center"
+          },
+          {
+            "__type": "Sandbox.DoorWorldHud",
+            "__guid": "ef4bce64-7fd9-452a-a5e3-3e91ecd06e19",
+            "__enabled": true,
+            "Flags": 0,
+            "Door": {
+              "_type": "component",
+              "component_id": "63f9abba-02bd-4247-86f7-08e143c836e7",
+              "go": "6ff64c8d-d72e-4559-88f1-0805701930f5",
+              "component_type": "Door"
+            },
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          }
+        ],
+        "Children": []
+      }
+    ],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,

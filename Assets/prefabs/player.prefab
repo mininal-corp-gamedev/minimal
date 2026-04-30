@@ -49,7 +49,7 @@
           "go": "70709696-00d3-4b3a-a540-a7da2fcf0471",
           "component_type": "PlayerJob"
         },
-        "MaxDoors": 8,
+        "MaxDoors": 4,
         "MaxProps": 20,
         "MoneyDropPrefab": {
           "_type": "gameobject",
@@ -136,7 +136,7 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "PitchClamp": 92.975204,
-        "ReachLength": 130,
+        "ReachLength": 100,
         "Renderer": {
           "_type": "component",
           "component_id": "5a0e0ab6-7965-4d83-97e7-f8d9bce09def",
@@ -366,7 +366,7 @@
         ],
         "Children": [
           {
-            "__guid": "e9082a8f-460d-4a98-9953-c9e719a4336e",
+            "__guid": "20464581-906c-4f0b-a507-e0672b3fb6bb",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - y_front_pants_white",
@@ -383,7 +383,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "e4589a4f-3a19-4866-a24d-ea5effde5e5d",
+                "__guid": "1758b21c-ce6c-4b7a-8064-db4965ab4ef7",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,

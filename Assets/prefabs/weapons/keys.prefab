@@ -26,13 +26,15 @@
         "CanAttackWithoutAmmo": true,
         "ClipSize": 0,
         "Damage": 0,
+        "DoorHitSound": "sounds/door/wood_crate_impact_hard2.sound",
         "FireDelay": 0.25,
         "FireSound": null,
-        "HasHipFire": true,
+        "HasHipFire": false,
         "HasReload": false,
         "HoldType": "None",
         "IsIronSight": false,
-        "IsMelee": false,
+        "IsMelee": true,
+        "LockSound": "sounds/door/gear1.sound",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -46,12 +48,8 @@
         "SpawnSpriteFireOnShot": false,
         "SpriteFirePrefab": null,
         "TotalReserveAmmo": 0,
-        "Viewmodel": {
-          "_type": "component",
-          "component_id": "31640b06-be37-4c11-9348-e44011f4c6a7",
-          "go": "062e07aa-52fc-405d-a851-aa472f4fce3d",
-          "component_type": "SkinnedModelRenderer"
-        }
+        "UnlockSound": "sounds/door/gear3.sound",
+        "Viewmodel": null
       }
     ],
     "Children": [
@@ -64,7 +62,7 @@
         "Rotation": "0,0,0,1",
         "Scale": "1,1,1",
         "Tags": "",
-        "Enabled": true,
+        "Enabled": false,
         "NetworkMode": 0,
         "NetworkFlags": 0,
         "NetworkOrphaned": 0,

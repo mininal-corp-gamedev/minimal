@@ -1351,8 +1351,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         {
             Inventory.ClearAll();
             Inventory.SetSlotCount(InventorySlotCount);
+        }
 
-            foreach (var itemId in DefaultInventoryItemIds)
+        // Ensure all default items are present, even if loading from an existing save
+        foreach (var itemId in DefaultInventoryItemIds)
+        {
+            if (Inventory.GetTotalCount(itemId) == 0)
                 Inventory.AddItem(Item.Create(itemId, 1, canDrop: false, isJobItem: false, canSave: true));
         }
 

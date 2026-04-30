@@ -217,12 +217,6 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
             return;
         }
 
-        if ( printer.PlayerOwner.IsValid() && printer.PlayerOwner != ply )
-        {
-            Log.Warning( $"RpcOnTakeMoney: {Rpc.Caller.DisplayName} is not the printer owner" );
-            return;
-        }
-
         var dist = Vector3.DistanceBetween( ply.WorldPosition, printer.WorldPosition );
         if ( dist > printer.MaxDistance )
         {

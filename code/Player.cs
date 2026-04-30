@@ -89,6 +89,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private bool _inventoryEventsHooked;
     private bool _deferInventorySync;
     private bool _inventoryChangedWhileDeferred;
+    private readonly List<PropCustom> _ownedPropSpawnStack = new();
     private bool _ignoreNextFallDamage = true;
     private TimeUntil _fallDamageGraceUntil;
     private TimeUntil _nextFallDamageAllowed;
@@ -1631,6 +1632,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         HostUpdateDeathRespawn();
         UpdateArrestEffects();
         CheckUseHotbarSlots();
+        TryUndoLastOwnedProp();
     }
 
     protected override void OnUpdate()
@@ -1954,6 +1956,56 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         {
             if ( player.GameObject.Network.Owner?.SteamId.Value == steamId )
                 return player;
+        }
+
+        return null;
+    }
+
+    public void RegisterSpawnedProp( PropCustom prop )
+    {
+        if ( !prop.IsValid() )
+            return;
+
+        _ownedPropSpawnStack.RemoveAll( x => !x.IsValid() || x == prop );
+        _ownedPropSpawnStack.Add( prop );
+    }
+
+    private void TryUndoLastOwnedProp()
+    {
+        if ( IsProxy )
+            return;
+        if ( !Input.Pressed( "Undo" ) )
+            return;
+
+        var prop = GetLastOwnedProp();
+        if ( !prop.IsValid() )
+        {
+            Notification.Error( "У тебя нет заспавненных пропов.", 2.5f );
+            return;
+        }
+
+        var propObject = prop.GameObject;
+        var propName = !propObject.IsValid() || string.IsNullOrWhiteSpace( propObject.Name ) ? "Prop" : propObject.Name;
+        propObject?.Destroy();
+        Notification.Info( $"Удален проп: {propName}", 2.8f );
+    }
+
+    private PropCustom GetLastOwnedProp()
+    {
+        _ownedPropSpawnStack.RemoveAll( x => !x.IsValid() || !x.GameObject.IsValid() );
+
+        for ( int i = _ownedPropSpawnStack.Count - 1; i >= 0; i-- )
+        {
+            var prop = _ownedPropSpawnStack[i];
+            if ( !prop.IsValid() || !prop.GameObject.IsValid() )
+                continue;
+            if ( prop.PlayerOwner != this )
+                continue;
+            if ( prop.GameObject.Network.Owner != Connection.Local )
+                continue;
+
+            _ownedPropSpawnStack.RemoveAt( i );
+            return prop;
         }
 
         return null;

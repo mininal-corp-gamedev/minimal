@@ -3,6 +3,7 @@ using Sandbox;
 public sealed class PropCustom : Component, Component.INetworkListener
 {
 	[Sync( SyncFlags.FromHost )] public Player PlayerOwner { get; private set; }
+	private bool _registeredLocally;
 
 	public void SetOwner( Player owner )
 	{
@@ -10,6 +11,17 @@ public sealed class PropCustom : Component, Component.INetworkListener
 			return;
 
 		PlayerOwner = owner;
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( _registeredLocally )
+			return;
+		if ( !PlayerOwner.IsValid() || PlayerOwner.IsProxy )
+			return;
+
+		PlayerOwner.RegisterSpawnedProp( this );
+		_registeredLocally = true;
 	}
 
 	void Component.INetworkListener.OnDisconnected( Connection channel )

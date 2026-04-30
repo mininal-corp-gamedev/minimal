@@ -80,7 +80,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private const string InventorySaveFolder = "inv";
     private const int DefaultStartingMoney = 500;
     private const int InventorySlotCount = 20;
-    private static readonly string[] DefaultInventoryItemIds = { "hands", "physgun", "toolgun" };
+    private static readonly string[] DefaultInventoryItemIds = { "hands", "physgun", "toolgun", "keys" };
 
     // Host-only gate. Until the save is loaded on the host, Money writes
     // must not overwrite the file on disk.
@@ -1119,6 +1119,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         ItemUseRegistry.Register("physgun", new WepPhysgunUseHandler());
         ItemUseRegistry.Register("toolgun", new WepToolgunUseHandler());
         ItemUseRegistry.Register("hands", new WepHandsUseHandler());
+        ItemUseRegistry.Register("keys", new WepKeysUseHandler());
         ItemUseRegistry.Register("handcuff", new WepHandcuffUseHandler());
         ItemUseRegistry.Register("picklock", new WepPicklockUseHandler());
         ItemUseRegistry.Register("ammo_usp", new AmmoUseHandler(AmmoWeaponType.Usp));

@@ -1,0 +1,538 @@
+{
+  "RootObject": {
+    "__guid": "3472ab49-201b-4eac-9402-b92a526b1bc1",
+    "__version": 2,
+    "Flags": 0,
+    "Name": "managers",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [],
+    "Children": [
+      {
+        "__guid": "aa9461ff-8a4e-4be4-b3cf-4dc3d9be5c46",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Spawn Manager",
+        "Position": "-2013.97559,-680.994507,1532.77954",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "SpawnManager",
+            "__guid": "86db9359-72cd-4fa8-8096-d46fbecd5e57",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PlayerSpawns": null
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "bfa99d0c-d2e8-43e1-b19b-faa0754a35dc",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Network Manager",
+        "Position": "-2104.2854,-707.404297,1542.36353",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.NetworkHelper",
+            "__guid": "bdbe0d7a-9361-4c17-a8b3-1053ac18aca3",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PlayerPrefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/player.prefab"
+            },
+            "SpawnPoints": [
+              {
+                "_type": "gameobject",
+                "go": "bfa99d0c-d2e8-43e1-b19b-faa0754a35dc"
+              }
+            ],
+            "StartServer": true
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "399cf7f2-c2a4-4938-86c2-90a4bf478502",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Weapon Manager",
+        "Position": "-2836.64746,5654.56543,173.648392",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "WeaponManager",
+            "__guid": "d3707d98-1a98-4e1e-899b-3fb4fbbffa03",
+            "__enabled": true,
+            "Flags": 0,
+            "BulletPrefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/bullets/bullet.prefab"
+            },
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "WeaponHandcuff": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/handcuff.prefab"
+            },
+            "WeaponHands": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/hands.prefab"
+            },
+            "WeaponKeys": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/keys.prefab"
+            },
+            "WeaponM4a1Prefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/m4a1.prefab"
+            },
+            "WeaponMp5Prefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/mp5.prefab"
+            },
+            "WeaponPhysgun": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/physgun.prefab"
+            },
+            "WeaponPickaxe": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/pickaxe.prefab"
+            },
+            "WeaponPicklock": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/picklock.prefab"
+            },
+            "WeaponToolgun": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/toolgun.prefab"
+            },
+            "WeaponUspPrefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/usp.prefab"
+            },
+            "Wep": null,
+            "WorldWeaponHandcuff": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/handcuff.prefab"
+            },
+            "WorldWeaponKeys": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/keys.prefab"
+            },
+            "WorldWeaponM4a1Prefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/m4a1.prefab"
+            },
+            "WorldWeaponMp5Prefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/mp5.prefab"
+            },
+            "WorldWeaponPhysgun": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/physgun.prefab"
+            },
+            "WorldWeaponPickaxe": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/pickaxe.prefab"
+            },
+            "WorldWeaponPicklock": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/picklock.prefab"
+            },
+            "WorldWeaponToolgun": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/toolgun.prefab"
+            },
+            "WorldWeaponUspPrefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/usp.prefab"
+            }
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "464e5c7c-cdb6-48cd-b7ba-26aea23ebbdf",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Shop Manager",
+        "Position": "-1931.04468,6931.51904,417.399414",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "ShopManager",
+            "__guid": "937ac176-fa94-456a-8efe-6e35c7e31402",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "f3a82ae2-3ba2-479d-89c2-ee6a7319be4c",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Admin Manager",
+        "Position": "23.341217,-931.462097,199.656998",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "AdminManager",
+            "__guid": "48ba0cc7-69b6-4f42-bab8-9ffbd9c390a7",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "1eb7475f-1c69-4490-90c5-e0137be5e753",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "UI",
+        "Position": "389.161255,-466.394379,-113.793594",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.ScreenPanel",
+            "__guid": "12d4ff84-55da-44a2-88a4-d8468a422d8a",
+            "__enabled": true,
+            "Flags": 0,
+            "AutoScreenScale": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Opacity": 1,
+            "Scale": 1,
+            "ScaleStrategy": "ConsistentHeight",
+            "TargetCamera": null,
+            "ZIndex": 100
+          },
+          {
+            "__type": "Sandbox.Hud",
+            "__guid": "aa223f33-b5ea-4951-a6a8-6c93b342a8d9",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.AmmoHud",
+            "__guid": "ab799631-f346-4c43-b1ae-3eb53abd9b6f",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.Logo",
+            "__guid": "4a8e7083-cbde-485f-8774-528a8c62fb38",
+            "__enabled": true,
+            "Flags": 0,
+            "LogoPath": "icons/logos/logo_small_dark2.vtex",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.WeaponHotbar",
+            "__guid": "538e7142-729d-464f-b3a7-abd998453814",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.Chat",
+            "__guid": "e348904b-8072-4e18-a6f9-5c2477406354",
+            "__enabled": true,
+            "Flags": 0,
+            "ClosedMessageLifetime": 6,
+            "MaxMessageLength": 160,
+            "MaxStoredMessages": 200,
+            "MessageRadius": 400,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "SendCooldownSeconds": 0.25
+          },
+          {
+            "__type": "Sandbox.Notification",
+            "__guid": "ad639979-5e1b-4f29-94c0-d91897e8fa8f",
+            "__enabled": true,
+            "Flags": 0,
+            "DefaultAliveSeconds": 2.5,
+            "FadeSeconds": 0.2,
+            "NotifyErrorSound": null,
+            "NotifyInfoSound": null,
+            "NotifyWarnSound": null,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.TabMenu",
+            "__guid": "c03ecba7-ab2b-407e-a380-55f7503bc3a4",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.KeybindsHud",
+            "__guid": "d6ad6c13-64f5-439d-9b1e-b5cfef3594cc",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.ContextMenu",
+            "__guid": "de9edd5e-cb11-41f7-a1fc-a0a76dc01c3d",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.InventoryPanel",
+            "__guid": "de7c5c75-6971-4c32-a249-de428a3d3be1",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.LabelBeta",
+            "__guid": "d058df98-b3c9-4f32-bc47-1bab3d94ae4b",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.AdminPanel",
+            "__guid": "90460dc7-f756-434d-92f4-ef9aa29d3b11",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.DropMoneyConfirmPanel",
+            "__guid": "e444138a-4090-4d55-8a16-761dc8aacab3",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.TransferMoneyConfirmPanel",
+            "__guid": "4febd7e7-4193-4b2f-8cd2-4938391dd7cb",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.PropsMenu",
+            "__guid": "628471c1-e9af-4a99-903a-cfc54c59b21d",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.UI.Crosshair",
+            "__guid": "f2c128dc-5efe-402c-8dcc-6ace485f0460",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "ShowCrosshair": true
+          }
+        ],
+        "Children": []
+      }
+    ],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [],
+  "__version": 2
+}

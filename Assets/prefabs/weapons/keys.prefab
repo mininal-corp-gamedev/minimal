@@ -1,0 +1,154 @@
+{
+  "RootObject": {
+    "__guid": "4d0d08fd-d93f-46ff-a12a-3c797f876769",
+    "__version": 2,
+    "Flags": 0,
+    "Name": "keys",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 0,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "Minimal.Weapons.WeaponKeys",
+        "__guid": "d8db24fd-9eff-45d2-888c-b29c1353f489",
+        "__enabled": true,
+        "Flags": 0,
+        "Ammo": 0,
+        "AttackRange": 80,
+        "BulletPrefab": null,
+        "CanAttackWithoutAmmo": true,
+        "ClipSize": 0,
+        "Damage": 0,
+        "FireDelay": 0.25,
+        "FireSound": null,
+        "HasHipFire": true,
+        "HasReload": false,
+        "HoldType": "None",
+        "IsIronSight": false,
+        "IsMelee": false,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "ReloadDurationSeconds": 2,
+        "ReloadSound": null,
+        "SemiAuto": true,
+        "ShotPos": null,
+        "SpawnSpriteFireOnShot": false,
+        "SpriteFirePrefab": null,
+        "TotalReserveAmmo": 0,
+        "Viewmodel": {
+          "_type": "component",
+          "component_id": "31640b06-be37-4c11-9348-e44011f4c6a7",
+          "go": "062e07aa-52fc-405d-a851-aa472f4fce3d",
+          "component_type": "SkinnedModelRenderer"
+        }
+      }
+    ],
+    "Children": [
+      {
+        "__guid": "062e07aa-52fc-405d-a851-aa472f4fce3d",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "arms",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 0,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.SkinnedModelRenderer",
+            "__guid": "31640b06-be37-4c11-9348-e44011f4c6a7",
+            "__enabled": true,
+            "Flags": 0,
+            "AnimationGraph": null,
+            "BodyGroups": 21,
+            "BoneMergeTarget": null,
+            "CreateAttachments": false,
+            "CreateBoneObjects": false,
+            "LodOverride": null,
+            "MaterialGroup": null,
+            "MaterialOverride": null,
+            "Materials": null,
+            "Model": "models/first_person/v_first_person_arms_human.vmdl",
+            "Morphs": {},
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "Parameters": {
+              "bools": {},
+              "ints": {},
+              "floats": {},
+              "vectors": {},
+              "rotations": {}
+            },
+            "PlaybackRate": 1,
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderType": "On",
+            "Sequence": {
+              "Name": null,
+              "Looping": true,
+              "Blending": false
+            },
+            "Tint": "1,1,1,1",
+            "UseAnimGraph": true
+          }
+        ],
+        "Children": []
+      }
+    ],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [
+    "facepunch.v_first_person_arms_human#142949"
+  ],
+  "__version": 2
+}

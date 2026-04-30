@@ -20,6 +20,7 @@ public sealed class WeaponManager : Component
     [Property, Category("Weapon Prefabs")] public GameObject WeaponHands { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponHandcuff { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponPicklock { get; set; }
+    [Property, Category("Weapon Prefabs")] public GameObject WeaponKeys { get; set; }
 
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponPickaxe { get; set; }
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponUspPrefab { get; set; }
@@ -29,6 +30,7 @@ public sealed class WeaponManager : Component
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponToolgun { get; set; }
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponHandcuff { get; set; }
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponPicklock { get; set; }
+    [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponKeys { get; set; }
 
     /// <summary>Слот ближнего боя (без патронов). Префаб — <see cref="Minimal.Weapons.WeaponPickaxe"/> или <c>Weapon</c> с <c>IsMelee</c>.</summary>
     public Weapon Pickaxe { get; private set; }
@@ -40,6 +42,7 @@ public sealed class WeaponManager : Component
     public Weapon Hands { get; private set; }
     public Weapon Handcuff { get; private set; }
     public Weapon Picklock { get; private set; }
+    public Weapon Keys { get; private set; }
 
     /// <summary>Подходит ли оружие под отображение патронов / перезарядку.</summary>
     public static bool WeaponUsesAmmo(Weapon weapon) => weapon.IsValid() && !weapon.IsMelee;
@@ -79,6 +82,7 @@ public sealed class WeaponManager : Component
         Hands = SpawnWeapon(WeaponHands, camera, "Hands");
         Handcuff = SpawnWeapon(WeaponHandcuff, camera, "Handcuff");
         Picklock = SpawnWeapon(WeaponPicklock, camera, "Picklock");
+        Keys = SpawnWeapon(WeaponKeys, camera, "Keys");
 
         Log.Info("[WeaponManager] Spawned all weapons");
     }

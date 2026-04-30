@@ -5,7 +5,6 @@ public sealed class SpawnManager : Component
     public static SpawnManager Instance { get; private set; }
 
     [Property] public GameObject PlayerSpawns { get; set; }
-    [Property] public GameObject EnemySpawns { get; set; }
 
     protected override void OnAwake()
     {

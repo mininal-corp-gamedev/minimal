@@ -24,12 +24,11 @@
     "LeaderboardType": "None",
     "CsProjName": "",
     "LaunchMode": "DedicatedServerOnly",
-    "DedicatedServerStartupScene": "scenes/minimal.scene",
     "ControlModes": {
       "Keyboard": true,
       "VR": false,
       "Gamepad": false
     },
-    "StartupScene": "scenes/minimal.scene"
+    "StartupScene": "scenes/minimalver3.scene"
   }
 }

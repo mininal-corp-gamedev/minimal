@@ -11,6 +11,7 @@
       "Resources": null,
       "PackageReferences": null,
       "EditorReferences": [
+        "opengameartcco.moneybatchclean#95928",
         "prayandplay.compactprinter#111644"
       ],
       "Mounts": null,

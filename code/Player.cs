@@ -3,6 +3,7 @@ using Ambi.Utils;
 using Minimal.ItemUseHandlers;
 using Sandbox;
 using System;
+using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
 public sealed class Player : Component, ICustomDamagable, PlayerController.IEvents
@@ -101,6 +102,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private bool _deathColliderApplied;
     private bool _deathPrevColliderEnabled;
     private Vector3 _queuedElevatorCarryDelta;
+    private bool _ownerClothingApplyInProgress;
+    private bool _ownerClothingApplied;
+    private TimeUntil _nextOwnerClothingApplyAttempt = 0f;
     private static bool _jobInventoryEventsRegistered;
 
     /// <summary>
@@ -1166,15 +1170,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         return taken;
     }
 
-    [Rpc.Broadcast]
-    private void DressForHost(Dresser dresser)
-    {
-        Log.Info($"Dresser from: {Rpc.Caller.DisplayName} - {dresser.Network.Owner.DisplayName}");
-
-        Dresser.Clear();
-        Dresser.Apply();
-    }
-
     private void SetupWorldHud()
     {
         WorldHud.Name = Connection.Local.DisplayName;
@@ -1209,7 +1204,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         Job?.AssignDefault();
         Spawn();
         SetupWorldHud();
-        DressForHost(Dresser);
         AdminManager.RpcRequestRankInit();
 
         // Сейв-инит запрашиваем у хоста ИЗ NetworkInit, а не в OnStart.
@@ -1220,6 +1214,41 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         // Через Rpc.Host мы гарантированно знаем Rpc.Caller.SteamId на хосте.
         RpcRequestPlayerSaveInit();
         RpcRequestPlayerInventoryInit();
+    }
+
+    private void TryApplyOwnerClothing()
+    {
+        if (_ownerClothingApplied || _ownerClothingApplyInProgress)
+            return;
+        if (!_nextOwnerClothingApplyAttempt)
+            return;
+        if (!Dresser.IsValid())
+            return;
+        if (GameObject.Network.Owner is null)
+            return;
+
+        _ = ApplyOwnerClothingAsync();
+    }
+
+    private async Task ApplyOwnerClothingAsync()
+    {
+        _ownerClothingApplyInProgress = true;
+
+        try
+        {
+            Dresser.Source = Sandbox.Dresser.ClothingSource.OwnerConnection;
+            await Dresser.Apply();
+            _ownerClothingApplied = true;
+        }
+        catch (Exception ex)
+        {
+            _nextOwnerClothingApplyAttempt = 2f;
+            Log.Warning($"[Player] Failed to apply owner clothing for {GameObject.Network.Owner?.DisplayName ?? "unknown"}: {ex.Message}");
+        }
+        finally
+        {
+            _ownerClothingApplyInProgress = false;
+        }
     }
 
     private void HookInventoryEvents()
@@ -1709,6 +1738,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     protected override void OnUpdate()
     {
+        TryApplyOwnerClothing();
         UpdateWorldWeaponVisual();
         DrawPhysgunBeam();
     }

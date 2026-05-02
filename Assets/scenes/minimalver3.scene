@@ -31308,75 +31308,6 @@
       "Children": []
     },
     {
-      "__guid": "18556ca7-091b-40ca-963e-790d6a3ebc31",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "bible_ru",
-      "Position": "-4049.84497,2567.99951,80.1807251",
-      "Rotation": "0.49999997,0.49999997,-0.49999997,0.49999997",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.SoundPointComponent",
-          "__guid": "dc10eb20-ad12-4bae-934a-f916079c555c",
-          "__enabled": true,
-          "Flags": 0,
-          "Distance": 512,
-          "DistanceAttenuation": false,
-          "DistanceAttenuationOverride": false,
-          "Falloff": [
-            {
-              "x": 0,
-              "y": 1,
-              "in": 3.1415927,
-              "out": -3.1415927,
-              "mode": "Mirrored"
-            },
-            {
-              "x": 1,
-              "y": 0,
-              "in": 0,
-              "out": 0,
-              "mode": "Mirrored"
-            }
-          ],
-          "Force2d": false,
-          "MaxRepeatTime": 1,
-          "MinRepeatTime": 1,
-          "Occlusion": false,
-          "OcclusionOverride": false,
-          "OcclusionRadius": 32,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "Pitch": 1,
-          "PlayOnStart": true,
-          "ReflectionOverride": false,
-          "Reflections": false,
-          "Repeat": false,
-          "SoundEvent": "audio/bible_ru.sound",
-          "SoundOverride": false,
-          "StopOnNew": false,
-          "TargetMixer": {
-            "Name": "unknown",
-            "Id": "00000000-0000-0000-0000-000000000000"
-          },
-          "Volume": 1
-        }
-      ],
-      "Children": []
-    },
-    {
       "__guid": "1b83b9da-0ead-469e-ab60-6c17770be70b",
       "__version": 2,
       "Flags": 0,
@@ -31627,7 +31558,6 @@
     "facepunch.weapon_crate_stacka#143532",
     "facepunch.wheely_bin#143949",
     "facepunch.wire_cage_b_painted#111152",
-    "gavinovichaa.bibleru#168769",
     "gkaf.door_2_window_a#26046",
     "gkaf.door_2#26045",
     "gunsightsoftware.model-deadpigeon#184155",

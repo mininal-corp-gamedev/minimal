@@ -7,6 +7,8 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 {
 	public enum DoorState { Closed, Open }
 	public enum DoorLockState { Unlocked, Locked }
+	public enum DoorMovementMode { Swing, Slide }
+	public enum DoorSlideAxis { LocalRight, LocalForward, LocalUp }
 
 	/// <summary>Display name shown on the world HUD when the door has no owner or is blocked.</summary>
 	[Property] public string Header { get; set; } = "Door";
@@ -27,6 +29,9 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	/// <summary>Jobs allowed to lock/unlock this door when <see cref="HasOnlyJobs"/> is true.</summary>
 	[Property, ShowIf( "HasOnlyJobs", true )] public List<JobDefinition> AllowedJobs { get; set; } = new();
+
+	/// <summary>If true, a job-only door starts locked when the host initializes it.</summary>
+	[Property, ShowIf( "HasOnlyJobs", true )] public bool StartLocked { get; set; } = false;
 
 	/// <summary>
 	/// Optional paired door. When set, Buy/Sell/Open/Close/Lock/Unlock mirror to the paired door.
@@ -124,11 +129,23 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	/// <summary>True if the door has been broken.</summary>
 	[Sync] public bool IsBroken { get; private set; }
 
+	/// <summary>How this door moves when it opens.</summary>
+	[Property, Category( "Movement" )] public DoorMovementMode MovementMode { get; set; } = DoorMovementMode.Swing;
+
 	/// <summary>Speed of the open/close rotation animation in degrees per second.</summary>
-	[Property] public float AnimationSpeed { get; set; } = 90f;
+	[Property, Category( "Movement" ), ShowIf( "MovementMode", DoorMovementMode.Swing )] public float AnimationSpeed { get; set; } = 90f;
 
 	/// <summary>Maximum angle, in degrees, used when the door opens.</summary>
-	[Property] public float OpenAngle { get; set; } = 90f;
+	[Property, Category( "Movement" ), ShowIf( "MovementMode", DoorMovementMode.Swing )] public float OpenAngle { get; set; } = 90f;
+
+	/// <summary>Local axis used by sliding doors. Negative <see cref="SlideDistance"/> moves in the opposite direction.</summary>
+	[Property, Category( "Movement" ), ShowIf( "MovementMode", DoorMovementMode.Slide )] public DoorSlideAxis SlideAxis { get; set; } = DoorSlideAxis.LocalRight;
+
+	/// <summary>Distance, in scene units, used by sliding doors. Use a negative value to slide left/back/down.</summary>
+	[Property, Category( "Movement" ), ShowIf( "MovementMode", DoorMovementMode.Slide )] public float SlideDistance { get; set; } = 96f;
+
+	/// <summary>Speed of the open/close sliding animation in scene units per second.</summary>
+	[Property, Category( "Movement" ), ShowIf( "MovementMode", DoorMovementMode.Slide )] public float SlideSpeed { get; set; } = 120f;
 
 	/// <summary>Maximum distance between a caller and the door for the host to accept direct door actions.</summary>
 	[Property] public float InteractRange { get; set; } = 220f;
@@ -166,7 +183,9 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	[Property, Category( "Lockpick" )] public float LockpickInteractRange { get; set; } = 120f;
 
 	private float _currentYaw;
+	private float _currentSlideDistance;
 	private Rotation _baseRotation;
+	private Vector3 _baseLocalPosition;
 	private TimeUntil _brokenLockout;
 
 	/// <summary>True while the post-break cooldown prevents closing or locking.</summary>
@@ -174,14 +193,42 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	protected override void OnStart()
 	{
+		ApplyStartLockState();
+
 		_baseRotation = LocalRotation;
+		_baseLocalPosition = LocalPosition;
 		_currentYaw = State == DoorState.Open ? OpenYaw : 0f;
+		_currentSlideDistance = State == DoorState.Open ? SlideDistance : 0f;
+		ApplyCurrentTransform();
 
 		if ( WorldHud.IsValid() )
 			WorldHud.Door = this;
 	}
 
+	private void ApplyStartLockState()
+	{
+		if ( !Networking.IsHost ) return;
+		if ( !StartLocked ) return;
+		if ( !HasOnlyJobs || IsBlocked ) return;
+
+		LockState = DoorLockState.Locked;
+
+		if ( DoorSecond.IsValid() && DoorSecond.HasOnlyJobs && !DoorSecond.IsBlocked )
+			DoorSecond.LockState = DoorLockState.Locked;
+	}
+
 	protected override void OnUpdate()
+	{
+		if ( MovementMode == DoorMovementMode.Slide )
+		{
+			UpdateSlideAnimation();
+			return;
+		}
+
+		UpdateSwingAnimation();
+	}
+
+	private void UpdateSwingAnimation()
 	{
 		float targetYaw = State == DoorState.Open ? OpenYaw : 0f;
 
@@ -210,6 +257,60 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		}
 
 		LocalRotation = _baseRotation * Rotation.FromYaw( _currentYaw );
+	}
+
+	private void ApplyCurrentTransform()
+	{
+		if ( MovementMode == DoorMovementMode.Slide )
+			ApplySlidePosition();
+		else
+			LocalRotation = _baseRotation * Rotation.FromYaw( _currentYaw );
+	}
+
+	private void UpdateSlideAnimation()
+	{
+		float targetDistance = State == DoorState.Open ? SlideDistance : 0f;
+
+		if ( !IsPlayingAnimation )
+		{
+			if ( MathF.Abs( _currentSlideDistance - targetDistance ) > 0.001f )
+			{
+				_currentSlideDistance = targetDistance;
+				ApplySlidePosition();
+			}
+			return;
+		}
+
+		float step = MathF.Max( 0f, SlideSpeed ) * Time.Delta;
+		float diff = targetDistance - _currentSlideDistance;
+
+		if ( step <= 0.001f || MathF.Abs( diff ) <= step )
+		{
+			_currentSlideDistance = targetDistance;
+			if ( !IsProxy )
+				IsPlayingAnimation = false;
+		}
+		else
+		{
+			_currentSlideDistance += MathF.Sign( diff ) * step;
+		}
+
+		ApplySlidePosition();
+	}
+
+	private void ApplySlidePosition()
+	{
+		LocalPosition = _baseLocalPosition + GetSlideDirection() * _currentSlideDistance;
+	}
+
+	private Vector3 GetSlideDirection()
+	{
+		return SlideAxis switch
+		{
+			DoorSlideAxis.LocalForward => _baseRotation.Forward,
+			DoorSlideAxis.LocalUp => _baseRotation.Up,
+			_ => _baseRotation.Right
+		};
 	}
 
 	public bool Press( IPressable.Event e )

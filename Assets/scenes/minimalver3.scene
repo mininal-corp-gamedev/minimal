@@ -30779,7 +30779,35 @@
           "SpawnPoints": [
             {
               "_type": "gameobject",
-              "go": "c40ceab0-ef2b-4e94-ad85-47052ebd1a85"
+              "go": "e7640a20-05f0-45bd-87c5-070acc5c2438"
+            },
+            {
+              "_type": "gameobject",
+              "go": "2615dec3-9b07-4b70-8f9f-da2fdb1df78f"
+            },
+            {
+              "_type": "gameobject",
+              "go": "2be5de37-e6d3-4512-bf48-7fcc19a28fed"
+            },
+            {
+              "_type": "gameobject",
+              "go": "5dab82fc-211c-453b-aa53-a8af0c296aac"
+            },
+            {
+              "_type": "gameobject",
+              "go": "f038407f-028a-45dd-aca0-ec55c7f67394"
+            },
+            {
+              "_type": "gameobject",
+              "go": "c54e8740-add9-43f8-95d5-03c284e1b96d"
+            },
+            {
+              "_type": "gameobject",
+              "go": "bf3f6097-e18c-42ae-a9c6-d36e8e74facf"
+            },
+            {
+              "_type": "gameobject",
+              "go": "fd25f6e2-4f52-4759-8946-7dc371210d6c"
             }
           ],
           "StartServer": true
@@ -31008,12 +31036,12 @@
       "Components": [],
       "Children": [
         {
-          "__guid": "6f0127a1-4a30-48fb-bd8b-e2289e5b2c1f",
+          "__guid": "fd25f6e2-4f52-4759-8946-7dc371210d6c",
           "__version": 2,
           "Flags": 0,
-          "Name": "Ply Spawn",
-          "Position": "348.341125,-172.59201,70.9259567",
-          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
+          "Name": "point (7)",
+          "Position": "465.267242,-273.325684,0.000991821289",
+          "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -31026,12 +31054,12 @@
           "Children": []
         },
         {
-          "__guid": "160afd49-c6aa-4042-b269-7befbdc6a795",
+          "__guid": "bf3f6097-e18c-42ae-a9c6-d36e8e74facf",
           "__version": 2,
           "Flags": 0,
-          "Name": "Ply Spawn",
-          "Position": "124.113892,-549.206909,117.677322",
-          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
+          "Name": "point (6)",
+          "Position": "271.05658,-305.56488,4.57763672E-05",
+          "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -31044,12 +31072,12 @@
           "Children": []
         },
         {
-          "__guid": "c000567a-a0d6-47b3-bc3c-d07b6b4617fd",
+          "__guid": "c54e8740-add9-43f8-95d5-03c284e1b96d",
           "__version": 2,
           "Flags": 0,
-          "Name": "Ply Spawn",
-          "Position": "405.323669,-542.667419,117.677299",
-          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
+          "Name": "point (5)",
+          "Position": "42.6556892,-276.511047,7.62939453E-05",
+          "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -31062,12 +31090,12 @@
           "Children": []
         },
         {
-          "__guid": "95ffebd1-67f2-4e52-8fa7-92b8bbfced65",
+          "__guid": "f038407f-028a-45dd-aca0-ec55c7f67394",
           "__version": 2,
           "Flags": 0,
-          "Name": "Ply Spawn",
-          "Position": "268.268494,-546.742798,117.677315",
-          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
+          "Name": "point (4)",
+          "Position": "21.585907,-80.3589325,0.000274658203",
+          "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -31080,12 +31108,12 @@
           "Children": []
         },
         {
-          "__guid": "9fb5d1e4-01eb-4605-b9c4-873e62be3866",
+          "__guid": "5dab82fc-211c-453b-aa53-a8af0c296aac",
           "__version": 2,
           "Flags": 0,
-          "Name": "Ply Spawn",
-          "Position": "290.235718,250.266098,16.2899323",
-          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
+          "Name": "point (3)",
+          "Position": "42.3843994,153.473633,-0.000152587891",
+          "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -31098,12 +31126,12 @@
           "Children": []
         },
         {
-          "__guid": "45f82b95-5bf2-49cd-954f-4426caa69229",
+          "__guid": "2be5de37-e6d3-4512-bf48-7fcc19a28fed",
           "__version": 2,
           "Flags": 0,
-          "Name": "Ply Spawn",
-          "Position": "454.030701,198.626938,54.9184685",
-          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
+          "Name": "point (2)",
+          "Position": "256.122986,170.057358,0.000152587891",
+          "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -31116,12 +31144,12 @@
           "Children": []
         },
         {
-          "__guid": "8ba2a607-a52d-4c5a-af29-1036e736e865",
+          "__guid": "2615dec3-9b07-4b70-8f9f-da2fdb1df78f",
           "__version": 2,
           "Flags": 0,
-          "Name": "Ply Spawn",
-          "Position": "24.9477539,3.1518364,44.596981",
-          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
+          "Name": "point (1)",
+          "Position": "467.692871,148.778809,0.000213623047",
+          "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -31134,84 +31162,12 @@
           "Children": []
         },
         {
-          "__guid": "fe548dc3-cb3d-43d9-9056-5c4b3cb311a5",
+          "__guid": "e7640a20-05f0-45bd-87c5-070acc5c2438",
           "__version": 2,
           "Flags": 0,
-          "Name": "Ply Spawn",
-          "Position": "282.904297,-283.364471,86.9806976",
-          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
-          "Scale": "1,1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [],
-          "Children": []
-        },
-        {
-          "__guid": "ea57a69c-d118-4088-b86c-9a2fbc576f28",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "Ply Spawn",
-          "Position": "488.59668,-220.645782,78.7523804",
-          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
-          "Scale": "1,1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [],
-          "Children": []
-        },
-        {
-          "__guid": "4d9341c0-7701-43e2-bdcc-2a708c86731a",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "Ply Spawn",
-          "Position": "243.078812,175.37706,108.333572",
-          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
-          "Scale": "1,1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [],
-          "Children": []
-        },
-        {
-          "__guid": "749316e1-aee9-485a-9467-b673fcc67af4",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "Ply Spawn",
-          "Position": "227.195251,-385.696991,73.3852234",
-          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
-          "Scale": "1,1,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [],
-          "Children": []
-        },
-        {
-          "__guid": "913339e3-44f8-4dce-b2df-9c7ec1750e6d",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "Ply Spawn",
-          "Position": "87.1493835,-361.480652,50.2311974",
-          "Rotation": "-0.0470985956,0.0428408831,0.738251746,0.671513796",
+          "Name": "point",
+          "Position": "490.62146,-39.922451,-0.000946044922",
+          "Rotation": "0,0,0,1",
           "Scale": "1,1,1",
           "Tags": "",
           "Enabled": true,
@@ -31511,6 +31467,9 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
+      },
       "Sandbox.SelectionSetsSystem": {
         "Data": {
           "SelectionSets": []
@@ -31520,9 +31479,6 @@
         "Storage": {
           "$blob": "49282fd9-ea15-4301-b738-6e777cc5a613"
         }
-      },
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
       }
     }
   },

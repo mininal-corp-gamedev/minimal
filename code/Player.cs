@@ -100,6 +100,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private bool _deathPrevUseCameraControls;
     private bool _deathColliderApplied;
     private bool _deathPrevColliderEnabled;
+    private Vector3 _queuedElevatorCarryDelta;
     private static bool _jobInventoryEventsRegistered;
 
     /// <summary>
@@ -249,6 +250,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if (!IsProxy)
         {
+            ClearQueuedElevatorCarryDelta();
             WorldPosition = position;
             if (Controller.IsValid())
                 Controller.EyeAngles = rotation;
@@ -258,11 +260,36 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         RpcOwnerTeleport(position, rotation);
     }
 
+    public void ApplyElevatorCarryDelta(Vector3 delta)
+    {
+        if (!Networking.IsHost) return;
+        if (delta.LengthSquared <= 0.000001f) return;
+
+        if (!IsProxy)
+        {
+            ApplyElevatorDelta(delta);
+            return;
+        }
+
+        RpcOwnerQueueElevatorCarryDelta(delta);
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerQueueElevatorCarryDelta(Vector3 delta)
+    {
+        if (Networking.IsHost) return;
+        if (IsProxy) return;
+        if (delta.LengthSquared <= 0.000001f) return;
+
+        _queuedElevatorCarryDelta += delta;
+    }
+
     [Rpc.Owner]
     private void RpcOwnerSpawn(Vector3 position, Rotation rotation)
     {
         if (Networking.IsHost) return;
 
+        ClearQueuedElevatorCarryDelta();
         WorldPosition = position;
         if (Controller.IsValid())
             Controller.EyeAngles = rotation;
@@ -279,9 +306,43 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         if (Networking.IsHost) return;
 
+        ClearQueuedElevatorCarryDelta();
         WorldPosition = position;
         if (Controller.IsValid())
             Controller.EyeAngles = rotation;
+    }
+
+    private void ApplyElevatorDelta(Vector3 delta)
+    {
+        if (!Controller.IsValid() || IsDead || IsArrested)
+            return;
+
+        WorldPosition += delta;
+        ResetElevatorFallDamageGrace();
+
+        if (!Controller.Body.IsValid())
+            return;
+
+        var velocity = Controller.Body.Velocity;
+        if (MathF.Abs(delta.z) > 0.001f && velocity.z < 0f)
+            velocity.z = 0f;
+
+        Controller.Body.Velocity = velocity;
+    }
+
+    private void ApplyQueuedElevatorCarryDelta()
+    {
+        if (_queuedElevatorCarryDelta.LengthSquared <= 0.000001f)
+            return;
+
+        var delta = _queuedElevatorCarryDelta;
+        _queuedElevatorCarryDelta = Vector3.Zero;
+        ApplyElevatorDelta(delta);
+    }
+
+    private void ClearQueuedElevatorCarryDelta()
+    {
+        _queuedElevatorCarryDelta = Vector3.Zero;
     }
 
     private void SpawnInternal()
@@ -296,6 +357,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         RestoreDeathState();
         ResetFallDamageGrace();
         WorldHud?.WorldHudRefresh();
+        ClearQueuedElevatorCarryDelta();
         WorldPosition = spawnPoint.WorldPosition;
         Controller.EyeAngles = spawnPoint.WorldRotation;
 
@@ -399,6 +461,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (!Networking.IsHost) return;
         if (IsDead) return;
 
+        ClearQueuedElevatorCarryDelta();
         IsDead = true;
         Health = 0f;
         DeathTimeUntilRespawn = MathF.Max(0.1f, RespawnDelaySeconds);
@@ -413,6 +476,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Owner]
     private void RpcOwnerDied(string deathMessage, float respawnDelay)
     {
+        ClearQueuedElevatorCarryDelta();
         IsDead = true;
         Health = 0f;
         DeathTimeUntilRespawn = MathF.Max(0.1f, respawnDelay);
@@ -627,6 +691,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         _ignoreNextFallDamage = true;
         _fallDamageGraceUntil = MathF.Max(0f, FallDamageSpawnGraceSeconds);
+        _nextFallDamageAllowed = 0.2f;
+    }
+
+    private void ResetElevatorFallDamageGrace()
+    {
+        _ignoreNextFallDamage = true;
+        _fallDamageGraceUntil = 0.35f;
         _nextFallDamageAllowed = 0.2f;
     }
 
@@ -1629,6 +1700,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     protected override void OnFixedUpdate()
     {
+        ApplyQueuedElevatorCarryDelta();
         HostUpdateDeathRespawn();
         UpdateArrestEffects();
         CheckUseHotbarSlots();
@@ -2212,6 +2284,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         if (Controller.IsValid())
         {
+            ClearQueuedElevatorCarryDelta();
             WorldPosition = pos;
             Controller.EyeAngles = rot;
         }

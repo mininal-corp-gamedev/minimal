@@ -115,6 +115,9 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	/// <summary>Current lock state of the door.</summary>
 	[Sync] public DoorLockState LockState { get; private set; } = DoorLockState.Unlocked;
 
+	/// <summary>Yaw angle used by the current open animation. Chosen by the host from the opener side.</summary>
+	[Sync] public float OpenYaw { get; private set; } = 90f;
+
 	/// <summary>True while the door is playing its open or close animation.</summary>
 	[Sync] public bool IsPlayingAnimation { get; private set; }
 
@@ -123,6 +126,12 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	/// <summary>Speed of the open/close rotation animation in degrees per second.</summary>
 	[Property] public float AnimationSpeed { get; set; } = 90f;
+
+	/// <summary>Maximum angle, in degrees, used when the door opens.</summary>
+	[Property] public float OpenAngle { get; set; } = 90f;
+
+	/// <summary>Maximum distance between a caller and the door for the host to accept direct door actions.</summary>
+	[Property] public float InteractRange { get; set; } = 220f;
 
 	/// <summary>Sound played (broadcast to all clients at the door position) when this door opens.</summary>
 	[Property, Category( "Sounds" )] public SoundEvent OpenSound { get; set; }
@@ -166,7 +175,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	protected override void OnStart()
 	{
 		_baseRotation = LocalRotation;
-		_currentYaw = State == DoorState.Open ? 90f : 0f;
+		_currentYaw = State == DoorState.Open ? OpenYaw : 0f;
 
 		if ( WorldHud.IsValid() )
 			WorldHud.Door = this;
@@ -174,7 +183,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	protected override void OnUpdate()
 	{
-		float targetYaw = State == DoorState.Open ? 90f : 0f;
+		float targetYaw = State == DoorState.Open ? OpenYaw : 0f;
 
 		if ( !IsPlayingAnimation )
 		{
@@ -208,38 +217,68 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		if ( !e.Source.GameObject.Components.TryGet<Player>( out var player, FindMode.EverythingInSelfAndParent ) ) return false;
 
 		if ( State == DoorState.Closed )
-			RpcRequestOpen();
+		{
+			if ( Networking.IsHost )
+				Open( player );
+			else
+				RpcRequestOpen();
+		}
 		else
-			RpcRequestClose();
+		{
+			if ( Networking.IsHost )
+				Close();
+			else
+				RpcRequestClose();
+		}
 
 		return true;
 	}
 
 	/// <summary>Opens the door. Has no effect if animating, already open, or locked. Mirrors to <see cref="DoorSecond"/>.</summary>
-	public void Open()
+	public void Open( Player opener = null )
+	{
+		if ( !Networking.IsHost ) return;
+		OpenWithYaw( ResolveOpenYaw( opener ), true );
+	}
+
+	private void OpenPaired( float openYaw )
+	{
+		if ( !Networking.IsHost ) return;
+		OpenWithYaw( openYaw, false );
+	}
+
+	private void OpenWithYaw( float openYaw, bool mirrorToSecond )
 	{
 		if ( State == DoorState.Open ) return; // idempotent — prevents paired-door recursion
 		if ( IsPlayingAnimation ) return;
 		if ( LockState == DoorLockState.Locked ) return;
 
+		OpenYaw = openYaw;
 		State = DoorState.Open;
 		IsPlayingAnimation = true;
 
 		if ( OpenSound.IsValid() )
 			RpcPlaySoundAtDoor( OpenSound );
 
-		DoorSecond?.Open();
+		if ( mirrorToSecond && DoorSecond.IsValid() )
+			DoorSecond.OpenPaired( -openYaw );
 	}
 
 	[Rpc.Host]
 	public void RpcRequestOpen()
 	{
-		Open();
+		if ( !Networking.IsHost ) return;
+
+		var opener = FindRpcCallerPlayer();
+		if ( !CanPlayerInteract( opener ) ) return;
+
+		Open( opener );
 	}
 
 	/// <summary>Closes the door. Has no effect if animating, already closed, or the broken lockout is active. Mirrors to <see cref="DoorSecond"/>.</summary>
 	public void Close()
 	{
+		if ( !Networking.IsHost ) return;
 		if ( State == DoorState.Closed ) return; // idempotent — prevents paired-door recursion
 		if ( IsPlayingAnimation ) return;
 		if ( IsBrokenLocked ) return;
@@ -256,12 +295,18 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	[Rpc.Host]
 	public void RpcRequestClose()
 	{
+		if ( !Networking.IsHost ) return;
+
+		var closer = FindRpcCallerPlayer();
+		if ( !CanPlayerInteract( closer ) ) return;
+
 		Close();
 	}
 
 	/// <summary>Locks the door. Requires a non-blocked, non-broken, closed, idle door that is either player-owned or a job-door. Mirrors to <see cref="DoorSecond"/>.</summary>
 	public void Lock()
 	{
+		if ( !Networking.IsHost ) return;
 		if ( LockState == DoorLockState.Locked ) return; // idempotent — prevents paired-door recursion
 		if ( IsPlayingAnimation ) return;
 		if ( State == DoorState.Open ) return;
@@ -280,13 +325,19 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	public void RpcRequestLock()
 	{
 		if ( !Networking.IsHost ) return;
-		if ( !CallerCanLock( Rpc.Caller.SteamId ) ) return;
+
+		var caller = Rpc.Caller;
+		var player = FindRpcCallerPlayer();
+		if ( caller is null || !CanPlayerInteract( player ) ) return;
+		if ( !CallerCanLock( caller.SteamId ) ) return;
+
 		Lock();
 	}
 
 	/// <summary>Unlocks the door. Requires the door not being admin-blocked and being either player-owned or a job-door. Mirrors to <see cref="DoorSecond"/>.</summary>
 	public void Unlock()
 	{
+		if ( !Networking.IsHost ) return;
 		if ( LockState == DoorLockState.Unlocked ) return; // idempotent — prevents paired-door recursion
 		if ( IsBlocked ) return;
 		if ( !HasOnlyJobs && !HasOwner ) return;
@@ -301,7 +352,12 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	public void RpcRequestUnlock()
 	{
 		if ( !Networking.IsHost ) return;
-		if ( !CallerCanLock( Rpc.Caller.SteamId ) ) return;
+
+		var caller = Rpc.Caller;
+		var player = FindRpcCallerPlayer();
+		if ( caller is null || !CanPlayerInteract( player ) ) return;
+		if ( !CallerCanLock( caller.SteamId ) ) return;
+
 		Unlock();
 	}
 
@@ -346,12 +402,14 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	{
 		if ( !Networking.IsHost ) return;
 
-		var buyer = FindPlayerBySteamId( Rpc.Caller.SteamId );
+		var caller = Rpc.Caller;
+		var buyer = FindRpcCallerPlayer();
 		if ( buyer is null )
 		{
-			Log.Warning( $"Door.RpcRequestBuy: player not found for {Rpc.Caller.DisplayName}" );
+			Log.Warning( $"Door.RpcRequestBuy: player not found for {caller?.DisplayName ?? "unknown"}" );
 			return;
 		}
+		if ( !CanPlayerInteract( buyer ) ) return;
 
 		Buy( buyer );
 	}
@@ -387,8 +445,13 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	public void RpcRequestSell()
 	{
 		if ( !Networking.IsHost ) return;
+
+		var caller = Rpc.Caller;
+		var seller = FindRpcCallerPlayer();
+		if ( caller is null || !CanPlayerInteract( seller ) ) return;
+
 		// Only the gameplay owner can sell.
-		if ( !IsOwnedBy( Rpc.Caller.SteamId ) ) return;
+		if ( !IsOwnedBy( caller.SteamId ) ) return;
 		Sell();
 	}
 
@@ -430,9 +493,14 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	public void RpcRequestAddRoommate( long steamId )
 	{
 		if ( !Networking.IsHost ) return;
+
+		var caller = Rpc.Caller;
+		var owner = FindRpcCallerPlayer();
+		if ( caller is null || !CanPlayerInteract( owner ) ) return;
+
 		if ( !CanHaveRoommates ) return;
 		if ( !HasOwner ) return;
-		if ( !IsOwnedBy( Rpc.Caller.SteamId ) ) return; // only the owner can add
+		if ( !IsOwnedBy( caller.SteamId ) ) return; // only the owner can add
 		if ( steamId == 0L ) return;
 		if ( steamId == OwnerSteamId ) return; // cannot add self
 
@@ -451,9 +519,14 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	public void RpcRequestRemoveRoommate( long steamId )
 	{
 		if ( !Networking.IsHost ) return;
+
+		var caller = Rpc.Caller;
+		var owner = FindRpcCallerPlayer();
+		if ( caller is null || !CanPlayerInteract( owner ) ) return;
+
 		if ( !CanHaveRoommates ) return;
 		if ( !HasOwner ) return;
-		if ( !IsOwnedBy( Rpc.Caller.SteamId ) ) return; // only the owner can remove
+		if ( !IsOwnedBy( caller.SteamId ) ) return; // only the owner can remove
 		if ( steamId == 0L ) return;
 
 		var set = new HashSet<long>( RoommateIds );
@@ -483,6 +556,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	public void RpcRequestHit( SoundEvent hitSound )
 	{
 		if ( !Networking.IsHost ) return;
+		if ( !CanPlayerInteract( FindRpcCallerPlayer() ) ) return;
 		if ( !hitSound.IsValid() ) return;
 		RpcPlaySoundAtDoor( hitSound );
 	}
@@ -497,12 +571,74 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		return null;
 	}
 
+	private Player FindRpcCallerPlayer()
+	{
+		var caller = Rpc.Caller;
+		if ( caller is null ) return null;
+		return FindPlayerBySteamId( caller.SteamId );
+	}
+
+	private bool CanPlayerInteract( Player player )
+	{
+		if ( !player.IsValid() ) return false;
+		if ( player.IsArrested ) return false;
+
+		var maxDistance = MathF.Max( 1f, InteractRange );
+		return Vector3.DistanceBetween( GetPlayerInteractionPosition( player ), WorldPosition ) <= maxDistance;
+	}
+
+	private float ResolveOpenYaw( Player opener )
+	{
+		var openAngle = MathF.Abs( OpenAngle );
+		if ( openAngle <= 0.001f ) return 0f;
+		if ( !opener.IsValid() ) return openAngle;
+
+		var doorNormal = FlattenHorizontal( WorldRotation.Forward );
+		if ( doorNormal.LengthSquared <= 0.001f ) return openAngle;
+		doorNormal = doorNormal.Normal;
+
+		var openerOffset = FlattenHorizontal( GetPlayerInteractionPosition( opener ) - WorldPosition );
+		var side = openerOffset.LengthSquared > 0.001f ? Vector3.Dot( doorNormal, openerOffset ) : 0f;
+
+		if ( MathF.Abs( side ) <= 2f )
+		{
+			var openerForward = FlattenHorizontal( GetPlayerForward( opener ) );
+			if ( openerForward.LengthSquared > 0.001f )
+				side = -Vector3.Dot( doorNormal, openerForward.Normal );
+		}
+
+		if ( MathF.Abs( side ) <= 0.001f ) return openAngle;
+		return side > 0f ? openAngle : -openAngle;
+	}
+
+	private static Vector3 GetPlayerInteractionPosition( Player player )
+	{
+		if ( player.Controller.IsValid() )
+			return player.Controller.EyePosition;
+
+		return player.WorldPosition;
+	}
+
+	private static Vector3 GetPlayerForward( Player player )
+	{
+		if ( player.Controller.IsValid() )
+			return player.Controller.EyeTransform.Forward;
+
+		return player.WorldRotation.Forward;
+	}
+
+	private static Vector3 FlattenHorizontal( Vector3 value )
+	{
+		return new Vector3( value.x, value.y, 0f );
+	}
+
 	/// <summary>
 	/// Breaks the door: unlocks it, forces it open, and prevents closing or locking
 	/// for a duration defined by the broken lockout timer.
 	/// </summary>
-	public void Break()
+	public void Break( Player breaker = null )
 	{
+		if ( !Networking.IsHost ) return;
 		if ( IsBroken ) return;
 
 		IsBroken = true;
@@ -510,13 +646,18 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		_brokenLockout = 10f;
 
 		if ( State == DoorState.Closed && !IsPlayingAnimation )
-			Open();
+			Open( breaker );
 	}
 
 	[Rpc.Host]
 	public void RpcRequestBreak()
 	{
-		Break();
+		if ( !Networking.IsHost ) return;
+
+		var breaker = FindRpcCallerPlayer();
+		if ( !CanPlayerInteract( breaker ) ) return;
+
+		Break( breaker );
 	}
 
 	// ===================== LOCKPICK =====================
@@ -579,7 +720,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 			LockState = DoorLockState.Unlocked;
 			if ( DoorSecond.IsValid() && DoorSecond.LockState == DoorLockState.Locked )
 				DoorSecond.LockState = DoorLockState.Unlocked;
-			Open();
+			Open( picker );
 
 			NotifyLockpicker( caller, $"Взлом удался! Дверь открыта. Следующая попытка через {cooldown:0}с.", NotificationType.Info, 3.5f );
 		}

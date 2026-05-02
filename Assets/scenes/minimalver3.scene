@@ -1557,6 +1557,202 @@
                 }
               ],
               "Children": []
+            },
+            {
+              "__guid": "8cc18e54-e0d0-4e72-b8d9-edc229b141bd",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "sanae",
+              "Position": "-2729.51562,-722.083252,0.176213682",
+              "Rotation": "0,0,0.793353438,-0.60876143",
+              "Scale": "1,1,1",
+              "Tags": "",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [
+                {
+                  "__type": "Sandbox.Prop",
+                  "__guid": "9bfe7009-2dec-444e-a148-0fd242eb0e56",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "BodyGroups": 18446744073709551615,
+                  "Health": 0,
+                  "IsStatic": false,
+                  "MaterialGroup": null,
+                  "Model": "fumo/sanae/sanae.vmdl",
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "OnPropBreak": null,
+                  "OnPropTakeDamage": null,
+                  "StartAsleep": false,
+                  "Tint": "1,1,1,1"
+                },
+                {
+                  "__type": "Sandbox.ModelRenderer",
+                  "__guid": "5602307f-6093-4b07-8cdb-32b92d58f724",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "BodyGroups": 18446744073709551615,
+                  "CreateAttachments": false,
+                  "LodOverride": null,
+                  "MaterialGroup": null,
+                  "MaterialOverride": null,
+                  "Materials": null,
+                  "Model": "fumo/sanae/sanae.vmdl",
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "RenderOptions": {
+                    "GameLayer": true,
+                    "OverlayLayer": false,
+                    "BloomLayer": false,
+                    "AfterUILayer": false
+                  },
+                  "RenderType": "On",
+                  "Tint": "1,1,1,1"
+                },
+                {
+                  "__type": "Sandbox.ModelCollider",
+                  "__guid": "b19533c8-1f59-4547-9b5e-1bb4644b1649",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "ColliderFlags": 0,
+                  "Elasticity": null,
+                  "Friction": null,
+                  "IsTrigger": false,
+                  "Model": "fumo/sanae/sanae.vmdl",
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "OnObjectTriggerEnter": null,
+                  "OnObjectTriggerExit": null,
+                  "OnTriggerEnter": null,
+                  "OnTriggerExit": null,
+                  "RollingResistance": null,
+                  "Static": false,
+                  "Surface": null,
+                  "SurfaceVelocity": "0,0,0"
+                },
+                {
+                  "__type": "Sandbox.Rigidbody",
+                  "__guid": "603dfdab-978c-4541-bcf2-edce7f13e8f8",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "AngularDamping": 0,
+                  "EnableImpactDamage": true,
+                  "EnhancedCcd": false,
+                  "Gravity": true,
+                  "GravityScale": 1,
+                  "ImpactDamage": 0,
+                  "LinearDamping": 0,
+                  "Locking": {
+                    "X": false,
+                    "Y": false,
+                    "Z": false,
+                    "Pitch": false,
+                    "Yaw": false,
+                    "Roll": false
+                  },
+                  "MassCenterOverride": "0,0,0",
+                  "MassOverride": 0,
+                  "MinImpactDamageSpeed": 500,
+                  "MotionEnabled": true,
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "OverrideMassCenter": false,
+                  "RigidbodyFlags": 0,
+                  "StartAsleep": false
+                }
+              ],
+              "Children": [
+                {
+                  "__guid": "56c476eb-2efc-4f56-aac8-ab027b02a33c",
+                  "__version": 2,
+                  "Flags": 0,
+                  "Name": "rageman_3d",
+                  "Position": "-27.3038292,-34.4654579,-0.203671843",
+                  "Rotation": "0,0,-0.866025388,0.50000006",
+                  "Scale": "1,1,1",
+                  "Tags": "",
+                  "Enabled": true,
+                  "NetworkMode": 2,
+                  "NetworkFlags": 0,
+                  "NetworkOrphaned": 0,
+                  "NetworkTransmit": true,
+                  "OwnerTransfer": 1,
+                  "Components": [
+                    {
+                      "__type": "Sandbox.SoundPointComponent",
+                      "__guid": "36195f88-c799-4f12-b421-6cead6052280",
+                      "__enabled": true,
+                      "Flags": 0,
+                      "Distance": 1500,
+                      "DistanceAttenuation": false,
+                      "DistanceAttenuationOverride": true,
+                      "Falloff": [
+                        {
+                          "x": 0,
+                          "y": 1,
+                          "in": 3.1415927,
+                          "out": -3.1415927,
+                          "mode": "Mirrored"
+                        },
+                        {
+                          "x": 1,
+                          "y": 0,
+                          "in": 0,
+                          "out": 0,
+                          "mode": "Mirrored"
+                        }
+                      ],
+                      "Force2d": false,
+                      "MaxRepeatTime": 1,
+                      "MinRepeatTime": 1,
+                      "Occlusion": false,
+                      "OcclusionOverride": false,
+                      "OcclusionRadius": 32,
+                      "OnComponentDestroy": null,
+                      "OnComponentDisabled": null,
+                      "OnComponentEnabled": null,
+                      "OnComponentFixedUpdate": null,
+                      "OnComponentStart": null,
+                      "OnComponentUpdate": null,
+                      "Pitch": 1,
+                      "PlayOnStart": true,
+                      "ReflectionOverride": false,
+                      "Reflections": false,
+                      "Repeat": false,
+                      "SoundEvent": "sounds/music/rageman_3d.sound",
+                      "SoundOverride": false,
+                      "StopOnNew": false,
+                      "TargetMixer": {
+                        "Name": "unknown",
+                        "Id": "00000000-0000-0000-0000-000000000000"
+                      },
+                      "Volume": 1
+                    }
+                  ],
+                  "Children": []
+                }
+              ]
             }
           ]
         },
@@ -1617,6 +1813,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -1666,6 +1878,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,-1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -1717,6 +1945,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.707106948,-0.70710659"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -1766,6 +2010,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.707106948,-0.70710659"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -1824,6 +2084,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -1873,6 +2149,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,-1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -10673,6 +10965,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -10724,6 +11032,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,3.57627869E-07,-0.999999881"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -10773,6 +11097,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -10822,6 +11162,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.707106888,-0.70710659"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -10871,6 +11227,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.707106888,-0.707106471"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -10920,6 +11292,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -10969,6 +11357,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.707106888,-0.707106471"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11018,6 +11422,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11067,6 +11487,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11116,6 +11552,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11165,6 +11617,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11214,6 +11682,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.707106888,-0.707106471"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11263,6 +11747,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11312,6 +11812,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.707106888,-0.707106471"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11361,6 +11877,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106888,0.707106769"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eab26a99-7a6d-44cb-b2d8-3725b98e878c"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11421,6 +11953,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,2.84217094E-14,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11470,6 +12018,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11519,6 +12083,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11568,6 +12148,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11617,6 +12213,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11666,6 +12278,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11715,6 +12343,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11764,6 +12408,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -11925,6 +12585,22 @@
                     },
                     "Property": "IsStatic",
                     "Value": true
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -12089,6 +12765,22 @@
                     },
                     "Property": "IsStatic",
                     "Value": true
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -12150,6 +12842,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -12199,6 +12907,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0.999999881,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -12385,8 +13109,24 @@
                           "Type": "Component",
                           "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
                         },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                        },
                         "Property": "IsBlocked",
                         "Value": true
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -12565,8 +13305,24 @@
                           "Type": "Component",
                           "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
                         },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                        },
                         "Property": "IsBlocked",
                         "Value": true
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -12756,8 +13512,24 @@
                           "Type": "Component",
                           "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
                         },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                        },
                         "Property": "IsBlocked",
                         "Value": true
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -12936,8 +13708,24 @@
                           "Type": "Component",
                           "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
                         },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                        },
                         "Property": "IsBlocked",
                         "Value": true
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -13001,6 +13789,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -13050,6 +13854,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,-1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -13110,6 +13930,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -13159,6 +13995,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,-1,1.78813934E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -13219,6 +14071,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -13268,6 +14136,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,-1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -13311,6 +14195,22 @@
                     },
                     "Property": "Position",
                     "Value": "-849.661255,2885.96631,-15.8750038"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14202,6 +15102,22 @@
                   },
                   {
                     "Target": {
+                      "Type": "Component",
+                      "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
+                  },
+                  {
+                    "Target": {
                       "Type": "GameObject",
                       "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                     },
@@ -14258,6 +15174,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   },
                   {
                     "Target": {
@@ -14328,6 +15260,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14377,6 +15325,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14426,6 +15390,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14467,6 +15447,22 @@
                     },
                     "Property": "Position",
                     "Value": "-1913.97632,-3137.30127,-816.131958"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14508,6 +15504,22 @@
                     },
                     "Property": "Position",
                     "Value": "-1913.97632,-3137.30127,-671.991455"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14549,6 +15561,22 @@
                     },
                     "Property": "Position",
                     "Value": "-1913.97656,-3297.99976,-671.991455"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14598,6 +15626,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14647,6 +15691,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14696,6 +15756,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14745,6 +15821,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106709,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14794,6 +15886,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.99999994,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14843,6 +15951,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14892,6 +16016,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14941,6 +16081,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -14982,6 +16138,22 @@
                     },
                     "Property": "Position",
                     "Value": "-1739.23706,-2665.90967,-816.030334"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15023,6 +16195,22 @@
                     },
                     "Property": "Position",
                     "Value": "-1921.98535,-2665.90967,-816.030334"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15064,6 +16252,22 @@
                     },
                     "Property": "Position",
                     "Value": "-1921.9751,-2537.87915,-816.030334"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15113,6 +16317,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.99999994,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15162,6 +16382,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.99999994,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15211,6 +16447,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.99999994,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15260,6 +16512,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.99999994,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15309,6 +16577,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.99999994,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15358,6 +16642,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.707106888,-0.707106531"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15399,6 +16699,22 @@
                     },
                     "Property": "Position",
                     "Value": "-441.976868,2030.01648,-672.002319"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15440,6 +16756,22 @@
                     },
                     "Property": "Position",
                     "Value": "-353.977234,2030.0166,-672.002319"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15481,6 +16813,22 @@
                     },
                     "Property": "Position",
                     "Value": "-369.977783,2045.77771,-816.002319"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15530,6 +16878,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.707106829,-0.70710659"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15579,6 +16943,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,3.27825546E-07,-1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15628,6 +17008,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.382683545,0.923879504"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "cd91b72e-f09b-4054-a36a-4acfbad541b8"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "cd91b72e-f09b-4054-a36a-4acfbad541b8"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15679,6 +17075,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1.00000012"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -15722,6 +17134,22 @@
                     },
                     "Property": "Position",
                     "Value": "-450.412415,1686.02271,-816.188904"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "cd91b72e-f09b-4054-a36a-4acfbad541b8"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "cd91b72e-f09b-4054-a36a-4acfbad541b8"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16012,6 +17440,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -16061,6 +17505,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.78813934E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -16121,6 +17581,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -16172,6 +17648,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1.00000012,1.78813934E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       }
                     ],
                     "MovedObjects": []
@@ -16225,6 +17717,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16274,6 +17782,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16323,6 +17847,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.707106411,-0.707107067"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16374,6 +17914,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16423,6 +17979,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16464,6 +18036,22 @@
                     },
                     "Property": "Position",
                     "Value": "1374.021,-1335.6178,16.1899357"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16505,6 +18093,22 @@
                     },
                     "Property": "Position",
                     "Value": "1198.01709,-1543.5166,16.1899586"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16554,6 +18158,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16605,6 +18225,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16654,6 +18290,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.999999881,-4.76837158E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16705,6 +18357,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "cd91b72e-f09b-4054-a36a-4acfbad541b8"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "cd91b72e-f09b-4054-a36a-4acfbad541b8"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16756,6 +18424,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16805,6 +18489,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16854,6 +18554,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16903,6 +18619,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -16952,6 +18684,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17001,6 +18749,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.707106829,-0.707106292"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17050,6 +18814,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17099,6 +18879,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17148,6 +18944,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17197,6 +19009,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17246,6 +19074,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17295,6 +19139,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17344,6 +19204,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17393,6 +19269,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17442,6 +19334,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17491,6 +19399,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17540,6 +19464,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17589,6 +19529,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17638,6 +19594,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17687,6 +19659,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17736,6 +19724,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17785,6 +19789,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17834,6 +19854,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17883,6 +19919,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17932,6 +19984,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.999999881,1.49011612E-07"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -17981,6 +20049,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -18030,6 +20114,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -18079,6 +20179,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -18128,6 +20244,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -18177,6 +20309,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0,1"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -18226,6 +20374,22 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.382683307,0.923879623"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "cd91b72e-f09b-4054-a36a-4acfbad541b8"
+                    },
+                    "Property": "InteractRange",
+                    "Value": 220
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "cd91b72e-f09b-4054-a36a-4acfbad541b8"
+                    },
+                    "Property": "OpenAngle",
+                    "Value": 90
                   }
                 ],
                 "MovedObjects": []
@@ -18308,6 +20472,22 @@
                       },
                       {
                         "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
+                      },
+                      {
+                        "Target": {
                           "Type": "GameObject",
                           "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                         },
@@ -18364,6 +20544,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1.00000012,2.08616257E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       },
                       {
                         "Target": {
@@ -18437,6 +20633,22 @@
                       },
                       {
                         "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
+                      },
+                      {
+                        "Target": {
                           "Type": "GameObject",
                           "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                         },
@@ -18493,6 +20705,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.78813934E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       },
                       {
                         "Target": {
@@ -18566,6 +20794,22 @@
                       },
                       {
                         "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
+                      },
+                      {
+                        "Target": {
                           "Type": "GameObject",
                           "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                         },
@@ -18622,6 +20866,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       },
                       {
                         "Target": {
@@ -18695,6 +20955,22 @@
                       },
                       {
                         "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
+                      },
+                      {
+                        "Target": {
                           "Type": "GameObject",
                           "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                         },
@@ -18751,6 +21027,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       },
                       {
                         "Target": {
@@ -18824,6 +21116,22 @@
                       },
                       {
                         "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
+                      },
+                      {
+                        "Target": {
                           "Type": "GameObject",
                           "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                         },
@@ -18880,6 +21188,22 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "InteractRange",
+                        "Value": 220
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "OpenAngle",
+                        "Value": 90
                       },
                       {
                         "Target": {
@@ -30237,6 +32561,256 @@
         }
       ],
       "Children": []
+    },
+    {
+      "__guid": "18556ca7-091b-40ca-963e-790d6a3ebc31",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "bible_ru",
+      "Position": "-4049.84497,2567.99951,80.1807251",
+      "Rotation": "0.49999997,0.49999997,-0.49999997,0.49999997",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.SoundPointComponent",
+          "__guid": "dc10eb20-ad12-4bae-934a-f916079c555c",
+          "__enabled": true,
+          "Flags": 0,
+          "Distance": 512,
+          "DistanceAttenuation": false,
+          "DistanceAttenuationOverride": false,
+          "Falloff": [
+            {
+              "x": 0,
+              "y": 1,
+              "in": 3.1415927,
+              "out": -3.1415927,
+              "mode": "Mirrored"
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "in": 0,
+              "out": 0,
+              "mode": "Mirrored"
+            }
+          ],
+          "Force2d": false,
+          "MaxRepeatTime": 1,
+          "MinRepeatTime": 1,
+          "Occlusion": false,
+          "OcclusionOverride": false,
+          "OcclusionRadius": 32,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Pitch": 1,
+          "PlayOnStart": true,
+          "ReflectionOverride": false,
+          "Reflections": false,
+          "Repeat": false,
+          "SoundEvent": "audio/bible_ru.sound",
+          "SoundOverride": false,
+          "StopOnNew": false,
+          "TargetMixer": {
+            "Name": "unknown",
+            "Id": "00000000-0000-0000-0000-000000000000"
+          },
+          "Volume": 1
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "1b83b9da-0ead-469e-ab60-6c17770be70b",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "metal_platform",
+      "Position": "-78.6602173,1423.89209,28.8572998",
+      "Rotation": "0,0,0,1",
+      "Scale": "2.07133055,1.6615169,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "8789c1d1-c4e3-4220-8fa9-f2952b4754f3",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "props/other/metal_platform.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "e9d9e513-01e5-4894-ad6b-eb5be073bf4f",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "props/other/metal_platform.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "3bd2d7b3-663d-40c7-9cbc-28978e321a66",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "props/other/metal_platform.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": false,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "Elevator",
+          "__guid": "ec078b25-cdb9-4c99-944e-1f389a68af0a",
+          "__enabled": true,
+          "Flags": 0,
+          "ArriveSound": null,
+          "CarryPlayers": true,
+          "FloorCount": 5,
+          "FloorHeight": 128,
+          "FloorHeights": [
+            128,
+            128,
+            128,
+            128
+          ],
+          "InitialFloor": 1,
+          "MaxUseDistance": 180,
+          "MoveSpeed": 128,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "PassengerHorizontalRadius": 96,
+          "PassengerReleaseGraceSeconds": 0.16,
+          "PassengerTraceDistance": 42,
+          "Platform": null,
+          "RejectRequestsWhileMoving": false,
+          "StartSound": null,
+          "UseCustomFloorHeights": false
+        }
+      ],
+      "Children": [
+        {
+          "__guid": "1c4704f8-f141-4bb7-8cb6-f0f97a5d0a57",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "World",
+          "Position": "-29.0783901,-57.6933784,47.4553299",
+          "Rotation": "0,0,0.70710665,0.707106829",
+          "Scale": "0.764183402,0.649999976,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.WorldPanel",
+              "__guid": "0eadeb11-9f06-4a75-91dc-9284f0542bc5",
+              "__enabled": true,
+              "Flags": 0,
+              "HorizontalAlign": "Center",
+              "InteractionRange": 1000,
+              "LookAtCamera": false,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "PanelSize": "512,512",
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderScale": 1,
+              "VerticalAlign": "Center"
+            },
+            {
+              "__type": "Sandbox.ElevatorPanel",
+              "__guid": "86614002-951f-46e8-a38d-0201d5a6745f",
+              "__enabled": true,
+              "Flags": 0,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "TargetElevator": null
+            }
+          ],
+          "Children": []
+        }
+      ]
     }
   ],
   "SceneProperties": {
@@ -30303,11 +32877,15 @@
     "facepunch.weapon_crate_stacka#143532",
     "facepunch.wheely_bin#143949",
     "facepunch.wire_cage_b_painted#111152",
+    "gavinovichaa.bibleru#168769",
     "gkaf.door_2_window_a#26046",
     "gkaf.door_2#26045",
     "gunsightsoftware.model-deadpigeon#184155",
     "halfpeeps.garage_door#42972",
-    "niclude.bench_4#30655"
+    "niclude.bench_4#30655",
+    "rlensound.rageman_3d#53976",
+    "smlp.sanae#10353",
+    "thebox.metalplatform#168259"
   ],
   "__version": 3
 }

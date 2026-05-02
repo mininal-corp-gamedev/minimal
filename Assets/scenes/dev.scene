@@ -2777,20 +2777,7 @@
             "MovedObjects": []
           },
           "__PrefabIdToInstanceId": {
-            "7d42eb68-36f5-47c1-a4ec-8691ab7ee4a3": "7a412526-b6be-4874-89bd-d67c0b9e1930",
-            "7672966e-74b5-4329-a8b8-fad48312e94e": "f77661cc-a7f4-4475-aff5-410ab2d19053",
-            "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54": "99b2e8b6-22c6-4d76-bb8e-bdf3b9451ea1",
-            "5bcb7a92-911e-4bde-a2de-1a95b7e4000f": "60cc90b8-fc4e-44cd-ab94-6b7b232388d1",
-            "5c875c09-e551-4755-b59f-dcfe6c1adce9": "20176868-7493-43d1-be28-9b52741b1353",
-            "93ce591a-1522-43a5-9943-ff7d16f05575": "0cf44630-a893-4569-9f8c-eb9e5b55d881",
-            "d857e2f2-d6b5-4f38-9d0b-9610f55e6f7b": "e8f44103-1e25-466c-af35-74d9698012da",
-            "9c3b2826-ab26-4ebc-a1df-d586475d6e4f": "c89307cc-1783-456b-954a-0c057552f967",
-            "5c71a2fd-b807-4cc7-8283-e595402ce8ca": "327ce4ca-92e3-4a52-893b-2628904633e9",
-            "1284c979-08f3-4783-8162-3170356dbdb5": "8e013b9d-c81e-4d6a-8b4a-b886d2f11973",
-            "7b7c37b6-a0e2-4954-a580-db1eda3cb153": "6cea5730-a5aa-4af4-a9e0-0e42f12d75da",
-            "86eaad1a-9e8b-4ed2-9269-c9b098bd78d6": "e5a490c4-a4e9-40ba-82b5-8e75136e821d",
-            "941c5ee2-b12e-4649-a129-c64cd70d738d": "fd4dfe68-1a6d-413a-92f0-fa74411895f6",
-            "cf01cd43-0f1f-4187-8c73-4ff24d193dd5": "71a91cc1-a6f3-4440-9411-6d7c041fac2b"
+            "781c220d-84f1-4056-bd4c-949ec498fb88": "15ec24d1-082f-4b6f-9532-70c8bf191230"
           }
         },
         {
@@ -3682,6 +3669,44 @@
           ]
         }
       ]
+    },
+    {
+      "__guid": "cb8dc4dc-96ec-4579-858d-b7e91a4ca21b",
+      "__version": 2,
+      "Flags": 32,
+      "Name": "Object",
+      "Position": "692.098267,778.899963,239.945969",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.MapInstance",
+          "__guid": "8692d400-80f3-4129-a527-648163637dbe",
+          "__enabled": true,
+          "Flags": 0,
+          "__version": 1,
+          "EnableCollision": true,
+          "MapName": "thieves.rpdowntown3tcompact",
+          "NoOrigin": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnMapLoaded": null,
+          "OnMapUnloaded": null,
+          "UseMapFromLaunch": false
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {
@@ -3706,17 +3731,17 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "58322020-4f9a-4383-b025-01040a856d72"
         }
       },
       "Sandbox.MovieMaker.MovieRecorderSystem": {
         "DisableClientRecording": false
       },
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "58322020-4f9a-4383-b025-01040a856d72"
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       }
     }

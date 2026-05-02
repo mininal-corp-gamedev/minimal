@@ -1,0 +1,121 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Collections.Generic;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="elevator-panel @PanelStateClass">
+		<div class="display">
+			<div class="label">Elevator</div>
+			<div class="floor">@FloorText</div>
+			<div class="state">@StateText</div>
+		</div>
+
+		<div class="floor-buttons">
+			@foreach ( var targetFloor in Floors )
+			{
+				<div
+					class="floor-button @GetFloorClass( targetFloor ) @GetDisabledClass( targetFloor )"
+					onclick=@(() => RequestFloor( targetFloor ))>
+					@targetFloor
+				</div>
+			}
+		</div>
+	</div>
+</root>
+
+@code
+{
+	[Property] public Elevator TargetElevator { get; set; }
+
+	Elevator Lift => TargetElevator ?? Components.Get<Elevator>( FindMode.EverythingInSelfAndAncestors );
+
+	int FloorCount => Math.Clamp( Lift?.SafeFloorCount ?? 1, 1, 20 );
+	string PanelStateClass => Lift?.IsMoving == true ? "moving" : "idle";
+
+	IEnumerable<int> Floors
+	{
+		get
+		{
+			for ( var floor = 1; floor <= FloorCount; floor++ )
+				yield return floor;
+		}
+	}
+
+	string FloorText
+	{
+		get
+		{
+			if ( Lift is null )
+				return "-";
+
+			if ( Lift.IsMoving )
+				return $"{Lift.CurrentFloor} -> {Lift.TargetFloor}";
+
+			return Lift.CurrentFloor.ToString();
+		}
+	}
+
+	string StateText
+	{
+		get
+		{
+			if ( Lift is null )
+				return "Offline";
+
+			return Lift.IsMoving ? "Moving" : "Ready";
+		}
+	}
+
+	void RequestFloor( int floor )
+	{
+		if ( IsFloorDisabled( floor ) )
+			return;
+
+		Lift?.RpcRequestFloor( floor );
+	}
+
+	bool IsFloorDisabled( int floor )
+	{
+		if ( Lift is null )
+			return true;
+
+		return !Lift.CanRequestFloor( floor );
+	}
+
+	string GetFloorClass( int floor )
+	{
+		if ( Lift is null )
+			return "";
+
+		if ( Lift.IsMoving && Lift.TargetFloor == floor )
+			return "target";
+
+		if ( !Lift.IsMoving && Lift.CurrentFloor == floor )
+			return "current";
+
+		return "";
+	}
+
+	string GetDisabledClass( int floor )
+	{
+		return IsFloorDisabled( floor ) ? "disabled" : "";
+	}
+
+	protected override int BuildHash()
+	{
+		var h = new HashCode();
+		h.Add( Lift );
+		h.Add( Lift?.SafeFloorCount ?? 0 );
+		h.Add( Lift?.CurrentFloor ?? 0 );
+		h.Add( Lift?.TargetFloor ?? 0 );
+		h.Add( Lift?.TravelOffset ?? 0f );
+		h.Add( Lift?.IsMoving ?? false );
+		h.Add( FloorText );
+		h.Add( StateText );
+		h.Add( PanelStateClass );
+		return h.ToHashCode();
+	}
+}

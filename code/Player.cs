@@ -124,8 +124,11 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private Vector3 _queuedElevatorCarryDelta;
     private bool _ownerClothingApplyInProgress;
     private bool _ownerClothingApplied;
+    private long _ownerClothingSteamId;
+    private int _ownerClothingApplyPasses;
     private TimeUntil _nextOwnerClothingApplyAttempt = 0f;
     private static bool _jobInventoryEventsRegistered;
+    private const int OwnerClothingMaxApplyPasses = 3;
 
     /// <summary>
     /// Number of doors currently owned (gameplay-wise) by this player.
@@ -1271,37 +1274,90 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private void TryApplyOwnerClothing()
     {
-        if (_ownerClothingApplied || _ownerClothingApplyInProgress)
+#if SERVER
+        // Dedicated servers should not build cosmetic clothing. Let every client
+        // apply visuals from the network owner connection instead.
+        return;
+#else
+        var ownerSteamId = GetOwnerSteamId();
+        if (ownerSteamId <= 0L)
+        {
+            if (_ownerClothingSteamId != 0L)
+                ResetOwnerClothingApplyState(0L);
+
+            ScheduleOwnerClothingRetry(0.25f);
+            return;
+        }
+
+        if (_ownerClothingSteamId != ownerSteamId)
+            ResetOwnerClothingApplyState(ownerSteamId);
+
+        if (_ownerClothingApplyInProgress)
+            return;
+        if (_ownerClothingApplied && _ownerClothingApplyPasses >= OwnerClothingMaxApplyPasses)
             return;
         if (!_nextOwnerClothingApplyAttempt)
             return;
         if (!Dresser.IsValid())
+        {
+            ScheduleOwnerClothingRetry(0.5f);
             return;
-        if (GameObject.Network.Owner is null)
+        }
+        if (!Renderer.IsValid())
+        {
+            ScheduleOwnerClothingRetry(0.5f);
             return;
+        }
 
-        _ = ApplyOwnerClothingAsync();
+        _ = ApplyOwnerClothingAsync(ownerSteamId);
+#endif
     }
 
-    private async Task ApplyOwnerClothingAsync()
+    private async Task ApplyOwnerClothingAsync(long ownerSteamId)
     {
         _ownerClothingApplyInProgress = true;
+        _ownerClothingApplyPasses++;
 
         try
         {
             Dresser.Source = Sandbox.Dresser.ClothingSource.OwnerConnection;
             await Dresser.Apply();
+
+            var currentOwnerSteamId = GameObject.IsValid() ? GetOwnerSteamId() : 0L;
+            if (currentOwnerSteamId != ownerSteamId)
+            {
+                ResetOwnerClothingApplyState(currentOwnerSteamId);
+                return;
+            }
+
             _ownerClothingApplied = true;
+
+            if (_ownerClothingApplyPasses < OwnerClothingMaxApplyPasses)
+                ScheduleOwnerClothingRetry(_ownerClothingApplyPasses == 1 ? 1f : 3f);
         }
         catch (Exception ex)
         {
-            _nextOwnerClothingApplyAttempt = 2f;
-            Log.Warning($"[Player] Failed to apply owner clothing for {GameObject.Network.Owner?.DisplayName ?? "unknown"}: {ex.Message}");
+            ScheduleOwnerClothingRetry(2f);
+            var ownerName = GameObject.IsValid() ? GameObject.Network.Owner?.DisplayName ?? "unknown" : "unknown";
+            Log.Warning($"[Player] Failed to apply owner clothing for {ownerName}: {ex.Message}");
         }
         finally
         {
             _ownerClothingApplyInProgress = false;
         }
+    }
+
+    private void ResetOwnerClothingApplyState(long ownerSteamId)
+    {
+        _ownerClothingSteamId = ownerSteamId;
+        _ownerClothingApplied = false;
+        _ownerClothingApplyPasses = 0;
+        _nextOwnerClothingApplyAttempt = 0f;
+    }
+
+    private void ScheduleOwnerClothingRetry(float delaySeconds)
+    {
+        _nextOwnerClothingApplyAttempt = MathF.Max(0.05f, delaySeconds);
     }
 
     private void HookInventoryEvents()

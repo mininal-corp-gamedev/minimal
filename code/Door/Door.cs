@@ -153,9 +153,6 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	/// <summary>Speed of the open/close sliding animation in scene units per second.</summary>
 	[Property, Category( "Movement" ), ShowIf( "MovementMode", DoorMovementMode.Slide )] public float SlideSpeed { get; set; } = 120f;
 
-	/// <summary>Runtime guard for authored static physics on animated doors.</summary>
-	[Property, Category( "Movement" )] public bool ForceMovablePhysics { get; set; } = true;
-
 	/// <summary>Maximum distance between a caller and the door for the host to accept direct door actions.</summary>
 	[Property] public float InteractRange { get; set; } = 220f;
 
@@ -203,7 +200,6 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	protected override void OnStart()
 	{
 		ApplyStartLockState();
-		PrepareMovablePhysics();
 
 		_baseRotation = LocalRotation;
 		_baseLocalPosition = LocalPosition;
@@ -213,36 +209,6 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		if ( WorldHud.IsValid() )
 			WorldHud.Door = this;
-	}
-
-	private void PrepareMovablePhysics()
-	{
-		if ( !ForceMovablePhysics ) return;
-
-		foreach ( var go in EnumerateSelfAndChildren( GameObject ) )
-		{
-			if ( go.Components.TryGet<ModelCollider>( out var modelCollider ) )
-				modelCollider.Static = false;
-
-			if ( go.Components.TryGet<BoxCollider>( out var boxCollider ) )
-				boxCollider.Static = false;
-
-			if ( go.Components.TryGet<Prop>( out var prop ) )
-				prop.IsStatic = false;
-		}
-	}
-
-	private static IEnumerable<GameObject> EnumerateSelfAndChildren( GameObject root )
-	{
-		if ( !root.IsValid() ) yield break;
-
-		yield return root;
-
-		foreach ( var child in root.Children )
-		{
-			foreach ( var descendant in EnumerateSelfAndChildren( child ) )
-				yield return descendant;
-		}
 	}
 
 	private void ApplyStartLockState()

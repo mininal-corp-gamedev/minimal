@@ -30842,7 +30842,11 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "PlayerSpawns": null
+          "PlayerSpawns": {
+            "_type": "gameobject",
+            "go": "965c22b4-44ed-498a-8568-bee415665ea7"
+          },
+          "PlayerSpawnsName": "Spawn Players"
         }
       ],
       "Children": []

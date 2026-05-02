@@ -28,8 +28,16 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Sync(SyncFlags.FromHost)] public float Health { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public float MaxHealth { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public bool IsDead { get; private set; }
-    [Sync(SyncFlags.FromHost)] public TimeUntil DeathTimeUntilRespawn { get; private set; }
     [Sync(SyncFlags.FromHost)] public string DeathMessage { get; private set; } = "";
+
+    // TimeUntil должен жить в backing field: с auto-property обратный отсчёт может ломаться.
+    private TimeUntil _deathTimeUntilRespawn;
+    [Sync(SyncFlags.FromHost)]
+    public TimeUntil DeathTimeUntilRespawn
+    {
+        get => _deathTimeUntilRespawn;
+        private set => _deathTimeUntilRespawn = value;
+    }
 
     [Property, Category("Death")] public float RespawnDelaySeconds { get; set; } = 5f;
     [Property, Category("Fall Damage")] public float SafeFallDistance { get; set; } = 420f;
@@ -67,7 +75,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Sync(SyncFlags.FromHost)] public bool IsArrested { get; set; }
 
     /// <summary>Время до автоматического освобождения. Считается на клиенте, по истечении клиент шлёт RPC хосту.</summary>
-    [Sync(SyncFlags.FromHost)] public TimeUntil ArrestTimeUntilRelease { get; set; }
+    private TimeUntil _arrestTimeUntilRelease;
+    [Sync(SyncFlags.FromHost)]
+    public TimeUntil ArrestTimeUntilRelease
+    {
+        get => _arrestTimeUntilRelease;
+        set => _arrestTimeUntilRelease = value;
+    }
 
     private bool _arrestSpeedApplied;
     private float _origWalkSpeed;
@@ -75,7 +89,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     // ===== Lockpick cooldown =====
     /// <summary>Время до окончания кулдауна на взлом дверей. Хост авторитетен.</summary>
-    [Sync(SyncFlags.FromHost)] public TimeUntil LockpickCooldown { get; set; }
+    private TimeUntil _lockpickCooldown;
+    [Sync(SyncFlags.FromHost)]
+    public TimeUntil LockpickCooldown
+    {
+        get => _lockpickCooldown;
+        set => _lockpickCooldown = value;
+    }
 
     private const string PlayerSaveFolder = "players";
     private const string InventorySaveFolder = "inv";
@@ -220,16 +240,16 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         if (!Networking.IsHost) return;
 
+        var hasSpawnTransform = TryGetSpawnTransform(out var spawnPosition, out var spawnRotation);
+        if (!hasSpawnTransform)
+            Log.Warning($"[Player] Respawning {GameObject.Network.Owner?.DisplayName ?? GameObject.Name} without a valid spawn point.");
+
         if (!IsProxy)
         {
-            SpawnInternal();
+            SpawnInternal(spawnPosition, spawnRotation);
             RpcClearDeathRagdoll();
             return;
         }
-
-        // Точку спавна выбираем на хосте, чтобы у владельца не было десинка.
-        var spawnPoint = SpawnManager.Instance?.GetRandomPlayerSpawn();
-        if (!spawnPoint.IsValid()) return;
 
         Health = MaxHealth;
         IsDead = false;
@@ -239,7 +259,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         WorldHud?.WorldHudRefresh();
         Job?.NotifySpawned();
 
-        RpcOwnerSpawn(spawnPoint.WorldPosition, spawnPoint.WorldRotation);
+        RpcOwnerSpawn(spawnPosition, spawnRotation);
         RpcClearDeathRagdoll();
     }
 
@@ -351,9 +371,15 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private void SpawnInternal()
     {
-        var spawnPoint = SpawnManager.Instance?.GetRandomPlayerSpawn();
-        if (!spawnPoint.IsValid()) return;
+        var hasSpawnTransform = TryGetSpawnTransform(out var spawnPosition, out var spawnRotation);
+        if (!hasSpawnTransform)
+            Log.Warning($"[Player] Spawning {GameObject.Network.Owner?.DisplayName ?? GameObject.Name} without a valid spawn point.");
 
+        SpawnInternal(spawnPosition, spawnRotation);
+    }
+
+    private void SpawnInternal(Vector3 spawnPosition, Rotation spawnRotation)
+    {
         Health = MaxHealth;
         IsDead = false;
         DeathTimeUntilRespawn = 0f;
@@ -362,10 +388,27 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         ResetFallDamageGrace();
         WorldHud?.WorldHudRefresh();
         ClearQueuedElevatorCarryDelta();
-        WorldPosition = spawnPoint.WorldPosition;
-        Controller.EyeAngles = spawnPoint.WorldRotation;
+        WorldPosition = spawnPosition;
+
+        if (Controller.IsValid())
+            Controller.EyeAngles = spawnRotation;
 
         Job?.NotifySpawned();
+    }
+
+    private bool TryGetSpawnTransform(out Vector3 position, out Rotation rotation)
+    {
+        var spawnPoint = SpawnManager.Instance?.GetRandomPlayerSpawn();
+        if (spawnPoint.IsValid())
+        {
+            position = spawnPoint.WorldPosition;
+            rotation = spawnPoint.WorldRotation;
+            return true;
+        }
+
+        position = WorldPosition;
+        rotation = WorldRotation;
+        return false;
     }
 
     public void OnDamage(in DamageInfo dmgInfo)
@@ -508,7 +551,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         if (!Networking.IsHost) return;
         if (!IsDead) return;
-        if ((float)DeathTimeUntilRespawn > 0f) return;
+        if ((float)_deathTimeUntilRespawn > 0f) return;
 
         HostTriggerRespawn();
     }
@@ -2200,7 +2243,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             }
 
             // Время считаем на клиенте; по истечении просим хост освободить.
-            if ((float)ArrestTimeUntilRelease <= 0f)
+            if ((float)_arrestTimeUntilRelease <= 0f)
                 RequestSelfRelease();
         }
     }

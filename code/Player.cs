@@ -858,14 +858,24 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var itemId = slot.Item.Id;
         var isWeapon = IsWeaponItem(slot.Item);
         bool successful;
-        _deferInventorySync = true;
-        try
+        if ( isWeapon && IsProxy )
         {
-            successful = Inventory.TryUseItem(slot, this);
+            // On a dedicated host the remote player's viewmodel weapons live only on
+            // the owning client. Approve the equip server-side, then let the owner
+            // run the item handler locally via RpcOwnerUseInventorySlotApproved.
+            successful = true;
         }
-        finally
+        else
         {
-            _deferInventorySync = false;
+            _deferInventorySync = true;
+            try
+            {
+                successful = Inventory.TryUseItem(slot, this);
+            }
+            finally
+            {
+                _deferInventorySync = false;
+            }
         }
 
         if (successful && isWeapon)

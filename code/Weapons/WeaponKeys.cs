@@ -35,9 +35,7 @@ public sealed class WeaponKeys : Weapon
 
         if (door.CanBeControlledByLocalPlayer)
         {
-            door.RpcRequestLock();
-            if (LockSound.IsValid())
-                door.RpcPlaySoundAtDoor(LockSound);
+            door.RpcRequestLockWithSound(LockSound);
         }
         else
         {
@@ -55,9 +53,7 @@ public sealed class WeaponKeys : Weapon
 
         if (door.CanBeControlledByLocalPlayer)
         {
-            door.RpcRequestUnlock();
-            if (UnlockSound.IsValid())
-                door.RpcPlaySoundAtDoor(UnlockSound);
+            door.RpcRequestUnlockWithSound(UnlockSound);
         }
         else
         {

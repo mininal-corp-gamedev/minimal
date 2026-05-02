@@ -1,4 +1,5 @@
 using Ambi.Storage;
+using Sandbox;
 
 namespace Minimal.ItemUseHandlers;
 
@@ -17,10 +18,10 @@ public sealed class AmmoUseHandler : IItemUseHandler
     public bool Use(Item item, Player caller)
     {
         var weapon = GetWeapon();
-        if (!weapon.IsValid())
+        if (weapon.IsValid())
+            weapon.TotalReserveAmmo += weapon.ClipSize * 2;
+        else if (!Networking.IsHost)
             return false;
-
-        weapon.TotalReserveAmmo += weapon.ClipSize * 2;
 
         item.Remove(1);
         return true;

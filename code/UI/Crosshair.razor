@@ -35,15 +35,43 @@ root {
 @code
 {
 	[Property] public bool ShowCrosshair { get; set; } = true;
+	static readonly HashSet<string> VisibilityBlockers = new( StringComparer.Ordinal );
+
+	protected override void OnStart()
+	{
+		VisibilityBlockers.Clear();
+		ApplyVisibilityBlockers();
+	}
+
+	public static void SetBlocked( string source, bool blocked )
+	{
+		source = string.IsNullOrWhiteSpace( source ) ? "unknown" : source;
+
+		if ( blocked )
+			VisibilityBlockers.Add( source );
+		else
+			VisibilityBlockers.Remove( source );
+
+		var scene = Game.ActiveScene;
+		if ( scene is null ) return;
+
+		foreach ( var crosshair in scene.GetAllComponents<Crosshair>() )
+			crosshair.ApplyVisibilityBlockers();
+	}
 
 	public void SetVisible( bool visible )
 	{
-		ShowCrosshair = visible;
+		SetBlocked( "legacy", !visible );
+	}
+
+	private void ApplyVisibilityBlockers()
+	{
+		ShowCrosshair = VisibilityBlockers.Count == 0;
 		StateHasChanged();
 	}
 
 	protected override int BuildHash()
 	{
-		return ShowCrosshair ? 1 : 0;
+		return HashCode.Combine( ShowCrosshair, VisibilityBlockers.Count );
 	}
 }

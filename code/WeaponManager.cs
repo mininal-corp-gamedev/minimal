@@ -43,6 +43,7 @@ public sealed class WeaponManager : Component
     public Weapon Handcuff { get; private set; }
     public Weapon Picklock { get; private set; }
     public Weapon Keys { get; private set; }
+    private bool _weaponsSpawned;
 
     /// <summary>Подходит ли оружие под отображение патронов / перезарядку.</summary>
     public static bool WeaponUsesAmmo(Weapon weapon) => weapon.IsValid() && !weapon.IsMelee;
@@ -61,15 +62,23 @@ public sealed class WeaponManager : Component
 
     protected override void OnStart()
     {
-        SpawnAllWeapons();
+        TrySpawnAllWeapons(logIfMissingCamera: true);
     }
 
-    private void SpawnAllWeapons()
+    protected override void OnUpdate()
+    {
+        if (_weaponsSpawned) return;
+
+        TrySpawnAllWeapons(logIfMissingCamera: false);
+    }
+
+    private void TrySpawnAllWeapons(bool logIfMissingCamera)
     {
         var camera = Scene.Camera?.GameObject;
         if (!camera.IsValid())
         {
-            Log.Warning("[WeaponManager] No scene camera, weapons will not be parented");
+            if (logIfMissingCamera)
+                Log.Warning("[WeaponManager] No scene camera, weapons will not be parented");
             return;
         }
 
@@ -83,6 +92,7 @@ public sealed class WeaponManager : Component
         Handcuff = SpawnWeapon(WeaponHandcuff, camera, "Handcuff");
         Picklock = SpawnWeapon(WeaponPicklock, camera, "Picklock");
         Keys = SpawnWeapon(WeaponKeys, camera, "Keys");
+        _weaponsSpawned = true;
 
         Log.Info("[WeaponManager] Spawned all weapons");
     }

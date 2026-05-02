@@ -40,7 +40,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	[Property] public Door DoorSecond { get; set; }
 
 	/// <summary>Gameplay owner of this door. Set by Buy, cleared by Sell. Not the network object owner.</summary>
-	[Sync] public Player PlayerOwner { get; private set; }
+	[Sync( SyncFlags.FromHost )] public Player PlayerOwner { get; private set; }
 
 	/// <summary>True if the door currently has a gameplay owner.</summary>
 	public bool HasOwner => PlayerOwner.IsValid();
@@ -57,7 +57,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	// ===== Roommates =====
 
 	/// <summary>Host-authoritative, network-synced, semicolon-separated list of roommate SteamIds.</summary>
-	[Sync] public string RoommateIdsSerialized { get; private set; } = "";
+	[Sync( SyncFlags.FromHost )] public string RoommateIdsSerialized { get; private set; } = "";
 
 	/// <summary>Parsed enumeration of roommate SteamIds.</summary>
 	public IEnumerable<long> RoommateIds
@@ -105,29 +105,35 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		if ( !player.IsValid() ) return false;
 		if ( AllowedJobs is null || AllowedJobs.Count == 0 ) return false;
 
-		var def = player.Job?.JobDefinition;
-		if ( def is null ) return false;
+		var jobId = player.Job?.JobId;
+		if ( string.IsNullOrWhiteSpace( jobId ) ) return false;
 
-		return AllowedJobs.Contains( def );
+		foreach ( var allowedJob in AllowedJobs )
+		{
+			if ( string.Equals( allowedJob?.Id, jobId, StringComparison.OrdinalIgnoreCase ) )
+				return true;
+		}
+
+		return false;
 	}
 
 	/// <summary>True on the local client if the local player holds one of the allowed jobs for this door.</summary>
 	public bool IsLocalPlayerJobAllowed => IsJobAllowed( Player.Local );
 
 	/// <summary>Current open/closed state of the door.</summary>
-	[Sync] public DoorState State { get; private set; } = DoorState.Closed;
+	[Sync( SyncFlags.FromHost )] public DoorState State { get; private set; } = DoorState.Closed;
 
 	/// <summary>Current lock state of the door.</summary>
-	[Sync] public DoorLockState LockState { get; private set; } = DoorLockState.Unlocked;
+	[Sync( SyncFlags.FromHost )] public DoorLockState LockState { get; private set; } = DoorLockState.Unlocked;
 
 	/// <summary>Yaw angle used by the current open animation. Chosen by the host from the opener side.</summary>
-	[Sync] public float OpenYaw { get; private set; } = 90f;
+	[Sync( SyncFlags.FromHost )] public float OpenYaw { get; private set; } = 90f;
 
 	/// <summary>True while the door is playing its open or close animation.</summary>
-	[Sync] public bool IsPlayingAnimation { get; private set; }
+	[Sync( SyncFlags.FromHost )] public bool IsPlayingAnimation { get; private set; }
 
 	/// <summary>True if the door has been broken.</summary>
-	[Sync] public bool IsBroken { get; private set; }
+	[Sync( SyncFlags.FromHost )] public bool IsBroken { get; private set; }
 
 	/// <summary>How this door moves when it opens.</summary>
 	[Property, Category( "Movement" )] public DoorMovementMode MovementMode { get; set; } = DoorMovementMode.Swing;
@@ -146,6 +152,9 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	/// <summary>Speed of the open/close sliding animation in scene units per second.</summary>
 	[Property, Category( "Movement" ), ShowIf( "MovementMode", DoorMovementMode.Slide )] public float SlideSpeed { get; set; } = 120f;
+
+	/// <summary>Runtime guard for authored static physics on animated doors.</summary>
+	[Property, Category( "Movement" )] public bool ForceMovablePhysics { get; set; } = true;
 
 	/// <summary>Maximum distance between a caller and the door for the host to accept direct door actions.</summary>
 	[Property] public float InteractRange { get; set; } = 220f;
@@ -194,6 +203,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	protected override void OnStart()
 	{
 		ApplyStartLockState();
+		PrepareMovablePhysics();
 
 		_baseRotation = LocalRotation;
 		_baseLocalPosition = LocalPosition;
@@ -203,6 +213,36 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		if ( WorldHud.IsValid() )
 			WorldHud.Door = this;
+	}
+
+	private void PrepareMovablePhysics()
+	{
+		if ( !ForceMovablePhysics ) return;
+
+		foreach ( var go in EnumerateSelfAndChildren( GameObject ) )
+		{
+			if ( go.Components.TryGet<ModelCollider>( out var modelCollider ) )
+				modelCollider.Static = false;
+
+			if ( go.Components.TryGet<BoxCollider>( out var boxCollider ) )
+				boxCollider.Static = false;
+
+			if ( go.Components.TryGet<Prop>( out var prop ) )
+				prop.IsStatic = false;
+		}
+	}
+
+	private static IEnumerable<GameObject> EnumerateSelfAndChildren( GameObject root )
+	{
+		if ( !root.IsValid() ) yield break;
+
+		yield return root;
+
+		foreach ( var child in root.Children )
+		{
+			foreach ( var descendant in EnumerateSelfAndChildren( child ) )
+				yield return descendant;
+		}
 	}
 
 	private void ApplyStartLockState()
@@ -317,22 +357,33 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	{
 		if ( !e.Source.GameObject.Components.TryGet<Player>( out var player, FindMode.EverythingInSelfAndParent ) ) return false;
 
-		if ( State == DoorState.Closed )
-		{
-			if ( Networking.IsHost )
-				Open( player );
-			else
-				RpcRequestOpen();
-		}
+		if ( Networking.IsHost )
+			Toggle( player );
 		else
-		{
-			if ( Networking.IsHost )
-				Close();
-			else
-				RpcRequestClose();
-		}
+			RpcRequestToggle();
 
 		return true;
+	}
+
+	private void Toggle( Player player )
+	{
+		if ( !Networking.IsHost ) return;
+
+		if ( State == DoorState.Closed )
+			Open( player );
+		else
+			Close();
+	}
+
+	[Rpc.Host]
+	public void RpcRequestToggle()
+	{
+		if ( !Networking.IsHost ) return;
+
+		var caller = FindRpcCallerPlayer();
+		if ( !CanPlayerInteract( caller ) ) return;
+
+		Toggle( caller );
 	}
 
 	/// <summary>Opens the door. Has no effect if animating, already open, or locked. Mirrors to <see cref="DoorSecond"/>.</summary>
@@ -425,6 +476,17 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	[Rpc.Host]
 	public void RpcRequestLock()
 	{
+		HostRequestLock( null );
+	}
+
+	[Rpc.Host]
+	public void RpcRequestLockWithSound( SoundEvent successSound )
+	{
+		HostRequestLock( successSound );
+	}
+
+	private void HostRequestLock( SoundEvent successSound )
+	{
 		if ( !Networking.IsHost ) return;
 
 		var caller = Rpc.Caller;
@@ -432,7 +494,11 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		if ( caller is null || !CanPlayerInteract( player ) ) return;
 		if ( !CallerCanLock( caller.SteamId ) ) return;
 
+		var wasUnlocked = LockState == DoorLockState.Unlocked;
 		Lock();
+
+		if ( wasUnlocked && LockState == DoorLockState.Locked && successSound.IsValid() )
+			RpcPlaySoundAtDoor( successSound );
 	}
 
 	/// <summary>Unlocks the door. Requires the door not being admin-blocked and being either player-owned or a job-door. Mirrors to <see cref="DoorSecond"/>.</summary>
@@ -452,6 +518,17 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	[Rpc.Host]
 	public void RpcRequestUnlock()
 	{
+		HostRequestUnlock( null );
+	}
+
+	[Rpc.Host]
+	public void RpcRequestUnlockWithSound( SoundEvent successSound )
+	{
+		HostRequestUnlock( successSound );
+	}
+
+	private void HostRequestUnlock( SoundEvent successSound )
+	{
 		if ( !Networking.IsHost ) return;
 
 		var caller = Rpc.Caller;
@@ -459,7 +536,11 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		if ( caller is null || !CanPlayerInteract( player ) ) return;
 		if ( !CallerCanLock( caller.SteamId ) ) return;
 
+		var wasLocked = LockState == DoorLockState.Locked;
 		Unlock();
+
+		if ( wasLocked && LockState == DoorLockState.Unlocked && successSound.IsValid() )
+			RpcPlaySoundAtDoor( successSound );
 	}
 
 	/// <summary>Host-side check: is this caller allowed to toggle the door's lock state?</summary>
@@ -642,8 +723,9 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	/// <summary>Broadcast-play a sound at this door's world position on all clients.</summary>
 	[Rpc.Broadcast]
-	public void RpcPlaySoundAtDoor( SoundEvent sound )
+	private void RpcPlaySoundAtDoor( SoundEvent sound )
 	{
+		if ( !Networking.IsHost && Rpc.Caller is not null && !Rpc.Caller.IsHost ) return;
 		if ( !sound.IsValid() ) return;
 		Sound.Play( sound, WorldPosition );
 	}

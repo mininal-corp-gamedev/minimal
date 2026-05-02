@@ -462,9 +462,7 @@
 	{
 		IsOpen = open;
 
-		var crosshair = Scene.GetAllComponents<Crosshair>().FirstOrDefault();
-		if ( crosshair is not null )
-			crosshair.SetVisible( !IsOpen );
+		Crosshair.SetBlocked( nameof( TabMenu ), open );
 	}
 
 		protected override void OnUpdate()

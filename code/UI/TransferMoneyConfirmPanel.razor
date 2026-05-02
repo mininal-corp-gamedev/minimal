@@ -100,9 +100,7 @@
 	{
 		IsOpen = open;
 
-		var crosshair = Scene.GetAllComponents<Crosshair>().FirstOrDefault();
-		if ( crosshair is not null )
-			crosshair.SetVisible( !open );
+		Crosshair.SetBlocked( nameof( TransferMoneyConfirmPanel ), open );
 
 	#pragma warning disable CS0612
 		Mouse.Visible = open;

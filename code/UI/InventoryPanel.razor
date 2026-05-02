@@ -213,9 +213,7 @@
 	{
 		IsOpen = open;
 
-		var crosshair = Scene.GetAllComponents<Crosshair>().FirstOrDefault();
-		if ( crosshair is not null )
-			crosshair.SetVisible( !open );
+		Crosshair.SetBlocked( nameof( InventoryPanel ), open );
 	}
 
 		protected override void OnUpdate()

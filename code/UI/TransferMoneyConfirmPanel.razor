@@ -165,8 +165,21 @@
 
 	protected override void OnDestroy()
 	{
+		ReleaseCrosshairBlock();
+
 		if ( Instance == this )
 			Instance = null;
+	}
+
+	protected override void OnDisabled()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	private void ReleaseCrosshairBlock()
+	{
+		IsOpen = false;
+		Crosshair.SetBlocked( nameof( TransferMoneyConfirmPanel ), false );
 	}
 
 	protected override int BuildHash() => HashCode.Combine( IsOpen, AmountInput, TargetSteamId, TargetName );

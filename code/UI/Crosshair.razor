@@ -36,16 +36,47 @@ root {
 {
 	[Property] public bool ShowCrosshair { get; set; } = true;
 	static readonly HashSet<string> VisibilityBlockers = new( StringComparer.Ordinal );
+	static Scene BlockerScene;
 
 	protected override void OnStart()
 	{
-		VisibilityBlockers.Clear();
+		BindBlockersToActiveScene();
 		ApplyVisibilityBlockers();
+	}
+
+	public static void EnsureExists()
+	{
+#if SERVER
+		return;
+#else
+		var scene = Game.ActiveScene;
+		if ( scene is null ) return;
+
+		BindBlockersToActiveScene();
+
+		foreach ( var crosshair in scene.GetAllComponents<Crosshair>() )
+		{
+			crosshair.ApplyVisibilityBlockers();
+			return;
+		}
+
+		var panelObject = scene.CreateObject();
+		panelObject.Name = "CrosshairRuntime";
+		panelObject.Components.Create<ScreenPanel>();
+
+		var created = panelObject.Components.Create<Crosshair>();
+		created.ApplyVisibilityBlockers();
+#endif
 	}
 
 	public static void SetBlocked( string source, bool blocked )
 	{
 		source = string.IsNullOrWhiteSpace( source ) ? "unknown" : source;
+
+		if ( blocked )
+			EnsureExists();
+		else
+			BindBlockersToActiveScene();
 
 		if ( blocked )
 			VisibilityBlockers.Add( source );
@@ -57,6 +88,15 @@ root {
 
 		foreach ( var crosshair in scene.GetAllComponents<Crosshair>() )
 			crosshair.ApplyVisibilityBlockers();
+	}
+
+	private static void BindBlockersToActiveScene()
+	{
+		var scene = Game.ActiveScene;
+		if ( scene == BlockerScene ) return;
+
+		BlockerScene = scene;
+		VisibilityBlockers.Clear();
 	}
 
 	public void SetVisible( bool visible )

@@ -216,7 +216,7 @@
 		Crosshair.SetBlocked( nameof( InventoryPanel ), open );
 	}
 
-		protected override void OnUpdate()
+	protected override void OnUpdate()
 	{
 		if ( Input.Pressed( "Inventory" ) )
 		{
@@ -236,6 +236,22 @@
 				TipY = GetMousePanelY() + 16f;
 			}
 		}
+	}
+
+	protected override void OnDisabled()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	protected override void OnDestroy()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	private void ReleaseCrosshairBlock()
+	{
+		IsOpen = false;
+		Crosshair.SetBlocked( nameof( InventoryPanel ), false );
 	}
 
 	float GetMousePanelX() => Mouse.Position.x * Panel.ScaleFromScreen;

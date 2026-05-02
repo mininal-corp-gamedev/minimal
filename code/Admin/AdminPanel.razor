@@ -120,6 +120,12 @@
 	private IEnumerable<AdminAbilityDefinition> VisibleAbilities => Abilities.Where( x => CurrentRank >= x.RequiredRank );
 	private AdminAbilityDefinition ActiveDefinition => Abilities.FirstOrDefault( x => x.Id == ActiveAbility && CurrentRank >= x.RequiredRank );
 
+	private void SetOpen( bool open )
+	{
+		IsOpen = open;
+		Crosshair.SetBlocked( nameof( AdminPanel ), open );
+	}
+
 	private void SelectAbility( string id )
 	{
 		ActiveAbility = id;
@@ -241,7 +247,8 @@
 	{
 		if ( CurrentRank <= 0 )
 		{
-			IsOpen = false;
+			if ( IsOpen )
+				SetOpen( false );
 
 #pragma warning disable CS0612
 			Mouse.Visible = false;
@@ -252,7 +259,7 @@
 
 		if ( Input.Pressed( "AdminPanel" ) )
 		{
-			IsOpen = !IsOpen;
+			SetOpen( !IsOpen );
 			if ( IsOpen )
 			{
 				ClearFormState();
@@ -265,6 +272,22 @@
 #pragma warning disable CS0612
 		Mouse.Visible = IsOpen;
 #pragma warning restore CS0612
+	}
+
+	protected override void OnDisabled()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	protected override void OnDestroy()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	private void ReleaseCrosshairBlock()
+	{
+		IsOpen = false;
+		Crosshair.SetBlocked( nameof( AdminPanel ), false );
 	}
 
 	protected override int BuildHash()

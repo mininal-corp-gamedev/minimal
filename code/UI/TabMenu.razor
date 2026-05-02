@@ -458,6 +458,22 @@
 		LoadShop();
 	}
 
+	protected override void OnDisabled()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	protected override void OnDestroy()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	private void ReleaseCrosshairBlock()
+	{
+		IsOpen = false;
+		Crosshair.SetBlocked( nameof( TabMenu ), false );
+	}
+
 	private void SetOpen( bool open )
 	{
 		IsOpen = open;

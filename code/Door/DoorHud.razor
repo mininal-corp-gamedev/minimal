@@ -140,7 +140,21 @@
 
 @code
 {
-	[Property] public Door Door { get; set; }
+	private Door _door;
+
+	[Property]
+	public Door Door
+	{
+		get => _door;
+		set
+		{
+			if ( _door == value )
+				return;
+
+			_door = value;
+			Crosshair.SetBlocked( nameof( DoorHud ), _door is not null );
+		}
+	}
 
 	bool IsOpen => Door is not null;
 	private TimeUntil _canOpenCooldown;
@@ -243,6 +257,23 @@
 		Door = null;
 		_canOpenCooldown = 0.25f;
 		ShowRoommateList = false;
+	}
+
+	protected override void OnDisabled()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	protected override void OnDestroy()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	private void ReleaseCrosshairBlock()
+	{
+		_door = null;
+		ShowRoommateList = false;
+		Crosshair.SetBlocked( nameof( DoorHud ), false );
 	}
 
 	protected override int BuildHash()

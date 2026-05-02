@@ -86,6 +86,22 @@
 		}
 	}
 
+	protected override void OnDisabled()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	protected override void OnDestroy()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	private void ReleaseCrosshairBlock()
+	{
+		IsOpen = false;
+		Crosshair.SetBlocked( nameof( ContextMenu ), false );
+	}
+
 	protected override int BuildHash() => System.HashCode.Combine(
 		IsOpen,
 		ActiveAction,

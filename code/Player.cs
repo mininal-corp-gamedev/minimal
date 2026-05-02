@@ -127,6 +127,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private long _ownerClothingSteamId;
     private int _ownerClothingApplyPasses;
     private TimeUntil _nextOwnerClothingApplyAttempt = 0f;
+    private TimeUntil _nextLocalUiEnsure = 0f;
     private static bool _jobInventoryEventsRegistered;
     private const int OwnerClothingMaxApplyPasses = 3;
 
@@ -1645,8 +1646,19 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private void MakeLocalInstance()
     {
-        if (!IsProxy)
-            Local = this;
+        if (IsProxy) return;
+
+        Local = this;
+        EnsureLocalRuntimeUi();
+    }
+
+    private void EnsureLocalRuntimeUi()
+    {
+        if (IsProxy) return;
+        if (!_nextLocalUiEnsure) return;
+
+        _nextLocalUiEnsure = 1f;
+        Sandbox.UI.Crosshair.EnsureExists();
     }
 
     private void DestroyLocalInstance()
@@ -1847,6 +1859,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     protected override void OnUpdate()
     {
+        MakeLocalInstance();
         TryApplyOwnerClothing();
         UpdateWorldWeaponVisual();
         DrawPhysgunBeam();

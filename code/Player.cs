@@ -13,6 +13,9 @@ using System.Text.Json.Serialization;
 public sealed class Player : Component, ICustomDamagable, PlayerController.IEvents
 {
     public static Player Local { get; private set; }
+    private static readonly SoundEvent DefaultPhysgunBeamStartSound = new("weapons/physgun/sounds/physgun.shoot.start.sound");
+    private static readonly SoundEvent DefaultPhysgunBeamActiveLoopSound = new("weapons/physgun/sounds/physgun.active.loop.sound");
+    private static readonly SoundEvent DefaultPhysgunIdleSound = new("weapons/physgun/sounds/physgun.idle.sound");
 
     [Property] public PlayerController Controller { get; private set; }
     [Property] public SkinnedModelRenderer Renderer { get; private set; }
@@ -197,6 +200,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private float _physgunBeamPreviousDistance;
     private GameObject _physgunBeamEndPointEffect;
     private GameObject _physgunBeamGrabEffect;
+    private SoundHandle _physgunBeamActiveLoopSound;
+    private SoundHandle _physgunWorldIdleSound;
+    private bool _physgunBeamSoundActive;
     private bool _localPhysgunBeamOverrideSet;
     private bool _localPhysgunBeamOverrideActive;
     private Vector3 _localPhysgunBeamOverrideStart;
@@ -2019,6 +2025,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private void DestroyWorldWeaponVisual()
     {
+        StopRemotePhysgunIdleSound();
+
         if (_worldWeaponObject.IsValid())
             _worldWeaponObject.Destroy();
 
@@ -2026,6 +2034,33 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _worldWeaponItemId = null;
         _worldWeaponUsesAuthoredPrefab = false;
         _worldWeaponAttachedToBone = false;
+    }
+
+    private void UpdateRemotePhysgunIdleSound()
+    {
+        if (!IsProxy || !string.Equals(_worldWeaponItemId, "physgun", StringComparison.OrdinalIgnoreCase))
+        {
+            StopRemotePhysgunIdleSound();
+            return;
+        }
+
+        var position = _worldWeaponObject.IsValid() ? _worldWeaponObject.WorldPosition : WorldPosition;
+
+        if (_physgunWorldIdleSound is null)
+        {
+            if (DefaultPhysgunIdleSound.IsValid())
+                _physgunWorldIdleSound = Sound.Play(DefaultPhysgunIdleSound, position);
+
+            return;
+        }
+
+        _physgunWorldIdleSound.Position = position;
+    }
+
+    private void StopRemotePhysgunIdleSound()
+    {
+        _physgunWorldIdleSound?.Stop();
+        _physgunWorldIdleSound = null;
     }
 
     protected override void OnStart()
@@ -2059,6 +2094,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         TryApplyOwnerClothing();
         EnsureWeaponVisualRendererReady();
         UpdateWorldWeaponVisual();
+        UpdateRemotePhysgunIdleSound();
         DrawPhysgunBeam();
     }
 
@@ -2131,6 +2167,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if (!active)
         {
+            StopPhysgunBeamSound();
             SetPhysgunBeamVisible(false);
             ClosePhysgunBeamEffects();
             return;
@@ -2152,6 +2189,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if ((end - start).LengthSquared <= 1f)
         {
+            StopPhysgunBeamSound();
             SetPhysgunBeamVisible(false);
             ClosePhysgunBeamEffects();
             return;
@@ -2159,6 +2197,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if (!EnsurePhysgunBeamVisual())
             return;
+
+        UpdatePhysgunBeamSound(start);
 
         var justEnabled = !_physgunBeamObject.Enabled;
 
@@ -2314,6 +2354,32 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
     }
 
+    private void UpdatePhysgunBeamSound(Vector3 position)
+    {
+        if (!_physgunBeamSoundActive)
+        {
+            if (DefaultPhysgunBeamStartSound.IsValid())
+                Sound.Play(DefaultPhysgunBeamStartSound, position);
+
+            if (DefaultPhysgunBeamActiveLoopSound.IsValid())
+                _physgunBeamActiveLoopSound = Sound.Play(DefaultPhysgunBeamActiveLoopSound, position);
+
+            _physgunBeamSoundActive = true;
+            return;
+        }
+
+        if (_physgunBeamActiveLoopSound is not null)
+            _physgunBeamActiveLoopSound.Position = position;
+    }
+
+    private void StopPhysgunBeamSound()
+    {
+        _physgunBeamSoundActive = false;
+
+        _physgunBeamActiveLoopSound?.Stop();
+        _physgunBeamActiveLoopSound = null;
+    }
+
     private void SetPhysgunBeamVisible(bool visible)
     {
         if (!_physgunBeamObject.IsValid())
@@ -2323,6 +2389,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (visible)
             return;
 
+        StopPhysgunBeamSound();
         _physgunBeamPreviousDistance = 0f;
         _physgunBeamMiddleSpring = new Vector3.SpringDamped(0, 0);
         ClosePhysgunBeamEffects();
@@ -2330,6 +2397,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private void DestroyPhysgunBeamVisual()
     {
+        StopPhysgunBeamSound();
         ClosePhysgunBeamEffects();
 
         if (_physgunBeamObject.IsValid())

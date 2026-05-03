@@ -28,6 +28,8 @@ public sealed class WeaponPhysgun : Weapon
     private const float HostSyncedBeamSag = 48f;
     private const float HostSyncedBeamMoveBendScale = 0.035f;
     private const float HostSyncedBeamMaxBend = 140f;
+    private static readonly SoundEvent DefaultDeploySound = new("weapons/common/foley/foley_deploy_weapon_01.sound");
+    private static readonly SoundEvent DefaultIdleSound = new("weapons/physgun/sounds/physgun.idle.sound");
 
     [Property, Category("Physgun")] public float MaxRange { get; set; } = 8196f;
     [Property, Category("Physgun")] public float MinHoldDistance { get; set; } = 50f;
@@ -61,6 +63,8 @@ public sealed class WeaponPhysgun : Weapon
     [Property, Category("Physgun Sounds")] public SoundEvent FreezeSound { get; set; }
     [Property, Category("Physgun Sounds")] public SoundEvent ButtonInSound { get; set; }
     [Property, Category("Physgun Sounds")] public SoundEvent ButtonOutSound { get; set; }
+    [Property, Category("Physgun Sounds")] public SoundEvent DeploySound { get; set; }
+    [Property, Category("Physgun Sounds")] public SoundEvent IdleSound { get; set; }
 
     [Property, Category("Physgun Effects")] public GameObject FreezeEffectPrefab { get; set; }
     [Property, Category("Physgun Effects")] public GameObject UnFreezeEffectPrefab { get; set; }
@@ -101,6 +105,9 @@ public sealed class WeaponPhysgun : Weapon
     private Angles _lastViewmodelEyeAngles;
     private Vector2 _viewmodelInertia;
     private bool _viewmodelInertiaInitialized;
+    private bool _viewmodelDeployed;
+    private bool _wasGrounded = true;
+    private SoundHandle _idleSoundHandle;
 
     private static readonly Dictionary<long, HostGrabState> HostGrabStates = new();
     private static readonly Dictionary<long, int> HostBeamSequences = new();
@@ -241,8 +248,13 @@ public sealed class WeaponPhysgun : Weapon
 
     protected override void OnDisabled()
     {
+        if (Viewmodel != null)
+            Viewmodel.Set("b_holster", true);
+
         RequestHostEndGrab(preserveVelocity: false);
         ResetGrab();
+        StopPhysgunSounds();
+        _viewmodelDeployed = false;
     }
 
     protected override void ResetViewmodelState()
@@ -262,6 +274,22 @@ public sealed class WeaponPhysgun : Weapon
         Viewmodel.Set("ironsights", 0);
         Viewmodel.Set("ironsights_fire_scale", 0.5f);
         Viewmodel.Set("speed_ironsights", 1f);
+        if (!_viewmodelDeployed)
+            Viewmodel.Set("b_deploy", true);
+
+        Viewmodel.Set("b_holster", false);
+        Viewmodel.Set("b_jump", false);
+        Viewmodel.Set("b_lower_weapon", false);
+        Viewmodel.Set("b_empty", false);
+        Viewmodel.Set("firing_mode", 0);
+        Viewmodel.Set("move_speed", 0f);
+        Viewmodel.Set("move_groundspeed", 0f);
+
+        if (!_viewmodelDeployed)
+        {
+            PlayLocalSound(DeploySound, DefaultDeploySound);
+            _viewmodelDeployed = true;
+        }
     }
 
     protected override void OnWeaponFixedUpdate()
@@ -288,6 +316,7 @@ public sealed class WeaponPhysgun : Weapon
         UpdateLocalGrabPrediction();
         UpdateGrabbed();
         UpdateBeamState();
+        UpdateSoundState();
         UpdateViewmodelState();
     }
 
@@ -1756,12 +1785,58 @@ public sealed class WeaponPhysgun : Weapon
             emitter.Target = target;
     }
 
+    private void UpdateSoundState()
+    {
+        var position = GetLocalSoundPosition();
+        EnsureIdleSound(position);
+        UpdateIdleSoundPosition(position);
+    }
+
+    private void EnsureIdleSound(Vector3 position)
+    {
+        if (_idleSoundHandle is not null)
+            return;
+
+        var sound = ResolveSound(IdleSound, DefaultIdleSound);
+        if (!sound.IsValid())
+            return;
+
+        _idleSoundHandle = Sound.Play(sound, position);
+    }
+
+    private void StopPhysgunSounds()
+    {
+        _idleSoundHandle?.Stop();
+        _idleSoundHandle = null;
+    }
+
+    private void UpdateIdleSoundPosition(Vector3 position)
+    {
+        if (_idleSoundHandle is not null)
+            _idleSoundHandle.Position = position;
+    }
+
+    private Vector3 GetLocalSoundPosition()
+    {
+        return ShotPos.IsValid() ? ShotPos.WorldPosition : WorldPosition;
+    }
+
     private void PlayLocalSound(SoundEvent sound)
     {
+        PlayLocalSound(sound, null);
+    }
+
+    private void PlayLocalSound(SoundEvent sound, SoundEvent fallback)
+    {
+        sound = ResolveSound(sound, fallback);
         if (!sound.IsValid()) return;
 
-        var position = ShotPos.IsValid() ? ShotPos.WorldPosition : WorldPosition;
-        Sound.Play(sound, position);
+        Sound.Play(sound, GetLocalSoundPosition());
+    }
+
+    private static SoundEvent ResolveSound(SoundEvent sound, SoundEvent fallback)
+    {
+        return sound.IsValid() ? sound : fallback;
     }
 
     private void UpdateBeamState()
@@ -1972,19 +2047,27 @@ public sealed class WeaponPhysgun : Weapon
                 _lastViewmodelEyeAngles = eyeAngles;
             }
 
-            var velocity = controller.WishVelocity;
+            var velocity = controller.Body.Velocity;
             var eye = controller.EyeTransform;
             var forward = Vector3.Dot(eye.Forward, velocity);
             var sideward = Vector3.Dot(eye.Right, velocity);
             var horizontalSpeed = new Vector3(velocity.x, velocity.y, 0f).Length;
             var direction = MathF.Atan2(sideward, forward).RadianToDegree().NormalizeDegrees();
+            var grounded = controller.IsOnGround;
 
-            Viewmodel.Set("b_grounded", controller.IsOnGround);
+            if (_wasGrounded && !grounded)
+                Viewmodel.Set("b_jump", true);
+
+            _wasGrounded = grounded;
+
+            Viewmodel.Set("b_grounded", grounded);
             Viewmodel.Set("aim_pitch", eyeAngles.pitch);
             Viewmodel.Set("aim_yaw", eyeAngles.yaw);
             Viewmodel.Set("aim_pitch_inertia", _viewmodelInertia.x * 2f);
             Viewmodel.Set("aim_yaw_inertia", _viewmodelInertia.y * 2f);
             Viewmodel.Set("move_direction", direction);
+            Viewmodel.Set("move_speed", velocity.Length);
+            Viewmodel.Set("move_groundspeed", horizontalSpeed);
             Viewmodel.Set("move_x", forward);
             Viewmodel.Set("move_y", sideward);
             Viewmodel.Set("move_z", velocity.z);
@@ -1993,6 +2076,7 @@ public sealed class WeaponPhysgun : Weapon
         else
         {
             _viewmodelInertiaInitialized = false;
+            _wasGrounded = true;
         }
 
         Viewmodel.Set("b_twohanded", true);
@@ -2009,6 +2093,10 @@ public sealed class WeaponPhysgun : Weapon
         Viewmodel.Set("speed_deploy", 1f);
         Viewmodel.Set("speed_reload", 1f);
         Viewmodel.Set("speed_grab", 1f);
+        Viewmodel.Set("b_holster", false);
+        Viewmodel.Set("b_lower_weapon", false);
+        Viewmodel.Set("b_empty", false);
+        Viewmodel.Set("firing_mode", 0);
 
         if (active)
             Viewmodel.Set("b_sprint", false);

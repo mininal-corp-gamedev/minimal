@@ -174,10 +174,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     public bool IsLocalPlayer => !IsProxy;
 
-    [Sync] public bool PhysgunBeamActive { get; private set; }
-    [Sync] public Vector3 PhysgunBeamStart { get; private set; }
-    [Sync] public Vector3 PhysgunBeamEnd { get; private set; }
-    [Sync] public Vector3 PhysgunBeamBend { get; private set; }
+    [Sync(SyncFlags.FromHost)] public bool PhysgunBeamActive { get; private set; }
+    [Sync(SyncFlags.FromHost)] public Vector3 PhysgunBeamStart { get; private set; }
+    [Sync(SyncFlags.FromHost)] public Vector3 PhysgunBeamEnd { get; private set; }
+    [Sync(SyncFlags.FromHost)] public Vector3 PhysgunBeamBend { get; private set; }
 
     private static bool _itemUseHandlersRegistered;
     private GameObject _worldWeaponObject;
@@ -188,6 +188,11 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private LineRenderer _physgunBeamRenderer;
     private Vector3.SpringDamped _physgunBeamMiddleSpring = new Vector3.SpringDamped(0, 0);
     private float _physgunBeamPreviousDistance;
+    private bool _localPhysgunBeamOverrideSet;
+    private bool _localPhysgunBeamOverrideActive;
+    private Vector3 _localPhysgunBeamOverrideStart;
+    private Vector3 _localPhysgunBeamOverrideEnd;
+    private Vector3 _localPhysgunBeamOverrideBend;
 
     private sealed class WorldWeaponVisualDefinition
     {
@@ -1861,6 +1866,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         ApplyQueuedElevatorCarryDelta();
         HostUpdateDeathRespawn();
+        Minimal.Weapons.WeaponPhysgun.HostFixedUpdateForPlayer(this);
         UpdateArrestEffects();
         CheckUseHotbarSlots();
         TryUndoLastOwnedProp();
@@ -1887,7 +1893,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     public void SetPhysgunBeam(bool active, Vector3 start = default, Vector3 end = default, Vector3 bend = default)
     {
-        if (IsProxy)
+        if (!Networking.IsHost && IsProxy)
             return;
 
         PhysgunBeamActive = active;
@@ -1896,16 +1902,51 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         PhysgunBeamBend = bend;
     }
 
+    public void SetLocalPhysgunBeam(bool active, Vector3 start = default, Vector3 end = default, Vector3 bend = default)
+    {
+        if (IsProxy)
+            return;
+
+        _localPhysgunBeamOverrideSet = true;
+        _localPhysgunBeamOverrideActive = active;
+        _localPhysgunBeamOverrideStart = start;
+        _localPhysgunBeamOverrideEnd = end;
+        _localPhysgunBeamOverrideBend = bend;
+    }
+
+    public Vector3 GetPhysgunBeamWorldStart(Vector3 fallbackForward)
+    {
+        var forward = fallbackForward.LengthSquared > 0.001f ? fallbackForward.Normal : WorldRotation.Forward;
+
+        if (TryGetWeaponVisualBaseTransform(out var transform))
+        {
+            var offset = WorldWeaponVisuals.TryGetValue("physgun", out var definition)
+                ? definition.PositionOffset
+                : Vector3.Zero;
+
+            return transform.Position + transform.Rotation * offset + transform.Rotation.Forward * 10f;
+        }
+
+        if (Controller.IsValid())
+            return Controller.EyeTransform.Position + forward * 18f + Vector3.Down * 6f;
+
+        return WorldPosition + Vector3.Up * 48f + forward * 16f;
+    }
+
     private void DrawPhysgunBeam()
     {
-        if (IsProxy || !PhysgunBeamActive)
+        var useLocalOverride = !IsProxy && _localPhysgunBeamOverrideSet;
+        var active = useLocalOverride ? _localPhysgunBeamOverrideActive : PhysgunBeamActive;
+
+        if (!active)
         {
             SetPhysgunBeamVisible(false);
             return;
         }
 
-        var start = PhysgunBeamStart;
-        var end = PhysgunBeamEnd;
+        var start = useLocalOverride ? _localPhysgunBeamOverrideStart : PhysgunBeamStart;
+        var end = useLocalOverride ? _localPhysgunBeamOverrideEnd : PhysgunBeamEnd;
+        var bend = useLocalOverride ? _localPhysgunBeamOverrideBend : PhysgunBeamBend;
         if ((end - start).LengthSquared <= 1f)
         {
             SetPhysgunBeamVisible(false);
@@ -1923,7 +1964,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var delta = end - start;
         var distance = delta.Length;
         var forward = delta.LengthSquared > 0.001f ? delta.Normal : Vector3.Forward;
-        var targetMiddle = start + forward * distance * 0.33f + PhysgunBeamBend * 0.75f;
+        var targetMiddle = start + forward * distance * 0.33f + bend * 0.75f;
         targetMiddle += Noise.FbmVector(2, Time.Now * 400.0f, Time.Now * 100.0f);
 
         if (!justEnabled)
@@ -2036,6 +2077,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _physgunBeamRenderer = null;
         _physgunBeamPreviousDistance = 0f;
         _physgunBeamMiddleSpring = new Vector3.SpringDamped(0, 0);
+        _localPhysgunBeamOverrideSet = false;
+        _localPhysgunBeamOverrideActive = false;
     }
 
 

@@ -16,16 +16,22 @@ public sealed class WeaponPhysgun : Weapon
     private const string HeldCollisionTag = "physgun_held";
     private const float HostMaxRangeLimit = 2048f;
     private const float HostMaxHoldDistanceLimit = 2048f;
-    private const float HostMaxLinearSpeedLimit = 6000f;
+    private const float HostMaxLinearSpeedLimit = 24000f;
+    private const float HostMinResponsiveLinearSpeed = 12000f;
     private const float HostMaxLaunchForceLimit = 5000f;
     private const int HostMaxOverlapIterationsLimit = 12;
+    private const float HostMaxAimOriginError = 220f;
+    private const float HostGrabInputTimeout = 0.35f;
+    private const float HostSyncedBeamSag = 48f;
+    private const float HostSyncedBeamMoveBendScale = 0.035f;
+    private const float HostSyncedBeamMaxBend = 140f;
 
     [Property, Category("Physgun")] public float MaxRange { get; set; } = 1024f;
     [Property, Category("Physgun")] public float MinHoldDistance { get; set; } = 60f;
     [Property, Category("Physgun")] public float MaxHoldDistance { get; set; } = 1024f;
     [Property, Category("Physgun")] public float GravityGunHoldDistance { get; set; } = 90f;
     [Property, Category("Physgun")] public float ScrollStep { get; set; } = 25f;
-    [Property, Category("Physgun")] public float MaxLinearSpeed { get; set; } = 4000f;
+    [Property, Category("Physgun")] public float MaxLinearSpeed { get; set; } = 12000f;
     [Property, Category("Physgun")] public float LaunchForce { get; set; } = 1500f;
     [Property, Category("Physgun")] public float SnapAngleDegrees { get; set; } = 45f;
     [Property, Category("Physgun")] public float RotationLerp { get; set; } = 0.5f;
@@ -65,6 +71,9 @@ public sealed class WeaponPhysgun : Weapon
     private float _grabDistance;
     private Vector3 _localOffset;
     private Rotation _grabOffset = Rotation.Identity;
+    private int _grabSessionId;
+    private int _grabInputSequence;
+    private int _beamInputSequence;
     private bool _preventReselect;
 
     private Angles _spinSavedEyeAngles;
@@ -79,6 +88,7 @@ public sealed class WeaponPhysgun : Weapon
     private bool _beamSeekActive;
 
     private static readonly Dictionary<long, HostGrabState> HostGrabStates = new();
+    private static readonly Dictionary<long, int> HostBeamSequences = new();
 
     private sealed class HostGrabState
     {
@@ -87,10 +97,28 @@ public sealed class WeaponPhysgun : Weapon
         public GrabMode Mode;
         public GameObject GameObject;
         public Rigidbody Body;
+        public int SessionId;
+        public int LastInputSequence;
         public Vector3 LocalOffset;
         public Rotation GrabOffset;
         public float GrabDistance;
         public bool HadHeldCollisionTag;
+        public Vector3 AimPosition;
+        public Vector3 AimForward;
+        public float AimYaw;
+        public float MinHoldDistance;
+        public float MaxHoldDistance;
+        public float MaxLinearSpeed;
+        public float RotationLerp;
+        public float PlayerPadding;
+        public int MaxResolveIterations;
+        public float ReleasePlayerPadding;
+        public float ReleasePushSpeed;
+        public int ReleaseMaxResolveIterations;
+        public float LastInputTime;
+        public Vector3 BeamLastEnd;
+        public Vector3 BeamBend;
+        public bool BeamHasLastEnd;
 
         public bool IsValid()
         {
@@ -107,6 +135,9 @@ public sealed class WeaponPhysgun : Weapon
             return;
 
         var steamId = player.GameObject.Network.Owner?.SteamId.Value ?? 0L;
+        if (steamId != 0L)
+            HostBeamSequences.Remove(steamId);
+
         if (steamId == 0L || !HostGrabStates.TryGetValue(steamId, out var state))
             return;
 
@@ -115,9 +146,50 @@ public sealed class WeaponPhysgun : Weapon
             HostResolveGrabbedPlayerOverlaps(state, preserveVelocity: false,
                 padding: 6f, pushSpeed: 120f, maxIterations: 6);
             HostDisableHeldCollisionMode(state);
+            state.Player.SetPhysgunBeam(false);
         }
 
         HostGrabStates.Remove(steamId);
+    }
+
+    public static void HostFixedUpdateForPlayer(Player player)
+    {
+        if (!Networking.IsHost || !player.IsValid())
+            return;
+
+        var connection = player.GameObject.Network.Owner;
+        var steamId = connection?.SteamId.Value ?? 0L;
+        if (steamId == 0L || !HostGrabStates.TryGetValue(steamId, out var state))
+            return;
+
+        if (!state.IsValid())
+        {
+            if (state is not null)
+                HostGrabStates.Remove(state.SteamId);
+            player.SetPhysgunBeam(false);
+            return;
+        }
+
+        if (Time.Now - state.LastInputTime > HostGrabInputTimeout)
+        {
+            HostEndGrab(connection, state.GameObject, preserveVelocity: false,
+                state.ReleasePlayerPadding, state.ReleasePushSpeed, state.ReleaseMaxResolveIterations);
+            return;
+        }
+
+        if (!HostCanUsePhysgun(state.Player)
+            || !HostCanGrabRigidbody(state.Player, state.Body, state.Mode)
+            || !state.Body.MotionEnabled
+            || state.Body.IsProxy)
+        {
+            HostEndGrab(connection, state.GameObject, preserveVelocity: false,
+                state.ReleasePlayerPadding, state.ReleasePushSpeed, state.ReleaseMaxResolveIterations);
+            HostRejectGrab(connection, state.GameObject);
+            return;
+        }
+
+        HostApplyGrabMovement(state);
+        HostUpdateSyncedBeam(state);
     }
 
     protected override void OnWeaponStart()
@@ -288,8 +360,14 @@ public sealed class WeaponPhysgun : Weapon
         if (!TryFindGrabTarget(mode, origin, dir, out var tr, out var rb))
             return false;
 
+        var sessionId = unchecked(++_grabSessionId);
+        if (sessionId == 0)
+            sessionId = _grabSessionId = 1;
+
+        _grabInputSequence = 0;
+
         StartLocalGrab(mode, eye, tr, rb);
-        RequestHostStartGrab(mode, origin, dir, Player.Local.Controller.EyeAngles.yaw);
+        RequestHostStartGrab(mode, origin, dir, Player.Local.Controller.EyeAngles.yaw, sessionId);
         return true;
     }
 
@@ -481,29 +559,37 @@ public sealed class WeaponPhysgun : Weapon
         if (_mode == GrabMode.None || _mode == GrabMode.PhysgunSeek || !_grabbed.IsValid())
             return;
 
+        var eye = Player.Local.Controller.EyeTransform;
+        var yaw = Player.Local.Controller.EyeAngles.yaw;
+        var inputSequence = unchecked(++_grabInputSequence);
+
         if (Networking.IsHost)
         {
             HostUpdateGrab(GetLocalPlayerConnection(), _grabbed.GameObject, _grabDistance, _grabOffset,
+                _grabSessionId, inputSequence,
+                eye.Position, eye.Forward, yaw,
                 MinHoldDistance, MaxHoldDistance, MaxLinearSpeed, RotationLerp,
                 ReleasePlayerPadding, HeldPlayerPadding, HeldMaxResolveIterations);
             return;
         }
 
         RpcHostUpdateGrab(_grabbed.GameObject, _grabDistance, _grabOffset,
+            _grabSessionId, inputSequence,
+            eye.Position, eye.Forward, yaw,
             MinHoldDistance, MaxHoldDistance, MaxLinearSpeed, RotationLerp,
             ReleasePlayerPadding, HeldPlayerPadding, HeldMaxResolveIterations);
     }
 
-    private void RequestHostStartGrab(GrabMode mode, Vector3 origin, Vector3 forward, float yaw)
+    private void RequestHostStartGrab(GrabMode mode, Vector3 origin, Vector3 forward, float yaw, int sessionId)
     {
         if (Networking.IsHost)
         {
-            HostStartGrab(GetLocalPlayerConnection(), (int)mode, origin, forward, yaw,
+            HostStartGrab(GetLocalPlayerConnection(), (int)mode, origin, forward, yaw, sessionId,
                 MaxRange, MinHoldDistance, MaxHoldDistance, GravityGunHoldDistance, SeekRadius, AttachSound);
             return;
         }
 
-        RpcHostStartGrab((int)mode, origin, forward, yaw,
+        RpcHostStartGrab((int)mode, origin, forward, yaw, sessionId,
             MaxRange, MinHoldDistance, MaxHoldDistance, GravityGunHoldDistance, SeekRadius, AttachSound);
     }
 
@@ -561,22 +647,26 @@ public sealed class WeaponPhysgun : Weapon
     }
 
     [Rpc.Host]
-    private static void RpcHostStartGrab(int mode, Vector3 origin, Vector3 forward, float yaw,
+    private static void RpcHostStartGrab(int mode, Vector3 origin, Vector3 forward, float yaw, int sessionId,
         float maxRange, float minHoldDistance, float maxHoldDistance, float gravityGunHoldDistance,
         float seekRadius, SoundEvent attachSound)
     {
         if (!Networking.IsHost) return;
-        HostStartGrab(Rpc.Caller, mode, origin, forward, yaw, maxRange, minHoldDistance,
+        HostStartGrab(Rpc.Caller, mode, origin, forward, yaw, sessionId, maxRange, minHoldDistance,
             maxHoldDistance, gravityGunHoldDistance, seekRadius, attachSound);
     }
 
-    [Rpc.Host]
+    [Rpc.Host(NetFlags.UnreliableNoDelay)]
     private static void RpcHostUpdateGrab(GameObject target, float grabDistance, Rotation grabOffset,
+        int sessionId, int inputSequence,
+        Vector3 aimPosition, Vector3 aimForward, float aimYaw,
         float minHoldDistance, float maxHoldDistance, float maxLinearSpeed, float rotationLerp,
         float releasePlayerPadding, float heldPlayerPadding, int heldMaxResolveIterations)
     {
         if (!Networking.IsHost) return;
         HostUpdateGrab(Rpc.Caller, target, grabDistance, grabOffset,
+            sessionId, inputSequence,
+            aimPosition, aimForward, aimYaw,
             minHoldDistance, maxHoldDistance, maxLinearSpeed, rotationLerp,
             releasePlayerPadding, heldPlayerPadding, heldMaxResolveIterations);
     }
@@ -609,7 +699,38 @@ public sealed class WeaponPhysgun : Weapon
             releasePushSpeed, releaseMaxResolveIterations);
     }
 
-    private static void HostStartGrab(Connection caller, int modeValue, Vector3 origin, Vector3 forward, float yaw,
+    [Rpc.Host(NetFlags.UnreliableNoDelay)]
+    private static void RpcHostUpdatePhysgunBeam(int sequence, Vector3 start, Vector3 end, Vector3 bend, float maxRange)
+    {
+        if (!Networking.IsHost) return;
+        if (!TryGetCallerPlayer(Rpc.Caller, out var player)) return;
+        if (!HostCanUsePhysgun(player)) return;
+        if (!HostAcceptBeamSequence(Rpc.Caller, sequence)) return;
+
+        if (HostGrabStates.ContainsKey(Rpc.Caller.SteamId.Value))
+            return;
+
+        var safeStart = HostValidateBeamStart(player, start, end);
+        var safeEnd = HostValidateBeamEnd(safeStart, end, maxRange);
+        var safeBend = ClampVectorLength(bend, HostSyncedBeamMaxBend);
+
+        player.SetPhysgunBeam(true, safeStart, safeEnd, safeBend);
+    }
+
+    [Rpc.Host]
+    private static void RpcHostClearPhysgunBeam(int sequence)
+    {
+        if (!Networking.IsHost) return;
+        if (!TryGetCallerPlayer(Rpc.Caller, out var player)) return;
+        if (!HostAcceptBeamSequence(Rpc.Caller, sequence)) return;
+
+        if (HostGrabStates.ContainsKey(Rpc.Caller.SteamId.Value))
+            return;
+
+        player.SetPhysgunBeam(false);
+    }
+
+    private static void HostStartGrab(Connection caller, int modeValue, Vector3 origin, Vector3 forward, float yaw, int sessionId,
         float maxRange, float minHoldDistance, float maxHoldDistance, float gravityGunHoldDistance,
         float seekRadius, SoundEvent attachSound)
     {
@@ -623,13 +744,13 @@ public sealed class WeaponPhysgun : Weapon
         }
 
         var mode = modeValue == (int)GrabMode.GravityGun ? GrabMode.GravityGun : GrabMode.Physgun;
-        var aim = HostGetAimTransform(player, origin, forward, yaw);
+        var aim = HostGetValidatedAimTransform(player, origin, forward, yaw);
 
-        maxRange = Clamp(maxRange, 64f, HostMaxRangeLimit);
-        minHoldDistance = Clamp(minHoldDistance, 1f, HostMaxHoldDistanceLimit);
-        maxHoldDistance = Clamp(maxHoldDistance, minHoldDistance, HostMaxHoldDistanceLimit);
-        gravityGunHoldDistance = Clamp(gravityGunHoldDistance, minHoldDistance, maxHoldDistance);
-        seekRadius = Clamp(seekRadius, 0f, 64f);
+        maxRange = Clamp(FiniteOrDefault(maxRange, 1024f), 64f, HostMaxRangeLimit);
+        minHoldDistance = Clamp(FiniteOrDefault(minHoldDistance, 60f), 1f, HostMaxHoldDistanceLimit);
+        maxHoldDistance = Clamp(FiniteOrDefault(maxHoldDistance, 1024f), minHoldDistance, HostMaxHoldDistanceLimit);
+        gravityGunHoldDistance = Clamp(FiniteOrDefault(gravityGunHoldDistance, 90f), minHoldDistance, maxHoldDistance);
+        seekRadius = Clamp(FiniteOrDefault(seekRadius, 0f), 0f, 64f);
 
         if (!HostTryFindGrabTarget(player, mode, aim, maxRange, seekRadius, out var tr, out var rb))
         {
@@ -656,7 +777,22 @@ public sealed class WeaponPhysgun : Weapon
             Mode = mode,
             GameObject = rb.GameObject,
             Body = rb,
-            HadHeldCollisionTag = rb.GameObject.Tags.Has(HeldCollisionTag)
+            SessionId = sessionId,
+            LastInputSequence = 0,
+            HadHeldCollisionTag = rb.GameObject.Tags.Has(HeldCollisionTag),
+            AimPosition = aim.Position,
+            AimForward = aim.Forward,
+            AimYaw = aim.Rotation.Yaw(),
+            MinHoldDistance = minHoldDistance,
+            MaxHoldDistance = maxHoldDistance,
+            MaxLinearSpeed = HostMinResponsiveLinearSpeed,
+            RotationLerp = 0.5f,
+            PlayerPadding = 12f,
+            MaxResolveIterations = 4,
+            ReleasePlayerPadding = 6f,
+            ReleasePushSpeed = 120f,
+            ReleaseMaxResolveIterations = 6,
+            LastInputTime = Time.Now
         };
 
         if (mode == GrabMode.GravityGun)
@@ -683,32 +819,56 @@ public sealed class WeaponPhysgun : Weapon
     }
 
     private static void HostUpdateGrab(Connection caller, GameObject target, float grabDistance, Rotation grabOffset,
+        int sessionId, int inputSequence,
+        Vector3 aimPosition, Vector3 aimForward, float aimYaw,
         float minHoldDistance, float maxHoldDistance, float maxLinearSpeed, float rotationLerp,
         float releasePlayerPadding, float heldPlayerPadding, int heldMaxResolveIterations)
     {
         if (!TryGetHostState(caller, target, out var state))
             return;
 
-        if (!HostCanUsePhysgun(state.Player) || !state.Body.MotionEnabled || state.Body.IsProxy)
+        if (state.SessionId != sessionId || inputSequence <= state.LastInputSequence)
+            return;
+
+        if (!HostCanUsePhysgun(state.Player)
+            || !HostCanGrabRigidbody(state.Player, state.Body, state.Mode)
+            || !state.Body.MotionEnabled
+            || state.Body.IsProxy)
         {
             HostEndGrab(caller, target, preserveVelocity: false, releasePlayerPadding, 120f, 6);
             HostRejectGrab(caller, target);
             return;
         }
 
-        minHoldDistance = Clamp(minHoldDistance, 1f, HostMaxHoldDistanceLimit);
-        maxHoldDistance = Clamp(maxHoldDistance, minHoldDistance, HostMaxHoldDistanceLimit);
-        maxLinearSpeed = Clamp(maxLinearSpeed, 100f, HostMaxLinearSpeedLimit);
-        rotationLerp = Clamp(rotationLerp, 0.01f, 1f);
-        heldPlayerPadding = Clamp(heldPlayerPadding, 0f, 64f);
-        releasePlayerPadding = Clamp(releasePlayerPadding, 0f, 64f);
+        minHoldDistance = Clamp(FiniteOrDefault(minHoldDistance, state.MinHoldDistance), 1f, HostMaxHoldDistanceLimit);
+        maxHoldDistance = Clamp(FiniteOrDefault(maxHoldDistance, state.MaxHoldDistance), minHoldDistance, HostMaxHoldDistanceLimit);
+        maxLinearSpeed = MathF.Max(Clamp(FiniteOrDefault(maxLinearSpeed, state.MaxLinearSpeed), 100f, HostMaxLinearSpeedLimit), HostMinResponsiveLinearSpeed);
+        rotationLerp = Clamp(FiniteOrDefault(rotationLerp, state.RotationLerp), 0.01f, 1f);
+        heldPlayerPadding = Clamp(FiniteOrDefault(heldPlayerPadding, state.PlayerPadding), 0f, 64f);
+        releasePlayerPadding = Clamp(FiniteOrDefault(releasePlayerPadding, state.ReleasePlayerPadding), 0f, 64f);
         heldMaxResolveIterations = Math.Clamp(heldMaxResolveIterations, 1, HostMaxOverlapIterationsLimit);
 
-        state.GrabDistance = Clamp(grabDistance, minHoldDistance, maxHoldDistance);
-        state.GrabOffset = grabOffset;
+        var aim = HostGetValidatedAimTransform(state.Player, aimPosition, aimForward, aimYaw);
 
-        HostApplyGrabMovement(state, minHoldDistance, maxHoldDistance, maxLinearSpeed,
-            rotationLerp, MathF.Max(releasePlayerPadding, heldPlayerPadding), heldMaxResolveIterations);
+        state.GrabDistance = Clamp(FiniteOrDefault(grabDistance, state.GrabDistance), minHoldDistance, maxHoldDistance);
+        state.GrabOffset = grabOffset;
+        state.LastInputSequence = inputSequence;
+        state.AimPosition = aim.Position;
+        state.AimForward = aim.Forward;
+        state.AimYaw = aim.Rotation.Yaw();
+        state.MinHoldDistance = minHoldDistance;
+        state.MaxHoldDistance = maxHoldDistance;
+        state.MaxLinearSpeed = maxLinearSpeed;
+        state.RotationLerp = rotationLerp;
+        state.PlayerPadding = MathF.Max(releasePlayerPadding, heldPlayerPadding);
+        state.MaxResolveIterations = heldMaxResolveIterations;
+        state.ReleasePlayerPadding = releasePlayerPadding;
+        state.ReleasePushSpeed = 120f;
+        state.ReleaseMaxResolveIterations = 6;
+        state.LastInputTime = Time.Now;
+
+        HostApplyGrabMovement(state);
+        HostUpdateSyncedBeam(state);
     }
 
     private static void HostEndGrab(Connection caller, GameObject target, bool preserveVelocity,
@@ -724,6 +884,7 @@ public sealed class WeaponPhysgun : Weapon
         HostResolveGrabbedPlayerOverlaps(state, preserveVelocity, releasePlayerPadding,
             releasePushSpeed, releaseMaxResolveIterations);
         HostDisableHeldCollisionMode(state);
+        state.Player.SetPhysgunBeam(false);
         HostGrabStates.Remove(state.SteamId);
     }
 
@@ -784,6 +945,19 @@ public sealed class WeaponPhysgun : Weapon
         return player.IsValid();
     }
 
+    private static bool HostAcceptBeamSequence(Connection caller, int sequence)
+    {
+        if (caller is null)
+            return false;
+
+        var steamId = caller.SteamId.Value;
+        if (HostBeamSequences.TryGetValue(steamId, out var lastSequence) && sequence <= lastSequence)
+            return false;
+
+        HostBeamSequences[steamId] = sequence;
+        return true;
+    }
+
     private static bool TryGetHostState(Connection caller, GameObject target, out HostGrabState state)
     {
         state = null;
@@ -815,16 +989,47 @@ public sealed class WeaponPhysgun : Weapon
             && string.Equals(player.EquippedWeaponItemId, "physgun", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static Transform HostGetAimTransform(Player player, Vector3 requestedOrigin, Vector3 requestedForward, float requestedYaw)
+    private static Transform HostGetValidatedAimTransform(Player player, Vector3 requestedOrigin, Vector3 requestedForward, float requestedYaw)
     {
-        if (player.Controller.IsValid())
-            return player.Controller.EyeTransform;
+        var serverAim = player.Controller.IsValid()
+            ? player.Controller.EyeTransform
+            : new Transform(player.WorldPosition + Vector3.Up * 64f, player.WorldRotation);
 
-        var forward = requestedForward.LengthSquared > 0.001f
+        var origin = IsFiniteVector(requestedOrigin)
+            && Vector3.DistanceBetween(serverAim.Position, requestedOrigin) <= HostMaxAimOriginError
+                ? requestedOrigin
+                : serverAim.Position;
+
+        var forward = IsFiniteVector(requestedForward) && requestedForward.LengthSquared > 0.001f
             ? requestedForward.Normal
-            : Rotation.FromYaw(requestedYaw).Forward;
+            : serverAim.Forward;
 
-        return new Transform(requestedOrigin, Rotation.LookAt(forward));
+        if (forward.LengthSquared <= 0.001f && !float.IsNaN(requestedYaw) && !float.IsInfinity(requestedYaw))
+            forward = Rotation.FromYaw(requestedYaw).Forward;
+
+        if (forward.LengthSquared <= 0.001f)
+            forward = Vector3.Forward;
+
+        return new Transform(origin, Rotation.LookAt(forward.Normal));
+    }
+
+    private static Transform HostGetStateAimTransform(HostGrabState state)
+    {
+        var forward = IsFiniteVector(state.AimForward) && state.AimForward.LengthSquared > 0.001f
+            ? state.AimForward.Normal
+            : state.Player.WorldRotation.Forward;
+
+        if (forward.LengthSquared <= 0.001f)
+            forward = Vector3.Forward;
+
+        return new Transform(state.AimPosition, Rotation.LookAt(forward.Normal));
+    }
+
+    private static bool IsFiniteVector(Vector3 value)
+    {
+        return !float.IsNaN(value.x) && !float.IsInfinity(value.x)
+            && !float.IsNaN(value.y) && !float.IsInfinity(value.y)
+            && !float.IsNaN(value.z) && !float.IsInfinity(value.z);
     }
 
     private static bool HostTryFindGrabTarget(Player player, GrabMode mode, Transform aim,
@@ -882,38 +1087,106 @@ public sealed class WeaponPhysgun : Weapon
         return ownsProp || ownsPrinter;
     }
 
-    private static void HostApplyGrabMovement(HostGrabState state, float minHoldDistance,
-        float maxHoldDistance, float maxLinearSpeed, float rotationLerp, float playerPadding,
-        int maxResolveIterations)
+    private static void HostApplyGrabMovement(HostGrabState state)
     {
         var body = state.Body;
-        if (!body.IsValid() || !state.Player.Controller.IsValid())
+        if (!body.IsValid() || !state.Player.IsValid())
             return;
 
         var dt = Time.Delta;
         if (dt <= 0f)
             return;
 
-        var eye = state.Player.Controller.EyeTransform;
+        var eye = HostGetStateAimTransform(state);
         var grabDistance = HostClampGrabDistance(body, HostGetEndPoint(state), eye,
-            state.GrabDistance, minHoldDistance, maxHoldDistance);
+            state.GrabDistance, state.MinHoldDistance, state.MaxHoldDistance);
         var targetPos = eye.Position + eye.Forward * grabDistance;
 
         var targetRot = state.Mode == GrabMode.GravityGun
             ? eye.Rotation * state.GrabOffset
-            : Rotation.FromYaw(state.Player.Controller.EyeAngles.yaw) * state.GrabOffset;
+            : Rotation.FromYaw(state.AimYaw) * state.GrabOffset;
 
         var desiredBodyPos = targetPos - targetRot * state.LocalOffset;
-        desiredBodyPos = HostResolveHeldPlayerOverlaps(state, desiredBodyPos, playerPadding, maxResolveIterations);
+        desiredBodyPos = HostResolveHeldPlayerOverlaps(state, desiredBodyPos,
+            state.PlayerPadding, state.MaxResolveIterations);
 
-        body.WorldRotation = Rotation.Slerp(body.WorldRotation, targetRot, rotationLerp);
+        body.WorldRotation = Rotation.Slerp(body.WorldRotation, targetRot, state.RotationLerp);
         body.AngularVelocity = Vector3.Zero;
 
         var velocity = (desiredBodyPos - body.WorldPosition) / dt;
-        if (velocity.Length > maxLinearSpeed)
-            velocity = velocity.Normal * maxLinearSpeed;
+        if (velocity.Length > state.MaxLinearSpeed)
+            velocity = velocity.Normal * state.MaxLinearSpeed;
 
         body.Velocity = velocity;
+    }
+
+    private static void HostUpdateSyncedBeam(HostGrabState state)
+    {
+        if (!state.Player.IsValid() || !state.Body.IsValid())
+            return;
+
+        var start = state.Player.GetPhysgunBeamWorldStart(state.AimForward);
+        var end = state.Mode == GrabMode.GravityGun
+            ? state.Body.WorldPosition
+            : state.Body.WorldTransform.PointToWorld(state.LocalOffset);
+
+        end = HostClampBeamEnd(start, end);
+
+        var dt = MathF.Max(Time.Delta, 0.001f);
+        var endVelocity = state.BeamHasLastEnd ? (end - state.BeamLastEnd) / dt : Vector3.Zero;
+        state.BeamLastEnd = end;
+        state.BeamHasLastEnd = true;
+
+        var distance = Vector3.DistanceBetween(start, end);
+        var sag = Vector3.Down * MathF.Min(HostSyncedBeamSag, distance * 0.08f);
+        var moveBend = -endVelocity * HostSyncedBeamMoveBendScale;
+        var desiredBend = ClampVectorLength(sag + moveBend, HostSyncedBeamMaxBend);
+
+        state.BeamBend = LerpVector(state.BeamBend, desiredBend, 0.35f);
+        state.Player.SetPhysgunBeam(true, start, end, state.BeamBend);
+    }
+
+    private static Vector3 HostClampBeamEnd(Vector3 start, Vector3 end)
+    {
+        var delta = end - start;
+        if (delta.Length <= HostMaxRangeLimit)
+            return end;
+
+        return start + delta.Normal * HostMaxRangeLimit;
+    }
+
+    private static Vector3 HostValidateBeamStart(Player player, Vector3 requestedStart, Vector3 requestedEnd)
+    {
+        var fallbackForward = IsFiniteVector(requestedEnd - requestedStart) && (requestedEnd - requestedStart).LengthSquared > 0.001f
+            ? (requestedEnd - requestedStart).Normal
+            : player.WorldRotation.Forward;
+
+        var fallbackStart = player.GetPhysgunBeamWorldStart(fallbackForward);
+
+        if (!IsFiniteVector(requestedStart))
+            return fallbackStart;
+
+        var serverEye = player.Controller.IsValid()
+            ? player.Controller.EyeTransform.Position
+            : player.WorldPosition + Vector3.Up * 64f;
+
+        if (Vector3.DistanceBetween(serverEye, requestedStart) > HostMaxAimOriginError)
+            return fallbackStart;
+
+        return requestedStart;
+    }
+
+    private static Vector3 HostValidateBeamEnd(Vector3 start, Vector3 requestedEnd, float requestedMaxRange)
+    {
+        if (!IsFiniteVector(requestedEnd))
+            return start;
+
+        var maxRange = Clamp(FiniteOrDefault(requestedMaxRange, 1024f), 64f, HostMaxRangeLimit);
+        var delta = requestedEnd - start;
+        if (delta.Length <= maxRange)
+            return requestedEnd;
+
+        return start + delta.Normal * maxRange;
     }
 
     private static float HostClampGrabDistance(Rigidbody body, Vector3 point, Transform eye,
@@ -1108,6 +1381,9 @@ public sealed class WeaponPhysgun : Weapon
         if (caller is null)
             return;
 
+        if (TryGetCallerPlayer(caller, out var player))
+            player.SetPhysgunBeam(false);
+
         using (Rpc.FilterInclude(c => c.SteamId.Value == caller.SteamId.Value))
         {
             RpcClientRejectGrab(caller.SteamId.Value, target);
@@ -1185,7 +1461,7 @@ public sealed class WeaponPhysgun : Weapon
         var desiredBend = ClampVectorLength(sag + moveBend, BeamMaxBend);
 
         _beamBend = LerpVector(_beamBend, desiredBend, 0.35f);
-        player.SetPhysgunBeam(true, start, end, _beamBend);
+        PublishBeamState(true, start, end, _beamBend);
     }
 
     private void UpdateSeekingBeamState()
@@ -1214,7 +1490,7 @@ public sealed class WeaponPhysgun : Weapon
         _beamBend = LerpVector(_beamBend, desiredBend, 0.25f);
         _beamLastEnd = end;
         _beamHasLastEnd = true;
-        player.SetPhysgunBeam(true, start, end, _beamBend);
+        PublishBeamState(true, start, end, _beamBend);
     }
 
     private Vector3 GetSeekingBeamBend(Transform eye, Vector3 start, Vector3 end)
@@ -1266,7 +1542,28 @@ public sealed class WeaponPhysgun : Weapon
         _beamHasLastEnd = false;
 
         if (Player.Local.IsValid() && (hadBeam || Player.Local.PhysgunBeamActive))
-            Player.Local.SetPhysgunBeam(false);
+            PublishBeamState(false);
+    }
+
+    private void PublishBeamState(bool active, Vector3 start = default, Vector3 end = default, Vector3 bend = default)
+    {
+        if (!Player.Local.IsValid())
+            return;
+
+        Player.Local.SetLocalPhysgunBeam(active, start, end, bend);
+
+        if (Networking.IsHost)
+        {
+            Player.Local.SetPhysgunBeam(active, start, end, bend);
+            return;
+        }
+
+        var sequence = unchecked(++_beamInputSequence);
+
+        if (active)
+            RpcHostUpdatePhysgunBeam(sequence, start, end, bend, MaxRange);
+        else
+            RpcHostClearPhysgunBeam(sequence);
     }
 
     private void UpdateViewmodelState()
@@ -1350,5 +1647,10 @@ public sealed class WeaponPhysgun : Weapon
             max = min;
 
         return MathF.Max(min, MathF.Min(max, value));
+    }
+
+    private static float FiniteOrDefault(float value, float fallback)
+    {
+        return float.IsNaN(value) || float.IsInfinity(value) ? fallback : value;
     }
 }

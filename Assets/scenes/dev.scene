@@ -3199,6 +3199,50 @@
       }
     },
     {
+      "__guid": "521c1dd1-f7c4-4fef-983b-401da945fbc3",
+      "__version": 2,
+      "__Prefab": "prefabs/doors/door police 2.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+            },
+            "Property": "Name",
+            "Value": "door police 5"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+            },
+            "Property": "Position",
+            "Value": "976.195129,-151.595703,11.1412811"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "1a32e9e9-0ad9-4c35-9977-694f32effa28": "521c1dd1-f7c4-4fef-983b-401da945fbc3",
+        "0097694d-e91b-41f5-bfff-0ba318adf421": "0ded3de7-4216-4f95-8463-32b88f4ec584",
+        "08598ea3-c937-4b5c-b3ad-a55028f8c819": "67ec48fc-ab71-4001-b27a-f43acfe12c3f",
+        "f3194674-6ea7-4dbb-bce9-467c27446bb9": "f3e5c6ec-00db-4305-8a99-4565f8cbdc67",
+        "06db3ed2-5fdb-417d-b74b-41c4a3270e86": "27e8ce0f-88bb-4362-8f9f-8d892209339a",
+        "4c08e199-1d08-4b00-920e-eb26d13d6a3f": "657b4488-a818-4a68-af8e-75b9f6746faf",
+        "716a032b-dd50-4f3b-a932-f95fdc5823cf": "156a3db6-6290-474f-8c0b-dad209ccccf6",
+        "9e330344-1ee1-4a85-b504-9e3f54b559b1": "220cc436-b9c9-4992-8dbe-d82e9bff3993",
+        "99e34c9b-5f31-4177-81a2-ecfbaceb82ae": "275ff079-913f-4142-8298-1530b9fa45a8",
+        "6416f6fc-7681-43ed-9c5c-558096eae9a3": "311ff180-1413-4587-9221-60419bbce3b3",
+        "7f4dc5fd-a395-4784-9373-49419211a35d": "5ee0ff93-398f-4ff2-b99b-2354be74224e",
+        "eb1fa5a4-7e01-441b-b35e-431f6ae58cc2": "19d7aecd-4e91-48bf-916d-bb389227f2c1",
+        "2263669d-496d-422a-8199-787d54c9e7c3": "6c956078-d42f-477e-ad76-f207bea59380",
+        "8a784562-9c2a-424a-b873-55997556adc6": "262f7dbc-eb6c-4112-a4e3-d76f57396299"
+      }
+    },
+    {
       "__guid": "0eb2a36d-12e1-4668-bf84-67f202a506ab",
       "__version": 2,
       "__Prefab": "prefabs/doors/door city.prefab",
@@ -3299,17 +3343,17 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "58322020-4f9a-4383-b025-01040a856d72"
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       },
       "Sandbox.MovieMaker.MovieRecorderSystem": {
         "DisableClientRecording": false
       },
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "58322020-4f9a-4383-b025-01040a856d72"
         }
       }
     }

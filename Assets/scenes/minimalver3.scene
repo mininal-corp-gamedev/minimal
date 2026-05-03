@@ -12709,15 +12709,119 @@
                 {
                   "__guid": "80f82d7b-b8ed-4eb9-bcda-b97058f03882",
                   "__version": 2,
-                  "__Prefab": "prefabs/doors/door police.prefab",
+                  "__Prefab": "prefabs/doors/door police 2.prefab",
                   "__PrefabInstancePatch": {
-                    "AddedObjects": [],
-                    "RemovedObjects": [],
+                    "AddedObjects": [
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "283a892a-49f3-41af-8348-3aca4cfab5fa"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelRenderer",
+                          "__guid": "283a892a-49f3-41af-8348-3aca4cfab5fa",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "BodyGroups": 18446744073709551615,
+                          "CreateAttachments": false,
+                          "LodOverride": null,
+                          "MaterialGroup": null,
+                          "MaterialOverride": null,
+                          "Materials": null,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "RenderOptions": {
+                            "GameLayer": true,
+                            "OverlayLayer": false,
+                            "BloomLayer": false,
+                            "AfterUILayer": false
+                          },
+                          "RenderType": "On",
+                          "Tint": "0.06512,0.02998,0.02998,1"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "a04c8a0b-fb3b-45d5-af0a-3d7f12afaa21"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "283a892a-49f3-41af-8348-3aca4cfab5fa"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelCollider",
+                          "__guid": "a04c8a0b-fb3b-45d5-af0a-3d7f12afaa21",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "ColliderFlags": 0,
+                          "Elasticity": null,
+                          "Friction": null,
+                          "IsTrigger": false,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "OnObjectTriggerEnter": null,
+                          "OnObjectTriggerExit": null,
+                          "OnTriggerEnter": null,
+                          "OnTriggerExit": null,
+                          "RollingResistance": null,
+                          "Static": true,
+                          "Surface": null,
+                          "SurfaceVelocity": "0,0,0"
+                        }
+                      }
+                    ],
+                    "RemovedObjects": [
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "f3194674-6ea7-4dbb-bce9-467c27446bb9"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "06db3ed2-5fdb-417d-b74b-41c4a3270e86"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "4c08e199-1d08-4b00-920e-eb26d13d6a3f"
+                        }
+                      }
+                    ],
                     "PropertyOverrides": [
                       {
                         "Target": {
                           "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
                         },
                         "Property": "Name",
                         "Value": "doorw_city_p"
@@ -12725,40 +12829,163 @@
                       {
                         "Target": {
                           "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0097694d-e91b-41f5-bfff-0ba318adf421"
+                        },
+                        "Property": "IsStatic",
+                        "Value": true
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
+                        },
+                        "Property": "Header",
+                        "Value": "Суд"
                       }
                     ],
                     "MovedObjects": []
                   },
                   "__PrefabIdToInstanceId": {
-                    "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "80f82d7b-b8ed-4eb9-bcda-b97058f03882",
-                    "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "c6a92218-de6b-48b8-8b30-fd204c9d320b",
-                    "183d408b-ef59-4367-82d6-152fb4caf265": "dd06a096-439a-49a9-b381-c90b2c48e686",
-                    "7f912fb9-0e68-4b5a-8e84-572dfe594555": "9119a445-0da0-44a2-aed0-797771144e7b",
-                    "59c1f46e-3bab-4ea8-9da9-60c104acd255": "f11cf106-ca34-438d-9994-52676f391f49",
-                    "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "7f849fff-1a5b-4e99-8c97-267a5061ed72",
-                    "daa8e69f-ccdb-489c-b47b-cf27e3d98252": "555ef5a2-1705-476f-86f6-0c153158d22a",
-                    "77c9bbbc-adfe-40a0-b5c0-01ef28d95cd0": "7166850e-5bf1-429a-8347-20ce394e1108",
-                    "1da51500-c196-4871-a40f-1539bfba738b": "4a300ebc-5870-4d95-83c0-02692a1bb5cd",
-                    "64e17fe5-46fd-4302-934a-e50990ffa251": "30ad9ccd-74af-4b9c-9d17-5d4f7073ee83",
-                    "89fbdb4b-9ebc-4809-bcc8-c1ab0eabd0fd": "41ff1463-0200-41de-9e04-64d410a8fdbb"
+                    "1a32e9e9-0ad9-4c35-9977-694f32effa28": "80f82d7b-b8ed-4eb9-bcda-b97058f03882",
+                    "0097694d-e91b-41f5-bfff-0ba318adf421": "01d2cc8d-8aa1-4bf3-8394-05865b04c567",
+                    "08598ea3-c937-4b5c-b3ad-a55028f8c819": "a4328b76-43fc-4bc3-ae39-5133ba0edac1",
+                    "f3194674-6ea7-4dbb-bce9-467c27446bb9": "ac09790f-c960-4c73-a323-4662fe9c7866",
+                    "06db3ed2-5fdb-417d-b74b-41c4a3270e86": "4f482b95-1489-470b-a500-074c0a1e03c5",
+                    "4c08e199-1d08-4b00-920e-eb26d13d6a3f": "5f25354c-8ea3-4a6e-952e-0c6e4c6607c5",
+                    "716a032b-dd50-4f3b-a932-f95fdc5823cf": "daf42642-4e20-4285-958e-e618d549e311",
+                    "9e330344-1ee1-4a85-b504-9e3f54b559b1": "27e5925f-99e3-43e2-a7bc-97b315657a40",
+                    "99e34c9b-5f31-4177-81a2-ecfbaceb82ae": "5344fc17-d787-4019-83a9-2616a780d890",
+                    "6416f6fc-7681-43ed-9c5c-558096eae9a3": "27d2784e-52b6-424f-9d82-0b456fe0a1fc",
+                    "7f4dc5fd-a395-4784-9373-49419211a35d": "721876bb-90b2-40c7-b5c6-c0c70e6524b2",
+                    "eb1fa5a4-7e01-441b-b35e-431f6ae58cc2": "ee88d3ea-ad86-4ae9-a5fb-218ac6f894af",
+                    "2263669d-496d-422a-8199-787d54c9e7c3": "7883e0cc-0b73-4b6d-8f5a-f0006762f750",
+                    "8a784562-9c2a-424a-b873-55997556adc6": "6a305e47-22a5-40b3-a0a8-e715c75aad3b"
                   }
                 },
                 {
                   "__guid": "4f3a5e9d-1643-46e1-af5f-a3e1deb2100c",
                   "__version": 2,
-                  "__Prefab": "prefabs/doors/door police.prefab",
+                  "__Prefab": "prefabs/doors/door police 2.prefab",
                   "__PrefabInstancePatch": {
-                    "AddedObjects": [],
-                    "RemovedObjects": [],
+                    "AddedObjects": [
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "e6a0ddf8-016d-479c-8589-e6c65e41fc2f"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelRenderer",
+                          "__guid": "e6a0ddf8-016d-479c-8589-e6c65e41fc2f",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "BodyGroups": 18446744073709551615,
+                          "CreateAttachments": false,
+                          "LodOverride": null,
+                          "MaterialGroup": null,
+                          "MaterialOverride": null,
+                          "Materials": null,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "RenderOptions": {
+                            "GameLayer": true,
+                            "OverlayLayer": false,
+                            "BloomLayer": false,
+                            "AfterUILayer": false
+                          },
+                          "RenderType": "On",
+                          "Tint": "0.06512,0.02998,0.02998,1"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "f6361f00-b568-40a1-b319-15542d0f7a2c"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "e6a0ddf8-016d-479c-8589-e6c65e41fc2f"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelCollider",
+                          "__guid": "f6361f00-b568-40a1-b319-15542d0f7a2c",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "ColliderFlags": 0,
+                          "Elasticity": null,
+                          "Friction": null,
+                          "IsTrigger": false,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "OnObjectTriggerEnter": null,
+                          "OnObjectTriggerExit": null,
+                          "OnTriggerEnter": null,
+                          "OnTriggerExit": null,
+                          "RollingResistance": null,
+                          "Static": true,
+                          "Surface": null,
+                          "SurfaceVelocity": "0,0,0"
+                        }
+                      }
+                    ],
+                    "RemovedObjects": [
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "f3194674-6ea7-4dbb-bce9-467c27446bb9"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "06db3ed2-5fdb-417d-b74b-41c4a3270e86"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "4c08e199-1d08-4b00-920e-eb26d13d6a3f"
+                        }
+                      }
+                    ],
                     "PropertyOverrides": [
                       {
                         "Target": {
                           "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
                         },
                         "Property": "Name",
                         "Value": "doorw_city_p"
@@ -12766,7 +12993,7 @@
                       {
                         "Target": {
                           "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
                         },
                         "Property": "Position",
                         "Value": "5.34057617E-05,104.006958,0"
@@ -12774,26 +13001,45 @@
                       {
                         "Target": {
                           "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0097694d-e91b-41f5-bfff-0ba318adf421"
+                        },
+                        "Property": "IsStatic",
+                        "Value": true
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
+                        },
+                        "Property": "Header",
+                        "Value": "Суд"
                       }
                     ],
                     "MovedObjects": []
                   },
                   "__PrefabIdToInstanceId": {
-                    "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "4f3a5e9d-1643-46e1-af5f-a3e1deb2100c",
-                    "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "77fd1895-c46e-47e5-853e-3c9cd6d2ca80",
-                    "183d408b-ef59-4367-82d6-152fb4caf265": "635889f0-b434-4677-816b-3014a62aa251",
-                    "7f912fb9-0e68-4b5a-8e84-572dfe594555": "5e016183-8736-434b-9bf4-ce70fd24c05c",
-                    "59c1f46e-3bab-4ea8-9da9-60c104acd255": "65a7be7b-c003-4000-9511-bba259e25b91",
-                    "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "1cb2184c-fac0-4533-a63d-e1c8c2049884",
-                    "daa8e69f-ccdb-489c-b47b-cf27e3d98252": "80fccd4b-dd6d-4f57-8b6d-a882aefcacdd",
-                    "77c9bbbc-adfe-40a0-b5c0-01ef28d95cd0": "1d0e75a6-1eb1-4d73-a96b-8319b49cb8c1",
-                    "1da51500-c196-4871-a40f-1539bfba738b": "35a38470-3522-46c7-8a66-266ccc2f5b74",
-                    "64e17fe5-46fd-4302-934a-e50990ffa251": "18aa1306-f928-495b-8eeb-e8af04b7b70c",
-                    "89fbdb4b-9ebc-4809-bcc8-c1ab0eabd0fd": "086adb10-0e84-473f-ba7d-4c95f4444aaa"
+                    "1a32e9e9-0ad9-4c35-9977-694f32effa28": "4f3a5e9d-1643-46e1-af5f-a3e1deb2100c",
+                    "0097694d-e91b-41f5-bfff-0ba318adf421": "285c0412-ed17-40c2-9377-c6312d6dda0d",
+                    "08598ea3-c937-4b5c-b3ad-a55028f8c819": "a250cc9e-b0c6-4d87-8a27-d0250bf933d5",
+                    "f3194674-6ea7-4dbb-bce9-467c27446bb9": "72d88130-7aa9-45ef-a252-96067e09fac6",
+                    "06db3ed2-5fdb-417d-b74b-41c4a3270e86": "706fefcc-2447-4a77-80b9-2dd5e1b889e1",
+                    "4c08e199-1d08-4b00-920e-eb26d13d6a3f": "9075c536-7a68-4b91-9ca1-1af93841a0ae",
+                    "716a032b-dd50-4f3b-a932-f95fdc5823cf": "55c43a80-f589-418b-aa87-57c1471340ed",
+                    "9e330344-1ee1-4a85-b504-9e3f54b559b1": "c8430f3a-c97b-48b8-892c-68c44f216221",
+                    "99e34c9b-5f31-4177-81a2-ecfbaceb82ae": "1c933121-80b3-484e-8da6-d734c106d6dd",
+                    "6416f6fc-7681-43ed-9c5c-558096eae9a3": "ed686391-dcb4-4164-8ca4-cfb1c7ed4e5a",
+                    "7f4dc5fd-a395-4784-9373-49419211a35d": "c505d26a-5e78-4834-ab74-89d4177aa4c3",
+                    "eb1fa5a4-7e01-441b-b35e-431f6ae58cc2": "d1849ea2-bb31-45a6-b962-29392f0aac22",
+                    "2263669d-496d-422a-8199-787d54c9e7c3": "5812fae8-4d43-4ab7-9923-5e49088801bc",
+                    "8a784562-9c2a-424a-b873-55997556adc6": "00fcde0e-86b5-46e7-a7f1-73636f394eaa"
                   }
                 }
               ]
@@ -12818,7 +13064,7 @@
                 {
                   "__guid": "77e69639-d2e8-40a1-aa0a-e2579fcc9331",
                   "__version": 2,
-                  "__Prefab": "prefabs/doors/door police.prefab",
+                  "__Prefab": "prefabs/doors/door police 2.prefab",
                   "__PrefabInstancePatch": {
                     "AddedObjects": [],
                     "RemovedObjects": [],
@@ -12826,7 +13072,7 @@
                       {
                         "Target": {
                           "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
                         },
                         "Property": "Name",
                         "Value": "doorw_city_p"
@@ -12834,32 +13080,43 @@
                       {
                         "Target": {
                           "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
+                        },
+                        "Property": "Header",
+                        "Value": "Суд"
                       }
                     ],
                     "MovedObjects": []
                   },
                   "__PrefabIdToInstanceId": {
-                    "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "77e69639-d2e8-40a1-aa0a-e2579fcc9331",
-                    "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "ebf3763a-2405-43b4-bb91-c1cb3e848fe0",
-                    "183d408b-ef59-4367-82d6-152fb4caf265": "b3b3350a-3940-4e4a-946f-7c4c248051de",
-                    "7f912fb9-0e68-4b5a-8e84-572dfe594555": "a3596e8b-baa7-47f1-b59a-f442537dd353",
-                    "59c1f46e-3bab-4ea8-9da9-60c104acd255": "49f4ea2c-fe20-4175-8f5f-422e13f30bc1",
-                    "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "3aed2766-f105-4398-a2d3-0666efcaea19",
-                    "daa8e69f-ccdb-489c-b47b-cf27e3d98252": "9ec8d3c8-b1ab-4bb7-921b-8a4ab17002c0",
-                    "77c9bbbc-adfe-40a0-b5c0-01ef28d95cd0": "8315e173-1e2e-423c-820f-ab7f232a635d",
-                    "1da51500-c196-4871-a40f-1539bfba738b": "e439351b-ae2b-4ba8-b474-359f48deb004",
-                    "64e17fe5-46fd-4302-934a-e50990ffa251": "846e8b7a-7ce2-4196-b1ff-3f7067d44ef8",
-                    "89fbdb4b-9ebc-4809-bcc8-c1ab0eabd0fd": "b78a7808-a592-4da8-980c-c84d0de08d8d"
+                    "1a32e9e9-0ad9-4c35-9977-694f32effa28": "77e69639-d2e8-40a1-aa0a-e2579fcc9331",
+                    "0097694d-e91b-41f5-bfff-0ba318adf421": "9ed7eae1-83cb-44a5-aeaa-7252cbd247de",
+                    "08598ea3-c937-4b5c-b3ad-a55028f8c819": "0fd0b66c-9ab1-48b0-b6c3-89bb30df0645",
+                    "f3194674-6ea7-4dbb-bce9-467c27446bb9": "5f548b80-345a-491b-b59b-b420c898bff3",
+                    "06db3ed2-5fdb-417d-b74b-41c4a3270e86": "6b1daa61-04ec-45b3-bba6-9dad441780c1",
+                    "4c08e199-1d08-4b00-920e-eb26d13d6a3f": "e07970b0-413a-4765-80af-abd89d1ecc81",
+                    "716a032b-dd50-4f3b-a932-f95fdc5823cf": "0e5f02b1-ecd1-4798-ab27-5c8c589034e8",
+                    "9e330344-1ee1-4a85-b504-9e3f54b559b1": "a83f40b4-b4f4-42d8-9a5b-6c0d29da3878",
+                    "99e34c9b-5f31-4177-81a2-ecfbaceb82ae": "3de1a6a6-8bad-4b34-9bb4-c4e2d0ad6c9f",
+                    "6416f6fc-7681-43ed-9c5c-558096eae9a3": "99410247-2c89-46b2-a065-77a9b8070d9f",
+                    "7f4dc5fd-a395-4784-9373-49419211a35d": "92fcfd6c-7f82-47d8-8bc9-7647081bfbce",
+                    "eb1fa5a4-7e01-441b-b35e-431f6ae58cc2": "8011066c-abd8-4bc6-baee-d25a6dc1636c",
+                    "2263669d-496d-422a-8199-787d54c9e7c3": "e46fb3e1-c0ac-472d-a9a0-c6482f55f486",
+                    "8a784562-9c2a-424a-b873-55997556adc6": "3691f026-ef66-4dc9-8c44-f6a85b5cb589"
                   }
                 },
                 {
                   "__guid": "48599e81-4b51-407a-a3fe-90b4c7780f49",
                   "__version": 2,
-                  "__Prefab": "prefabs/doors/door police.prefab",
+                  "__Prefab": "prefabs/doors/door police 2.prefab",
                   "__PrefabInstancePatch": {
                     "AddedObjects": [],
                     "RemovedObjects": [],
@@ -12867,7 +13124,7 @@
                       {
                         "Target": {
                           "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
                         },
                         "Property": "Name",
                         "Value": "doorw_city_p"
@@ -12875,7 +13132,7 @@
                       {
                         "Target": {
                           "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
                         },
                         "Property": "Position",
                         "Value": "5.34057617E-05,104.006958,0"
@@ -12883,26 +13140,37 @@
                       {
                         "Target": {
                           "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
+                        },
+                        "Property": "Header",
+                        "Value": "Суд"
                       }
                     ],
                     "MovedObjects": []
                   },
                   "__PrefabIdToInstanceId": {
-                    "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "48599e81-4b51-407a-a3fe-90b4c7780f49",
-                    "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "b3043226-bc4e-42a3-b5b6-84264ae5a048",
-                    "183d408b-ef59-4367-82d6-152fb4caf265": "7d8a81f4-0e9d-414e-b48c-ad3b341966f4",
-                    "7f912fb9-0e68-4b5a-8e84-572dfe594555": "8d902ae9-522b-4d0b-be63-e4cdbdb7c456",
-                    "59c1f46e-3bab-4ea8-9da9-60c104acd255": "cac1434d-1c6f-4849-b90d-0457f6168630",
-                    "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "38971042-bcd6-4628-ac72-0e9a76b43a80",
-                    "daa8e69f-ccdb-489c-b47b-cf27e3d98252": "7b02eb29-8a46-4eb3-9bc4-19c6b47645fa",
-                    "77c9bbbc-adfe-40a0-b5c0-01ef28d95cd0": "f4695a36-052d-40b2-970b-5e4dde487cdd",
-                    "1da51500-c196-4871-a40f-1539bfba738b": "80bf554c-2fa0-43b9-843a-c1e991465809",
-                    "64e17fe5-46fd-4302-934a-e50990ffa251": "7d3dd00c-ac2e-48d5-a52f-842a12a59ec2",
-                    "89fbdb4b-9ebc-4809-bcc8-c1ab0eabd0fd": "86f9c2f3-fb05-4442-95e6-a5b25f250405"
+                    "1a32e9e9-0ad9-4c35-9977-694f32effa28": "48599e81-4b51-407a-a3fe-90b4c7780f49",
+                    "0097694d-e91b-41f5-bfff-0ba318adf421": "52297823-7727-46b2-a47f-4c85f5b9e9cd",
+                    "08598ea3-c937-4b5c-b3ad-a55028f8c819": "3afa4582-a9a3-4b73-81d0-5e6e746fba6b",
+                    "f3194674-6ea7-4dbb-bce9-467c27446bb9": "859aab50-2f34-43bc-bcf1-cadfdf6c6688",
+                    "06db3ed2-5fdb-417d-b74b-41c4a3270e86": "e304f9ca-a693-42e1-8ad7-b217a57f8704",
+                    "4c08e199-1d08-4b00-920e-eb26d13d6a3f": "76355b78-88bb-4574-84f6-e0eb5cdd2a1e",
+                    "716a032b-dd50-4f3b-a932-f95fdc5823cf": "a9df3925-a9c1-4a5b-8a84-2f0704a580e9",
+                    "9e330344-1ee1-4a85-b504-9e3f54b559b1": "8b2b810b-9833-4a32-9672-263ef9da1613",
+                    "99e34c9b-5f31-4177-81a2-ecfbaceb82ae": "cec1e91c-3da9-4897-a357-86d77dffe8e3",
+                    "6416f6fc-7681-43ed-9c5c-558096eae9a3": "f3ad2185-82f8-43fd-8feb-6a617d9d0714",
+                    "7f4dc5fd-a395-4784-9373-49419211a35d": "11b760f0-0d88-4b85-a80b-139bacba1603",
+                    "eb1fa5a4-7e01-441b-b35e-431f6ae58cc2": "22b838c7-618a-40b6-9b31-910bad0bc1a2",
+                    "2263669d-496d-422a-8199-787d54c9e7c3": "fc1bb69a-6f4a-45b2-a315-c80908870118",
+                    "8a784562-9c2a-424a-b873-55997556adc6": "69ec4815-3ac6-4f3c-bd4a-9d662800a99a"
                   }
                 }
               ]
@@ -13435,7 +13703,7 @@
                   "DoorSecond": null,
                   "HasOnlyJobs": true,
                   "Header": "Камера 1",
-                  "InteractRange": 220,
+                  "InteractRange": 100,
                   "IsBlocked": false,
                   "LockpickCooldownSeconds": 60,
                   "LockpickInteractRange": 120,
@@ -13624,7 +13892,7 @@
                   "DoorSecond": null,
                   "HasOnlyJobs": true,
                   "Header": "Камера 2",
-                  "InteractRange": 220,
+                  "InteractRange": 100,
                   "IsBlocked": false,
                   "LockpickCooldownSeconds": 60,
                   "LockpickInteractRange": 120,
@@ -13813,7 +14081,7 @@
                   "DoorSecond": null,
                   "HasOnlyJobs": true,
                   "Header": "Камера 3",
-                  "InteractRange": 220,
+                  "InteractRange": 100,
                   "IsBlocked": false,
                   "LockpickCooldownSeconds": 60,
                   "LockpickInteractRange": 120,
@@ -14002,7 +14270,7 @@
                   "DoorSecond": null,
                   "HasOnlyJobs": true,
                   "Header": "Камера 4",
-                  "InteractRange": 220,
+                  "InteractRange": 100,
                   "IsBlocked": false,
                   "LockpickCooldownSeconds": 60,
                   "LockpickInteractRange": 120,
@@ -14191,7 +14459,7 @@
                   "DoorSecond": null,
                   "HasOnlyJobs": true,
                   "Header": "Камера 5",
-                  "InteractRange": 220,
+                  "InteractRange": 100,
                   "IsBlocked": false,
                   "LockpickCooldownSeconds": 60,
                   "LockpickInteractRange": 120,
@@ -14380,7 +14648,7 @@
                   "DoorSecond": null,
                   "HasOnlyJobs": true,
                   "Header": "Камера 6",
-                  "InteractRange": 220,
+                  "InteractRange": 100,
                   "IsBlocked": false,
                   "LockpickCooldownSeconds": 60,
                   "LockpickInteractRange": 120,
@@ -14569,7 +14837,7 @@
                   "DoorSecond": null,
                   "HasOnlyJobs": true,
                   "Header": "Камера 7",
-                  "InteractRange": 220,
+                  "InteractRange": 100,
                   "IsBlocked": false,
                   "LockpickCooldownSeconds": 60,
                   "LockpickInteractRange": 120,
@@ -14758,7 +15026,7 @@
                   "DoorSecond": null,
                   "HasOnlyJobs": true,
                   "Header": "Камера 8",
-                  "InteractRange": 220,
+                  "InteractRange": 100,
                   "IsBlocked": false,
                   "LockpickCooldownSeconds": 60,
                   "LockpickInteractRange": 120,
@@ -14947,7 +15215,7 @@
                   "DoorSecond": null,
                   "HasOnlyJobs": true,
                   "Header": "Камера 9",
-                  "InteractRange": 220,
+                  "InteractRange": 100,
                   "IsBlocked": false,
                   "LockpickCooldownSeconds": 60,
                   "LockpickInteractRange": 120,
@@ -33196,17 +33464,17 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "b7c3e9f6-dbbd-4d7c-9f80-7434b612f0ee"
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       },
       "Sandbox.MovieMaker.MovieRecorderSystem": {
         "DisableClientRecording": false
       },
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "b7c3e9f6-dbbd-4d7c-9f80-7434b612f0ee"
         }
       }
     }

@@ -3090,44 +3090,6 @@
       ]
     },
     {
-      "__guid": "cb8dc4dc-96ec-4579-858d-b7e91a4ca21b",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "Object",
-      "Position": "692.098267,778.899963,239.945969",
-      "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.MapInstance",
-          "__guid": "8692d400-80f3-4129-a527-648163637dbe",
-          "__enabled": true,
-          "Flags": 0,
-          "__version": 1,
-          "EnableCollision": true,
-          "MapName": "thieves.rpdowntown3tcompact",
-          "NoOrigin": false,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OnMapLoaded": null,
-          "OnMapUnloaded": null,
-          "UseMapFromLaunch": false
-        }
-      ],
-      "Children": []
-    },
-    {
       "__guid": "8c16fa86-cf46-46ba-8d4e-d37dcad2a1ce",
       "__version": 2,
       "__Prefab": "prefabs/doors/door shops.prefab",
@@ -3343,17 +3305,12 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
-        }
-      },
       "Sandbox.MovieMaker.MovieRecorderSystem": {
         "DisableClientRecording": false
       },
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "58322020-4f9a-4383-b025-01040a856d72"
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       }
     }

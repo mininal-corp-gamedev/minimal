@@ -33163,7 +33163,7 @@
           "OnComponentUpdate": null
         },
         {
-          "__type": "Sandbox.UI.Crosshair",
+          "__type": "Sandbox.Crosshair",
           "__guid": "9d5de974-73eb-4d34-9e4c-9f0dbc695cb8",
           "__enabled": true,
           "Flags": 0,

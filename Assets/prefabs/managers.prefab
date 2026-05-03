@@ -490,7 +490,7 @@
             "OnComponentUpdate": null
           },
           {
-            "__type": "Sandbox.UI.Crosshair",
+            "__type": "Sandbox.Crosshair",
             "__guid": "f2c128dc-5efe-402c-8dcc-6ace485f0460",
             "__enabled": true,
             "Flags": 0,

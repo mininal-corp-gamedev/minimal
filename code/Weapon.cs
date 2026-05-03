@@ -63,7 +63,7 @@ public class Weapon : Component
     /// <summary>
     /// Использовать ли стандартный обработчик ввода (огонь/перезарядка/прицеливание).
     /// Спец-оружие вроде Physgun/Toolgun возвращает false и реализует свой ввод
-    /// в <see cref="OnWeaponFixedUpdate"/>.
+    /// в своих update/fixed-update хуках.
     /// </summary>
     protected virtual bool UseDefaultCombatInput => true;
 

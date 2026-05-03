@@ -1672,7 +1672,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (!_nextLocalUiEnsure) return;
 
         _nextLocalUiEnsure = 1f;
-        Sandbox.UI.Crosshair.EnsureExists();
+        Crosshair.EnsureExists();
     }
 
     private void DestroyLocalInstance()

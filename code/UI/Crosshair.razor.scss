@@ -6,15 +6,20 @@ Crosshair
 	right: 0;
 	bottom: 0;
 	background-color: transparent;
-	justify-content: center;
-	align-items: center;
-	font-weight: bold;
-	border-radius: 20px;
+	pointer-events: none;
 
-	.title
+	.crosshair
 	{
-		font-size: 25px;
-		font-family: Poppins;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		width: 6px;
+		height: 6px;
+		margin-left: -3px;
+		margin-top: -3px;
+		background-color: white;
+		border-radius: 999px;
+		box-shadow: 0 0 2px rgba(0, 0, 0, 0.75);
 		color: #fff;
 	}
 }

@@ -36,6 +36,7 @@ public sealed class WeaponPhysgun : Weapon
     [Property, Category("Physgun")] public float SnapAngleDegrees { get; set; } = 45f;
     [Property, Category("Physgun")] public float RotationLerp { get; set; } = 0.5f;
     [Property, Category("Physgun")] public float SeekRadius { get; set; } = 28f;
+    [Property, Category("Physgun")] public bool LocalVisualPrediction { get; set; } = true;
 
     [Property, Category("Physgun Beam")] public float BeamMaxLength { get; set; } = 1024f;
     [Property, Category("Physgun Beam")] public float BeamSag { get; set; } = 48f;
@@ -219,7 +220,7 @@ public sealed class WeaponPhysgun : Weapon
         Viewmodel.Set("b_attack", false);
     }
 
-    protected override void OnWeaponFixedUpdate()
+    protected override void OnWeaponUpdate()
     {
         if (!Player.Local.IsValid()) return;
 
@@ -234,14 +235,10 @@ public sealed class WeaponPhysgun : Weapon
 
         ValidateGrabbed();
         HandleInput();
+        UpdateSpin();
+        UpdateLocalGrabPrediction();
         UpdateGrabbed();
         UpdateBeamState();
-        UpdateViewmodelState();
-    }
-
-    protected override void OnWeaponUpdate()
-    {
-        UpdateSpin();
         UpdateViewmodelState();
     }
 
@@ -580,6 +577,31 @@ public sealed class WeaponPhysgun : Weapon
             ReleasePlayerPadding, HeldPlayerPadding, HeldMaxResolveIterations);
     }
 
+    private void UpdateLocalGrabPrediction()
+    {
+        if (!LocalVisualPrediction || Networking.IsHost)
+            return;
+
+        if (_mode == GrabMode.None || _mode == GrabMode.PhysgunSeek || !_grabbed.IsValid())
+            return;
+
+        var player = Player.Local;
+        if (!player.IsValid() || !player.Controller.IsValid())
+            return;
+
+        var eye = player.Controller.EyeTransform;
+        var grabDistance = HostClampGrabDistance(_grabbed, GetBeamEndPosition(), eye,
+            _grabDistance, MinHoldDistance, MaxHoldDistance);
+        var targetPos = eye.Position + eye.Forward * grabDistance;
+
+        var targetRot = _mode == GrabMode.GravityGun
+            ? eye.Rotation * _grabOffset
+            : Rotation.FromYaw(player.Controller.EyeAngles.yaw) * _grabOffset;
+
+        _grabbed.WorldRotation = targetRot;
+        _grabbed.WorldPosition = targetPos - targetRot * _localOffset;
+    }
+
     private void RequestHostStartGrab(GrabMode mode, Vector3 origin, Vector3 forward, float yaw, int sessionId)
     {
         if (Networking.IsHost)
@@ -866,9 +888,6 @@ public sealed class WeaponPhysgun : Weapon
         state.ReleasePushSpeed = 120f;
         state.ReleaseMaxResolveIterations = 6;
         state.LastInputTime = Time.Now;
-
-        HostApplyGrabMovement(state);
-        HostUpdateSyncedBeam(state);
     }
 
     private static void HostEndGrab(Connection caller, GameObject target, bool preserveVelocity,

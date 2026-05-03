@@ -211,14 +211,16 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         public Rotation RotationOffset { get; }
         public float Scale { get; }
         public Vector3 BeamStartOffset { get; }
+        public string ParentBone { get; }
 
         public WorldWeaponVisualDefinition(Vector3 positionOffset, Rotation rotationOffset, float scale = 1f,
-            Vector3? beamStartOffset = null)
+            Vector3? beamStartOffset = null, string parentBone = "hold_r")
         {
             PositionOffset = positionOffset;
             RotationOffset = rotationOffset;
             Scale = scale;
             BeamStartOffset = beamStartOffset ?? positionOffset;
+            ParentBone = string.IsNullOrWhiteSpace(parentBone) ? "hold_r" : parentBone;
         }
     }
 
@@ -1745,7 +1747,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return false;
         }
 
-        var boneParent = TryGetWeaponVisualParentObject();
+        var boneParent = TryGetWeaponVisualParentObject(definition, usesAuthoredPrefab);
+        if (usesAuthoredPrefab && !boneParent.IsValid())
+            return false;
+
         var parent = boneParent.IsValid() ? boneParent : GameObject;
 
         _worldWeaponObject = prefab.Clone(new CloneConfig
@@ -1875,7 +1880,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if (!_worldWeaponAttachedToBone)
         {
-            var boneParent = TryGetWeaponVisualParentObject();
+            var boneParent = TryGetWeaponVisualParentObject(definition, _worldWeaponUsesAuthoredPrefab);
             if (boneParent.IsValid())
             {
                 _worldWeaponObject.Parent = boneParent;
@@ -1891,7 +1896,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
         }
 
-        if (!TryGetWeaponVisualBaseTransform(out var transform))
+        if (!TryGetWeaponVisualBaseTransform(definition, _worldWeaponUsesAuthoredPrefab, out var transform))
             return;
 
         var positionOffset = _worldWeaponUsesAuthoredPrefab ? Vector3.Zero : definition.PositionOffset;
@@ -1917,16 +1922,24 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _worldWeaponObject.LocalScale = Vector3.One * scale;
     }
 
-    private GameObject TryGetWeaponVisualParentObject()
+    private GameObject TryGetWeaponVisualParentObject(WorldWeaponVisualDefinition definition, bool strictParentBone)
     {
         EnsureWeaponVisualRendererReady();
 
         if (!Renderer.IsValid())
             return null;
 
+        var parentBone = string.IsNullOrWhiteSpace(definition?.ParentBone) ? "hold_r" : definition.ParentBone;
+        var bone = Renderer.GetBoneObject(parentBone);
+        if (bone.IsValid())
+            return bone;
+
+        if (strictParentBone)
+            return null;
+
         foreach (var boneName in WeaponVisualBoneNames)
         {
-            var bone = Renderer.GetBoneObject(boneName);
+            bone = Renderer.GetBoneObject(boneName);
             if (bone.IsValid())
                 return bone;
         }
@@ -1934,12 +1947,19 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         return null;
     }
 
-    private bool TryGetWeaponVisualBaseTransform(out Transform transform)
+    private bool TryGetWeaponVisualBaseTransform(WorldWeaponVisualDefinition definition, bool strictParentBone, out Transform transform)
     {
         transform = default;
 
         if (Renderer.IsValid())
         {
+            var parentBone = string.IsNullOrWhiteSpace(definition?.ParentBone) ? "hold_r" : definition.ParentBone;
+            if (Renderer.TryGetBoneTransform(parentBone, out transform))
+                return true;
+
+            if (strictParentBone)
+                return false;
+
             foreach (var boneName in WeaponVisualBoneNames)
             {
                 if (Renderer.TryGetBoneTransform(boneName, out transform))
@@ -2089,7 +2109,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (TryGetWorldWeaponChildTransform("muzzle", out var muzzleTransform))
             return muzzleTransform.Position + muzzleTransform.Rotation.Forward * 2f;
 
-        if (TryGetWeaponVisualBaseTransform(out var transform))
+        if (TryGetWeaponVisualBaseTransform(definition: null, strictParentBone: false, out var transform))
         {
             var offset = WorldWeaponVisuals.TryGetValue("physgun", out var definition)
                 ? definition.BeamStartOffset

@@ -129,8 +129,8 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	/// <summary>Yaw angle used by the current open animation. Chosen by the host from the opener side.</summary>
 	[Sync( SyncFlags.FromHost )] public float OpenYaw { get; private set; } = 90f;
 
-	/// <summary>True while the door is playing its open or close animation.</summary>
-	[Sync( SyncFlags.FromHost )] public bool IsPlayingAnimation { get; private set; }
+	/// <summary>True while this peer is playing the local open or close animation.</summary>
+	public bool IsPlayingAnimation { get; private set; }
 
 	/// <summary>True if the door has been broken.</summary>
 	[Sync( SyncFlags.FromHost )] public bool IsBroken { get; private set; }
@@ -190,9 +190,15 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	private float _currentYaw;
 	private float _currentSlideDistance;
+	private DoorState _animatedState = DoorState.Closed;
+	private float _animatedOpenYaw = 90f;
 	private Rotation _baseRotation;
 	private Vector3 _baseLocalPosition;
 	private TimeUntil _brokenLockout;
+	private bool _hasPendingPrediction;
+	private double _predictionCorrectionAt;
+
+	private const double PredictionCorrectionDelaySeconds = 0.35;
 
 	/// <summary>True while the post-break cooldown prevents closing or locking.</summary>
 	private bool IsBrokenLocked => IsBroken && !_brokenLockout;
@@ -205,6 +211,8 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		_baseLocalPosition = LocalPosition;
 		_currentYaw = State == DoorState.Open ? OpenYaw : 0f;
 		_currentSlideDistance = State == DoorState.Open ? SlideDistance : 0f;
+		_animatedState = State;
+		_animatedOpenYaw = OpenYaw;
 		ApplyCurrentTransform();
 
 		if ( WorldHud.IsValid() )
@@ -225,6 +233,20 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	protected override void OnUpdate()
 	{
+		if ( Networking.IsHost ) return;
+		UpdateDoorAnimation();
+	}
+
+	protected override void OnFixedUpdate()
+	{
+		if ( !Networking.IsHost ) return;
+		UpdateDoorAnimation();
+	}
+
+	private void UpdateDoorAnimation()
+	{
+		ReconcileAnimationWithSyncedState();
+
 		if ( MovementMode == DoorMovementMode.Slide )
 		{
 			UpdateSlideAnimation();
@@ -236,7 +258,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	private void UpdateSwingAnimation()
 	{
-		float targetYaw = State == DoorState.Open ? OpenYaw : 0f;
+		float targetYaw = _animatedState == DoorState.Open ? _animatedOpenYaw : 0f;
 
 		if ( !IsPlayingAnimation )
 		{
@@ -248,14 +270,13 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 			return;
 		}
 
-		float step = AnimationSpeed * Time.Delta;
+		float step = MathF.Max( 0f, AnimationSpeed ) * Time.Delta;
 		float diff = targetYaw - _currentYaw;
 
-		if ( MathF.Abs( diff ) <= step )
+		if ( step <= 0.001f || MathF.Abs( diff ) <= step )
 		{
 			_currentYaw = targetYaw;
-			if ( !IsProxy )
-				IsPlayingAnimation = false;
+			IsPlayingAnimation = false;
 		}
 		else
 		{
@@ -275,7 +296,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	private void UpdateSlideAnimation()
 	{
-		float targetDistance = State == DoorState.Open ? SlideDistance : 0f;
+		float targetDistance = _animatedState == DoorState.Open ? SlideDistance : 0f;
 
 		if ( !IsPlayingAnimation )
 		{
@@ -293,8 +314,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		if ( step <= 0.001f || MathF.Abs( diff ) <= step )
 		{
 			_currentSlideDistance = targetDistance;
-			if ( !IsProxy )
-				IsPlayingAnimation = false;
+			IsPlayingAnimation = false;
 		}
 		else
 		{
@@ -319,14 +339,126 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		};
 	}
 
+	private void ReconcileAnimationWithSyncedState()
+	{
+		if ( _hasPendingPrediction )
+		{
+			if ( Time.Now < _predictionCorrectionAt )
+				return;
+
+			_hasPendingPrediction = false;
+		}
+
+		if ( AnimationTargetMatches( State, OpenYaw ) )
+			return;
+
+		StartLocalMotion( State, OpenYaw );
+	}
+
+	private bool AnimationTargetMatches( DoorState targetState, float openYaw )
+	{
+		if ( _animatedState != targetState )
+			return false;
+
+		if ( targetState == DoorState.Open && MathF.Abs( _animatedOpenYaw - openYaw ) > 0.01f )
+			return false;
+
+		return true;
+	}
+
+	private void StartAuthoritativeMotion( DoorState targetState, float openYaw )
+	{
+		_hasPendingPrediction = false;
+		StartLocalMotion( targetState, openYaw );
+		RpcStartDoorMotion( (int)targetState, openYaw );
+	}
+
+	private void StartPredictedToggle( Player player )
+	{
+		if ( IsPlayingAnimation ) return;
+
+		if ( State == DoorState.Closed )
+		{
+			if ( LockState == DoorLockState.Locked ) return;
+
+			var openYaw = ResolveOpenYaw( player );
+			StartPredictedMotion( DoorState.Open, openYaw );
+
+			if ( DoorSecond.IsValid() )
+				DoorSecond.StartPredictedMotion( DoorState.Open, -openYaw );
+
+			return;
+		}
+
+		if ( IsBroken ) return;
+
+		StartPredictedMotion( DoorState.Closed, OpenYaw );
+
+		if ( DoorSecond.IsValid() )
+			DoorSecond.StartPredictedMotion( DoorState.Closed, DoorSecond.OpenYaw );
+	}
+
+	private void StartPredictedMotion( DoorState targetState, float openYaw )
+	{
+		_hasPendingPrediction = true;
+		_predictionCorrectionAt = Time.Now + PredictionCorrectionDelaySeconds;
+		StartLocalMotion( targetState, openYaw );
+	}
+
+	private void StartLocalMotion( DoorState targetState, float openYaw )
+	{
+		_animatedState = targetState;
+		_animatedOpenYaw = openYaw;
+
+		if ( MovementMode == DoorMovementMode.Slide )
+		{
+			var targetDistance = targetState == DoorState.Open ? SlideDistance : 0f;
+			if ( MathF.Abs( _currentSlideDistance - targetDistance ) <= 0.001f )
+			{
+				_currentSlideDistance = targetDistance;
+				IsPlayingAnimation = false;
+				ApplySlidePosition();
+				return;
+			}
+		}
+		else
+		{
+			var targetYaw = targetState == DoorState.Open ? openYaw : 0f;
+			if ( MathF.Abs( _currentYaw - targetYaw ) <= 0.001f )
+			{
+				_currentYaw = targetYaw;
+				IsPlayingAnimation = false;
+				LocalRotation = _baseRotation * Rotation.FromYaw( _currentYaw );
+				return;
+			}
+		}
+
+		IsPlayingAnimation = true;
+	}
+
+	[Rpc.Broadcast( NetFlags.UnreliableNoDelay )]
+	private void RpcStartDoorMotion( int targetStateValue, float openYaw )
+	{
+		if ( !Networking.IsHost && Rpc.Caller is not null && !Rpc.Caller.IsHost ) return;
+
+		var targetState = targetStateValue == (int)DoorState.Open ? DoorState.Open : DoorState.Closed;
+		_hasPendingPrediction = false;
+		StartLocalMotion( targetState, openYaw );
+	}
+
 	public bool Press( IPressable.Event e )
 	{
 		if ( !e.Source.GameObject.Components.TryGet<Player>( out var player, FindMode.EverythingInSelfAndParent ) ) return false;
 
 		if ( Networking.IsHost )
+		{
 			Toggle( player );
+		}
 		else
+		{
+			StartPredictedToggle( player );
 			RpcRequestToggle();
+		}
 
 		return true;
 	}
@@ -373,7 +505,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		OpenYaw = openYaw;
 		State = DoorState.Open;
-		IsPlayingAnimation = true;
+		StartAuthoritativeMotion( DoorState.Open, openYaw );
 
 		if ( OpenSound.IsValid() )
 			RpcPlaySoundAtDoor( OpenSound );
@@ -402,7 +534,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		if ( IsBrokenLocked ) return;
 
 		State = DoorState.Closed;
-		IsPlayingAnimation = true;
+		StartAuthoritativeMotion( DoorState.Closed, OpenYaw );
 
 		if ( CloseSound.IsValid() )
 			RpcPlaySoundAtDoor( CloseSound );

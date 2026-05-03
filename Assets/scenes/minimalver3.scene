@@ -22484,6 +22484,14 @@
                       },
                       {
                         "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "OpenSound",
+                        "Value": "sounds/door/door_latch3.sound"
+                      },
+                      {
+                        "Target": {
                           "Type": "GameObject",
                           "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                         },

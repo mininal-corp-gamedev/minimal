@@ -188,6 +188,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private string _worldWeaponItemId;
     private string _worldWeaponFailedItemId;
     private bool _worldWeaponUsesAuthoredPrefab;
+    private bool _worldWeaponAttachedToBone;
     private GameObject _physgunBeamObject;
     private LineRenderer _physgunBeamRenderer;
     private Vector3.SpringDamped _physgunBeamMiddleSpring = new Vector3.SpringDamped(0, 0);
@@ -230,8 +231,11 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private static readonly string[] WeaponVisualBoneNames =
     {
+        "hold_r",
         "hold_R",
+        "hand_r",
         "hand_R",
+        "weapon_r",
         "weapon_R",
         "ValveBiped.Bip01_R_Hand"
     };
@@ -1732,18 +1736,20 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return false;
         }
 
+        var boneParent = TryGetWeaponVisualParentObject();
+
         _worldWeaponObject = prefab.Clone();
         _worldWeaponObject.Name = $"world_weapon_{itemId}";
-        _worldWeaponObject.Parent = GameObject;
-        _worldWeaponObject.LocalPosition = Vector3.Zero;
-        _worldWeaponObject.LocalRotation = Rotation.Identity;
-        _worldWeaponObject.LocalScale = Vector3.One * definition.Scale;
+        _worldWeaponObject.Parent = boneParent.IsValid() ? boneParent : GameObject;
+        _worldWeaponUsesAuthoredPrefab = usesAuthoredPrefab;
+        _worldWeaponAttachedToBone = boneParent.IsValid();
+
+        ApplyWorldWeaponLocalTransform(definition);
 
         PrepareWorldWeaponClone(_worldWeaponObject);
 
         _worldWeaponItemId = itemId;
         _worldWeaponFailedItemId = null;
-        _worldWeaponUsesAuthoredPrefab = usesAuthoredPrefab;
         Log.Info($"[Player] World weapon visual '{itemId}' cloned from {(usesAuthoredPrefab ? "world" : "view")} prefab");
         return true;
     }
@@ -1817,6 +1823,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (!_worldWeaponObject.IsValid() || !Renderer.IsValid())
             return;
 
+        if (_worldWeaponAttachedToBone)
+        {
+            ApplyWorldWeaponLocalTransform(definition);
+            return;
+        }
+
         if (!TryGetWeaponVisualBaseTransform(out var transform))
             return;
 
@@ -1827,6 +1839,35 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _worldWeaponObject.WorldPosition = transform.Position + transform.Rotation * positionOffset;
         _worldWeaponObject.WorldRotation = transform.Rotation * rotationOffset;
         _worldWeaponObject.LocalScale = Vector3.One * scale;
+    }
+
+    private void ApplyWorldWeaponLocalTransform(WorldWeaponVisualDefinition definition)
+    {
+        if (!_worldWeaponObject.IsValid())
+            return;
+
+        var positionOffset = _worldWeaponUsesAuthoredPrefab ? Vector3.Zero : definition.PositionOffset;
+        var rotationOffset = _worldWeaponUsesAuthoredPrefab ? Rotation.Identity : definition.RotationOffset;
+        var scale = _worldWeaponUsesAuthoredPrefab ? 1f : definition.Scale;
+
+        _worldWeaponObject.LocalPosition = positionOffset;
+        _worldWeaponObject.LocalRotation = rotationOffset;
+        _worldWeaponObject.LocalScale = Vector3.One * scale;
+    }
+
+    private GameObject TryGetWeaponVisualParentObject()
+    {
+        if (!Renderer.IsValid())
+            return null;
+
+        foreach (var boneName in WeaponVisualBoneNames)
+        {
+            var bone = Renderer.GetBoneObject(boneName);
+            if (bone.IsValid())
+                return bone;
+        }
+
+        return null;
     }
 
     private bool TryGetWeaponVisualBaseTransform(out Transform transform)
@@ -1854,6 +1895,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _worldWeaponObject = null;
         _worldWeaponItemId = null;
         _worldWeaponUsesAuthoredPrefab = false;
+        _worldWeaponAttachedToBone = false;
     }
 
     protected override void OnStart()

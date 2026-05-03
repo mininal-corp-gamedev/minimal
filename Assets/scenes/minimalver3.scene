@@ -33343,7 +33343,7 @@
           },
           "WorldWeaponPhysgun": {
             "_type": "gameobject",
-            "prefab": "weapons/physgun/physgun.prefab"
+            "prefab": "weapons/physgun/physgun_wm.prefab"
           },
           "WorldWeaponPickaxe": {
             "_type": "gameobject",

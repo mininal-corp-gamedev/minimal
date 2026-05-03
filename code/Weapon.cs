@@ -1,5 +1,6 @@
 using Ambi.Utils;
 using Sandbox;
+using Sandbox.Citizen;
 using System;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ public class Weapon : Component
     /// <summary>Префаб спрайта вспышки при выстреле. Спавнится в ShotPos.</summary>
     [Property, Category("Combat")] public GameObject SpriteFirePrefab { get; set; }
     [Property, Category("Combat")] public bool SpawnSpriteFireOnShot { get; set; } = false;
-    [Property, Category("Combat")] public WeaponHoldType HoldType { get; set; } = WeaponHoldType.None;
+    [Property, Category("Combat")] public CitizenAnimationHelper.HoldTypes HoldType { get; set; } = CitizenAnimationHelper.HoldTypes.None;
 
     public WeaponState State { get; protected set; } = WeaponState.None;
 
@@ -400,17 +401,4 @@ public enum WeaponState
     None,
     Fire,
     Reload
-}
-
-public enum WeaponHoldType : byte
-{
-    None = 0,
-    Pistol = 1,
-    Rifle = 2,
-    Shotgun = 3,
-    HoldItem = 4,
-    MeleePunch = 5,
-    MeleeWeapons = 6,
-    Rpg = 7,
-    PhysGun = 8
 }

@@ -1,4 +1,5 @@
 using Sandbox;
+using Sandbox.Citizen;
 using System;
 using System.Collections.Generic;
 
@@ -203,7 +204,7 @@ public sealed class WeaponPhysgun : Weapon
 
     protected override void OnWeaponStart()
     {
-        HoldType = WeaponHoldType.PhysGun;
+        HoldType = CitizenAnimationHelper.HoldTypes.Physgun;
         Ammo = 0;
         TotalReserveAmmo = 0;
         HasReload = false;

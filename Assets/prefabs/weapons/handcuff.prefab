@@ -30,7 +30,7 @@
         "FireSound": "sounds/melee_attack.sound",
         "HasHipFire": false,
         "HasReload": false,
-        "HoldType": "MeleeWeapons",
+        "HoldType": "Swing",
         "IsIronSight": false,
         "IsMelee": true,
         "OnComponentDestroy": null,

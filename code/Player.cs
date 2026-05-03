@@ -2,6 +2,7 @@ using Ambi.Storage;
 using Ambi.Utils;
 using Minimal.ItemUseHandlers;
 using Sandbox;
+using Sandbox.Citizen;
 using Sandbox.Rendering;
 using Sandbox.Utility;
 using System;
@@ -189,6 +190,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private string _worldWeaponFailedItemId;
     private bool _worldWeaponUsesAuthoredPrefab;
     private bool _worldWeaponAttachedToBone;
+    private bool _weaponVisualRendererPrepared;
     private GameObject _physgunBeamObject;
     private LineRenderer _physgunBeamRenderer;
     private Vector3.SpringDamped _physgunBeamMiddleSpring = new Vector3.SpringDamped(0, 0);
@@ -208,12 +210,15 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         public Vector3 PositionOffset { get; }
         public Rotation RotationOffset { get; }
         public float Scale { get; }
+        public Vector3 BeamStartOffset { get; }
 
-        public WorldWeaponVisualDefinition(Vector3 positionOffset, Rotation rotationOffset, float scale = 1f)
+        public WorldWeaponVisualDefinition(Vector3 positionOffset, Rotation rotationOffset, float scale = 1f,
+            Vector3? beamStartOffset = null)
         {
             PositionOffset = positionOffset;
             RotationOffset = rotationOffset;
             Scale = scale;
+            BeamStartOffset = beamStartOffset ?? positionOffset;
         }
     }
 
@@ -222,7 +227,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         ["usp"] = new(new Vector3(-17f, 2f, 0f), Rotation.Identity, 0.9f),
         ["mp5"] = new(new Vector3(-24f, 3f, 0f), Rotation.Identity, 0.9f),
         ["m4a1"] = new(new Vector3(-29f, 3f, 0f), Rotation.Identity, 0.9f),
-        ["physgun"] = new(new Vector3(-8f, 2f, 4f), Rotation.Identity, 0.65f),
+        ["physgun"] = new(new Vector3(-8f, 2f, 4f), Rotation.Identity, 0.65f,
+            beamStartOffset: new Vector3(3.8309741f, -0.3073678f, -5.3010688f)),
         ["toolgun"] = new(new Vector3(-17f, 3f, 0f), Rotation.Identity, 0.9f),
         ["pickaxe"] = new(new Vector3(-5f, 0f, 0f), Rotation.Identity),
         ["picklock"] = new(new Vector3(-5f, 0f, 0f), Rotation.Identity),
@@ -1695,6 +1701,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private void UpdateWorldWeaponVisual()
     {
+        EnsureWeaponVisualRendererReady();
+        UpdateProxyWeaponHoldType();
+
         if (!IsProxy || IsArrested || string.IsNullOrWhiteSpace(EquippedWeaponItemId))
         {
             DestroyWorldWeaponVisual();
@@ -1737,10 +1746,23 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
 
         var boneParent = TryGetWeaponVisualParentObject();
+        var parent = boneParent.IsValid() ? boneParent : GameObject;
 
-        _worldWeaponObject = prefab.Clone();
+        _worldWeaponObject = prefab.Clone(new CloneConfig
+        {
+            Parent = parent,
+            StartEnabled = true,
+            Transform = global::Transform.Zero
+        });
+        if (!_worldWeaponObject.IsValid())
+        {
+            _worldWeaponFailedItemId = itemId;
+            Log.Warning($"[Player] Failed to clone world weapon visual for '{itemId}'");
+            return false;
+        }
+
         _worldWeaponObject.Name = $"world_weapon_{itemId}";
-        _worldWeaponObject.Parent = boneParent.IsValid() ? boneParent : GameObject;
+        _worldWeaponObject.Flags |= GameObjectFlags.NotSaved | GameObjectFlags.NotNetworked;
         _worldWeaponUsesAuthoredPrefab = usesAuthoredPrefab;
         _worldWeaponAttachedToBone = boneParent.IsValid();
 
@@ -1795,6 +1817,34 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         };
     }
 
+    private void UpdateProxyWeaponHoldType()
+    {
+        if (!IsProxy || !Renderer.IsValid())
+            return;
+
+        var holdType = IsArrested || string.IsNullOrWhiteSpace(EquippedWeaponItemId)
+            ? CitizenAnimationHelper.HoldTypes.None
+            : GetWeaponHoldType(EquippedWeaponItemId);
+
+        Renderer.Set("holdtype", (int)holdType);
+    }
+
+    private static CitizenAnimationHelper.HoldTypes GetWeaponHoldType(string itemId)
+    {
+        return itemId switch
+        {
+            "usp" => CitizenAnimationHelper.HoldTypes.Pistol,
+            "toolgun" => CitizenAnimationHelper.HoldTypes.Pistol,
+            "mp5" => CitizenAnimationHelper.HoldTypes.Rifle,
+            "m4a1" => CitizenAnimationHelper.HoldTypes.Rifle,
+            "physgun" => CitizenAnimationHelper.HoldTypes.Physgun,
+            "hands" => CitizenAnimationHelper.HoldTypes.Punch,
+            "picklock" => CitizenAnimationHelper.HoldTypes.Swing,
+            "handcuff" => CitizenAnimationHelper.HoldTypes.Swing,
+            _ => CitizenAnimationHelper.HoldTypes.None
+        };
+    }
+
     private static void PrepareWorldWeaponClone(GameObject obj)
     {
         if (!obj.IsValid())
@@ -1822,6 +1872,18 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         if (!_worldWeaponObject.IsValid() || !Renderer.IsValid())
             return;
+
+        if (!_worldWeaponAttachedToBone)
+        {
+            var boneParent = TryGetWeaponVisualParentObject();
+            if (boneParent.IsValid())
+            {
+                _worldWeaponObject.Parent = boneParent;
+                _worldWeaponAttachedToBone = true;
+                ApplyWorldWeaponLocalTransform(definition);
+                return;
+            }
+        }
 
         if (_worldWeaponAttachedToBone)
         {
@@ -1857,6 +1919,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private GameObject TryGetWeaponVisualParentObject()
     {
+        EnsureWeaponVisualRendererReady();
+
         if (!Renderer.IsValid())
             return null;
 
@@ -1887,6 +1951,52 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         return true;
     }
 
+    private void EnsureWeaponVisualRendererReady()
+    {
+        if (!Renderer.IsValid())
+        {
+            _weaponVisualRendererPrepared = false;
+            return;
+        }
+
+        if (_weaponVisualRendererPrepared)
+            return;
+
+        Renderer.CreateAttachments = true;
+        Renderer.CreateBoneObjects = true;
+        _weaponVisualRendererPrepared = true;
+    }
+
+    private bool TryGetWorldWeaponChildTransform(string childName, out Transform transform)
+    {
+        transform = default;
+
+        var child = FindChildRecursive(_worldWeaponObject, childName);
+        if (!child.IsValid())
+            return false;
+
+        transform = child.WorldTransform;
+        return true;
+    }
+
+    private static GameObject FindChildRecursive(GameObject root, string name)
+    {
+        if (!root.IsValid())
+            return null;
+
+        if (string.Equals(root.Name, name, StringComparison.OrdinalIgnoreCase))
+            return root;
+
+        foreach (var child in root.Children)
+        {
+            var found = FindChildRecursive(child, name);
+            if (found.IsValid())
+                return found;
+        }
+
+        return null;
+    }
+
     private void DestroyWorldWeaponVisual()
     {
         if (_worldWeaponObject.IsValid())
@@ -1901,6 +2011,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     protected override void OnStart()
 	{
         GameObject.Tags.Add( "player" );
+        EnsureWeaponVisualRendererReady();
         MakeLocalInstance();
         RegisterItemUseHandlers();
         RegisterJobInventoryEvents();
@@ -1926,6 +2037,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         MakeLocalInstance();
         TryApplyOwnerClothing();
+        EnsureWeaponVisualRendererReady();
         UpdateWorldWeaponVisual();
         DrawPhysgunBeam();
     }
@@ -1974,13 +2086,16 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         var forward = fallbackForward.LengthSquared > 0.001f ? fallbackForward.Normal : WorldRotation.Forward;
 
+        if (TryGetWorldWeaponChildTransform("muzzle", out var muzzleTransform))
+            return muzzleTransform.Position + muzzleTransform.Rotation.Forward * 2f;
+
         if (TryGetWeaponVisualBaseTransform(out var transform))
         {
             var offset = WorldWeaponVisuals.TryGetValue("physgun", out var definition)
-                ? definition.PositionOffset
+                ? definition.BeamStartOffset
                 : Vector3.Zero;
 
-            return transform.Position + transform.Rotation * offset + transform.Rotation.Forward * 10f;
+            return transform.Position + transform.Rotation * offset + transform.Rotation.Forward * 2f;
         }
 
         if (Controller.IsValid())
@@ -2006,6 +2121,15 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var bend = useLocalOverride ? _localPhysgunBeamOverrideBend : PhysgunBeamBend;
         var endNormal = useLocalOverride ? _localPhysgunBeamOverrideEndNormal : PhysgunBeamEndNormal;
         var grabbed = useLocalOverride ? _localPhysgunBeamOverrideGrabbed : PhysgunBeamGrabbed;
+
+        if (!useLocalOverride
+            && IsProxy
+            && string.Equals(_worldWeaponItemId, "physgun", StringComparison.OrdinalIgnoreCase)
+            && TryGetWorldWeaponChildTransform("muzzle", out var muzzleTransform))
+        {
+            start = muzzleTransform.Position + muzzleTransform.Rotation.Forward * 2f;
+        }
+
         if ((end - start).LengthSquared <= 1f)
         {
             SetPhysgunBeamVisible(false);

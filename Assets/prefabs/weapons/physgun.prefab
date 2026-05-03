@@ -39,7 +39,7 @@
         "GravityGunHoldDistance": 90,
         "HasHipFire": true,
         "HasReload": false,
-        "HoldType": "PhysGun",
+        "HoldType": "Physgun",
         "IsIronSight": false,
         "IsMelee": false,
         "LaunchForce": 1500,

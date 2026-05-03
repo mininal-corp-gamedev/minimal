@@ -1867,6 +1867,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     protected override void OnDestroy()
     {
+        Minimal.Weapons.WeaponPhysgun.HostReleaseForPlayer( this );
         UnhookInventoryEvents();
 
         RestoreDeathState();
@@ -2201,17 +2202,48 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if ( !Input.Pressed( "Undo" ) )
             return;
 
+        if ( Networking.IsHost )
+        {
+            HostUndoLastOwnedProp( GameObject.Network.Owner );
+            return;
+        }
+
+        RpcRequestUndoLastOwnedProp();
+    }
+
+    [Rpc.Host]
+    private void RpcRequestUndoLastOwnedProp()
+    {
+        if ( !Networking.IsHost )
+            return;
+
+        var caller = Rpc.Caller;
+        if ( caller is null )
+            return;
+
+        var player = FindPlayerBySteamId( caller.SteamId.Value );
+        if ( !player.IsValid() )
+            return;
+
+        player.HostUndoLastOwnedProp( caller );
+    }
+
+    private void HostUndoLastOwnedProp( Connection connection )
+    {
+        if ( !Networking.IsHost )
+            return;
+
         var prop = GetLastOwnedProp();
         if ( !prop.IsValid() )
         {
-            Notification.Error( "У тебя нет заспавненных пропов.", 2.5f );
+            NotifyInventoryResult( connection, "У тебя нет заспавненных пропов.", false );
             return;
         }
 
         var propObject = prop.GameObject;
         var propName = !propObject.IsValid() || string.IsNullOrWhiteSpace( propObject.Name ) ? "Prop" : propObject.Name;
         propObject?.Destroy();
-        Notification.Info( $"Удален проп: {propName}", 2.8f );
+        NotifyInventoryResult( connection, $"Удален проп: {propName}", true );
     }
 
     private PropCustom GetLastOwnedProp()
@@ -2224,8 +2256,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             if ( !prop.IsValid() || !prop.GameObject.IsValid() )
                 continue;
             if ( prop.PlayerOwner != this )
-                continue;
-            if ( prop.GameObject.Network.Owner != Connection.Local )
                 continue;
 
             _ownedPropSpawnStack.RemoveAt( i );

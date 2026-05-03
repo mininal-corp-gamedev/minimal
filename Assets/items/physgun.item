@@ -1,7 +1,7 @@
 {
   "Id": "physgun",
   "Category": "weapons",
-  "Header": "Pjhysgun",
+  "Header": "Physgun",
   "Description": "",
   "MaxCount": 1,
   "IconPath": "icons/weapons/physgun.vtex",

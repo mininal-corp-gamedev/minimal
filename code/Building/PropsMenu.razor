@@ -242,7 +242,8 @@
 		}
 
 		gameObj.Tags.Add("prop");
-		gameObj.NetworkSpawn( caller );
+		// Dedicated architecture: gameplay owner is PropCustom.PlayerOwner; network authority stays on host.
+		gameObj.NetworkSpawn();
 
 		Log.Info( $"[PropsMenu] {caller.DisplayName} ({caller.SteamId.Value}) bought/spawned prop '{GetPropHeader( prop )}' (id: {prop.Id}, price: ${prop.Price}, object: {gameObj.Name})." );
 		NotifyCaller( caller, $"Spawned: {GetPropHeader( prop )}.", true );

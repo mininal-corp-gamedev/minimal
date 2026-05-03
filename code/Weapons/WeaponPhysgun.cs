@@ -1,34 +1,24 @@
 using Sandbox;
 using System;
+using System.Collections.Generic;
 
 namespace Minimal.Weapons;
 
 /// <summary>
-/// Physgun + GravityGun в одном стволе (без эффектов и лучей).
+/// Facepunch-style Physgun + Gravity Gun adapted for MinimalRP.
 ///
-/// Управление:
-/// * Зажатие <b>ЛКМ</b> — physgun: держит объект на текущей дистанции перед игроком.
-///   <list type="bullet">
-///   <item>Колёсико мыши — приближать/отдалять объект.</item>
-///   <item>Зажать <b>Reload</b> — крутить объект (<see cref="Input.AnalogLook"/>).</item>
-///   <item>Зажать <b>Run</b> вместе с Reload — крутить со снэпом по углу <see cref="SnapAngleDegrees"/>.</item>
-///   <item>Нажать <b>ПКМ</b> — заморозить объект (отключить физику) и отпустить захват.</item>
-///   </list>
-/// * Зажатие <b>ПКМ</b> — gravitygun: подтягивает объект к игроку и удерживает близко.
-///   <list type="bullet">
-///   <item>Нажать <b>ЛКМ</b> — швырнуть объект вперёд (push).</item>
-///   <item>Отпустить <b>ПКМ</b> — просто бросить (без push).</item>
-///   </list>
-///
-/// Захват разрешён только для GameObject, у которого есть <see cref="Rigidbody"/>
-/// и которым владеет локальный игрок (<c>GameObject.Network.Owner == Connection.Local</c>).
-/// Этим мы соблюдаем server (host) authority: хост по сети авторитетен глобально,
-/// но физикой конкретного объекта рулит его сетевой владелец — поэтому именно он
-/// и манипулирует им через physgun.
+/// Dedicated-server rule:
+/// clients only send intent and drive local viewmodel/beam feedback; the host validates
+/// the active weapon, ownership and target type, then moves/freezes/launches the Rigidbody.
 /// </summary>
 public sealed class WeaponPhysgun : Weapon
 {
     private const string HeldCollisionTag = "physgun_held";
+    private const float HostMaxRangeLimit = 2048f;
+    private const float HostMaxHoldDistanceLimit = 2048f;
+    private const float HostMaxLinearSpeedLimit = 6000f;
+    private const float HostMaxLaunchForceLimit = 5000f;
+    private const int HostMaxOverlapIterationsLimit = 12;
 
     [Property, Category("Physgun")] public float MaxRange { get; set; } = 1024f;
     [Property, Category("Physgun")] public float MinHoldDistance { get; set; } = 60f;
@@ -40,121 +30,160 @@ public sealed class WeaponPhysgun : Weapon
     [Property, Category("Physgun")] public float SnapAngleDegrees { get; set; } = 45f;
     [Property, Category("Physgun")] public float RotationLerp { get; set; } = 0.5f;
     [Property, Category("Physgun")] public float SeekRadius { get; set; } = 28f;
+
     [Property, Category("Physgun Beam")] public float BeamMaxLength { get; set; } = 1024f;
     [Property, Category("Physgun Beam")] public float BeamSag { get; set; } = 48f;
     [Property, Category("Physgun Beam")] public float BeamMoveBendScale { get; set; } = 0.035f;
     [Property, Category("Physgun Beam")] public float BeamMaxBend { get; set; } = 140f;
     [Property, Category("Physgun Beam")] public float BeamSeekIdleBend { get; set; } = 18f;
     [Property, Category("Physgun Beam")] public float BeamSeekNoiseSpeed { get; set; } = 5f;
+
     [Property, Category("Physgun Safety")] public float ReleasePlayerPadding { get; set; } = 6f;
     [Property, Category("Physgun Safety")] public float ReleasePushSpeed { get; set; } = 120f;
     [Property, Category("Physgun Safety")] public int ReleaseMaxResolveIterations { get; set; } = 6;
     [Property, Category("Physgun Safety")] public float HeldPlayerPadding { get; set; } = 12f;
     [Property, Category("Physgun Safety")] public int HeldMaxResolveIterations { get; set; } = 4;
 
-    // Physgun не использует систему патронов и перезарядку.
+    [Property, Category("Physgun Sounds")] public SoundEvent AttachSound { get; set; }
+    [Property, Category("Physgun Sounds")] public SoundEvent ReleasedSound { get; set; }
+    [Property, Category("Physgun Sounds")] public SoundEvent FreezeSound { get; set; }
+    [Property, Category("Physgun Sounds")] public SoundEvent ButtonInSound { get; set; }
+    [Property, Category("Physgun Sounds")] public SoundEvent ButtonOutSound { get; set; }
+
     protected override bool UseDefaultCombatInput => false;
 
     private enum GrabMode
     {
-        None,
-        /// <summary>ЛКМ зажат, луч активен, ждём первый валидный объект под прицелом.</summary>
-        PhysgunSeek,
-        /// <summary>ЛКМ — обычный physgun: держим на расстоянии _grabDistance.</summary>
-        Physgun,
-        /// <summary>ПКМ — gravitygun: подтягиваем близко и держим.</summary>
-        GravityGun
+        None = 0,
+        PhysgunSeek = 1,
+        Physgun = 2,
+        GravityGun = 3
     }
 
     private GrabMode _mode = GrabMode.None;
     private Rigidbody _grabbed;
-
-    /// <summary>Дистанция вдоль взгляда, где должна находиться точка захвата на объекте.</summary>
     private float _grabDistance;
-
-    /// <summary>
-    /// Локальная точка на объекте (в его собственной системе координат), которую мы стараемся
-    /// удерживать в позиции <c>eyeOrigin + eyeForward * _grabDistance</c>.
-    /// </summary>
     private Vector3 _localOffset;
-
-    /// <summary>
-    /// Желаемый поворот объекта относительно опорного фрейма (yaw игрока для physgun,
-    /// полный взгляд для gravitygun). Меняется при крутке Reload.
-    /// </summary>
     private Rotation _grabOffset = Rotation.Identity;
-
-    /// <summary>
-    /// True если только что отпустили захват: блокирует немедленную пере-захват той же кнопкой,
-    /// пока ЛКМ/ПКМ не будут отпущены.
-    /// </summary>
     private bool _preventReselect;
 
-    /// <summary>
-    /// Угол камеры, который мы фиксируем на время крутки объекта (Reload в physgun).
-    /// Захватывается на кадре нажатия Reload и каждый следующий кадр восстанавливается,
-    /// чтобы движение мыши крутило объект, а не камеру.
-    /// </summary>
     private Angles _spinSavedEyeAngles;
     private bool _spinCameraLocked;
     private bool _spinLookControlsOverridden;
     private bool _spinPreviousUseLookControls;
+    private bool _spinSoundActive;
+
     private Vector3 _beamLastEnd;
     private Vector3 _beamBend;
     private bool _beamHasLastEnd;
-    private bool _grabbedHadHeldCollisionTag;
     private bool _beamSeekActive;
+
+    private static readonly Dictionary<long, HostGrabState> HostGrabStates = new();
+
+    private sealed class HostGrabState
+    {
+        public long SteamId;
+        public Player Player;
+        public GrabMode Mode;
+        public GameObject GameObject;
+        public Rigidbody Body;
+        public Vector3 LocalOffset;
+        public Rotation GrabOffset;
+        public float GrabDistance;
+        public bool HadHeldCollisionTag;
+
+        public bool IsValid()
+        {
+            return Player.IsValid()
+                && GameObject.IsValid()
+                && Body.IsValid()
+                && Body.GameObject == GameObject;
+        }
+    }
+
+    public static void HostReleaseForPlayer(Player player)
+    {
+        if (!Networking.IsHost || !player.IsValid())
+            return;
+
+        var steamId = player.GameObject.Network.Owner?.SteamId.Value ?? 0L;
+        if (steamId == 0L || !HostGrabStates.TryGetValue(steamId, out var state))
+            return;
+
+        if (state.IsValid())
+        {
+            HostResolveGrabbedPlayerOverlaps(state, preserveVelocity: false,
+                padding: 6f, pushSpeed: 120f, maxIterations: 6);
+            HostDisableHeldCollisionMode(state);
+        }
+
+        HostGrabStates.Remove(steamId);
+    }
 
     protected override void OnWeaponStart()
     {
         HoldType = WeaponHoldType.PhysGun;
         Ammo = 0;
+        TotalReserveAmmo = 0;
+        HasReload = false;
+        CanAttackWithoutAmmo = true;
         Log.Info("[WeaponPhysgun] Ready");
     }
 
     protected override void OnDisabled()
     {
-        ResetGrab(resolvePlayerOverlap: true);
+        RequestHostEndGrab(preserveVelocity: false);
+        ResetGrab();
+    }
+
+    protected override void ResetViewmodelState()
+    {
+        base.ResetViewmodelState();
+
+        if (Viewmodel == null) return;
+        Viewmodel.Set("stylus", 0f);
+        Viewmodel.Set("brake", 0f);
+        Viewmodel.Set("b_button", false);
+        Viewmodel.Set("b_attack", false);
     }
 
     protected override void OnWeaponFixedUpdate()
     {
         if (!Player.Local.IsValid()) return;
-        if (Player.Local.IsArrested) { ResetGrab(resolvePlayerOverlap: true); return; }
+
+        if (Player.Local.IsArrested || !Player.Local.IsAlive)
+        {
+            RequestHostEndGrab(preserveVelocity: false);
+            ResetGrab();
+            return;
+        }
+
         if (!Player.Local.Controller.IsValid()) return;
 
         ValidateGrabbed();
         HandleInput();
         UpdateGrabbed();
         UpdateBeamState();
+        UpdateViewmodelState();
     }
 
     protected override void OnWeaponUpdate()
     {
-        // Крутка объекта работает по «живой» дельте мыши, поэтому делаем её
-        // на каждом кадре, а не в FixedUpdate (где Input.AnalogLook повторяется
-        // между двумя физическими шагами одного кадра).
         UpdateSpin();
+        UpdateViewmodelState();
     }
 
     private void ValidateGrabbed()
     {
-        if (_mode == GrabMode.None || _mode == GrabMode.PhysgunSeek) return;
+        if (_mode == GrabMode.None || _mode == GrabMode.PhysgunSeek)
+            return;
 
         if (!_grabbed.IsValid() || !_grabbed.GameObject.IsValid())
         {
-            ResetGrab();
-            return;
-        }
-
-        // Если объект внезапно сменил сетевого владельца — отпускаем.
-        if (_grabbed.GameObject.Network.Owner != Connection.Local)
-        {
+            RequestHostEndGrab(preserveVelocity: false);
             ResetGrab();
         }
     }
-
-    // ============================ ВВОД ============================
 
     private void HandleInput()
     {
@@ -163,17 +192,15 @@ public sealed class WeaponPhysgun : Weapon
         bool lmbPressed = Input.Pressed("Attack1");
         bool rmbPressed = Input.Pressed("Attack2");
 
-        // После любого отпускания захвата ждём, пока пользователь отпустит обе кнопки,
-        // чтобы он не схватил ту же штуку ещё раз тем же кликом.
         if (_preventReselect)
         {
-            if (!lmbDown && !rmbDown) _preventReselect = false;
+            if (!lmbDown && !rmbDown)
+                _preventReselect = false;
             return;
         }
 
         if (_mode == GrabMode.None)
         {
-            // Приоритет у ПКМ: если игрок нажал обе сразу — это явно gravitygun.
             if (rmbPressed)
             {
                 TryStartGrab(GrabMode.GravityGun);
@@ -191,171 +218,52 @@ public sealed class WeaponPhysgun : Weapon
 
         if (_mode == GrabMode.PhysgunSeek)
         {
-            HandlePhysgunSeekInput(lmbDown);
+            if (!lmbDown)
+                EndSeek();
+            else
+                TryStartGrab(GrabMode.Physgun);
+
             return;
         }
 
         if (_mode == GrabMode.Physgun)
         {
-            HandlePhysgunInput(lmbDown, rmbPressed);
+            if (rmbPressed)
+            {
+                RequestHostFreezeGrab();
+                EndGrab();
+                return;
+            }
+
+            if (!lmbDown)
+            {
+                EndGrab();
+                return;
+            }
+
+            var wheelY = Input.MouseWheel.y;
+            if (MathF.Abs(wheelY) > 0.001f)
+            {
+                _grabDistance = Clamp(_grabDistance + wheelY * ScrollStep, MinHoldDistance, MaxHoldDistance);
+                Input.MouseWheel = Vector2.Zero;
+            }
+
             return;
         }
 
         if (_mode == GrabMode.GravityGun)
         {
-            HandleGravityGunInput(rmbDown, lmbPressed);
-            return;
+            if (lmbPressed)
+            {
+                RequestHostLaunchGrab();
+                EndGrab(preserveVelocity: true);
+                return;
+            }
+
+            if (!rmbDown)
+                EndGrab();
         }
     }
-
-    private void HandlePhysgunInput(bool lmbDown, bool rmbPressed)
-    {
-        // ПКМ во время удержания ЛКМ — заморозить объект и отпустить.
-        if (rmbPressed)
-        {
-            FreezeGrabbed();
-            EndGrab();
-            return;
-        }
-
-        // Отпустили ЛКМ — просто отпустили объект.
-        if (!lmbDown)
-        {
-            EndGrab();
-            return;
-        }
-
-        // Колёсико мыши — менять дистанцию удержания.
-        var wheelY = Input.MouseWheel.y;
-        if (MathF.Abs(wheelY) > 0.001f)
-        {
-            _grabDistance = MathF.Max(MinHoldDistance, MathF.Min(MaxHoldDistance, _grabDistance + wheelY * ScrollStep));
-            // Глушим колёсико, чтобы не переключился слот в инвентаре.
-            Input.MouseWheel = Vector2.Zero;
-        }
-
-        // Сама крутка по AnalogLook делается в OnWeaponUpdate (UpdateSpin) — там
-        // живая дельта мыши и можно корректно зафиксировать камеру.
-    }
-
-    private void HandlePhysgunSeekInput(bool lmbDown)
-    {
-        if (!lmbDown)
-        {
-            EndSeek();
-            return;
-        }
-
-        TryStartGrab(GrabMode.Physgun);
-    }
-
-    private void HandleGravityGunInput(bool rmbDown, bool lmbPressed)
-    {
-        // ЛКМ — швырнуть.
-        if (lmbPressed)
-        {
-            LaunchGrabbed();
-            EndGrab(preserveVelocity: true);
-            return;
-        }
-
-        // Отпустили ПКМ — бросить без push.
-        if (!rmbDown)
-        {
-            EndGrab();
-            return;
-        }
-    }
-
-    /// <summary>
-    /// Крутка объекта по движению мыши (Reload зажат + physgun-режим).
-    /// Камера на это время фиксируется, чтобы мышь крутила объект, а не игрока.
-    /// </summary>
-    private void UpdateSpin()
-    {
-        if (!Player.Local.IsValid() || !Player.Local.Controller.IsValid())
-        {
-            UnlockSpinCamera();
-            return;
-        }
-
-        var controller = Player.Local.Controller;
-
-        // Крутить можно только в physgun-режиме при активном захвате.
-        bool canSpin = _mode == GrabMode.Physgun
-            && _grabbed.IsValid()
-            && Input.Down("Reload");
-
-        if (!canSpin)
-        {
-            UnlockSpinCamera();
-            return;
-        }
-
-        // Захватили камеру в момент нажатия Reload (или первого валидного кадра крутки).
-        if (!_spinCameraLocked || Input.Pressed("Reload"))
-        {
-            _spinSavedEyeAngles = controller.EyeAngles;
-            _spinCameraLocked = true;
-        }
-
-        LockSpinCamera(controller);
-
-        bool snapping = Input.Down("Run");
-
-        // Дельта мыши за кадр; инвертируем, чтобы вверх/вправо = крутить объект,
-        // как в Facepunch-Physgun.
-        var look = Input.AnalogLook * -1f;
-
-        if (snapping)
-        {
-            // Снэп — крутим только по преобладающей оси.
-            if (MathF.Abs(look.yaw) > MathF.Abs(look.pitch)) look.pitch = 0;
-            else look.yaw = 0;
-        }
-
-        var spinRotation = Rotation.From(look) * _grabOffset;
-
-        if (snapping)
-        {
-            // Конвертируем в worldspace по yaw игрока, снэпим, возвращаем обратно.
-            var eyeYaw = Rotation.FromYaw(_spinSavedEyeAngles.yaw);
-            var spinWorld = eyeYaw * spinRotation;
-            var snapped = spinWorld.Angles().SnapToGrid(SnapAngleDegrees);
-            spinRotation = eyeYaw.Inverse * Rotation.From(snapped);
-        }
-
-        _grabOffset = spinRotation;
-
-        // Страховочный фикс: если контроллер уже успел применить look в этом кадре,
-        // возвращаем сохранённый угол. На следующих кадрах UseLookControls выключен,
-        // поэтому камера больше не борется с physgun за один и тот же ввод.
-        controller.EyeAngles = _spinSavedEyeAngles;
-
-        // Чтобы другие потребители (если такие есть) тоже не реагировали.
-        Input.AnalogLook = default;
-    }
-
-    private void LockSpinCamera(PlayerController controller)
-    {
-        if (!controller.IsValid()) return;
-        if (_spinLookControlsOverridden) return;
-
-        _spinPreviousUseLookControls = controller.UseLookControls;
-        controller.UseLookControls = false;
-        _spinLookControlsOverridden = true;
-    }
-
-    private void UnlockSpinCamera()
-    {
-        if (_spinLookControlsOverridden && Player.Local.IsValid() && Player.Local.Controller.IsValid())
-            Player.Local.Controller.UseLookControls = _spinPreviousUseLookControls;
-
-        _spinLookControlsOverridden = false;
-        _spinCameraLocked = false;
-    }
-
-    // ============================ ЗАХВАТ ============================
 
     private void BeginPhysgunSeek()
     {
@@ -366,6 +274,7 @@ public sealed class WeaponPhysgun : Weapon
 
     private void EndSeek()
     {
+        RequestHostEndGrab(preserveVelocity: false);
         ResetGrab();
         _preventReselect = true;
     }
@@ -379,46 +288,54 @@ public sealed class WeaponPhysgun : Weapon
         if (!TryFindGrabTarget(mode, origin, dir, out var tr, out var rb))
             return false;
 
+        StartLocalGrab(mode, eye, tr, rb);
+        RequestHostStartGrab(mode, origin, dir, Player.Local.Controller.EyeAngles.yaw);
+        return true;
+    }
+
+    private void StartLocalGrab(GrabMode mode, Transform eye, SceneTraceResult tr, Rigidbody rb)
+    {
         _grabbed = rb;
         _mode = mode;
         _beamSeekActive = false;
-        EnableHeldCollisionMode(rb);
 
         var bodyTransform = rb.WorldTransform;
 
-        // Если объект был заморожен — снимаем заморозку, иначе двигать его не получится.
-        if (!rb.MotionEnabled)
-        {
-            rb.MotionEnabled = true;
-        }
-
         if (mode == GrabMode.GravityGun)
         {
-            // Gravitygun «сразу берёт к себе»: захват по центру объекта (origin),
-            // мгновенное обнуление физики и телепорт к точке удержания.
-            // Без телепорта тело успевает упасть/удариться об пол на первых кадрах,
-            // пока скорость только-только разгоняет его к цели.
             _localOffset = Vector3.Zero;
             _grabDistance = GravityGunHoldDistance;
             _grabOffset = eye.Rotation.Inverse * bodyTransform.Rotation;
-
-            var snapPos = origin + dir * GravityGunHoldDistance;
-            rb.Velocity = Vector3.Zero;
-            rb.AngularVelocity = Vector3.Zero;
-            rb.WorldPosition = snapPos;
         }
         else
         {
-            // Physgun: удерживаем за точку, в которую попали, на той же дистанции.
             _localOffset = bodyTransform.PointToLocal(tr.HitPosition);
-            var hitDistance = Vector3.DistanceBetween(origin, tr.HitPosition);
-            _grabDistance = MathF.Max(MinHoldDistance, MathF.Min(MaxHoldDistance, hitDistance));
-            // Поворот объекта запоминаем относительно yaw игрока (чтобы при наклоне головы он не падал).
+            var hitDistance = Vector3.DistanceBetween(eye.Position, tr.HitPosition);
+            _grabDistance = Clamp(hitDistance, MinHoldDistance, MaxHoldDistance);
             var yaw = Rotation.FromYaw(Player.Local.Controller.EyeAngles.yaw);
             _grabOffset = yaw.Inverse * bodyTransform.Rotation;
         }
+    }
 
-        return true;
+    private void EndGrab(bool preserveVelocity = false)
+    {
+        RequestHostEndGrab(preserveVelocity);
+        ResetGrab();
+        _preventReselect = true;
+        PlayLocalSound(ReleasedSound);
+    }
+
+    private void ResetGrab()
+    {
+        _mode = GrabMode.None;
+        _grabbed = null;
+        _grabDistance = 0f;
+        _grabOffset = Rotation.Identity;
+        _localOffset = Vector3.Zero;
+        _beamSeekActive = false;
+        ResetBeamState();
+        UnlockSpinCamera();
+        SetSpinSoundActive(false);
     }
 
     private bool TryFindGrabTarget(GrabMode mode, Vector3 origin, Vector3 dir, out SceneTraceResult tr, out Rigidbody rb)
@@ -427,8 +344,6 @@ public sealed class WeaponPhysgun : Weapon
         if (TryGetGrabRigidbody(tr, mode, out rb))
             return true;
 
-        // Если центральный луч уже упёрся в мир, не даём радиусному trace'у
-        // "магнититься" к соседним поверхностям и расходиться с визуальным лучом.
         if (tr.Hit || mode != GrabMode.Physgun || SeekRadius <= 0f)
         {
             rb = null;
@@ -456,79 +371,585 @@ public sealed class WeaponPhysgun : Weapon
         if (!tr.Hit || !tr.GameObject.IsValid())
             return false;
 
-        // Ищем Rigidbody на самом GameObject или его родителях (на случай комплексных префабов).
         rb = tr.GameObject.Components.Get<Rigidbody>(FindMode.EverythingInSelfAndAncestors);
         if (!rb.IsValid())
             return false;
 
-        // Только объекты, которыми владеет локальный игрок.
-        if (rb.GameObject.Network.Owner != Connection.Local)
+        return LocalPlayerCanGrab(rb, mode);
+    }
+
+    private static bool LocalPlayerCanGrab(Rigidbody rb, GrabMode mode)
+    {
+        var player = Player.Local;
+        if (!player.IsValid() || !rb.IsValid() || !rb.GameObject.IsValid())
             return false;
 
-        // Фильтр по типу объекта зависит от режима:
-        //  * Physgun (ЛКМ) — только кастомные пропы (PropCustom). Денежные принтеры
-        //    и прочие игровые сущности руками держать нельзя.
-        //  * GravityGun (ПКМ) — пропы И денежные принтеры (MoneyPrinterBase).
-        //    Принтер берётся только так, по требованию дизайна.
-        var hasPropCustom = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors).IsValid();
-        var hasMoneyPrinter = rb.GameObject.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors).IsValid();
+        var prop = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors);
+        var ownsProp = prop.IsValid() && IsSamePlayer(prop.PlayerOwner, player);
 
         if (mode == GrabMode.Physgun)
-            return hasPropCustom;
+            return ownsProp;
 
-        return hasPropCustom || hasMoneyPrinter;
+        var printer = rb.GameObject.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors);
+        var ownsPrinter = printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player);
+
+        return ownsProp || ownsPrinter;
     }
 
-    private void EndGrab(bool preserveVelocity = false)
+    private void UpdateSpin()
     {
-        ResetGrab(resolvePlayerOverlap: true, preserveVelocity: preserveVelocity);
-        _preventReselect = true;
+        if (!Player.Local.IsValid() || !Player.Local.Controller.IsValid())
+        {
+            UnlockSpinCamera();
+            SetSpinSoundActive(false);
+            return;
+        }
+
+        bool canSpin = _mode == GrabMode.Physgun
+            && _grabbed.IsValid()
+            && Input.Down("Reload");
+
+        SetSpinSoundActive(canSpin);
+
+        if (!canSpin)
+        {
+            UnlockSpinCamera();
+            return;
+        }
+
+        var controller = Player.Local.Controller;
+        if (!_spinCameraLocked || Input.Pressed("Reload"))
+        {
+            _spinSavedEyeAngles = controller.EyeAngles;
+            _spinCameraLocked = true;
+        }
+
+        LockSpinCamera(controller);
+
+        bool snapping = Input.Down("Run");
+        var look = Input.AnalogLook * -1f;
+
+        if (snapping)
+        {
+            if (MathF.Abs(look.yaw) > MathF.Abs(look.pitch)) look.pitch = 0;
+            else look.yaw = 0;
+        }
+
+        var spinRotation = Rotation.From(look) * _grabOffset;
+
+        if (snapping)
+        {
+            var eyeYaw = Rotation.FromYaw(_spinSavedEyeAngles.yaw);
+            var spinWorld = eyeYaw * spinRotation;
+            var snapped = spinWorld.Angles().SnapToGrid(SnapAngleDegrees);
+            spinRotation = eyeYaw.Inverse * Rotation.From(snapped);
+        }
+
+        _grabOffset = spinRotation;
+        controller.EyeAngles = _spinSavedEyeAngles;
+        Input.AnalogLook = default;
     }
 
-    private void ResetGrab(bool resolvePlayerOverlap = false, bool preserveVelocity = false)
+    private void LockSpinCamera(PlayerController controller)
     {
-        if (resolvePlayerOverlap)
-            ResolveGrabbedPlayerOverlaps(preserveVelocity);
+        if (!controller.IsValid() || _spinLookControlsOverridden) return;
 
-        DisableHeldCollisionMode(_grabbed);
-
-        _mode = GrabMode.None;
-        _grabbed = null;
-        _grabDistance = 0f;
-        _grabOffset = Rotation.Identity;
-        _localOffset = Vector3.Zero;
-        _beamSeekActive = false;
-        ResetBeamState();
-        UnlockSpinCamera();
+        _spinPreviousUseLookControls = controller.UseLookControls;
+        controller.UseLookControls = false;
+        _spinLookControlsOverridden = true;
     }
 
-    private void EnableHeldCollisionMode(Rigidbody rb)
+    private void UnlockSpinCamera()
     {
-        if (!rb.IsValid() || !rb.GameObject.IsValid()) return;
+        if (_spinLookControlsOverridden && Player.Local.IsValid() && Player.Local.Controller.IsValid())
+            Player.Local.Controller.UseLookControls = _spinPreviousUseLookControls;
 
-        _grabbedHadHeldCollisionTag = rb.GameObject.Tags.Has(HeldCollisionTag);
+        _spinLookControlsOverridden = false;
+        _spinCameraLocked = false;
+    }
+
+    private void SetSpinSoundActive(bool active)
+    {
+        if (_spinSoundActive == active) return;
+
+        _spinSoundActive = active;
+        PlayLocalSound(active ? ButtonInSound : ButtonOutSound);
+    }
+
+    private void UpdateGrabbed()
+    {
+        if (_mode == GrabMode.None || _mode == GrabMode.PhysgunSeek || !_grabbed.IsValid())
+            return;
+
+        if (Networking.IsHost)
+        {
+            HostUpdateGrab(GetLocalPlayerConnection(), _grabbed.GameObject, _grabDistance, _grabOffset,
+                MinHoldDistance, MaxHoldDistance, MaxLinearSpeed, RotationLerp,
+                ReleasePlayerPadding, HeldPlayerPadding, HeldMaxResolveIterations);
+            return;
+        }
+
+        RpcHostUpdateGrab(_grabbed.GameObject, _grabDistance, _grabOffset,
+            MinHoldDistance, MaxHoldDistance, MaxLinearSpeed, RotationLerp,
+            ReleasePlayerPadding, HeldPlayerPadding, HeldMaxResolveIterations);
+    }
+
+    private void RequestHostStartGrab(GrabMode mode, Vector3 origin, Vector3 forward, float yaw)
+    {
+        if (Networking.IsHost)
+        {
+            HostStartGrab(GetLocalPlayerConnection(), (int)mode, origin, forward, yaw,
+                MaxRange, MinHoldDistance, MaxHoldDistance, GravityGunHoldDistance, SeekRadius, AttachSound);
+            return;
+        }
+
+        RpcHostStartGrab((int)mode, origin, forward, yaw,
+            MaxRange, MinHoldDistance, MaxHoldDistance, GravityGunHoldDistance, SeekRadius, AttachSound);
+    }
+
+    private void RequestHostEndGrab(bool preserveVelocity)
+    {
+        if (!_grabbed.IsValid())
+            return;
+
+        if (Networking.IsHost)
+        {
+            HostEndGrab(GetLocalPlayerConnection(), _grabbed.GameObject, preserveVelocity,
+                ReleasePlayerPadding, ReleasePushSpeed, ReleaseMaxResolveIterations);
+            return;
+        }
+
+        RpcHostEndGrab(_grabbed.GameObject, preserveVelocity,
+            ReleasePlayerPadding, ReleasePushSpeed, ReleaseMaxResolveIterations);
+    }
+
+    private void RequestHostFreezeGrab()
+    {
+        if (!_grabbed.IsValid())
+            return;
+
+        if (Networking.IsHost)
+        {
+            HostFreezeGrab(GetLocalPlayerConnection(), _grabbed.GameObject,
+                ReleasePlayerPadding, ReleasePushSpeed, ReleaseMaxResolveIterations, FreezeSound);
+            return;
+        }
+
+        RpcHostFreezeGrab(_grabbed.GameObject,
+            ReleasePlayerPadding, ReleasePushSpeed, ReleaseMaxResolveIterations, FreezeSound);
+    }
+
+    private void RequestHostLaunchGrab()
+    {
+        if (!_grabbed.IsValid())
+            return;
+
+        if (Networking.IsHost)
+        {
+            HostLaunchGrab(GetLocalPlayerConnection(), _grabbed.GameObject, LaunchForce,
+                ReleasePlayerPadding, ReleasePushSpeed, ReleaseMaxResolveIterations);
+            return;
+        }
+
+        RpcHostLaunchGrab(_grabbed.GameObject, LaunchForce,
+            ReleasePlayerPadding, ReleasePushSpeed, ReleaseMaxResolveIterations);
+    }
+
+    private Connection GetLocalPlayerConnection()
+    {
+        return Player.Local?.GameObject.Network.Owner ?? Connection.Local;
+    }
+
+    [Rpc.Host]
+    private static void RpcHostStartGrab(int mode, Vector3 origin, Vector3 forward, float yaw,
+        float maxRange, float minHoldDistance, float maxHoldDistance, float gravityGunHoldDistance,
+        float seekRadius, SoundEvent attachSound)
+    {
+        if (!Networking.IsHost) return;
+        HostStartGrab(Rpc.Caller, mode, origin, forward, yaw, maxRange, minHoldDistance,
+            maxHoldDistance, gravityGunHoldDistance, seekRadius, attachSound);
+    }
+
+    [Rpc.Host]
+    private static void RpcHostUpdateGrab(GameObject target, float grabDistance, Rotation grabOffset,
+        float minHoldDistance, float maxHoldDistance, float maxLinearSpeed, float rotationLerp,
+        float releasePlayerPadding, float heldPlayerPadding, int heldMaxResolveIterations)
+    {
+        if (!Networking.IsHost) return;
+        HostUpdateGrab(Rpc.Caller, target, grabDistance, grabOffset,
+            minHoldDistance, maxHoldDistance, maxLinearSpeed, rotationLerp,
+            releasePlayerPadding, heldPlayerPadding, heldMaxResolveIterations);
+    }
+
+    [Rpc.Host]
+    private static void RpcHostEndGrab(GameObject target, bool preserveVelocity,
+        float releasePlayerPadding, float releasePushSpeed, int releaseMaxResolveIterations)
+    {
+        if (!Networking.IsHost) return;
+        HostEndGrab(Rpc.Caller, target, preserveVelocity, releasePlayerPadding,
+            releasePushSpeed, releaseMaxResolveIterations);
+    }
+
+    [Rpc.Host]
+    private static void RpcHostFreezeGrab(GameObject target,
+        float releasePlayerPadding, float releasePushSpeed, int releaseMaxResolveIterations,
+        SoundEvent freezeSound)
+    {
+        if (!Networking.IsHost) return;
+        HostFreezeGrab(Rpc.Caller, target, releasePlayerPadding,
+            releasePushSpeed, releaseMaxResolveIterations, freezeSound);
+    }
+
+    [Rpc.Host]
+    private static void RpcHostLaunchGrab(GameObject target, float launchForce,
+        float releasePlayerPadding, float releasePushSpeed, int releaseMaxResolveIterations)
+    {
+        if (!Networking.IsHost) return;
+        HostLaunchGrab(Rpc.Caller, target, launchForce, releasePlayerPadding,
+            releasePushSpeed, releaseMaxResolveIterations);
+    }
+
+    private static void HostStartGrab(Connection caller, int modeValue, Vector3 origin, Vector3 forward, float yaw,
+        float maxRange, float minHoldDistance, float maxHoldDistance, float gravityGunHoldDistance,
+        float seekRadius, SoundEvent attachSound)
+    {
+        if (!TryGetCallerPlayer(caller, out var player))
+            return;
+
+        if (!HostCanUsePhysgun(player))
+        {
+            HostRejectGrab(caller, null);
+            return;
+        }
+
+        var mode = modeValue == (int)GrabMode.GravityGun ? GrabMode.GravityGun : GrabMode.Physgun;
+        var aim = HostGetAimTransform(player, origin, forward, yaw);
+
+        maxRange = Clamp(maxRange, 64f, HostMaxRangeLimit);
+        minHoldDistance = Clamp(minHoldDistance, 1f, HostMaxHoldDistanceLimit);
+        maxHoldDistance = Clamp(maxHoldDistance, minHoldDistance, HostMaxHoldDistanceLimit);
+        gravityGunHoldDistance = Clamp(gravityGunHoldDistance, minHoldDistance, maxHoldDistance);
+        seekRadius = Clamp(seekRadius, 0f, 64f);
+
+        if (!HostTryFindGrabTarget(player, mode, aim, maxRange, seekRadius, out var tr, out var rb))
+        {
+            HostRejectGrab(caller, null);
+            return;
+        }
+
+        if (rb.IsProxy || !rb.PhysicsBody.IsValid())
+        {
+            HostRejectGrab(caller, rb.GameObject);
+            return;
+        }
+
+        HostEndGrab(caller, null, preserveVelocity: false, 6f, 120f, 6);
+
+        if (!rb.MotionEnabled)
+            rb.MotionEnabled = true;
+
+        var bodyTransform = rb.WorldTransform;
+        var state = new HostGrabState
+        {
+            SteamId = caller.SteamId.Value,
+            Player = player,
+            Mode = mode,
+            GameObject = rb.GameObject,
+            Body = rb,
+            HadHeldCollisionTag = rb.GameObject.Tags.Has(HeldCollisionTag)
+        };
+
+        if (mode == GrabMode.GravityGun)
+        {
+            state.LocalOffset = Vector3.Zero;
+            state.GrabDistance = gravityGunHoldDistance;
+            state.GrabOffset = aim.Rotation.Inverse * bodyTransform.Rotation;
+
+            rb.Velocity = Vector3.Zero;
+            rb.AngularVelocity = Vector3.Zero;
+            rb.WorldPosition = aim.Position + aim.Forward * state.GrabDistance;
+        }
+        else
+        {
+            state.LocalOffset = bodyTransform.PointToLocal(tr.HitPosition);
+            state.GrabDistance = Vector3.DistanceBetween(aim.Position, tr.HitPosition);
+            state.GrabDistance = HostClampGrabDistance(rb, tr.HitPosition, aim, state.GrabDistance, minHoldDistance, maxHoldDistance);
+            state.GrabOffset = Rotation.FromYaw(aim.Rotation.Yaw()).Inverse * bodyTransform.Rotation;
+        }
+
         rb.GameObject.Tags.Add(HeldCollisionTag);
+        HostGrabStates[state.SteamId] = state;
+        RpcBroadcastPhysgunSound(attachSound, tr.HitPosition);
     }
 
-    private void DisableHeldCollisionMode(Rigidbody rb)
+    private static void HostUpdateGrab(Connection caller, GameObject target, float grabDistance, Rotation grabOffset,
+        float minHoldDistance, float maxHoldDistance, float maxLinearSpeed, float rotationLerp,
+        float releasePlayerPadding, float heldPlayerPadding, int heldMaxResolveIterations)
     {
-        if (rb.IsValid() && rb.GameObject.IsValid() && !_grabbedHadHeldCollisionTag)
-            rb.GameObject.Tags.Remove(HeldCollisionTag);
+        if (!TryGetHostState(caller, target, out var state))
+            return;
 
-        _grabbedHadHeldCollisionTag = false;
+        if (!HostCanUsePhysgun(state.Player) || !state.Body.MotionEnabled || state.Body.IsProxy)
+        {
+            HostEndGrab(caller, target, preserveVelocity: false, releasePlayerPadding, 120f, 6);
+            HostRejectGrab(caller, target);
+            return;
+        }
+
+        minHoldDistance = Clamp(minHoldDistance, 1f, HostMaxHoldDistanceLimit);
+        maxHoldDistance = Clamp(maxHoldDistance, minHoldDistance, HostMaxHoldDistanceLimit);
+        maxLinearSpeed = Clamp(maxLinearSpeed, 100f, HostMaxLinearSpeedLimit);
+        rotationLerp = Clamp(rotationLerp, 0.01f, 1f);
+        heldPlayerPadding = Clamp(heldPlayerPadding, 0f, 64f);
+        releasePlayerPadding = Clamp(releasePlayerPadding, 0f, 64f);
+        heldMaxResolveIterations = Math.Clamp(heldMaxResolveIterations, 1, HostMaxOverlapIterationsLimit);
+
+        state.GrabDistance = Clamp(grabDistance, minHoldDistance, maxHoldDistance);
+        state.GrabOffset = grabOffset;
+
+        HostApplyGrabMovement(state, minHoldDistance, maxHoldDistance, maxLinearSpeed,
+            rotationLerp, MathF.Max(releasePlayerPadding, heldPlayerPadding), heldMaxResolveIterations);
     }
 
-    private void ResolveGrabbedPlayerOverlaps(bool preserveVelocity)
+    private static void HostEndGrab(Connection caller, GameObject target, bool preserveVelocity,
+        float releasePlayerPadding, float releasePushSpeed, int releaseMaxResolveIterations)
     {
-        var rb = _grabbed;
+        if (!TryGetHostState(caller, target, out var state))
+            return;
+
+        releasePlayerPadding = Clamp(releasePlayerPadding, 0f, 64f);
+        releasePushSpeed = Clamp(releasePushSpeed, 0f, 1000f);
+        releaseMaxResolveIterations = Math.Clamp(releaseMaxResolveIterations, 1, HostMaxOverlapIterationsLimit);
+
+        HostResolveGrabbedPlayerOverlaps(state, preserveVelocity, releasePlayerPadding,
+            releasePushSpeed, releaseMaxResolveIterations);
+        HostDisableHeldCollisionMode(state);
+        HostGrabStates.Remove(state.SteamId);
+    }
+
+    private static void HostFreezeGrab(Connection caller, GameObject target,
+        float releasePlayerPadding, float releasePushSpeed, int releaseMaxResolveIterations,
+        SoundEvent freezeSound)
+    {
+        if (!TryGetHostState(caller, target, out var state))
+            return;
+
+        var body = state.Body;
+        HostEndGrab(caller, target, preserveVelocity: false, releasePlayerPadding,
+            releasePushSpeed, releaseMaxResolveIterations);
+
+        if (!body.IsValid() || body.IsProxy)
+            return;
+
+        body.Velocity = Vector3.Zero;
+        body.AngularVelocity = Vector3.Zero;
+        body.MotionEnabled = false;
+        RpcBroadcastPhysgunSound(freezeSound, body.WorldPosition);
+    }
+
+    private static void HostLaunchGrab(Connection caller, GameObject target, float launchForce,
+        float releasePlayerPadding, float releasePushSpeed, int releaseMaxResolveIterations)
+    {
+        if (!TryGetHostState(caller, target, out var state))
+            return;
+
+        var body = state.Body;
+        if (!body.IsValid() || body.IsProxy)
+        {
+            HostEndGrab(caller, target, preserveVelocity: false, releasePlayerPadding,
+                releasePushSpeed, releaseMaxResolveIterations);
+            return;
+        }
+
+        var dir = state.Player.Controller.IsValid()
+            ? state.Player.Controller.EyeTransform.Forward
+            : state.Player.WorldRotation.Forward;
+
+        launchForce = Clamp(launchForce, 0f, HostMaxLaunchForceLimit);
+        var mass = MathF.Max(0.1f, body.Mass);
+        body.ApplyImpulse(dir.Normal * (launchForce * mass));
+        body.PhysicsBody?.ApplyAngularImpulse(Vector3.Random * (launchForce * mass));
+
+        HostEndGrab(caller, target, preserveVelocity: true, releasePlayerPadding,
+            releasePushSpeed, releaseMaxResolveIterations);
+    }
+
+    private static bool TryGetCallerPlayer(Connection caller, out Player player)
+    {
+        player = null;
+        if (caller is null)
+            return false;
+
+        player = Player.FindPlayerBySteamId(caller.SteamId.Value);
+        return player.IsValid();
+    }
+
+    private static bool TryGetHostState(Connection caller, GameObject target, out HostGrabState state)
+    {
+        state = null;
+        if (caller is null)
+            return false;
+
+        if (!HostGrabStates.TryGetValue(caller.SteamId.Value, out state))
+            return false;
+
+        if (!state.IsValid())
+        {
+            if (state is not null)
+                HostGrabStates.Remove(state.SteamId);
+            return false;
+        }
+
+        if (target.IsValid() && state.GameObject != target)
+            return false;
+
+        return true;
+    }
+
+    private static bool HostCanUsePhysgun(Player player)
+    {
+        return player.IsValid()
+            && player.IsAlive
+            && !player.IsArrested
+            && player.Controller.IsValid()
+            && string.Equals(player.EquippedWeaponItemId, "physgun", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static Transform HostGetAimTransform(Player player, Vector3 requestedOrigin, Vector3 requestedForward, float requestedYaw)
+    {
+        if (player.Controller.IsValid())
+            return player.Controller.EyeTransform;
+
+        var forward = requestedForward.LengthSquared > 0.001f
+            ? requestedForward.Normal
+            : Rotation.FromYaw(requestedYaw).Forward;
+
+        return new Transform(requestedOrigin, Rotation.LookAt(forward));
+    }
+
+    private static bool HostTryFindGrabTarget(Player player, GrabMode mode, Transform aim,
+        float maxRange, float seekRadius, out SceneTraceResult tr, out Rigidbody rb)
+    {
+        tr = HostTraceGrabRay(player, aim.Position, aim.Forward, maxRange, 0f);
+        if (HostTryGetGrabRigidbody(player, tr, mode, out rb))
+            return true;
+
+        if (tr.Hit || mode != GrabMode.Physgun || seekRadius <= 0f)
+        {
+            rb = null;
+            return false;
+        }
+
+        tr = HostTraceGrabRay(player, aim.Position, aim.Forward, maxRange, seekRadius);
+        return HostTryGetGrabRigidbody(player, tr, mode, out rb);
+    }
+
+    private static SceneTraceResult HostTraceGrabRay(Player player, Vector3 origin, Vector3 dir, float maxRange, float radius)
+    {
+        return player.Scene.Trace
+            .Ray(origin, origin + dir * maxRange)
+            .Radius(MathF.Max(0f, radius))
+            .IgnoreGameObjectHierarchy(player.GameObject)
+            .WithoutTags("bullet", "player")
+            .Run();
+    }
+
+    private static bool HostTryGetGrabRigidbody(Player player, SceneTraceResult tr, GrabMode mode, out Rigidbody rb)
+    {
+        rb = null;
+
+        if (!tr.Hit || !tr.GameObject.IsValid())
+            return false;
+
+        rb = tr.GameObject.Components.Get<Rigidbody>(FindMode.EverythingInSelfAndAncestors);
+        if (!rb.IsValid() || !rb.GameObject.IsValid())
+            return false;
+
+        return HostCanGrabRigidbody(player, rb, mode);
+    }
+
+    private static bool HostCanGrabRigidbody(Player player, Rigidbody rb, GrabMode mode)
+    {
+        var prop = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors);
+        var ownsProp = prop.IsValid() && IsSamePlayer(prop.PlayerOwner, player);
+
+        if (mode == GrabMode.Physgun)
+            return ownsProp;
+
+        var printer = rb.GameObject.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors);
+        var ownsPrinter = printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player);
+
+        return ownsProp || ownsPrinter;
+    }
+
+    private static void HostApplyGrabMovement(HostGrabState state, float minHoldDistance,
+        float maxHoldDistance, float maxLinearSpeed, float rotationLerp, float playerPadding,
+        int maxResolveIterations)
+    {
+        var body = state.Body;
+        if (!body.IsValid() || !state.Player.Controller.IsValid())
+            return;
+
+        var dt = Time.Delta;
+        if (dt <= 0f)
+            return;
+
+        var eye = state.Player.Controller.EyeTransform;
+        var grabDistance = HostClampGrabDistance(body, HostGetEndPoint(state), eye,
+            state.GrabDistance, minHoldDistance, maxHoldDistance);
+        var targetPos = eye.Position + eye.Forward * grabDistance;
+
+        var targetRot = state.Mode == GrabMode.GravityGun
+            ? eye.Rotation * state.GrabOffset
+            : Rotation.FromYaw(state.Player.Controller.EyeAngles.yaw) * state.GrabOffset;
+
+        var desiredBodyPos = targetPos - targetRot * state.LocalOffset;
+        desiredBodyPos = HostResolveHeldPlayerOverlaps(state, desiredBodyPos, playerPadding, maxResolveIterations);
+
+        body.WorldRotation = Rotation.Slerp(body.WorldRotation, targetRot, rotationLerp);
+        body.AngularVelocity = Vector3.Zero;
+
+        var velocity = (desiredBodyPos - body.WorldPosition) / dt;
+        if (velocity.Length > maxLinearSpeed)
+            velocity = velocity.Normal * maxLinearSpeed;
+
+        body.Velocity = velocity;
+    }
+
+    private static float HostClampGrabDistance(Rigidbody body, Vector3 point, Transform eye,
+        float distance, float min, float max)
+    {
+        distance = Clamp(distance, min, max);
+
+        if (!body.IsValid())
+            return distance;
+
+        var closest = body.FindClosestPoint(eye.Position);
+        var along = distance + Vector3.Dot(closest - point, eye.Rotation.Forward);
+        if (along < min)
+            distance += min - along;
+
+        return Clamp(distance, min, max);
+    }
+
+    private static Vector3 HostGetEndPoint(HostGrabState state)
+    {
+        if (!state.GameObject.IsValid())
+            return state.LocalOffset;
+
+        return state.GameObject.WorldTransform.PointToWorld(state.LocalOffset);
+    }
+
+    private static void HostResolveGrabbedPlayerOverlaps(HostGrabState state, bool preserveVelocity,
+        float padding, float pushSpeed, int maxIterations)
+    {
+        var rb = state.Body;
         if (!rb.IsValid() || !rb.GameObject.IsValid()) return;
 
         var moved = false;
-        var maxIterations = Math.Max(1, ReleaseMaxResolveIterations);
-
-        for (var iteration = 0; iteration < maxIterations; iteration++)
+        for (var i = 0; i < maxIterations; i++)
         {
-            if (!TryFindPlayerReleaseOffset(rb, out var offset))
+            if (!HostTryFindPlayerReleaseOffset(state, padding, out var offset))
                 break;
 
             rb.WorldPosition += offset;
@@ -546,15 +967,37 @@ public sealed class WeaponPhysgun : Weapon
         }
 
         if (rb.Velocity.LengthSquared <= 1f)
-            rb.Velocity = GetSafeReleaseDirection(rb) * ReleasePushSpeed;
+            rb.Velocity = HostGetSafeReleaseDirection(state) * pushSpeed;
     }
 
-    private bool TryFindPlayerReleaseOffset(Rigidbody rb, out Vector3 offset)
+    private static Vector3 HostResolveHeldPlayerOverlaps(HostGrabState state, Vector3 desiredBodyPos,
+        float padding, int maxIterations)
+    {
+        var rb = state.Body;
+        if (!rb.IsValid())
+            return desiredBodyPos;
+
+        var currentBounds = HostGetRigidBodyBounds(rb);
+        var resolvedOffset = desiredBodyPos - rb.WorldPosition;
+
+        for (var i = 0; i < maxIterations; i++)
+        {
+            var desiredBounds = currentBounds.Translate(resolvedOffset);
+            if (!HostTryFindPlayerOverlapOffset(state, desiredBounds, padding, out var pushOffset))
+                break;
+
+            resolvedOffset += pushOffset;
+        }
+
+        return rb.WorldPosition + resolvedOffset;
+    }
+
+    private static bool HostTryFindPlayerReleaseOffset(HostGrabState state, float padding, out Vector3 offset)
     {
         offset = Vector3.Zero;
-        var propBounds = GetRigidBodyBounds(rb);
+        var propBounds = HostGetRigidBodyBounds(state.Body);
 
-        foreach (var go in Scene.GetAllObjects(true))
+        foreach (var go in state.Player.Scene.GetAllObjects(true))
         {
             if (!go.Components.TryGet<Player>(out var player))
                 continue;
@@ -562,13 +1005,13 @@ public sealed class WeaponPhysgun : Weapon
             if (!player.IsValid() || !player.Controller.IsValid())
                 continue;
 
-            var playerBounds = player.Controller.BodyBox().Grow(ReleasePlayerPadding);
+            var playerBounds = player.Controller.BodyBox().Grow(padding);
             if (!propBounds.Overlaps(playerBounds))
                 continue;
 
-            offset = GetHorizontalSeparationOffset(propBounds, playerBounds, ReleasePlayerPadding);
+            offset = HostGetHorizontalSeparationOffset(propBounds, playerBounds, padding);
             if (offset.LengthSquared <= 0.001f)
-                offset = GetFallbackReleaseDirection(rb, player) * MathF.Max(16f, ReleasePlayerPadding + 8f);
+                offset = HostGetFallbackReleaseDirection(state, player) * MathF.Max(16f, padding + 8f);
 
             return true;
         }
@@ -576,7 +1019,34 @@ public sealed class WeaponPhysgun : Weapon
         return false;
     }
 
-    private BBox GetRigidBodyBounds(Rigidbody rb)
+    private static bool HostTryFindPlayerOverlapOffset(HostGrabState state, BBox propBounds,
+        float padding, out Vector3 offset)
+    {
+        offset = Vector3.Zero;
+
+        foreach (var go in state.Player.Scene.GetAllObjects(true))
+        {
+            if (!go.Components.TryGet<Player>(out var player))
+                continue;
+
+            if (!player.IsValid() || !player.Controller.IsValid())
+                continue;
+
+            var playerBounds = player.Controller.BodyBox().Grow(padding);
+            if (!propBounds.Overlaps(playerBounds))
+                continue;
+
+            offset = HostGetHorizontalSeparationOffset(propBounds, playerBounds, padding);
+            if (offset.LengthSquared <= 0.001f)
+                offset = HostGetFallbackReleaseDirection(state, player) * MathF.Max(16f, padding + 8f);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private static BBox HostGetRigidBodyBounds(Rigidbody rb)
     {
         if (rb.PhysicsBody is not null)
             return rb.PhysicsBody.GetBounds();
@@ -584,7 +1054,7 @@ public sealed class WeaponPhysgun : Weapon
         return rb.GetWorldBounds();
     }
 
-    private Vector3 GetHorizontalSeparationOffset(BBox propBounds, BBox playerBounds, float padding)
+    private static Vector3 HostGetHorizontalSeparationOffset(BBox propBounds, BBox playerBounds, float padding)
     {
         padding = MathF.Max(0f, padding);
 
@@ -601,17 +1071,17 @@ public sealed class WeaponPhysgun : Weapon
             : new Vector3(0f, moveY, 0f);
     }
 
-    private Vector3 GetFallbackReleaseDirection(Rigidbody rb, Player player)
+    private static Vector3 HostGetFallbackReleaseDirection(HostGrabState state, Player player)
     {
-        var away = rb.WorldPosition - player.WorldPosition;
+        var away = state.Body.WorldPosition - player.WorldPosition;
         away.z = 0f;
 
         if (away.LengthSquared > 0.001f)
             return away.Normal;
 
-        if (Player.Local.IsValid() && Player.Local.Controller.IsValid())
+        if (state.Player.IsValid() && state.Player.Controller.IsValid())
         {
-            var forward = Player.Local.Controller.EyeTransform.Forward;
+            var forward = state.Player.Controller.EyeTransform.Forward;
             forward.z = 0f;
             if (forward.LengthSquared > 0.001f)
                 return forward.Normal;
@@ -620,62 +1090,62 @@ public sealed class WeaponPhysgun : Weapon
         return Vector3.Right;
     }
 
-    private Vector3 GetSafeReleaseDirection(Rigidbody rb)
+    private static Vector3 HostGetSafeReleaseDirection(HostGrabState state)
     {
-        if (!Player.Local.IsValid())
-            return Vector3.Right;
-
-        var away = rb.WorldPosition - Player.Local.WorldPosition;
+        var away = state.Body.WorldPosition - state.Player.WorldPosition;
         away.z = 0f;
         return away.LengthSquared > 0.001f ? away.Normal : Vector3.Right;
     }
 
-    private Vector3 ResolveHeldPlayerOverlaps(Rigidbody rb, Vector3 desiredBodyPos)
+    private static void HostDisableHeldCollisionMode(HostGrabState state)
     {
-        if (!rb.IsValid())
-            return desiredBodyPos;
-
-        var currentBounds = GetRigidBodyBounds(rb);
-        var desiredOffset = desiredBodyPos - rb.WorldPosition;
-        var resolvedOffset = desiredOffset;
-        var maxIterations = Math.Max(1, HeldMaxResolveIterations);
-
-        for (var iteration = 0; iteration < maxIterations; iteration++)
-        {
-            var desiredBounds = currentBounds.Translate(resolvedOffset);
-            if (!TryFindPlayerOverlapOffset(desiredBounds, MathF.Max(ReleasePlayerPadding, HeldPlayerPadding), out var pushOffset))
-                break;
-
-            resolvedOffset += pushOffset;
-        }
-
-        return rb.WorldPosition + resolvedOffset;
+        if (state.Body.IsValid() && state.Body.GameObject.IsValid() && !state.HadHeldCollisionTag)
+            state.Body.GameObject.Tags.Remove(HeldCollisionTag);
     }
 
-    private bool TryFindPlayerOverlapOffset(BBox propBounds, float padding, out Vector3 offset)
+    private static void HostRejectGrab(Connection caller, GameObject target)
     {
-        offset = Vector3.Zero;
+        if (caller is null)
+            return;
 
-        foreach (var go in Scene.GetAllObjects(true))
+        using (Rpc.FilterInclude(c => c.SteamId.Value == caller.SteamId.Value))
         {
-            if (!go.Components.TryGet<Player>(out var player))
-                continue;
-
-            if (!player.IsValid() || !player.Controller.IsValid())
-                continue;
-
-            var playerBounds = player.Controller.BodyBox().Grow(padding);
-            if (!propBounds.Overlaps(playerBounds))
-                continue;
-
-            offset = GetHorizontalSeparationOffset(propBounds, playerBounds, padding);
-            if (offset.LengthSquared <= 0.001f)
-                offset = GetFallbackReleaseDirection(_grabbed, player) * MathF.Max(16f, padding + 8f);
-
-            return true;
+            RpcClientRejectGrab(caller.SteamId.Value, target);
         }
+    }
 
-        return false;
+    [Rpc.Broadcast]
+    private static void RpcClientRejectGrab(long steamId, GameObject target)
+    {
+        if (Connection.Local?.SteamId.Value != steamId)
+            return;
+
+        if (Player.Local?.CurrentWeapon is WeaponPhysgun physgun)
+            physgun.OnHostRejectedGrab(target);
+    }
+
+    private void OnHostRejectedGrab(GameObject target)
+    {
+        if (target.IsValid() && _grabbed.IsValid() && _grabbed.GameObject != target)
+            return;
+
+        ResetGrab();
+        _preventReselect = true;
+    }
+
+    [Rpc.Broadcast]
+    private static void RpcBroadcastPhysgunSound(SoundEvent sound, Vector3 position)
+    {
+        if (sound.IsValid())
+            Sound.Play(sound, position);
+    }
+
+    private void PlayLocalSound(SoundEvent sound)
+    {
+        if (!sound.IsValid()) return;
+
+        var position = ShotPos.IsValid() ? ShotPos.WorldPosition : WorldPosition;
+        Sound.Play(sound, position);
     }
 
     private void UpdateBeamState()
@@ -788,6 +1258,56 @@ public sealed class WeaponPhysgun : Weapon
         return start + delta.Normal * maxLength;
     }
 
+    private void ResetBeamState()
+    {
+        var hadBeam = _beamHasLastEnd;
+        _beamLastEnd = Vector3.Zero;
+        _beamBend = Vector3.Zero;
+        _beamHasLastEnd = false;
+
+        if (Player.Local.IsValid() && (hadBeam || Player.Local.PhysgunBeamActive))
+            Player.Local.SetPhysgunBeam(false);
+    }
+
+    private void UpdateViewmodelState()
+    {
+        if (Viewmodel == null)
+            return;
+
+        var stylus = 0f;
+        var brake = 0f;
+
+        if (_mode == GrabMode.PhysgunSeek || HasLocalHoverTarget())
+        {
+            stylus = 0.5f;
+            brake = 1f;
+        }
+
+        if (_mode == GrabMode.Physgun || _mode == GrabMode.GravityGun)
+        {
+            stylus = 1f;
+            brake = 1f;
+        }
+
+        Viewmodel.Set("stylus", stylus);
+        Viewmodel.Set("brake", brake);
+        Viewmodel.Set("b_button", _spinCameraLocked);
+        Viewmodel.Set("b_attack", _mode == GrabMode.Physgun || _mode == GrabMode.PhysgunSeek);
+
+        if (_mode != GrabMode.None)
+            Viewmodel.Set("b_sprint", false);
+    }
+
+    private bool HasLocalHoverTarget()
+    {
+        if (!Player.Local.IsValid() || !Player.Local.Controller.IsValid())
+            return false;
+
+        var eye = Player.Local.Controller.EyeTransform;
+        return TryFindGrabTarget(GrabMode.Physgun, eye.Position, eye.Forward, out _, out _)
+            || TryFindGrabTarget(GrabMode.GravityGun, eye.Position, eye.Forward, out _, out _);
+    }
+
     private static Vector3 ClampVectorLength(Vector3 value, float maxLength)
     {
         maxLength = MathF.Max(0f, maxLength);
@@ -811,89 +1331,24 @@ public sealed class WeaponPhysgun : Weapon
         );
     }
 
-    private void ResetBeamState()
+    private static bool IsSamePlayer(Player owner, Player player)
     {
-        var hadBeam = _beamHasLastEnd;
-        _beamLastEnd = Vector3.Zero;
-        _beamBend = Vector3.Zero;
-        _beamHasLastEnd = false;
+        if (!owner.IsValid() || !player.IsValid())
+            return false;
 
-        if (Player.Local.IsValid() && (hadBeam || Player.Local.PhysgunBeamActive))
-            Player.Local.SetPhysgunBeam(false);
+        if (owner == player)
+            return true;
+
+        var ownerSteamId = owner.GameObject.Network.Owner?.SteamId.Value ?? 0L;
+        var playerSteamId = player.GameObject.Network.Owner?.SteamId.Value ?? 0L;
+        return ownerSteamId != 0L && ownerSteamId == playerSteamId;
     }
 
-    // ============================ ДВИЖЕНИЕ ============================
-
-    /// <summary>
-    /// Каждый FixedUpdate подталкиваем объект к целевой позиции/повороту.
-    /// Поскольку мы — сетевой владелец Rigidbody, можем напрямую писать его Velocity/WorldRotation.
-    /// </summary>
-    private void UpdateGrabbed()
+    private static float Clamp(float value, float min, float max)
     {
-        if (_mode == GrabMode.None || !_grabbed.IsValid()) return;
-        if (!_grabbed.MotionEnabled) return;
+        if (max < min)
+            max = min;
 
-        var dt = Time.Delta;
-        if (dt <= 0f) return;
-
-        var eye = Player.Local.Controller.EyeTransform;
-        var grabDistance = MathF.Max(MinHoldDistance, MathF.Min(MaxHoldDistance, _grabDistance));
-        var targetPos = eye.Position + eye.Forward * grabDistance;
-
-        // Целевой поворот:
-        // * gravitygun — следует полному взгляду (можно поднять предмет и над собой);
-        // * physgun — следует только yaw игрока, чтобы предмет не «колбасило» при наклоне головы.
-        Rotation targetRot;
-        if (_mode == GrabMode.GravityGun)
-            targetRot = eye.Rotation * _grabOffset;
-        else
-            targetRot = Rotation.FromYaw(Player.Local.Controller.EyeAngles.yaw) * _grabOffset;
-
-        // Хотим, чтобы локальная точка _localOffset на теле оказалась в targetPos:
-        // worldPoint = bodyPos + bodyRot * localOffset  =>  bodyPos = targetPos - targetRot * localOffset.
-        var offsetWorld = targetRot * _localOffset;
-        var desiredBodyPos = targetPos - offsetWorld;
-
-        var rb = _grabbed;
-        desiredBodyPos = ResolveHeldPlayerOverlaps(rb, desiredBodyPos);
-
-        // Поворачиваем напрямую (плавно), угловую скорость зануляем — иначе физика будет дёргать.
-        rb.WorldRotation = Rotation.Slerp(rb.WorldRotation, targetRot, MathF.Min(1f, RotationLerp));
-        rb.AngularVelocity = Vector3.Zero;
-
-        // Линейно — задаём скорость, которая за следующий шаг приведёт тело в desiredBodyPos.
-        // Это сохраняет физическое взаимодействие (объект всё ещё может толкать другие тела).
-        var posDelta = desiredBodyPos - rb.WorldPosition;
-        var v = posDelta / dt;
-        if (v.Length > MaxLinearSpeed) v = v.Normal * MaxLinearSpeed;
-        rb.Velocity = v;
-    }
-
-    // ============================ ДЕЙСТВИЯ ============================
-
-    /// <summary>Швырнуть объект вперёд (gravitygun + ЛКМ).</summary>
-    private void LaunchGrabbed()
-    {
-        if (!_grabbed.IsValid()) return;
-        if (_grabbed.GameObject.Network.Owner != Connection.Local) return;
-
-        var dir = Player.Local.Controller.EyeTransform.Forward;
-        var mass = MathF.Max(0.1f, _grabbed.Mass);
-        _grabbed.ApplyImpulse(dir * (LaunchForce * mass));
-    }
-
-    /// <summary>
-    /// Заморозить объект (physgun + ПКМ): отключаем его физику.
-    /// Локальный игрок — владелец, поэтому может это сделать напрямую и изменение
-    /// разойдётся по сети штатным механизмом синхронизации Rigidbody.
-    /// </summary>
-    private void FreezeGrabbed()
-    {
-        if (!_grabbed.IsValid()) return;
-        if (_grabbed.GameObject.Network.Owner != Connection.Local) return;
-
-        _grabbed.Velocity = Vector3.Zero;
-        _grabbed.AngularVelocity = Vector3.Zero;
-        _grabbed.MotionEnabled = false;
+        return MathF.Max(min, MathF.Min(max, value));
     }
 }

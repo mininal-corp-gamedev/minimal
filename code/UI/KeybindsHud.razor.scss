@@ -4,52 +4,50 @@ KeybindsHud {
     left: 0;
     right: 0;
     bottom: 0;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 54px;
     pointer-events: none;
 
     .keybinds-panel {
-        position: absolute;
-        right: 24px;
-        top: 50%;
-        transform: translateY( -50% );
-        margin-top: 20px;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: nowrap;
+        gap: 24px;
     }
 
     .keybind-row {
         flex-direction: row;
         align-items: center;
+        flex-shrink: 0;
         gap: 8px;
     }
 
     .key-badge {
         font-family: Montserrat;
-        font-size: 16px;
+        font-size: 13px;
         font-weight: 700;
-        color: white;
-        background-color: rgba( 255, 255, 255, 0.15 );
-        border: 1.5px solid rgba( 255, 255, 255, 0.5 );
-        border-radius: 8px;
-        padding: 2px 8px;
-        min-width: 36px;
+        color: rgba( 10, 12, 16, 0.92 );
+        background-color: rgba( 255, 255, 255, 0.92 );
+        border-radius: 4px;
+        padding: 4px 10px;
+        min-width: 34px;
         text-align: center;
-        text-shadow: 0 1px 3px rgba( 0, 0, 0, 0.82 );
+        text-shadow: none;
+        box-shadow: 0 1px 4px rgba( 0, 0, 0, 0.35 );
     }
 
     .separator {
-        font-family: Montserrat;
-        font-size: 18px;
-        color: rgba( 255, 255, 255, 0.6 );
-        text-shadow: 0 1px 2px rgba( 0, 0, 0, 0.65 );
+        display: none;
     }
 
     .key-label {
         font-family: Montserrat;
-        font-weight: 500;
-        font-size: 18px;
+        font-weight: 700;
+        font-size: 14px;
         color: white;
-        text-shadow: 0 1px 3px rgba( 0, 0, 0, 0.82 );
-        min-width: 110px;
+        text-shadow: 0 1px 4px rgba( 0, 0, 0, 0.82 );
+        white-space: nowrap;
     }
 }

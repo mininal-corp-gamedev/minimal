@@ -34268,13 +34268,13 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
-      },
       "Sandbox.SelectionSetsSystem": {
         "Data": {
           "SelectionSets": []
         }
+      },
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
       },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
@@ -34300,7 +34300,7 @@
     "facepunch.bench_plastic#144780",
     "facepunch.bike_frame#139660",
     "facepunch.bike_rack#141966",
-    "facepunch.couch#139679",
+    "facepunch.couch_body#139673",
     "facepunch.floor_grass_dirt_blend_a#18649",
     "facepunch.fold_const_sign#108397",
     "facepunch.ibc_water_tank#143314",

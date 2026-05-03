@@ -1821,6 +1821,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "51db7dcf-03a4-4418-8c3c-52823ccb1374",
+                          "go": "b870cf3b-2b79-4800-b4ac-411b32b6da19",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -1878,6 +1891,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0d13e917-d483-41ec-bfc7-0a0762b3b609"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "5f95f772-b888-46cb-902f-7153e640dfb0",
+                          "go": "6881b372-ff7a-46e0-8316-c70c515f11d5",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -12225,6 +12251,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "ecb00676-41f4-4487-91d8-b7bbdadb3158",
+                          "go": "dfcb97bb-1185-432f-8917-a15fc720182f",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -12282,6 +12321,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "6b1de3db-f694-48e4-ab1c-12af842b9653",
+                          "go": "0f6be8aa-2e0f-42ae-8648-7f0065a71e90",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -12462,6 +12514,19 @@
                         },
                         "Property": "IsStatic",
                         "Value": true
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "34860a2b-c98a-4985-b04b-38c81103faef",
+                          "go": "3971190c-67d1-4c7e-9e96-059e14bc3caf",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {
@@ -12650,6 +12715,19 @@
                         },
                         "Property": "IsStatic",
                         "Value": true
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "50ddea06-5fdb-48bd-bbac-cbf4c9e29a54"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "a5977c08-a199-4845-83d8-36dc6d014e03",
+                          "go": "b95dcc63-49c0-4b38-b7f0-066fecc59e71",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {
@@ -12847,6 +12925,19 @@
                           "Type": "Component",
                           "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
                         },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "a250cc9e-b0c6-4d87-8a27-d0250bf933d5",
+                          "go": "4f3a5e9d-1643-46e1-af5f-a3e1deb2100c",
+                          "component_type": "Door"
+                        }
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
+                        },
                         "Property": "Header",
                         "Value": "Суд"
                       }
@@ -13019,6 +13110,19 @@
                           "Type": "Component",
                           "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
                         },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "a4328b76-43fc-4bc3-ae39-5133ba0edac1",
+                          "go": "80f82d7b-b8ed-4eb9-bcda-b97058f03882",
+                          "component_type": "Door"
+                        }
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
+                        },
                         "Property": "Header",
                         "Value": "Суд"
                       }
@@ -13066,8 +13170,112 @@
                   "__version": 2,
                   "__Prefab": "prefabs/doors/door police 2.prefab",
                   "__PrefabInstancePatch": {
-                    "AddedObjects": [],
-                    "RemovedObjects": [],
+                    "AddedObjects": [
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "9dbab5c7-9356-4751-9ce3-6919bae33dd1"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelRenderer",
+                          "__guid": "9dbab5c7-9356-4751-9ce3-6919bae33dd1",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "BodyGroups": 18446744073709551615,
+                          "CreateAttachments": false,
+                          "LodOverride": null,
+                          "MaterialGroup": null,
+                          "MaterialOverride": null,
+                          "Materials": null,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "RenderOptions": {
+                            "GameLayer": true,
+                            "OverlayLayer": false,
+                            "BloomLayer": false,
+                            "AfterUILayer": false
+                          },
+                          "RenderType": "On",
+                          "Tint": "0.06512,0.02998,0.02998,1"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "ef23eb27-868b-4c20-b4b5-53179e933fec"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "9dbab5c7-9356-4751-9ce3-6919bae33dd1"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelCollider",
+                          "__guid": "ef23eb27-868b-4c20-b4b5-53179e933fec",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "ColliderFlags": 0,
+                          "Elasticity": null,
+                          "Friction": null,
+                          "IsTrigger": false,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "OnObjectTriggerEnter": null,
+                          "OnObjectTriggerExit": null,
+                          "OnTriggerEnter": null,
+                          "OnTriggerExit": null,
+                          "RollingResistance": null,
+                          "Static": true,
+                          "Surface": null,
+                          "SurfaceVelocity": "0,0,0"
+                        }
+                      }
+                    ],
+                    "RemovedObjects": [
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "f3194674-6ea7-4dbb-bce9-467c27446bb9"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "06db3ed2-5fdb-417d-b74b-41c4a3270e86"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "4c08e199-1d08-4b00-920e-eb26d13d6a3f"
+                        }
+                      }
+                    ],
                     "PropertyOverrides": [
                       {
                         "Target": {
@@ -13084,6 +13292,27 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0097694d-e91b-41f5-bfff-0ba318adf421"
+                        },
+                        "Property": "IsStatic",
+                        "Value": true
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "3afa4582-a9a3-4b73-81d0-5e6e746fba6b",
+                          "go": "48599e81-4b51-407a-a3fe-90b4c7780f49",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {
@@ -13118,8 +13347,112 @@
                   "__version": 2,
                   "__Prefab": "prefabs/doors/door police 2.prefab",
                   "__PrefabInstancePatch": {
-                    "AddedObjects": [],
-                    "RemovedObjects": [],
+                    "AddedObjects": [
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "3cef2f85-a295-42ff-b133-45e32732a233"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelRenderer",
+                          "__guid": "3cef2f85-a295-42ff-b133-45e32732a233",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "BodyGroups": 18446744073709551615,
+                          "CreateAttachments": false,
+                          "LodOverride": null,
+                          "MaterialGroup": null,
+                          "MaterialOverride": null,
+                          "Materials": null,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "RenderOptions": {
+                            "GameLayer": true,
+                            "OverlayLayer": false,
+                            "BloomLayer": false,
+                            "AfterUILayer": false
+                          },
+                          "RenderType": "On",
+                          "Tint": "0.06512,0.02998,0.02998,1"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "da647e92-b9d2-4168-a67f-c2eb3570fae1"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "3cef2f85-a295-42ff-b133-45e32732a233"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelCollider",
+                          "__guid": "da647e92-b9d2-4168-a67f-c2eb3570fae1",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "ColliderFlags": 0,
+                          "Elasticity": null,
+                          "Friction": null,
+                          "IsTrigger": false,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "OnObjectTriggerEnter": null,
+                          "OnObjectTriggerExit": null,
+                          "OnTriggerEnter": null,
+                          "OnTriggerExit": null,
+                          "RollingResistance": null,
+                          "Static": true,
+                          "Surface": null,
+                          "SurfaceVelocity": "0,0,0"
+                        }
+                      }
+                    ],
+                    "RemovedObjects": [
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "f3194674-6ea7-4dbb-bce9-467c27446bb9"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "06db3ed2-5fdb-417d-b74b-41c4a3270e86"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "4c08e199-1d08-4b00-920e-eb26d13d6a3f"
+                        }
+                      }
+                    ],
                     "PropertyOverrides": [
                       {
                         "Target": {
@@ -13144,6 +13477,27 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0097694d-e91b-41f5-bfff-0ba318adf421"
+                        },
+                        "Property": "IsStatic",
+                        "Value": true
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "08598ea3-c937-4b5c-b3ad-a55028f8c819"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "0fd0b66c-9ab1-48b0-b6c3-89bb30df0645",
+                          "go": "77e69639-d2e8-40a1-aa0a-e2579fcc9331",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {
@@ -13223,6 +13577,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "98e33b00-45e1-4295-9a4d-31d3bc3ed461",
+                          "go": "d44c0153-5910-47fa-a8ea-093a261bd2bc",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -13280,6 +13647,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "3072359c-473e-42f8-9dcc-7990cf8c3f9f",
+                          "go": "9177ecc4-183b-4ded-be53-f71a3609ed12",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -13348,6 +13728,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "93dc4a71-3ff2-48a2-8253-21c9e694576b",
+                          "go": "8fd075cc-7ee8-4331-b2a5-afa9a5f6e08d",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -13405,6 +13798,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "9e82cb06-41e5-4655-bdcc-6a504fb9c121",
+                          "go": "c77304e3-58a9-48a4-97b7-7aa84cbcf978",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -13473,6 +13879,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "3dc497c0-6c45-4d61-9d85-b03ab9ac5464",
+                          "go": "881af30b-d3d3-48c2-a4bd-6daa2256cdb0",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -13530,6 +13949,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "91026ccd-7df2-4591-a9b4-99d981931bb4",
+                          "go": "f1a3d9d0-f29e-4959-be26-a22291c28caa",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -17370,6 +17802,19 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0.99999994,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "9c629808-8e46-486c-b85b-dd84c45b961e",
+                          "go": "7a07fae9-4b49-44a5-93bc-562175bf45d0",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -17411,6 +17856,19 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "3fc6d8fb-9b03-4dba-9c37-7e1238473d69",
+                          "go": "7a1a6775-82dd-4066-a5ce-45c2ae413fb7",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -17506,6 +17964,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "401c362f-05e8-40ae-b0da-e898ced33f18",
+                          "go": "5d7f0284-cb99-47f1-8f2e-42eebad742d5",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -17563,6 +18034,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "8ebaa855-6812-4c83-9a11-960343ae452c",
+                          "go": "eb3440ff-a255-4fa6-b296-35710081b930",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -17639,6 +18123,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "da35804a-f339-4174-ba23-3ee0215c632c",
+                          "go": "a1b971b2-a529-40f9-93ac-9fa21723b449",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -17696,6 +18193,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "8fba182d-8f0e-4b8f-a979-4f7c81649d39",
+                          "go": "94a31227-df99-4a2a-816e-a21cc755983e",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -17772,6 +18282,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "cd6cb56a-799c-4ca7-a083-eff77f3ba724",
+                          "go": "cc47e0ff-6b47-46af-8322-51f347fde622",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -17829,6 +18352,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "eade69b6-37c0-429b-b88d-716ae56a8db2"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "ff7fe074-940c-4456-8127-3c09f8bbfb4b",
+                          "go": "e54117e7-c7ca-4736-9787-0bf5ae2a44f1",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -17897,6 +18433,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "901afba3-07ef-465b-972e-3af147a3a79b",
+                          "go": "9bdfd42b-cdb4-4279-a7d4-9a97c87eab3e",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -17956,6 +18505,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "eda71a91-0f34-4c7b-be5a-d8bb2fc2f215",
+                          "go": "9e291407-cb5e-4402-8731-b25dba7393b5",
+                          "component_type": "Door"
+                        }
                       }
                     ],
                     "MovedObjects": []
@@ -20493,6 +21055,19 @@
                       },
                       {
                         "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "75f972f0-73ad-48d2-b277-7881f127bbf6",
+                          "go": "7823d28a-3967-4043-9ebd-dac5937135c5",
+                          "component_type": "Door"
+                        }
+                      },
+                      {
+                        "Target": {
                           "Type": "GameObject",
                           "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                         },
@@ -20557,6 +21132,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "a59aaa76-f477-4593-85c4-891d1faced81",
+                          "go": "b61f5748-2ef7-4bba-a292-d9711ad757db",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {
@@ -20638,6 +21226,19 @@
                       },
                       {
                         "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "67265464-7ccd-44d9-92f2-a1dc4db9b24d",
+                          "go": "ec6386b1-8d23-46bb-beb7-43730a06e87c",
+                          "component_type": "Door"
+                        }
+                      },
+                      {
+                        "Target": {
                           "Type": "GameObject",
                           "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                         },
@@ -20702,6 +21303,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "1b234a12-5145-49f2-9b11-773f975f5409",
+                          "go": "15eb48f6-22c4-4948-8dcf-e09f93e366c9",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {
@@ -20791,6 +21405,19 @@
                       },
                       {
                         "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "b820215c-d9f0-4137-80cd-8c82329721ee",
+                          "go": "c6a2009a-fa44-49a6-9b7f-bbdc6126cce1",
+                          "component_type": "Door"
+                        }
+                      },
+                      {
+                        "Target": {
                           "Type": "GameObject",
                           "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                         },
@@ -20855,6 +21482,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "8e05c293-2e0a-4edc-a160-9ca5a8da4565",
+                          "go": "fe35e137-28ae-4822-a8b3-a325b7dfc087",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {
@@ -20944,6 +21584,19 @@
                       },
                       {
                         "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "313cfe17-712e-4d7e-84e2-b313848da328",
+                          "go": "33ae125d-9b98-477b-b188-5ab30aba5469",
+                          "component_type": "Door"
+                        }
+                      },
+                      {
+                        "Target": {
                           "Type": "GameObject",
                           "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                         },
@@ -21008,6 +21661,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "880a6c69-9d32-420c-9681-1ec425380237",
+                          "go": "78c7791b-f441-433e-8789-0ac27758af57",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {
@@ -21098,6 +21764,19 @@
                       {
                         "Target": {
                           "Type": "Component",
+                          "IdValue": "6915d782-6ff4-40e8-a67c-35c996879604"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "dbfa85cb-b807-48ab-8d70-701bf7e4ba4e",
+                          "go": "75009441-9930-49e7-8844-69aa013ca77d",
+                          "component_type": "Door"
+                        }
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
                           "IdValue": "071916b2-afa8-42bc-a830-cf8317abec1a"
                         },
                         "Property": "Tint",
@@ -21161,6 +21840,19 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "6915d782-6ff4-40e8-a67c-35c996879604"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "a48130f5-c073-4cf1-a17c-c0dc24c8bae0",
+                          "go": "1525842f-f936-4e5f-bd54-8135613fefa0",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {
@@ -21251,6 +21943,19 @@
                       {
                         "Target": {
                           "Type": "Component",
+                          "IdValue": "6915d782-6ff4-40e8-a67c-35c996879604"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "0c26e9a2-7f7d-4b9f-b13a-51046e31c6f2",
+                          "go": "dc6bbec3-3d9a-4324-b0e4-464fb5d16646",
+                          "component_type": "Door"
+                        }
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
                           "IdValue": "071916b2-afa8-42bc-a830-cf8317abec1a"
                         },
                         "Property": "Tint",
@@ -21314,6 +22019,19 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "6915d782-6ff4-40e8-a67c-35c996879604"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "a2382086-2479-4ddb-8525-4f081674f6a0",
+                          "go": "b196e3ee-40ac-4e4d-a626-258b40c0bb2c",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {
@@ -21404,6 +22122,19 @@
                       {
                         "Target": {
                           "Type": "Component",
+                          "IdValue": "6915d782-6ff4-40e8-a67c-35c996879604"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "e4339893-6dfc-4d28-83f8-6e7bad1739d1",
+                          "go": "edd8f8f8-e456-4516-83dc-3122e6a62b88",
+                          "component_type": "Door"
+                        }
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
                           "IdValue": "071916b2-afa8-42bc-a830-cf8317abec1a"
                         },
                         "Property": "Tint",
@@ -21467,6 +22198,19 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "6915d782-6ff4-40e8-a67c-35c996879604"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "52606b6f-69ea-4df5-9891-c0bb29cdab75",
+                          "go": "b56c64dc-e035-4eae-be6d-557c50e46a05",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {
@@ -21557,6 +22301,19 @@
                       {
                         "Target": {
                           "Type": "Component",
+                          "IdValue": "6915d782-6ff4-40e8-a67c-35c996879604"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "9ba6fbc1-2fcd-47fd-afec-4611079f265e",
+                          "go": "66cec03d-17ee-488b-bad2-560b75bf3e11",
+                          "component_type": "Door"
+                        }
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
                           "IdValue": "071916b2-afa8-42bc-a830-cf8317abec1a"
                         },
                         "Property": "Tint",
@@ -21620,6 +22377,19 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "6915d782-6ff4-40e8-a67c-35c996879604"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "68055d80-80ea-4f03-b3d0-7256fcc46cfe",
+                          "go": "d5dcb3dd-6e35-493b-a12a-210ceb525b02",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {
@@ -21701,6 +22471,19 @@
                       },
                       {
                         "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "2452cea5-a7cd-4dfb-a1e3-6b5b7705a1a6",
+                          "go": "51a64ac1-b4c1-424e-8791-39b16b9fa4ea",
+                          "component_type": "Door"
+                        }
+                      },
+                      {
+                        "Target": {
                           "Type": "GameObject",
                           "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                         },
@@ -21765,6 +22548,19 @@
                         },
                         "Property": "NetworkMode",
                         "Value": 1
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                        },
+                        "Property": "DoorSecond",
+                        "Value": {
+                          "_type": "component",
+                          "component_id": "59906894-98ee-46a8-b8ae-96c5bd0170b2",
+                          "go": "91cabefd-b091-4c6d-abc3-25b7d9c7072f",
+                          "component_type": "Door"
+                        }
                       },
                       {
                         "Target": {

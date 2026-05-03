@@ -3312,6 +3312,11 @@
         "Data": {
           "SelectionSets": []
         }
+      },
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "70aa36fc-0e79-45bf-8123-506fcd2c0311"
+        }
       }
     }
   },

@@ -59,6 +59,7 @@
           "_type": "gameobject",
           "prefab": "weapons/physgun/beam.prefab"
         },
+        "PhysgunBeamMaterial": "weapons/physgun/physgun_beam.vmat",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,

@@ -2,6 +2,8 @@ using Ambi.Storage;
 using Ambi.Utils;
 using Minimal.ItemUseHandlers;
 using Sandbox;
+using Sandbox.Rendering;
+using Sandbox.Utility;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,6 +21,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Property] public GameObject ItemDropPrefab { get; private set; }
     [Property] public GameObject MoneyDropPrefab { get; private set; }
     [Property, Category("Physgun Beam")] public GameObject PhysgunBeamPrefab { get; set; }
+    [Property, Category("Physgun Beam")] public Material PhysgunBeamMaterial { get; set; }
     [Property, Category("Sounds")] public SoundEvent HitSound { get; set; }
 
     /// <summary>Maximum number of doors this player can own at once.</summary>
@@ -183,7 +186,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private bool _worldWeaponUsesAuthoredPrefab;
     private GameObject _physgunBeamObject;
     private LineRenderer _physgunBeamRenderer;
-    private Vector3 _physgunBeamMiddle;
+    private Vector3.SpringDamped _physgunBeamMiddleSpring = new Vector3.SpringDamped(0, 0);
     private float _physgunBeamPreviousDistance;
 
     private sealed class WorldWeaponVisualDefinition
@@ -1913,7 +1916,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         var justEnabled = !_physgunBeamObject.Enabled;
-        _physgunBeamObject.Enabled = true;
 
         if (_physgunBeamRenderer.VectorPoints is null || _physgunBeamRenderer.VectorPoints.Count != 4)
             _physgunBeamRenderer.VectorPoints = new List<Vector3> { start, start, end, end };
@@ -1921,19 +1923,38 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var delta = end - start;
         var distance = delta.Length;
         var forward = delta.LengthSquared > 0.001f ? delta.Normal : Vector3.Forward;
-        var targetMiddle = start + forward * distance * 0.33f + PhysgunBeamBend * 0.75f + GetPhysgunBeamNoise(forward, distance);
+        var targetMiddle = start + forward * distance * 0.33f + PhysgunBeamBend * 0.75f;
+        targetMiddle += Noise.FbmVector(2, Time.Now * 400.0f, Time.Now * 100.0f);
 
-        if (justEnabled || (_physgunBeamPreviousDistance > 1f && distance / _physgunBeamPreviousDistance < 0.5f))
-            _physgunBeamMiddle = targetMiddle;
-        else
-            _physgunBeamMiddle = LerpVector(_physgunBeamMiddle, targetMiddle, MathF.Min(1f, Time.Delta * 12f));
+        if (!justEnabled)
+        {
+            if (_physgunBeamPreviousDistance > 1f && distance / _physgunBeamPreviousDistance < 0.5f)
+                _physgunBeamMiddleSpring = new Vector3.SpringDamped(targetMiddle, targetMiddle, 4f, 0.2f);
+
+            var alongForward = Vector3.Dot(_physgunBeamMiddleSpring.Current - start, forward);
+            if (alongForward < 0f)
+            {
+                var clamped = _physgunBeamMiddleSpring.Current - forward * alongForward;
+                _physgunBeamMiddleSpring = new Vector3.SpringDamped(clamped, targetMiddle, 4f, 0.2f);
+            }
+        }
 
         _physgunBeamPreviousDistance = distance;
 
         _physgunBeamRenderer.VectorPoints[0] = start;
-        _physgunBeamRenderer.VectorPoints[1] = _physgunBeamMiddle;
-        _physgunBeamRenderer.VectorPoints[2] = LerpVector(end + forward * 10f, _physgunBeamMiddle, 0.3f + MathF.Sin(Time.Now * 10f) * 0.2f);
+        _physgunBeamRenderer.VectorPoints[1] = _physgunBeamMiddleSpring.Current;
+        _physgunBeamMiddleSpring.Target = targetMiddle;
+        _physgunBeamMiddleSpring.Update(Time.Delta);
+        _physgunBeamRenderer.VectorPoints[2] = Vector3.Lerp(end + forward * 10f, _physgunBeamRenderer.VectorPoints[1], 0.3f + MathF.Sin(Time.Now * 10f) * 0.2f);
         _physgunBeamRenderer.VectorPoints[3] = end;
+
+        if (justEnabled)
+        {
+            _physgunBeamObject.Enabled = true;
+            _physgunBeamPreviousDistance = distance;
+            _physgunBeamRenderer.VectorPoints[1] = targetMiddle;
+            _physgunBeamMiddleSpring = new Vector3.SpringDamped(targetMiddle, targetMiddle, 4f, 0.2f);
+        }
     }
 
     private bool EnsurePhysgunBeamVisual()
@@ -1941,13 +1962,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (_physgunBeamRenderer.IsValid())
             return true;
 
-        if (!PhysgunBeamPrefab.IsValid())
-        {
-            Log.Warning("[Player] PhysgunBeamPrefab is not set.");
-            return false;
-        }
+        _physgunBeamObject = PhysgunBeamPrefab.IsValid()
+            ? PhysgunBeamPrefab.Clone(Vector3.Zero, Rotation.Identity)
+            : new GameObject(true, "Local Physgun Beam");
 
-        _physgunBeamObject = PhysgunBeamPrefab.Clone(Vector3.Zero, Rotation.Identity);
         if (!_physgunBeamObject.IsValid())
             return false;
 
@@ -1955,7 +1973,45 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _physgunBeamObject.Parent = GameObject;
         _physgunBeamObject.Enabled = false;
         _physgunBeamRenderer = _physgunBeamObject.Components.Get<LineRenderer>(FindMode.EverythingInSelfAndDescendants);
+
+        if (!_physgunBeamRenderer.IsValid())
+        {
+            _physgunBeamRenderer = _physgunBeamObject.Components.Create<LineRenderer>();
+            ConfigurePhysgunBeamRenderer(_physgunBeamRenderer);
+        }
+
         return _physgunBeamRenderer.IsValid();
+    }
+
+    private void ConfigurePhysgunBeamRenderer(LineRenderer renderer)
+    {
+        if (!renderer.IsValid())
+            return;
+
+        renderer.Additive = true;
+        renderer.AutoCalculateNormals = true;
+        renderer.CastShadows = false;
+        renderer.Color = new Gradient(new Gradient.ColorFrame(0.51890755f, new Color(1.74419f, 2.7907f, 3f, 1f)));
+        renderer.CylinderSegments = 12;
+        renderer.DepthFeather = 4f;
+        renderer.Face = SceneLineObject.FaceMode.Camera;
+        renderer.FogStrength = 1f;
+        renderer.Lighting = false;
+        renderer.Opaque = false;
+        renderer.UseVectorPoints = true;
+        renderer.VectorPoints = new List<Vector3> { Vector3.Zero, Vector3.Zero, Vector3.Forward * 128f, Vector3.Forward * 256f };
+        renderer.Width = new Curve(new Curve.Frame(0f, 3.4f), new Curve.Frame(0.46773395f, 5f), new Curve.Frame(1f, 0f));
+
+        var material = PhysgunBeamMaterial.IsValid()
+            ? PhysgunBeamMaterial
+            : Material.Load("weapons/physgun/physgun_beam.vmat");
+
+        renderer.Texturing = renderer.Texturing with
+        {
+            Material = material,
+            WorldSpace = true,
+            UnitsPerTexture = 512
+        };
     }
 
     private void SetPhysgunBeamVisible(bool visible)
@@ -1968,7 +2024,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         _physgunBeamPreviousDistance = 0f;
-        _physgunBeamMiddle = Vector3.Zero;
+        _physgunBeamMiddleSpring = new Vector3.SpringDamped(0, 0);
     }
 
     private void DestroyPhysgunBeamVisual()
@@ -1979,32 +2035,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _physgunBeamObject = null;
         _physgunBeamRenderer = null;
         _physgunBeamPreviousDistance = 0f;
-        _physgunBeamMiddle = Vector3.Zero;
-    }
-
-    private static Vector3 GetPhysgunBeamNoise(Vector3 forward, float distance)
-    {
-        var side = CrossVector(forward, Vector3.Up);
-        if (side.LengthSquared <= 0.001f)
-            side = CrossVector(forward, Vector3.Right);
-
-        side = side.LengthSquared > 0.001f ? side.Normal : Vector3.Right;
-        var up = CrossVector(side, forward);
-        up = up.LengthSquared > 0.001f ? up.Normal : Vector3.Up;
-
-        var amount = MathF.Min(8f, MathF.Max(1.5f, distance * 0.01f));
-        return (side * MathF.Sin(Time.Now * 23.7f) + up * MathF.Cos(Time.Now * 17.1f)) * amount;
-    }
-
-    private static Vector3 LerpVector(Vector3 a, Vector3 b, float t) => a + (b - a) * t;
-
-    private static Vector3 CrossVector(Vector3 a, Vector3 b)
-    {
-        return new Vector3(
-            a.y * b.z - a.z * b.y,
-            a.z * b.x - a.x * b.z,
-            a.x * b.y - a.y * b.x
-        );
+        _physgunBeamMiddleSpring = new Vector3.SpringDamped(0, 0);
     }
 
 

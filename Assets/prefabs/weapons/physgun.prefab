@@ -31,6 +31,10 @@
         "Damage": 0,
         "FireDelay": 0,
         "FireSound": null,
+        "FreezeEffectPrefab": {
+          "_type": "gameobject",
+          "prefab": "weapons/physgun/effects/freeze.prefab"
+        },
         "FreezeSound": "weapons/physgun/sounds/physgun.freeze.sound",
         "GravityGunHoldDistance": 90,
         "HasHipFire": true,
@@ -40,7 +44,7 @@
         "IsMelee": false,
         "LaunchForce": 1500,
         "MaxHoldDistance": 1024,
-        "MaxLinearSpeed": 4000,
+        "MaxLinearSpeed": 12000,
         "MaxRange": 1024,
         "MinHoldDistance": 60,
         "OnComponentDestroy": null,
@@ -63,12 +67,36 @@
         "SpawnSpriteFireOnShot": false,
         "SpriteFirePrefab": null,
         "TotalReserveAmmo": 1,
+        "UnFreezeEffectPrefab": {
+          "_type": "gameobject",
+          "prefab": "weapons/physgun/effects/unfreeze.prefab"
+        },
         "Viewmodel": {
           "_type": "component",
           "component_id": "4dac270b-fb42-46f8-b902-28235660cce7",
           "go": "a516f0cf-c8b1-4f42-881b-d626d4316ce1",
           "component_type": "SkinnedModelRenderer"
         }
+      },
+      {
+        "__type": "PhygunViewmodel",
+        "__guid": "f8c88a59-f9af-4fdf-b790-63742f45d402",
+        "__enabled": true,
+        "Flags": 0,
+        "BeamActive": false,
+        "BottleMaterial": "models/weapons/sbox_physgun/v_physgun_d.vmat",
+        "GlowEffect": null,
+        "GravTint": "1,0.8,0,1",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "PhysTint": "0,0.68333,1,1",
+        "SparksEffect": null,
+        "TipSprites": [],
+        "TubeFxMaterial": "models/weapons/sbox_physgun/v_physgun_tube.vmat"
       }
     ],
     "Children": [

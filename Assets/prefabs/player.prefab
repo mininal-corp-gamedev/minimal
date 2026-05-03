@@ -60,6 +60,14 @@
           "prefab": "weapons/physgun/beam.prefab"
         },
         "PhysgunBeamMaterial": "weapons/physgun/physgun_beam.vmat",
+        "PhysgunBeamEndPointEffectPrefab": {
+          "_type": "gameobject",
+          "prefab": "weapons/physgun/effects/beam-end.prefab"
+        },
+        "PhysgunBeamGrabEffectPrefab": {
+          "_type": "gameobject",
+          "prefab": "weapons/physgun/effects/grab.prefab"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,

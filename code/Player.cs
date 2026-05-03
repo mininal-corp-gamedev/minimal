@@ -22,6 +22,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Property] public GameObject MoneyDropPrefab { get; private set; }
     [Property, Category("Physgun Beam")] public GameObject PhysgunBeamPrefab { get; set; }
     [Property, Category("Physgun Beam")] public Material PhysgunBeamMaterial { get; set; }
+    [Property, Category("Physgun Beam")] public GameObject PhysgunBeamEndPointEffectPrefab { get; set; }
+    [Property, Category("Physgun Beam")] public GameObject PhysgunBeamGrabEffectPrefab { get; set; }
     [Property, Category("Sounds")] public SoundEvent HitSound { get; set; }
 
     /// <summary>Maximum number of doors this player can own at once.</summary>
@@ -177,7 +179,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Sync(SyncFlags.FromHost)] public bool PhysgunBeamActive { get; private set; }
     [Sync(SyncFlags.FromHost)] public Vector3 PhysgunBeamStart { get; private set; }
     [Sync(SyncFlags.FromHost)] public Vector3 PhysgunBeamEnd { get; private set; }
+    [Sync(SyncFlags.FromHost)] public Vector3 PhysgunBeamEndNormal { get; private set; } = Vector3.Up;
     [Sync(SyncFlags.FromHost)] public Vector3 PhysgunBeamBend { get; private set; }
+    [Sync(SyncFlags.FromHost)] public bool PhysgunBeamGrabbed { get; private set; }
 
     private static bool _itemUseHandlersRegistered;
     private GameObject _worldWeaponObject;
@@ -188,11 +192,15 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private LineRenderer _physgunBeamRenderer;
     private Vector3.SpringDamped _physgunBeamMiddleSpring = new Vector3.SpringDamped(0, 0);
     private float _physgunBeamPreviousDistance;
+    private GameObject _physgunBeamEndPointEffect;
+    private GameObject _physgunBeamGrabEffect;
     private bool _localPhysgunBeamOverrideSet;
     private bool _localPhysgunBeamOverrideActive;
     private Vector3 _localPhysgunBeamOverrideStart;
     private Vector3 _localPhysgunBeamOverrideEnd;
+    private Vector3 _localPhysgunBeamOverrideEndNormal = Vector3.Up;
     private Vector3 _localPhysgunBeamOverrideBend;
+    private bool _localPhysgunBeamOverrideGrabbed;
 
     private sealed class WorldWeaponVisualDefinition
     {
@@ -1891,7 +1899,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         DestroyLocalInstance();
     }
 
-    public void SetPhysgunBeam(bool active, Vector3 start = default, Vector3 end = default, Vector3 bend = default)
+    public void SetPhysgunBeam(bool active, Vector3 start = default, Vector3 end = default, Vector3 bend = default,
+        Vector3 endNormal = default, bool grabbed = false)
     {
         if (!Networking.IsHost && IsProxy)
             return;
@@ -1900,9 +1909,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         PhysgunBeamStart = start;
         PhysgunBeamEnd = end;
         PhysgunBeamBend = bend;
+        PhysgunBeamEndNormal = endNormal.LengthSquared > 0.001f ? endNormal.Normal : Vector3.Up;
+        PhysgunBeamGrabbed = grabbed;
     }
 
-    public void SetLocalPhysgunBeam(bool active, Vector3 start = default, Vector3 end = default, Vector3 bend = default)
+    public void SetLocalPhysgunBeam(bool active, Vector3 start = default, Vector3 end = default, Vector3 bend = default,
+        Vector3 endNormal = default, bool grabbed = false)
     {
         if (IsProxy)
             return;
@@ -1912,6 +1924,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _localPhysgunBeamOverrideStart = start;
         _localPhysgunBeamOverrideEnd = end;
         _localPhysgunBeamOverrideBend = bend;
+        _localPhysgunBeamOverrideEndNormal = endNormal.LengthSquared > 0.001f ? endNormal.Normal : Vector3.Up;
+        _localPhysgunBeamOverrideGrabbed = grabbed;
     }
 
     public Vector3 GetPhysgunBeamWorldStart(Vector3 fallbackForward)
@@ -1941,15 +1955,19 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (!active)
         {
             SetPhysgunBeamVisible(false);
+            ClosePhysgunBeamEffects();
             return;
         }
 
         var start = useLocalOverride ? _localPhysgunBeamOverrideStart : PhysgunBeamStart;
         var end = useLocalOverride ? _localPhysgunBeamOverrideEnd : PhysgunBeamEnd;
         var bend = useLocalOverride ? _localPhysgunBeamOverrideBend : PhysgunBeamBend;
+        var endNormal = useLocalOverride ? _localPhysgunBeamOverrideEndNormal : PhysgunBeamEndNormal;
+        var grabbed = useLocalOverride ? _localPhysgunBeamOverrideGrabbed : PhysgunBeamGrabbed;
         if ((end - start).LengthSquared <= 1f)
         {
             SetPhysgunBeamVisible(false);
+            ClosePhysgunBeamEffects();
             return;
         }
 
@@ -1964,6 +1982,11 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var delta = end - start;
         var distance = delta.Length;
         var forward = delta.LengthSquared > 0.001f ? delta.Normal : Vector3.Forward;
+        if (endNormal.LengthSquared <= 0.001f)
+            endNormal = -forward;
+        else
+            endNormal = endNormal.Normal;
+
         var targetMiddle = start + forward * distance * 0.33f + bend * 0.75f;
         targetMiddle += Noise.FbmVector(2, Time.Now * 400.0f, Time.Now * 100.0f);
 
@@ -1986,8 +2009,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _physgunBeamRenderer.VectorPoints[1] = _physgunBeamMiddleSpring.Current;
         _physgunBeamMiddleSpring.Target = targetMiddle;
         _physgunBeamMiddleSpring.Update(Time.Delta);
-        _physgunBeamRenderer.VectorPoints[2] = Vector3.Lerp(end + forward * 10f, _physgunBeamRenderer.VectorPoints[1], 0.3f + MathF.Sin(Time.Now * 10f) * 0.2f);
+        _physgunBeamRenderer.VectorPoints[2] = Vector3.Lerp(end + endNormal * 10f, _physgunBeamRenderer.VectorPoints[1], 0.3f + MathF.Sin(Time.Now * 10f) * 0.2f);
         _physgunBeamRenderer.VectorPoints[3] = end;
+        UpdatePhysgunBeamEffects(end, endNormal, grabbed);
 
         if (justEnabled)
         {
@@ -2055,6 +2079,55 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         };
     }
 
+    private void UpdatePhysgunBeamEffects(Vector3 end, Vector3 endNormal, bool grabbed)
+    {
+        var transform = new Transform(end, Rotation.LookAt(endNormal.LengthSquared > 0.001f ? endNormal.Normal : Vector3.Up));
+
+        if (grabbed)
+        {
+            if (_physgunBeamEndPointEffect.IsValid())
+            {
+                ITemporaryEffect.DisableLoopingEffects(_physgunBeamEndPointEffect);
+                _physgunBeamEndPointEffect = null;
+            }
+
+            if (!_physgunBeamGrabEffect.IsValid() && PhysgunBeamGrabEffectPrefab.IsValid())
+                _physgunBeamGrabEffect = PhysgunBeamGrabEffectPrefab.Clone(transform);
+
+            if (_physgunBeamGrabEffect.IsValid())
+                _physgunBeamGrabEffect.WorldTransform = transform;
+
+            return;
+        }
+
+        if (_physgunBeamGrabEffect.IsValid())
+        {
+            _physgunBeamGrabEffect.Destroy();
+            _physgunBeamGrabEffect = null;
+        }
+
+        if (!_physgunBeamEndPointEffect.IsValid() && PhysgunBeamEndPointEffectPrefab.IsValid())
+            _physgunBeamEndPointEffect = PhysgunBeamEndPointEffectPrefab.Clone(transform);
+
+        if (_physgunBeamEndPointEffect.IsValid())
+            _physgunBeamEndPointEffect.WorldTransform = transform;
+    }
+
+    private void ClosePhysgunBeamEffects()
+    {
+        if (_physgunBeamEndPointEffect.IsValid())
+        {
+            ITemporaryEffect.DisableLoopingEffects(_physgunBeamEndPointEffect);
+            _physgunBeamEndPointEffect = null;
+        }
+
+        if (_physgunBeamGrabEffect.IsValid())
+        {
+            _physgunBeamGrabEffect.Destroy();
+            _physgunBeamGrabEffect = null;
+        }
+    }
+
     private void SetPhysgunBeamVisible(bool visible)
     {
         if (!_physgunBeamObject.IsValid())
@@ -2066,10 +2139,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         _physgunBeamPreviousDistance = 0f;
         _physgunBeamMiddleSpring = new Vector3.SpringDamped(0, 0);
+        ClosePhysgunBeamEffects();
     }
 
     private void DestroyPhysgunBeamVisual()
     {
+        ClosePhysgunBeamEffects();
+
         if (_physgunBeamObject.IsValid())
             _physgunBeamObject.Destroy();
 
@@ -2079,6 +2155,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _physgunBeamMiddleSpring = new Vector3.SpringDamped(0, 0);
         _localPhysgunBeamOverrideSet = false;
         _localPhysgunBeamOverrideActive = false;
+        _localPhysgunBeamOverrideGrabbed = false;
     }
 
 

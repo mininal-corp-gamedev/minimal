@@ -57,6 +57,9 @@ public sealed class WeaponPhysgun : Weapon
     [Property, Category("Physgun Sounds")] public SoundEvent ButtonInSound { get; set; }
     [Property, Category("Physgun Sounds")] public SoundEvent ButtonOutSound { get; set; }
 
+    [Property, Category("Physgun Effects")] public GameObject FreezeEffectPrefab { get; set; }
+    [Property, Category("Physgun Effects")] public GameObject UnFreezeEffectPrefab { get; set; }
+
     protected override bool UseDefaultCombatInput => false;
 
     private enum GrabMode
@@ -71,6 +74,7 @@ public sealed class WeaponPhysgun : Weapon
     private Rigidbody _grabbed;
     private float _grabDistance;
     private Vector3 _localOffset;
+    private Vector3 _localNormal = Vector3.Up;
     private Rotation _grabOffset = Rotation.Identity;
     private int _grabSessionId;
     private int _grabInputSequence;
@@ -91,6 +95,9 @@ public sealed class WeaponPhysgun : Weapon
     private static readonly Dictionary<long, HostGrabState> HostGrabStates = new();
     private static readonly Dictionary<long, int> HostBeamSequences = new();
 
+    public bool BeamActive => _beamHasLastEnd || _mode == GrabMode.PhysgunSeek || _mode == GrabMode.Physgun || _mode == GrabMode.GravityGun;
+    public bool PullActive => _mode == GrabMode.GravityGun;
+
     private sealed class HostGrabState
     {
         public long SteamId;
@@ -101,6 +108,7 @@ public sealed class WeaponPhysgun : Weapon
         public int SessionId;
         public int LastInputSequence;
         public Vector3 LocalOffset;
+        public Vector3 LocalNormal;
         public Rotation GrabOffset;
         public float GrabDistance;
         public bool HadHeldCollisionTag;
@@ -270,6 +278,12 @@ public sealed class WeaponPhysgun : Weapon
 
         if (_mode == GrabMode.None)
         {
+            if (Input.Pressed("Reload"))
+            {
+                RequestHostUnfreezeAllAtAim();
+                return;
+            }
+
             if (rmbPressed)
             {
                 TryStartGrab(GrabMode.GravityGun);
@@ -375,6 +389,7 @@ public sealed class WeaponPhysgun : Weapon
         _beamSeekActive = false;
 
         var bodyTransform = rb.WorldTransform;
+        _localNormal = bodyTransform.NormalToLocal(tr.Normal);
 
         if (mode == GrabMode.GravityGun)
         {
@@ -407,6 +422,7 @@ public sealed class WeaponPhysgun : Weapon
         _grabDistance = 0f;
         _grabOffset = Rotation.Identity;
         _localOffset = Vector3.Zero;
+        _localNormal = Vector3.Up;
         _beamSeekActive = false;
         ResetBeamState();
         UnlockSpinCamera();
@@ -607,12 +623,14 @@ public sealed class WeaponPhysgun : Weapon
         if (Networking.IsHost)
         {
             HostStartGrab(GetLocalPlayerConnection(), (int)mode, origin, forward, yaw, sessionId,
-                MaxRange, MinHoldDistance, MaxHoldDistance, GravityGunHoldDistance, SeekRadius, AttachSound);
+                MaxRange, MinHoldDistance, MaxHoldDistance, GravityGunHoldDistance, SeekRadius, AttachSound,
+                UnFreezeEffectPrefab);
             return;
         }
 
         RpcHostStartGrab((int)mode, origin, forward, yaw, sessionId,
-            MaxRange, MinHoldDistance, MaxHoldDistance, GravityGunHoldDistance, SeekRadius, AttachSound);
+            MaxRange, MinHoldDistance, MaxHoldDistance, GravityGunHoldDistance, SeekRadius, AttachSound,
+            UnFreezeEffectPrefab);
     }
 
     private void RequestHostEndGrab(bool preserveVelocity)
@@ -639,12 +657,28 @@ public sealed class WeaponPhysgun : Weapon
         if (Networking.IsHost)
         {
             HostFreezeGrab(GetLocalPlayerConnection(), _grabbed.GameObject,
-                ReleasePlayerPadding, ReleasePushSpeed, ReleaseMaxResolveIterations, FreezeSound);
+                ReleasePlayerPadding, ReleasePushSpeed, ReleaseMaxResolveIterations, FreezeSound, FreezeEffectPrefab);
             return;
         }
 
         RpcHostFreezeGrab(_grabbed.GameObject,
-            ReleasePlayerPadding, ReleasePushSpeed, ReleaseMaxResolveIterations, FreezeSound);
+            ReleasePlayerPadding, ReleasePushSpeed, ReleaseMaxResolveIterations, FreezeSound, FreezeEffectPrefab);
+    }
+
+    private void RequestHostUnfreezeAllAtAim()
+    {
+        var player = Player.Local;
+        if (!player.IsValid() || !player.Controller.IsValid())
+            return;
+
+        var eye = player.Controller.EyeTransform;
+        if (Networking.IsHost)
+        {
+            HostUnfreezeAllAtAim(GetLocalPlayerConnection(), eye.Position, eye.Forward, MaxRange, UnFreezeEffectPrefab);
+            return;
+        }
+
+        RpcHostUnfreezeAllAtAim(eye.Position, eye.Forward, MaxRange, UnFreezeEffectPrefab);
     }
 
     private void RequestHostLaunchGrab()
@@ -671,11 +705,11 @@ public sealed class WeaponPhysgun : Weapon
     [Rpc.Host]
     private static void RpcHostStartGrab(int mode, Vector3 origin, Vector3 forward, float yaw, int sessionId,
         float maxRange, float minHoldDistance, float maxHoldDistance, float gravityGunHoldDistance,
-        float seekRadius, SoundEvent attachSound)
+        float seekRadius, SoundEvent attachSound, GameObject unfreezeEffectPrefab)
     {
         if (!Networking.IsHost) return;
         HostStartGrab(Rpc.Caller, mode, origin, forward, yaw, sessionId, maxRange, minHoldDistance,
-            maxHoldDistance, gravityGunHoldDistance, seekRadius, attachSound);
+            maxHoldDistance, gravityGunHoldDistance, seekRadius, attachSound, unfreezeEffectPrefab);
     }
 
     [Rpc.Host(NetFlags.UnreliableNoDelay)]
@@ -705,11 +739,18 @@ public sealed class WeaponPhysgun : Weapon
     [Rpc.Host]
     private static void RpcHostFreezeGrab(GameObject target,
         float releasePlayerPadding, float releasePushSpeed, int releaseMaxResolveIterations,
-        SoundEvent freezeSound)
+        SoundEvent freezeSound, GameObject freezeEffectPrefab)
     {
         if (!Networking.IsHost) return;
         HostFreezeGrab(Rpc.Caller, target, releasePlayerPadding,
-            releasePushSpeed, releaseMaxResolveIterations, freezeSound);
+            releasePushSpeed, releaseMaxResolveIterations, freezeSound, freezeEffectPrefab);
+    }
+
+    [Rpc.Host]
+    private static void RpcHostUnfreezeAllAtAim(Vector3 origin, Vector3 forward, float maxRange, GameObject unfreezeEffectPrefab)
+    {
+        if (!Networking.IsHost) return;
+        HostUnfreezeAllAtAim(Rpc.Caller, origin, forward, maxRange, unfreezeEffectPrefab);
     }
 
     [Rpc.Host]
@@ -722,7 +763,8 @@ public sealed class WeaponPhysgun : Weapon
     }
 
     [Rpc.Host(NetFlags.UnreliableNoDelay)]
-    private static void RpcHostUpdatePhysgunBeam(int sequence, Vector3 start, Vector3 end, Vector3 bend, float maxRange)
+    private static void RpcHostUpdatePhysgunBeam(int sequence, Vector3 start, Vector3 end, Vector3 bend,
+        Vector3 endNormal, bool grabbed, float maxRange)
     {
         if (!Networking.IsHost) return;
         if (!TryGetCallerPlayer(Rpc.Caller, out var player)) return;
@@ -735,8 +777,9 @@ public sealed class WeaponPhysgun : Weapon
         var safeStart = HostValidateBeamStart(player, start, end);
         var safeEnd = HostValidateBeamEnd(safeStart, end, maxRange);
         var safeBend = ClampVectorLength(bend, HostSyncedBeamMaxBend);
+        var safeNormal = IsFiniteVector(endNormal) && endNormal.LengthSquared > 0.001f ? endNormal.Normal : Vector3.Up;
 
-        player.SetPhysgunBeam(true, safeStart, safeEnd, safeBend);
+        player.SetPhysgunBeam(true, safeStart, safeEnd, safeBend, safeNormal, grabbed: false);
     }
 
     [Rpc.Host]
@@ -754,7 +797,7 @@ public sealed class WeaponPhysgun : Weapon
 
     private static void HostStartGrab(Connection caller, int modeValue, Vector3 origin, Vector3 forward, float yaw, int sessionId,
         float maxRange, float minHoldDistance, float maxHoldDistance, float gravityGunHoldDistance,
-        float seekRadius, SoundEvent attachSound)
+        float seekRadius, SoundEvent attachSound, GameObject unfreezeEffectPrefab)
     {
         if (!TryGetCallerPlayer(caller, out var player))
             return;
@@ -789,7 +832,10 @@ public sealed class WeaponPhysgun : Weapon
         HostEndGrab(caller, null, preserveVelocity: false, 6f, 120f, 6);
 
         if (!rb.MotionEnabled)
+        {
+            HostBroadcastPhysgunEffect(unfreezeEffectPrefab, rb.GameObject, rb.WorldTransform);
             rb.MotionEnabled = true;
+        }
 
         var bodyTransform = rb.WorldTransform;
         var state = new HostGrabState
@@ -802,6 +848,7 @@ public sealed class WeaponPhysgun : Weapon
             SessionId = sessionId,
             LastInputSequence = 0,
             HadHeldCollisionTag = rb.GameObject.Tags.Has(HeldCollisionTag),
+            LocalNormal = bodyTransform.NormalToLocal(tr.Normal),
             AimPosition = aim.Position,
             AimForward = aim.Forward,
             AimYaw = aim.Rotation.Yaw(),
@@ -909,7 +956,7 @@ public sealed class WeaponPhysgun : Weapon
 
     private static void HostFreezeGrab(Connection caller, GameObject target,
         float releasePlayerPadding, float releasePushSpeed, int releaseMaxResolveIterations,
-        SoundEvent freezeSound)
+        SoundEvent freezeSound, GameObject freezeEffectPrefab)
     {
         if (!TryGetHostState(caller, target, out var state))
             return;
@@ -924,7 +971,51 @@ public sealed class WeaponPhysgun : Weapon
         body.Velocity = Vector3.Zero;
         body.AngularVelocity = Vector3.Zero;
         body.MotionEnabled = false;
-        RpcBroadcastPhysgunSound(freezeSound, body.WorldPosition);
+        HostBroadcastPhysgunEffect(freezeEffectPrefab, body.GameObject, body.WorldTransform);
+
+        if (!freezeEffectPrefab.IsValid())
+            RpcBroadcastPhysgunSound(freezeSound, body.WorldPosition);
+    }
+
+    private static void HostUnfreezeAllAtAim(Connection caller, Vector3 origin, Vector3 forward,
+        float maxRange, GameObject unfreezeEffectPrefab)
+    {
+        if (!TryGetCallerPlayer(caller, out var player))
+            return;
+
+        if (!HostCanUsePhysgun(player))
+            return;
+
+        var aim = HostGetValidatedAimTransform(player, origin, forward, player.Controller.EyeAngles.yaw);
+        maxRange = Clamp(FiniteOrDefault(maxRange, 1024f), 64f, HostMaxRangeLimit);
+        var tr = HostTraceGrabRay(player, aim.Position, aim.Forward, maxRange, 0f);
+
+        if (!HostTryGetGrabRigidbody(player, tr, GrabMode.Physgun, out var body))
+            return;
+
+        if (!body.IsValid() || body.IsProxy)
+            return;
+
+        HostUnfreezeConnectedBodies(body, unfreezeEffectPrefab);
+    }
+
+    private static void HostUnfreezeConnectedBodies(Rigidbody body, GameObject unfreezeEffectPrefab)
+    {
+        if (!body.IsValid() || body.IsProxy)
+            return;
+
+        var bodies = new HashSet<Rigidbody>();
+        GetConnectedBodies(body.GameObject, bodies);
+
+        HostBroadcastPhysgunEffect(unfreezeEffectPrefab, body.GameObject, body.WorldTransform);
+
+        foreach (var rb in bodies)
+        {
+            if (!rb.IsValid() || rb.IsProxy)
+                continue;
+
+            rb.MotionEnabled = true;
+        }
     }
 
     private static void HostLaunchGrab(Connection caller, GameObject target, float launchForce,
@@ -1148,6 +1239,7 @@ public sealed class WeaponPhysgun : Weapon
         var end = state.Mode == GrabMode.GravityGun
             ? state.Body.WorldPosition
             : state.Body.WorldTransform.PointToWorld(state.LocalOffset);
+        var endNormal = HostGetEndNormal(state);
 
         end = HostClampBeamEnd(start, end);
 
@@ -1162,7 +1254,7 @@ public sealed class WeaponPhysgun : Weapon
         var desiredBend = ClampVectorLength(sag + moveBend, HostSyncedBeamMaxBend);
 
         state.BeamBend = LerpVector(state.BeamBend, desiredBend, 0.35f);
-        state.Player.SetPhysgunBeam(true, start, end, state.BeamBend);
+        state.Player.SetPhysgunBeam(true, start, end, state.BeamBend, endNormal, grabbed: true);
     }
 
     private static Vector3 HostClampBeamEnd(Vector3 start, Vector3 end)
@@ -1230,6 +1322,15 @@ public sealed class WeaponPhysgun : Weapon
             return state.LocalOffset;
 
         return state.GameObject.WorldTransform.PointToWorld(state.LocalOffset);
+    }
+
+    private static Vector3 HostGetEndNormal(HostGrabState state)
+    {
+        if (!state.GameObject.IsValid())
+            return state.AimForward.LengthSquared > 0.001f ? -state.AimForward.Normal : Vector3.Up;
+
+        var normal = state.GameObject.WorldTransform.NormalToWorld(state.LocalNormal);
+        return normal.LengthSquared > 0.001f ? normal.Normal : Vector3.Up;
     }
 
     private static void HostResolveGrabbedPlayerOverlaps(HostGrabState state, bool preserveVelocity,
@@ -1435,6 +1536,28 @@ public sealed class WeaponPhysgun : Weapon
             Sound.Play(sound, position);
     }
 
+    private static void HostBroadcastPhysgunEffect(GameObject effectPrefab, GameObject target, Transform transform)
+    {
+        if (!effectPrefab.IsValid())
+            return;
+
+        RpcBroadcastPhysgunEffect(effectPrefab, target, transform.Position, transform.Rotation);
+    }
+
+    [Rpc.Broadcast]
+    private static void RpcBroadcastPhysgunEffect(GameObject effectPrefab, GameObject target, Vector3 position, Rotation rotation)
+    {
+        if (!effectPrefab.IsValid())
+            return;
+
+        var effect = effectPrefab.Clone(new Transform(position, rotation));
+        if (!effect.IsValid())
+            return;
+
+        foreach (var emitter in effect.GetComponentsInChildren<ParticleModelEmitter>())
+            emitter.Target = target;
+    }
+
     private void PlayLocalSound(SoundEvent sound)
     {
         if (!sound.IsValid()) return;
@@ -1467,6 +1590,7 @@ public sealed class WeaponPhysgun : Weapon
         var eye = player.Controller.EyeTransform;
         var start = ShotPos.IsValid() ? ShotPos.WorldPosition : eye.Position;
         var end = GetBeamEndPosition();
+        var endNormal = GetBeamEndNormal(eye.Forward);
         end = ClampBeamEnd(start, end);
 
         var dt = MathF.Max(Time.Delta, 0.001f);
@@ -1480,7 +1604,7 @@ public sealed class WeaponPhysgun : Weapon
         var desiredBend = ClampVectorLength(sag + moveBend, BeamMaxBend);
 
         _beamBend = LerpVector(_beamBend, desiredBend, 0.35f);
-        PublishBeamState(true, start, end, _beamBend);
+        PublishBeamState(true, start, end, _beamBend, endNormal, grabbed: true);
     }
 
     private void UpdateSeekingBeamState()
@@ -1495,6 +1619,7 @@ public sealed class WeaponPhysgun : Weapon
         var eye = player.Controller.EyeTransform;
         var start = ShotPos.IsValid() ? ShotPos.WorldPosition : eye.Position;
         var end = eye.Position + eye.Forward * MathF.Max(1f, MathF.Min(MaxRange, BeamMaxLength));
+        var endNormal = -eye.Forward;
 
         var visualTrace = Scene.Trace
             .Ray(eye.Position, eye.Position + eye.Forward * MaxRange)
@@ -1503,13 +1628,16 @@ public sealed class WeaponPhysgun : Weapon
             .Run();
 
         if (visualTrace.Hit)
+        {
             end = ClampBeamEnd(start, visualTrace.HitPosition);
+            endNormal = visualTrace.Normal;
+        }
 
         var desiredBend = GetSeekingBeamBend(eye, start, end);
         _beamBend = LerpVector(_beamBend, desiredBend, 0.25f);
         _beamLastEnd = end;
         _beamHasLastEnd = true;
-        PublishBeamState(true, start, end, _beamBend);
+        PublishBeamState(true, start, end, _beamBend, endNormal, grabbed: false);
     }
 
     private Vector3 GetSeekingBeamBend(Transform eye, Vector3 start, Vector3 end)
@@ -1543,6 +1671,18 @@ public sealed class WeaponPhysgun : Weapon
         return _grabbed.WorldTransform.PointToWorld(_localOffset);
     }
 
+    private Vector3 GetBeamEndNormal(Vector3 fallbackForward)
+    {
+        if (!_grabbed.IsValid())
+            return fallbackForward.LengthSquared > 0.001f ? -fallbackForward.Normal : Vector3.Up;
+
+        if (_mode == GrabMode.GravityGun)
+            return fallbackForward.LengthSquared > 0.001f ? -fallbackForward.Normal : Vector3.Up;
+
+        var normal = _grabbed.WorldTransform.NormalToWorld(_localNormal);
+        return normal.LengthSquared > 0.001f ? normal.Normal : Vector3.Up;
+    }
+
     private Vector3 ClampBeamEnd(Vector3 start, Vector3 end)
     {
         var maxLength = MathF.Max(1f, MathF.Min(MaxRange, BeamMaxLength));
@@ -1564,23 +1704,24 @@ public sealed class WeaponPhysgun : Weapon
             PublishBeamState(false);
     }
 
-    private void PublishBeamState(bool active, Vector3 start = default, Vector3 end = default, Vector3 bend = default)
+    private void PublishBeamState(bool active, Vector3 start = default, Vector3 end = default, Vector3 bend = default,
+        Vector3 endNormal = default, bool grabbed = false)
     {
         if (!Player.Local.IsValid())
             return;
 
-        Player.Local.SetLocalPhysgunBeam(active, start, end, bend);
+        Player.Local.SetLocalPhysgunBeam(active, start, end, bend, endNormal, grabbed);
 
         if (Networking.IsHost)
         {
-            Player.Local.SetPhysgunBeam(active, start, end, bend);
+            Player.Local.SetPhysgunBeam(active, start, end, bend, endNormal, grabbed);
             return;
         }
 
         var sequence = unchecked(++_beamInputSequence);
 
         if (active)
-            RpcHostUpdatePhysgunBeam(sequence, start, end, bend, MaxRange);
+            RpcHostUpdatePhysgunBeam(sequence, start, end, bend, endNormal, grabbed, MaxRange);
         else
             RpcHostClearPhysgunBeam(sequence);
     }
@@ -1658,6 +1799,27 @@ public sealed class WeaponPhysgun : Weapon
         var ownerSteamId = owner.GameObject.Network.Owner?.SteamId.Value ?? 0L;
         var playerSteamId = player.GameObject.Network.Owner?.SteamId.Value ?? 0L;
         return ownerSteamId != 0L && ownerSteamId == playerSteamId;
+    }
+
+    private static void GetConnectedBodies(GameObject source, HashSet<Rigidbody> result)
+    {
+        if (!source.IsValid())
+            return;
+
+        foreach (var rb in source.Root.Components.GetAll<Rigidbody>())
+        {
+            if (!rb.IsValid() || !result.Add(rb))
+                continue;
+
+            foreach (var joint in rb.Joints)
+            {
+                if (joint.Object1 != null)
+                    GetConnectedBodies(joint.Object1, result);
+
+                if (joint.Object2 != null)
+                    GetConnectedBodies(joint.Object2, result);
+            }
+        }
     }
 
     private static float Clamp(float value, float min, float max)

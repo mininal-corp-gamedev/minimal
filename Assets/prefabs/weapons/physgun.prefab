@@ -84,7 +84,7 @@
         "__enabled": true,
         "Flags": 0,
         "BeamActive": false,
-        "BottleMaterial": null,
+        "BottleMaterial": "models/weapons/sbox_physgun/v_physgun_d.vmat",
         "GlowEffect": null,
         "GravTint": "1,0.8,0,1",
         "OnComponentDestroy": null,
@@ -96,7 +96,7 @@
         "PhysTint": "0,0.68333,1,1",
         "SparksEffect": null,
         "TipSprites": [],
-        "TubeFxMaterial": null
+        "TubeFxMaterial": "models/weapons/sbox_physgun/v_physgun_tube.vmat"
       }
     ],
     "Children": [
@@ -130,7 +130,7 @@
             "MaterialGroup": null,
             "MaterialOverride": null,
             "Materials": null,
-            "Model": "weapons/physgun/v_physgun.vmdl",
+            "Model": "models/weapons/sbox_physgun/v_physgun.vmdl",
             "Morphs": {},
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -282,6 +282,9 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [],
+  "__references": [
+    "facepunch.v_first_person_arms_human#205798",
+    "facepunch.v_physgun#205816"
+  ],
   "__version": 2
 }

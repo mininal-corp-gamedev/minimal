@@ -73,7 +73,7 @@
             "MaterialGroup": null,
             "MaterialOverride": null,
             "Materials": null,
-            "Model": "weapons/physgun/v_physgun.vmdl",
+            "Model": "models/weapons/sbox_physgun/w_physgun.vmdl",
             "Morphs": {},
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -274,6 +274,8 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [],
+  "__references": [
+    "facepunch.w_physgun#153998"
+  ],
   "__version": 2
 }

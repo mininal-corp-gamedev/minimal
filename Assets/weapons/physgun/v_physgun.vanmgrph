@@ -4069,7 +4069,7 @@
 	}
 	m_previewModels = 
 	[
-		"weapons/physgun/v_physgun.vmdl",
+		"models/weapons/sbox_physgun/v_physgun.vmdl",
 	]
 	m_boneMergeModels = 
 	[

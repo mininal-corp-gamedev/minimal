@@ -21,7 +21,7 @@
         "__enabled": true,
         "Flags": 0,
         "BeamActive": true,
-        "BottleMaterial": null,
+        "BottleMaterial": "models/weapons/sbox_physgun/v_physgun_d.vmat",
         "GlowEffect": {
           "_type": "component",
           "component_id": "641c4ad5-7b84-41d6-95b8-81517a04d182",
@@ -62,7 +62,7 @@
             "component_type": "SpriteRenderer"
           }
         ],
-        "TubeFxMaterial": null
+        "TubeFxMaterial": "models/weapons/sbox_physgun/v_physgun_tube.vmat"
       }
     ],
     "Children": [
@@ -96,7 +96,7 @@
             "MaterialGroup": null,
             "MaterialOverride": null,
             "Materials": null,
-            "Model": "weapons/physgun/v_physgun.vmdl",
+            "Model": "models/weapons/sbox_physgun/v_physgun.vmdl",
             "Morphs": {},
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -2682,6 +2682,9 @@
   "MenuPath": null,
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
-  "__references": [],
+  "__references": [
+    "facepunch.v_first_person_arms_human#205798",
+    "facepunch.v_physgun#205816"
+  ],
   "__version": 2
 }

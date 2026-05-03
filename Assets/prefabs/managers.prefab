@@ -143,7 +143,7 @@
             },
             "WeaponPhysgun": {
               "_type": "gameobject",
-              "prefab": "prefabs/weapons/physgun.prefab"
+              "prefab": "weapons/physgun/physgun.prefab"
             },
             "WeaponPickaxe": {
               "_type": "gameobject",
@@ -180,7 +180,7 @@
             },
             "WorldWeaponPhysgun": {
               "_type": "gameobject",
-              "prefab": "prefabs/weapons/physgun.prefab"
+              "prefab": "weapons/physgun/physgun.prefab"
             },
             "WorldWeaponPickaxe": {
               "_type": "gameobject",

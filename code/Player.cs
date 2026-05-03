@@ -3,6 +3,7 @@ using Ambi.Utils;
 using Minimal.ItemUseHandlers;
 using Sandbox;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
@@ -17,6 +18,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Property, Sync(SyncFlags.FromHost)] public PlayerJob Job { get; private set; }
     [Property] public GameObject ItemDropPrefab { get; private set; }
     [Property] public GameObject MoneyDropPrefab { get; private set; }
+    [Property, Category("Physgun Beam")] public GameObject PhysgunBeamPrefab { get; set; }
     [Property, Category("Sounds")] public SoundEvent HitSound { get; set; }
 
     /// <summary>Maximum number of doors this player can own at once.</summary>
@@ -179,6 +181,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private string _worldWeaponItemId;
     private string _worldWeaponFailedItemId;
     private bool _worldWeaponUsesAuthoredPrefab;
+    private GameObject _physgunBeamObject;
+    private LineRenderer _physgunBeamRenderer;
+    private Vector3 _physgunBeamMiddle;
+    private float _physgunBeamPreviousDistance;
 
     private sealed class WorldWeaponVisualDefinition
     {
@@ -1871,6 +1877,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         UnhookInventoryEvents();
 
         RestoreDeathState();
+        DestroyPhysgunBeamVisual();
         DestroyWorldWeaponVisual();
         DestroyLocalInstance();
     }
@@ -1888,101 +1895,108 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private void DrawPhysgunBeam()
     {
-        if (!PhysgunBeamActive)
+        if (IsProxy || !PhysgunBeamActive)
+        {
+            SetPhysgunBeamVisible(false);
             return;
+        }
 
         var start = PhysgunBeamStart;
         var end = PhysgunBeamEnd;
         if ((end - start).LengthSquared <= 1f)
+        {
+            SetPhysgunBeamVisible(false);
+            return;
+        }
+
+        if (!EnsurePhysgunBeamVisual())
             return;
 
-        var bend = PhysgunBeamBend;
-        var p1 = LerpVector(start, end, 0.35f) + bend;
-        var p2 = LerpVector(start, end, 0.70f) + bend;
+        var justEnabled = !_physgunBeamObject.Enabled;
+        _physgunBeamObject.Enabled = true;
 
-        var previousColor = Gizmo.Draw.Color;
-        var previousThickness = Gizmo.Draw.LineThickness;
+        if (_physgunBeamRenderer.VectorPoints is null || _physgunBeamRenderer.VectorPoints.Count != 4)
+            _physgunBeamRenderer.VectorPoints = new List<Vector3> { start, start, end, end };
 
-        DrawPhysgunBeamCurve(start, p1, p2, end, new Color(0.20f, 0.85f, 1f, 0.22f), 7f);
-        DrawPhysgunBeamFlicker(start, p1, p2, end);
-        DrawPhysgunBeamCurve(start, p1, p2, end, new Color(0.45f, 0.95f, 1f, 0.95f), 2.5f);
+        var delta = end - start;
+        var distance = delta.Length;
+        var forward = delta.LengthSquared > 0.001f ? delta.Normal : Vector3.Forward;
+        var targetMiddle = start + forward * distance * 0.33f + PhysgunBeamBend * 0.75f + GetPhysgunBeamNoise(forward, distance);
 
-        Gizmo.Draw.Color = previousColor;
-        Gizmo.Draw.LineThickness = previousThickness;
+        if (justEnabled || (_physgunBeamPreviousDistance > 1f && distance / _physgunBeamPreviousDistance < 0.5f))
+            _physgunBeamMiddle = targetMiddle;
+        else
+            _physgunBeamMiddle = LerpVector(_physgunBeamMiddle, targetMiddle, MathF.Min(1f, Time.Delta * 12f));
+
+        _physgunBeamPreviousDistance = distance;
+
+        _physgunBeamRenderer.VectorPoints[0] = start;
+        _physgunBeamRenderer.VectorPoints[1] = _physgunBeamMiddle;
+        _physgunBeamRenderer.VectorPoints[2] = LerpVector(end + forward * 10f, _physgunBeamMiddle, 0.3f + MathF.Sin(Time.Now * 10f) * 0.2f);
+        _physgunBeamRenderer.VectorPoints[3] = end;
     }
 
-    private static void DrawPhysgunBeamCurve(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, Color color, float thickness)
+    private bool EnsurePhysgunBeamVisual()
     {
-        const int segments = 18;
+        if (_physgunBeamRenderer.IsValid())
+            return true;
 
-        Gizmo.Draw.Color = color;
-        Gizmo.Draw.LineThickness = thickness;
-
-        var previous = p0;
-        for (var i = 1; i <= segments; i++)
+        if (!PhysgunBeamPrefab.IsValid())
         {
-            var t = i / (float)segments;
-            var point = CubicBezier(p0, p1, p2, p3, t);
-            Gizmo.Draw.Line(previous, point);
-            previous = point;
+            Log.Warning("[Player] PhysgunBeamPrefab is not set.");
+            return false;
         }
+
+        _physgunBeamObject = PhysgunBeamPrefab.Clone(Vector3.Zero, Rotation.Identity);
+        if (!_physgunBeamObject.IsValid())
+            return false;
+
+        _physgunBeamObject.Name = "Local Physgun Beam";
+        _physgunBeamObject.Parent = GameObject;
+        _physgunBeamObject.Enabled = false;
+        _physgunBeamRenderer = _physgunBeamObject.Components.Get<LineRenderer>(FindMode.EverythingInSelfAndDescendants);
+        return _physgunBeamRenderer.IsValid();
     }
 
-    private static void DrawPhysgunBeamFlicker(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3)
+    private void SetPhysgunBeamVisible(bool visible)
     {
-        const int sparks = 7;
+        if (!_physgunBeamObject.IsValid())
+            return;
 
-        var length = Vector3.DistanceBetween(p0, p3);
-        var amplitude = MathF.Min(14f, MathF.Max(3f, length * 0.018f));
-        var timeSeed = MathF.Floor(Time.Now * 18f);
+        _physgunBeamObject.Enabled = visible;
+        if (visible)
+            return;
 
-        Gizmo.Draw.Color = new Color(0.78f, 1f, 1f, 0.72f);
-        Gizmo.Draw.LineThickness = 1.35f;
-
-        for (var i = 0; i < sparks; i++)
-        {
-            var seed = i * 19.19f + timeSeed * 3.71f;
-            if (Hash01(seed) < 0.32f)
-                continue;
-
-            var t0 = (i + 1f) / (sparks + 2f);
-            var t1 = MathF.Min(0.98f, t0 + 0.035f + Hash01(seed + 4.4f) * 0.04f);
-            var a = CubicBezier(p0, p1, p2, p3, t0);
-            var c = CubicBezier(p0, p1, p2, p3, t1);
-            var dir = c - a;
-            if (dir.LengthSquared <= 0.001f)
-                continue;
-
-            dir = dir.Normal;
-            var side = CrossVector(dir, Vector3.Up);
-            if (side.LengthSquared <= 0.001f)
-                side = CrossVector(dir, Vector3.Right);
-
-            side = side.LengthSquared > 0.001f ? side.Normal : Vector3.Right;
-            var up = CrossVector(side, dir);
-            up = up.LengthSquared > 0.001f ? up.Normal : Vector3.Up;
-
-            var offset = (side * (Hash01(seed + 8.8f) - 0.5f) + up * (Hash01(seed + 12.2f) - 0.5f)) * amplitude;
-            var b = LerpVector(a, c, 0.5f) + offset;
-
-            Gizmo.Draw.Line(a, b);
-            Gizmo.Draw.Line(b, c);
-        }
+        _physgunBeamPreviousDistance = 0f;
+        _physgunBeamMiddle = Vector3.Zero;
     }
 
-    private static Vector3 CubicBezier(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
+    private void DestroyPhysgunBeamVisual()
     {
-        var u = 1f - t;
-        return p0 * (u * u * u)
-            + p1 * (3f * u * u * t)
-            + p2 * (3f * u * t * t)
-            + p3 * (t * t * t);
+        if (_physgunBeamObject.IsValid())
+            _physgunBeamObject.Destroy();
+
+        _physgunBeamObject = null;
+        _physgunBeamRenderer = null;
+        _physgunBeamPreviousDistance = 0f;
+        _physgunBeamMiddle = Vector3.Zero;
     }
 
-    private static Vector3 LerpVector(Vector3 a, Vector3 b, float t)
+    private static Vector3 GetPhysgunBeamNoise(Vector3 forward, float distance)
     {
-        return a + (b - a) * t;
+        var side = CrossVector(forward, Vector3.Up);
+        if (side.LengthSquared <= 0.001f)
+            side = CrossVector(forward, Vector3.Right);
+
+        side = side.LengthSquared > 0.001f ? side.Normal : Vector3.Right;
+        var up = CrossVector(side, forward);
+        up = up.LengthSquared > 0.001f ? up.Normal : Vector3.Up;
+
+        var amount = MathF.Min(8f, MathF.Max(1.5f, distance * 0.01f));
+        return (side * MathF.Sin(Time.Now * 23.7f) + up * MathF.Cos(Time.Now * 17.1f)) * amount;
     }
+
+    private static Vector3 LerpVector(Vector3 a, Vector3 b, float t) => a + (b - a) * t;
 
     private static Vector3 CrossVector(Vector3 a, Vector3 b)
     {
@@ -1991,12 +2005,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             a.z * b.x - a.x * b.z,
             a.x * b.y - a.y * b.x
         );
-    }
-
-    private static float Hash01(float value)
-    {
-        var s = MathF.Sin(value * 12.9898f) * 43758.5453f;
-        return s - MathF.Floor(s);
     }
 
 

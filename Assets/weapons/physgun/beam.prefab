@@ -1,0 +1,164 @@
+{
+  "RootObject": {
+    "__guid": "4ae7e18d-d406-44fe-9e67-17a89d0a2d42",
+    "__version": 2,
+    "Flags": 0,
+    "Name": "physgun_beam",
+    "Position": "0,0,0",
+    "Rotation": "0,0,0,1",
+    "Scale": "1,1,1",
+    "Tags": "",
+    "Enabled": false,
+    "NetworkMode": 2,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "Sandbox.LineRenderer",
+        "__guid": "5de87ea4-aeaa-4604-a4c5-17383e5a0b90",
+        "__enabled": true,
+        "Flags": 0,
+        "Additive": true,
+        "AutoCalculateNormals": true,
+        "CastShadows": false,
+        "Color": {
+          "blend": "Linear",
+          "color": [
+            {
+              "t": 0.51890755,
+              "c": "1.74419,2.7907,3,1"
+            }
+          ],
+          "alpha": []
+        },
+        "CylinderSegments": 12,
+        "DepthFeather": 4,
+        "EndCap": "None",
+        "Face": "Camera",
+        "FogStrength": 1,
+        "Lighting": false,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "Opaque": false,
+        "Points": [],
+        "RenderOptions": {
+          "GameLayer": true,
+          "OverlayLayer": false,
+          "BloomLayer": false,
+          "AfterUILayer": false
+        },
+        "SplineBias": 0,
+        "SplineContinuity": 0,
+        "SplineInterpolation": 8,
+        "SplineTension": 0,
+        "StartCap": "None",
+        "Texturing": {
+          "Texture": {
+            "$compiler": "texture",
+            "$source": "random",
+            "data": {
+              "Seed": 0,
+              "Size": "8,8",
+              "Gradient": {
+                "blend": "Linear",
+                "color": [
+                  {
+                    "t": 0,
+                    "c": "0,0,0,1"
+                  },
+                  {
+                    "t": 1,
+                    "c": "1,1,1,1"
+                  }
+                ],
+                "alpha": null
+              },
+              "ConvertHeightToNormals": false,
+              "NormalScale": 1,
+              "CacheToDisk": true
+            },
+            "compiled": "textures/generated/random/de57f30dc50aa163.vtex"
+          },
+          "Material": "weapons/physgun/physgun_beam.vmat",
+          "WorldSpace": true,
+          "UnitsPerTexture": 512,
+          "Scale": 1,
+          "Offset": 0,
+          "Scroll": 1,
+          "FilterMode": "Anisotropic",
+          "TextureAddressMode": "Wrap",
+          "Clamp": false
+        },
+        "UseVectorPoints": true,
+        "VectorPoints": [
+          "0,0,0",
+          "128,0,0",
+          "256,0,0",
+          "384,0,0"
+        ],
+        "Width": {
+          "rangey": "0.167400002,5",
+          "frames": [
+            {
+              "x": 0,
+              "y": 0.676678,
+              "in": -0.9629625,
+              "out": 0.9629625,
+              "mode": "Mirrored"
+            },
+            {
+              "x": 0.46773395,
+              "y": 1,
+              "in": 0,
+              "out": 0,
+              "mode": "Mirrored"
+            },
+            {
+              "x": 1,
+              "y": 0,
+              "in": 5.7647076,
+              "out": -5.7647076,
+              "mode": "Mirrored"
+            }
+          ]
+        },
+        "Wireframe": false
+      }
+    ],
+    "Children": [],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [],
+  "__version": 2
+}

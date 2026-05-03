@@ -55,6 +55,10 @@
           "_type": "gameobject",
           "prefab": "prefabs/money.prefab"
         },
+        "PhysgunBeamPrefab": {
+          "_type": "gameobject",
+          "prefab": "weapons/physgun/beam.prefab"
+        },
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,

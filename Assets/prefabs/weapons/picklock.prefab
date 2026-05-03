@@ -1576,7 +1576,7 @@
   "DontBreakAsTemplate": false,
   "__references": [
     "facepunch.v_crowbar#150525",
-    "facepunch.v_first_person_arms_human#142949",
+    "facepunch.v_first_person_arms_human#205798",
     "facepunch.w_crowbar#144899"
   ],
   "__version": 2

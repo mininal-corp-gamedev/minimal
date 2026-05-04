@@ -43,7 +43,8 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
-            "PlayerSpawns": null
+            "PlayerSpawns": null,
+            "PlayerSpawnsName": "Spawn Players"
           }
         ],
         "Children": []
@@ -254,6 +255,40 @@
             "__guid": "48ba0cc7-69b6-4f42-bab8-9ffbd9c390a7",
             "__enabled": true,
             "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          }
+        ],
+        "Children": []
+      },
+      {
+        "__guid": "c616e912-f145-4e48-9958-57afa098a1f1",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Job Manager",
+        "Position": "161.354462,118.0924,-223.635803",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "JobManager",
+            "__guid": "0e51fb74-dbd4-4105-a215-507127aadb8a",
+            "__enabled": true,
+            "Flags": 0,
+            "ArrestDurationSeconds": 120,
+            "ArrestInteractRange": 110,
+            "ArrestSpawnPoint": null,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,

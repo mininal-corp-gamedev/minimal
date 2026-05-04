@@ -72,16 +72,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     [Sync(SyncFlags.FromHost)] public int AdminRank { get; set; } = 0;
 
-    // ===== Arrest system =====
-    /// <summary>Точка спавна арестованного игрока. Выставляется в редакторе.</summary>
-    [Property, Category("Arrest")] public GameObject ArrestSpawnPoint { get; set; }
-
-    /// <summary>Длительность ареста в секундах.</summary>
-    [Property, Category("Arrest")] public float ArrestDurationSeconds { get; set; } = 120f;
-
-    /// <summary>Радиус взаимодействия наручников (используется хостом для валидации).</summary>
-    [Property, Category("Arrest")] public float ArrestInteractRange { get; set; } = 110f;
-
     /// <summary>Арестован ли игрок. Меняется только хостом.</summary>
     [Sync(SyncFlags.FromHost)] public bool IsArrested { get; set; }
 
@@ -2807,7 +2797,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (target == attacker) return;
         if (target.IsArrested) return;
 
-        if (Vector3.DistanceBetween(attacker.WorldPosition, target.WorldPosition) > target.ArrestInteractRange)
+        if (Vector3.DistanceBetween(attacker.WorldPosition, target.WorldPosition) > JobManager.Instance.ArrestInteractRange)
             return;
 
         target.HostArrest();
@@ -2827,7 +2817,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (!targetObj.Components.TryGet<Player>(out var target, FindMode.EverythingInSelfAndParent)) return;
         if (!target.IsArrested) return;
 
-        if (Vector3.DistanceBetween(attacker.WorldPosition, target.WorldPosition) > target.ArrestInteractRange)
+        if (Vector3.DistanceBetween(attacker.WorldPosition, target.WorldPosition) > JobManager.Instance.ArrestInteractRange)
             return;
 
         target.HostRelease();
@@ -2855,11 +2845,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (IsArrested) return;
 
         IsArrested = true;
-        ArrestTimeUntilRelease = ArrestDurationSeconds;
+        ArrestTimeUntilRelease = JobManager.Instance.ArrestDurationSeconds;
         HostSetEquippedWeaponItemId(null);
 
-        var pos = ArrestSpawnPoint.IsValid() ? ArrestSpawnPoint.WorldPosition : WorldPosition;
-        var rot = ArrestSpawnPoint.IsValid() ? ArrestSpawnPoint.WorldRotation : WorldRotation;
+        var randomSpawn = Random.Shared.FromList(JobManager.Instance.ArrestSpawnPoint.Children);
+
+        var pos = randomSpawn.IsValid() ? randomSpawn.WorldPosition : WorldPosition;
+        var rot = randomSpawn.IsValid() ? randomSpawn.WorldRotation : WorldRotation;
         RpcApplyArrest(pos, rot);
     }
 

@@ -245,19 +245,22 @@
           },
           {
             "Target": {
-              "Type": "Component",
-              "IdValue": "86db9359-72cd-4fa8-8096-d46fbecd5e57"
-            },
-            "Property": "PlayerSpawnsName",
-            "Value": "Spawn Players"
-          },
-          {
-            "Target": {
               "Type": "GameObject",
               "IdValue": "bfa99d0c-d2e8-43e1-b19b-faa0754a35dc"
             },
             "Property": "Flags",
             "Value": 0
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "0e51fb74-dbd4-4105-a215-507127aadb8a"
+            },
+            "Property": "ArrestSpawnPoint",
+            "Value": {
+              "_type": "gameobject",
+              "go": "d1981975-a0c7-44e7-ab0e-e45833b3b6a3"
+            }
           }
         ],
         "MovedObjects": []
@@ -291,7 +294,9 @@
         "e444138a-4090-4d55-8a16-761dc8aacab3": "d0fc5060-7405-4fa4-96b6-723afb284dec",
         "4febd7e7-4193-4b2f-8cd2-4938391dd7cb": "958250b9-c671-4983-a65e-200af887ebd7",
         "628471c1-e9af-4a99-903a-cfc54c59b21d": "ca3ed8e5-523c-48f7-a255-6483467b7d4e",
-        "f2c128dc-5efe-402c-8dcc-6ace485f0460": "57b364f7-c2bb-481e-922a-ac18939e173a"
+        "f2c128dc-5efe-402c-8dcc-6ace485f0460": "57b364f7-c2bb-481e-922a-ac18939e173a",
+        "c616e912-f145-4e48-9958-57afa098a1f1": "49bd3c82-7192-4b18-b477-7776f349d279",
+        "0e51fb74-dbd4-4105-a215-507127aadb8a": "6f414082-6b4f-4b56-aa57-76accc1f112e"
       }
     },
     {
@@ -589,62 +594,6 @@
             },
             "Property": "Rotation",
             "Value": "0,0,-0.707106769,0.707106769"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "InteractRange",
-            "Value": 220
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "MovementMode",
-            "Value": "Swing"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "OpenAngle",
-            "Value": 90
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "SlideAxis",
-            "Value": "LocalRight"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "SlideDistance",
-            "Value": 96
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "SlideSpeed",
-            "Value": 120
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "StartLocked",
-            "Value": false
           }
         ],
         "MovedObjects": []
@@ -693,62 +642,6 @@
             },
             "Property": "Rotation",
             "Value": "0,0,-0.707106769,0.707106769"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "InteractRange",
-            "Value": 220
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "MovementMode",
-            "Value": "Swing"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "OpenAngle",
-            "Value": 90
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "SlideAxis",
-            "Value": "LocalRight"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "SlideDistance",
-            "Value": 96
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "SlideSpeed",
-            "Value": 120
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "StartLocked",
-            "Value": false
           }
         ],
         "MovedObjects": []
@@ -797,62 +690,6 @@
             },
             "Property": "Rotation",
             "Value": "0,0,-0.707106769,0.707106769"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "InteractRange",
-            "Value": 220
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "MovementMode",
-            "Value": "Swing"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "OpenAngle",
-            "Value": 90
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "SlideAxis",
-            "Value": "LocalRight"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "SlideDistance",
-            "Value": 96
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "SlideSpeed",
-            "Value": 120
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "StartLocked",
-            "Value": false
           }
         ],
         "MovedObjects": []
@@ -909,62 +746,6 @@
             },
             "Property": "Header",
             "Value": "Hui"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "InteractRange",
-            "Value": 220
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "MovementMode",
-            "Value": "Swing"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "OpenAngle",
-            "Value": 90
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "SlideAxis",
-            "Value": "LocalRight"
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "SlideDistance",
-            "Value": 96
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "SlideSpeed",
-            "Value": 120
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "63f9abba-02bd-4247-86f7-08e143c836e7"
-            },
-            "Property": "StartLocked",
-            "Value": false
           }
         ],
         "MovedObjects": []
@@ -981,6 +762,43 @@
         "ef4bce64-7fd9-452a-a5e3-3e91ecd06e19": "4fecbe55-b82b-491d-9f47-f6c4bb3052a3",
         "962b8ead-3c10-49c6-aad5-15f28b236aed": "0e398409-e1c3-42b8-b534-70a48fc791be"
       }
+    },
+    {
+      "__guid": "d1981975-a0c7-44e7-ab0e-e45833b3b6a3",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Arrest Spawn",
+      "Position": "-586.433655,28.2769775,79.4509201",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [],
+      "Children": [
+        {
+          "__guid": "9a3f9c80-67c6-4058-912f-6cdc5e3ace9c",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Arrest Spawn (1)",
+          "Position": "0,0,-42.3628998",
+          "Rotation": "0,0,0.707106769,0.707106769",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": []
+        }
+      ]
     }
   ],
   "SceneProperties": {
@@ -1005,17 +823,17 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "4c8d8be3-9b2a-45ca-a21b-eaa302af4bec"
-        }
-      },
       "Sandbox.MovieMaker.MovieRecorderSystem": {
         "DisableClientRecording": false
       },
       "Sandbox.SelectionSetsSystem": {
         "Data": {
           "SelectionSets": []
+        }
+      },
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "4c8d8be3-9b2a-45ca-a21b-eaa302af4bec"
         }
       }
     }

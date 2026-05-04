@@ -21781,14 +21781,6 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
-                      },
-                      {
-                        "Target": {
-                          "Type": "Component",
-                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
-                        },
-                        "Property": "Model",
-                        "Value": "models/doors/door_1.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -21869,14 +21861,6 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
-                      },
-                      {
-                        "Target": {
-                          "Type": "Component",
-                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
-                        },
-                        "Property": "Model",
-                        "Value": "models/doors/door_1.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -21976,14 +21960,6 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
-                      },
-                      {
-                        "Target": {
-                          "Type": "Component",
-                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
-                        },
-                        "Property": "Model",
-                        "Value": "models/doors/door_1.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -22064,14 +22040,6 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
-                      },
-                      {
-                        "Target": {
-                          "Type": "Component",
-                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
-                        },
-                        "Property": "Model",
-                        "Value": "models/doors/door_1.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -22171,14 +22139,6 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
-                      },
-                      {
-                        "Target": {
-                          "Type": "Component",
-                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
-                        },
-                        "Property": "Model",
-                        "Value": "models/doors/door_1.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -22259,14 +22219,6 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
-                      },
-                      {
-                        "Target": {
-                          "Type": "Component",
-                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
-                        },
-                        "Property": "Model",
-                        "Value": "models/doors/door_1.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -22366,14 +22318,6 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
-                      },
-                      {
-                        "Target": {
-                          "Type": "Component",
-                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
-                        },
-                        "Property": "Model",
-                        "Value": "models/doors/door_1.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -22454,14 +22398,6 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
-                      },
-                      {
-                        "Target": {
-                          "Type": "Component",
-                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
-                        },
-                        "Property": "Model",
-                        "Value": "models/doors/door_1.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -34324,18 +34260,18 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
+        }
       },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "b7c3e9f6-dbbd-4d7c-9f80-7434b612f0ee"
         }
       },
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
-        }
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
       }
     }
   },
@@ -34371,7 +34307,6 @@
     "facepunch.weapon_crate_stacka#143532",
     "facepunch.wheely_bin#143949",
     "facepunch.wire_cage_b_painted#111152",
-    "gkaf.door_1#26044",
     "gkaf.door_2_window_a#26046",
     "gunsightsoftware.model-deadpigeon#184155",
     "halfpeeps.garage_door#42972",

@@ -799,6 +799,194 @@
           "Children": []
         }
       ]
+    },
+    {
+      "__guid": "ab8e15a2-5270-4d36-a857-1fc10700ad09",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Block",
+      "Position": "-272.860596,140.623505,80.547699",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "world",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.MeshComponent",
+          "__guid": "ce20a51d-f4e5-43cf-91a8-8af8b0d449e0",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Collision": "Mesh",
+          "Color": "0.11667,1,0,1",
+          "Elasticity": null,
+          "Friction": null,
+          "HideInGame": true,
+          "IsTrigger": true,
+          "Mesh": {
+            "Topology": "H4sIAAAAAAAACl2QCQ7CMAwEp4Qj3NBy/f+laMRGsohUVbFn1+t04ANs+Z0VsM69AwfgBFyAKZ9MPXdgk3qLnsI+Um/h/me9i2ZXfFvYOazafTJN0XRgKZmPyWtfXvYVL73PZRd52WdYPa7xtC8veys7u6t17/7t6Tn0ZtFjvIXZR895zjKjPWf4NiOrGt+ivpXZ3XnozaOndVn9vvVkkTjEAQAA",
+            "Positions": [
+              "-62.4784546,-62.8703003,64",
+              "62.4784851,-62.8703003,64",
+              "62.4784851,62.8703003,64",
+              "-62.4784546,62.8703003,64",
+              "-62.4784546,62.8703003,-64",
+              "62.4784851,62.8703003,-64",
+              "62.4784851,-62.8703003,-64",
+              "-62.4784546,-62.8703003,-64"
+            ],
+            "Blends": [
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0"
+            ],
+            "Colors": [
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0"
+            ],
+            "TextureCoord": [
+              "-1.64361024,-0.607446909",
+              "-2.61983633,-1.1292789",
+              "-1.64361024,-1.58979535",
+              "0.607446909,-1.1292789",
+              "-2.61983633,-1.58979535",
+              "1.64361024,-1.1292789",
+              "-2.61983633,-0.607446909",
+              "-1.58979535,-1.1292789",
+              "-1.64361024,-1.58979535",
+              "2.61983633,-0.129278883",
+              "-1.64361024,-0.607446909",
+              "1.58979535,-0.129278883",
+              "-2.61983633,-0.607446909",
+              "-1.64361024,-0.129278883",
+              "-2.61983633,-1.58979535",
+              "-0.607446909,-0.129278883",
+              "-0.607446909,-1.1292789",
+              "-2.61983633,-0.129278883",
+              "-1.58979535,-0.129278883",
+              "2.61983633,-1.1292789",
+              "0.607446909,-0.129278883",
+              "-1.64361024,-1.1292789",
+              "1.58979535,-1.1292789",
+              "1.64361024,-0.129278883"
+            ],
+            "MaterialIndex": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "EdgeFlags": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "Materials": [
+              "materials/dev/reflectivity_30.vmat"
+            ]
+          },
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RenderType": "On",
+          "RollingResistance": null,
+          "SmoothingAngle": 40,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "TriggerSafezone",
+          "__guid": "33a289d7-9100-4b52-b6e1-d821fb1e322a",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {
@@ -823,9 +1011,6 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
-      },
       "Sandbox.SelectionSetsSystem": {
         "Data": {
           "SelectionSets": []
@@ -835,6 +1020,9 @@
         "Storage": {
           "$blob": "4c8d8be3-9b2a-45ca-a21b-eaa302af4bec"
         }
+      },
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
       }
     }
   },

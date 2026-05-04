@@ -34,6 +34,7 @@
         "HasHipFire": true,
         "HasReload": true,
         "HoldType": "Pistol",
+        "HoldTypeHandedness": "RightHand",
         "IsIronSight": false,
         "IsMelee": false,
         "OnComponentDestroy": null,
@@ -60,6 +61,10 @@
           "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
           "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
           "component_type": "SkinnedModelRenderer"
+        },
+        "WorldModelPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefabs/weapons/wm/w_usp.prefab"
         }
       }
     ],

@@ -31,6 +31,7 @@
         "HasHipFire": true,
         "HasReload": true,
         "HoldType": "Pistol",
+        "HoldTypeHandedness": "RightHand",
         "IsIronSight": false,
         "IsMelee": false,
         "OnComponentDestroy": null,
@@ -54,6 +55,10 @@
           "component_id": "066406d5-81df-43e2-8d79-6d8dbbcf6b6e",
           "go": "52e8a3a5-0d9f-439f-96f1-71a62c8d7246",
           "component_type": "SkinnedModelRenderer"
+        },
+        "WorldModelPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefabs/weapons/wm/w_toolgun.prefab"
         }
       }
     ],

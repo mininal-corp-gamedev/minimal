@@ -20,9 +20,6 @@
         "__guid": "15b93fa3-e192-4f36-a3c5-682e48227985",
         "__enabled": true,
         "Flags": 0,
-        "ArrestDurationSeconds": 120,
-        "ArrestInteractRange": 110,
-        "ArrestSpawnPoint": null,
         "Controller": {
           "_type": "component",
           "component_id": "188a7c51-221c-4f73-b9c4-c78b60ded3fa",
@@ -39,6 +36,10 @@
         "FatalFallDamage": 120,
         "FatalFallDistance": 1150,
         "HitSound": "sounds/voicer-lines/hit.sound",
+        "HoldRBone": {
+          "_type": "gameobject",
+          "go": "8880354f-6d13-4976-a2ac-6a1d0e992beb"
+        },
         "ItemDropPrefab": {
           "_type": "gameobject",
           "prefab": "prefabs/item.prefab"
@@ -337,12 +338,12 @@
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
-            "BodyGroups": 682,
+            "BodyGroups": 649,
             "BoneMergeTarget": null,
             "CreateAttachments": true,
             "CreateBoneObjects": true,
             "LodOverride": null,
-            "MaterialGroup": "skin_light",
+            "MaterialGroup": "default",
             "MaterialOverride": null,
             "Materials": null,
             "Model": "models/citizen_human/citizen_human_male.vmdl",
@@ -3021,6 +3022,75 @@
             "NetworkTransmit": true,
             "OwnerTransfer": 1,
             "Components": [],
+            "Children": []
+          },
+          {
+            "__guid": "36277eab-0f9d-4a06-8bc7-d498876653af",
+            "__version": 2,
+            "Flags": 0,
+            "Name": "Clothing - y_front_pants_white",
+            "Position": "0,0,0",
+            "Rotation": "0,0,0,1",
+            "Scale": "1,1,1",
+            "Tags": "clothing",
+            "Enabled": true,
+            "NetworkMode": 2,
+            "NetworkFlags": 0,
+            "NetworkOrphaned": 0,
+            "NetworkTransmit": true,
+            "OwnerTransfer": 1,
+            "Components": [
+              {
+                "__type": "Sandbox.SkinnedModelRenderer",
+                "__guid": "79fe0fea-9b92-40d6-aeb2-09e98804fa36",
+                "__enabled": true,
+                "Flags": 0,
+                "AnimationGraph": null,
+                "BodyGroups": 18446744073709551615,
+                "BoneMergeTarget": {
+                  "_type": "component",
+                  "component_id": "5a0e0ab6-7965-4d83-97e7-f8d9bce09def",
+                  "go": "f907b6cc-697d-4a0e-aa04-9d3cb163e166",
+                  "component_type": "SkinnedModelRenderer"
+                },
+                "CreateAttachments": false,
+                "CreateBoneObjects": false,
+                "LodOverride": null,
+                "MaterialGroup": null,
+                "MaterialOverride": null,
+                "Materials": null,
+                "Model": "models/citizen_clothes/underwear/y_front_pants/models/y_front_pants_m_human.vmdl",
+                "Morphs": {},
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "Parameters": {
+                  "bools": {},
+                  "ints": {},
+                  "floats": {},
+                  "vectors": {},
+                  "rotations": {}
+                },
+                "PlaybackRate": 1,
+                "RenderOptions": {
+                  "GameLayer": true,
+                  "OverlayLayer": false,
+                  "BloomLayer": false,
+                  "AfterUILayer": false
+                },
+                "RenderType": "On",
+                "Sequence": {
+                  "Name": null,
+                  "Looping": true,
+                  "Blending": false
+                },
+                "Tint": "1,1,1,1",
+                "UseAnimGraph": true
+              }
+            ],
             "Children": []
           }
         ]

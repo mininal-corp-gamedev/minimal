@@ -24,24 +24,24 @@ public sealed class PhygunViewmodel : Component, Component.ExecuteInEditor
 
     protected override void OnUpdate()
     {
-        var physgun = GameObject.Root.Components.Get<Minimal.Weapons.WeaponPhysgun>(FindMode.EverythingInSelfAndDescendants);
-        if (physgun.IsValid())
-        {
-            BeamActive = physgun.BeamActive;
-            _tintFrac = MathX.Approach(_tintFrac, physgun.PullActive ? 1f : 0f, Time.Delta * 5f);
-            _effectsTint = Color.Lerp(PhysTint, GravTint, SteepEase(_tintFrac));
-        }
-        else
-        {
-            _tintFrac = 0f;
-            _effectsTint = PhysTint;
-        }
+        //var physgun = GameObject.Root.Components.Get<Minimal.Weapons.WeaponPhysgun>(FindMode.EverythingInSelfAndDescendants);
+        //if (physgun.IsValid())
+        //{
+        //    BeamActive = physgun.BeamActive;
+        //    _tintFrac = MathX.Approach(_tintFrac, physgun.PullActive ? 1f : 0f, Time.Delta * 5f);
+        //    _effectsTint = Color.Lerp(PhysTint, GravTint, SteepEase(_tintFrac));
+        //}
+        //else
+        //{
+        //    _tintFrac = 0f;
+        //    _effectsTint = PhysTint;
+        //}
 
-        UpdateGlowEffect();
-        UpdateTipSprites();
-        UpdateTubeFx();
-        UpdateSparks();
-        UpdateBottleGlow();
+        //UpdateGlowEffect();
+        //UpdateTipSprites();
+        //UpdateTubeFx();
+        //UpdateSparks();
+        //UpdateBottleGlow();
     }
 
     private static float SteepEase(float value)

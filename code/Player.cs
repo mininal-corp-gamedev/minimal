@@ -29,6 +29,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Property, Category("Physgun Beam")] public GameObject PhysgunBeamEndPointEffectPrefab { get; set; }
     [Property, Category("Physgun Beam")] public GameObject PhysgunBeamGrabEffectPrefab { get; set; }
     [Property, Category("Sounds")] public SoundEvent HitSound { get; set; }
+    [Property, Category("Weapons")] public GameObject HoldRBone { get; set; }
 
     /// <summary>Maximum number of doors this player can own at once.</summary>
     [Property] public int MaxDoors { get; set; } = 8;
@@ -181,8 +182,11 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private GameObject _worldWeaponObject;
     private string _worldWeaponItemId;
     private string _worldWeaponFailedItemId;
-    private bool _worldWeaponUsesAuthoredPrefab;
     private bool _worldWeaponAttachedToBone;
+    private Vector3 _worldWeaponPrefabOffset;
+    private Rotation _worldWeaponPrefabRotation;
+    private float _worldWeaponPrefabScale;
+    private int _worldWeaponPrefabHandedness;
     private bool _weaponVisualRendererPrepared;
     private GameObject _physgunBeamObject;
     private LineRenderer _physgunBeamRenderer;
@@ -201,48 +205,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private Vector3 _localPhysgunBeamOverrideBend;
     private bool _localPhysgunBeamOverrideGrabbed;
 
-    private sealed class WorldWeaponVisualDefinition
-    {
-        public Vector3 PositionOffset { get; }
-        public Rotation RotationOffset { get; }
-        public float Scale { get; }
-        public Vector3 BeamStartOffset { get; }
-        public string ParentBone { get; }
-
-        public WorldWeaponVisualDefinition(Vector3 positionOffset, Rotation rotationOffset, float scale = 1f,
-            Vector3? beamStartOffset = null, string parentBone = "hold_r")
-        {
-            PositionOffset = positionOffset;
-            RotationOffset = rotationOffset;
-            Scale = scale;
-            BeamStartOffset = beamStartOffset ?? positionOffset;
-            ParentBone = string.IsNullOrWhiteSpace(parentBone) ? "hold_r" : parentBone;
-        }
-    }
-
-    private static readonly Dictionary<string, WorldWeaponVisualDefinition> WorldWeaponVisuals = new(StringComparer.OrdinalIgnoreCase)
-    {
-        ["usp"] = new(new Vector3(-17f, 2f, 0f), Rotation.Identity, 0.9f),
-        ["mp5"] = new(new Vector3(-24f, 3f, 0f), Rotation.Identity, 0.9f),
-        ["m4a1"] = new(new Vector3(-29f, 3f, 0f), Rotation.Identity, 0.9f),
-        ["physgun"] = new(new Vector3(-8f, 2f, 4f), Rotation.Identity, 0.65f,
-            beamStartOffset: new Vector3(3.8309741f, -0.3073678f, -5.3010688f)),
-        ["toolgun"] = new(new Vector3(-17f, 3f, 0f), Rotation.Identity, 0.9f),
-        ["pickaxe"] = new(new Vector3(-5f, 0f, 0f), Rotation.Identity),
-        ["picklock"] = new(new Vector3(-5f, 0f, 0f), Rotation.Identity),
-        ["handcuff"] = new(new Vector3(-4f, 0f, 0f), Rotation.Identity, 0.75f)
-    };
-
-    private static readonly string[] WeaponVisualBoneNames =
-    {
-        "hold_r",
-        "hold_R",
-        "hand_r",
-        "hand_R",
-        "weapon_r",
-        "weapon_R",
-        "ValveBiped.Bip01_R_Hand"
-    };
 
     public sealed class PlayerSaveData
     {
@@ -501,6 +463,18 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         //if (!renderer.IsValid()) return;
 
         renderer?.Set("holdtype", holdType);
+    }
+
+    [Rpc.Broadcast]
+    private void RpcSetHoldTypeHandedness(SkinnedModelRenderer renderer, int handedness)
+    {
+        renderer?.Set("holdtype_handedness", handedness);
+    }
+
+    [Rpc.Broadcast]
+    public void RpcSetPlayerReload(bool isReloading)
+    {
+        Renderer?.Set("b_reload", isReloading);
     }
 
     /// <summary>
@@ -836,6 +810,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             CurrentInventorySlotIndex = -1;
             CurrentWeaponItemId = null;
             RpcSetHoldType(Renderer, 0);
+            RpcSetHoldTypeHandedness(Renderer, 0);
+            RpcSetPlayerReload(false);
 
             return;
         }
@@ -843,6 +819,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         CurrentWeapon = wep;
         CurrentWeapon.GameObject.Enabled = true;
         RpcSetHoldType(Renderer, (int)CurrentWeapon.HoldType);
+        RpcSetHoldTypeHandedness(Renderer, (int)CurrentWeapon.HoldTypeHandedness);
+        RpcSetPlayerReload(false);
     }
 
     private void HostSetEquippedWeaponItemId(string itemId)
@@ -1708,7 +1686,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
         }
 
-        if (!WorldWeaponVisuals.TryGetValue(EquippedWeaponItemId, out var definition))
+        var wmPrefab = GetWorldModelPrefabForItem(EquippedWeaponItemId);
+        if (!wmPrefab.IsValid())
         {
             DestroyWorldWeaponVisual();
             return;
@@ -1721,13 +1700,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
         }
 
-        if (!EnsureWorldWeaponVisual(EquippedWeaponItemId, definition))
+        if (!EnsureWorldWeaponVisual(EquippedWeaponItemId, wmPrefab))
             return;
 
-        UpdateWorldWeaponTransform(definition);
+        UpdateWorldWeaponTransform();
     }
 
-    private bool EnsureWorldWeaponVisual(string itemId, WorldWeaponVisualDefinition definition)
+    private bool EnsureWorldWeaponVisual(string itemId, GameObject wmPrefab)
     {
         if (_worldWeaponObject.IsValid()
             && string.Equals(_worldWeaponItemId, itemId, StringComparison.OrdinalIgnoreCase))
@@ -1735,23 +1714,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         DestroyWorldWeaponVisual();
 
-        var prefab = GetWorldWeaponPrefab(itemId, out var usesAuthoredPrefab);
-        if (!prefab.IsValid())
-        {
-            _worldWeaponFailedItemId = itemId;
-            Log.Warning($"[Player] World weapon prefab not found for '{itemId}'");
-            return false;
-        }
-
-        var boneParent = TryGetWeaponVisualParentObject(definition, usesAuthoredPrefab);
-        if (usesAuthoredPrefab && !boneParent.IsValid())
+        var boneParent = TryGetWeaponVisualParentObject();
+        if (!boneParent.IsValid())
             return false;
 
-        var parent = boneParent.IsValid() ? boneParent : GameObject;
-
-        _worldWeaponObject = prefab.Clone(new CloneConfig
+        _worldWeaponObject = wmPrefab.Clone(new CloneConfig
         {
-            Parent = parent,
+            Parent = boneParent,
             StartEnabled = true,
             Transform = global::Transform.Zero
         });
@@ -1764,58 +1733,55 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         _worldWeaponObject.Name = $"world_weapon_{itemId}";
         _worldWeaponObject.Flags |= GameObjectFlags.NotSaved | GameObjectFlags.NotNetworked;
-        _worldWeaponUsesAuthoredPrefab = usesAuthoredPrefab;
-        _worldWeaponAttachedToBone = boneParent.IsValid();
+        _worldWeaponAttachedToBone = true;
 
-        ApplyWorldWeaponLocalTransform(definition);
+        _worldWeaponPrefabOffset = Vector3.Zero;
+        _worldWeaponPrefabRotation = Rotation.Identity;
+        _worldWeaponPrefabScale = 1f;
+        _worldWeaponPrefabHandedness = 0;
 
-        PrepareWorldWeaponClone(_worldWeaponObject);
+        if (_worldWeaponObject.Components.TryGet<WeaponWorldModel>(out var wmComp))
+        {
+            _worldWeaponPrefabOffset = wmComp.PositionOffset;
+            _worldWeaponPrefabRotation = wmComp.RotationOffset;
+            _worldWeaponPrefabScale = wmComp.Scale > 0f ? wmComp.Scale : 1f;
+        }
+
+        var wepInst = GetWeaponInstanceForItem(itemId);
+        if (wepInst.IsValid())
+            _worldWeaponPrefabHandedness = (int)wepInst.HoldTypeHandedness;
+
+        ApplyWorldWeaponLocalTransform();
 
         _worldWeaponItemId = itemId;
         _worldWeaponFailedItemId = null;
-        Log.Info($"[Player] World weapon visual '{itemId}' cloned from {(usesAuthoredPrefab ? "world" : "view")} prefab");
+        Log.Info($"[Player] World weapon visual '{itemId}' spawned from WM prefab");
         return true;
     }
 
-    private static GameObject GetWorldWeaponPrefab(string itemId, out bool usesAuthoredPrefab)
+    private static Weapon GetWeaponInstanceForItem(string itemId)
     {
-        usesAuthoredPrefab = false;
-
         var manager = WeaponManager.Instance;
-        if (!manager.IsValid())
-            return null;
-
-        var worldPrefab = itemId switch
-        {
-            "usp" => manager.WorldWeaponUspPrefab,
-            "mp5" => manager.WorldWeaponMp5Prefab,
-            "m4a1" => manager.WorldWeaponM4a1Prefab,
-            "physgun" => manager.WorldWeaponPhysgun,
-            "toolgun" => manager.WorldWeaponToolgun,
-            "pickaxe" => manager.WorldWeaponPickaxe,
-            "picklock" => manager.WorldWeaponPicklock,
-            "handcuff" => manager.WorldWeaponHandcuff,
-            _ => null
-        };
-
-        if (worldPrefab.IsValid())
-        {
-            usesAuthoredPrefab = true;
-            return worldPrefab;
-        }
-
+        if (!manager.IsValid()) return null;
         return itemId switch
         {
-            "usp" => manager.WeaponUspPrefab,
-            "mp5" => manager.WeaponMp5Prefab,
-            "m4a1" => manager.WeaponM4a1Prefab,
-            "physgun" => manager.WeaponPhysgun,
-            "toolgun" => manager.WeaponToolgun,
-            "pickaxe" => manager.WeaponPickaxe,
-            "picklock" => manager.WeaponPicklock,
-            "handcuff" => manager.WeaponHandcuff,
-            _ => null
+            "usp"      => manager.Usp,
+            "mp5"      => manager.Mp5,
+            "m4a1"     => manager.M4A1,
+            "physgun"  => manager.Physgun,
+            "toolgun"  => manager.Toolgun,
+            "pickaxe"  => manager.Pickaxe,
+            "picklock" => manager.Picklock,
+            "handcuff" => manager.Handcuff,
+            "keys"     => manager.Keys,
+            _          => null
         };
+    }
+
+    private static GameObject GetWorldModelPrefabForItem(string itemId)
+    {
+        var weapon = GetWeaponInstanceForItem(itemId);
+        return weapon?.WorldModelPrefab;
     }
 
     private void UpdateProxyWeaponHoldType()
@@ -1827,7 +1793,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             ? CitizenAnimationHelper.HoldTypes.None
             : GetWeaponHoldType(EquippedWeaponItemId);
 
+        var handedness = IsArrested || string.IsNullOrWhiteSpace(EquippedWeaponItemId)
+            ? 0
+            : _worldWeaponPrefabHandedness;
+
         Renderer.Set("holdtype", (int)holdType);
+        Renderer.Set("holdtype_handedness", handedness);
     }
 
     private static CitizenAnimationHelper.HoldTypes GetWeaponHoldType(string itemId)
@@ -1846,122 +1817,63 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         };
     }
 
-    private static void PrepareWorldWeaponClone(GameObject obj)
-    {
-        if (!obj.IsValid())
-            return;
-
-        if (obj.Components.TryGet<Weapon>(out var weapon))
-            weapon.Enabled = false;
-
-        DisableWorldWeaponArms(obj);
-    }
-
-    private static void DisableWorldWeaponArms(GameObject obj)
-    {
-        if (!obj.IsValid())
-            return;
-
-        if (string.Equals(obj.Name, "arms", StringComparison.OrdinalIgnoreCase))
-            obj.Enabled = false;
-
-        foreach (var child in obj.Children)
-            DisableWorldWeaponArms(child);
-    }
-
-    private void UpdateWorldWeaponTransform(WorldWeaponVisualDefinition definition)
+    private void UpdateWorldWeaponTransform()
     {
         if (!_worldWeaponObject.IsValid() || !Renderer.IsValid())
             return;
 
         if (!_worldWeaponAttachedToBone)
         {
-            var boneParent = TryGetWeaponVisualParentObject(definition, _worldWeaponUsesAuthoredPrefab);
+            var boneParent = TryGetWeaponVisualParentObject();
             if (boneParent.IsValid())
             {
                 _worldWeaponObject.Parent = boneParent;
                 _worldWeaponAttachedToBone = true;
-                ApplyWorldWeaponLocalTransform(definition);
+                ApplyWorldWeaponLocalTransform();
                 return;
             }
         }
 
         if (_worldWeaponAttachedToBone)
         {
-            ApplyWorldWeaponLocalTransform(definition);
+            ApplyWorldWeaponLocalTransform();
             return;
         }
 
-        if (!TryGetWeaponVisualBaseTransform(definition, _worldWeaponUsesAuthoredPrefab, out var transform))
+        if (!TryGetWeaponVisualBaseTransform(out var transform))
             return;
 
-        var positionOffset = _worldWeaponUsesAuthoredPrefab ? Vector3.Zero : definition.PositionOffset;
-        var rotationOffset = _worldWeaponUsesAuthoredPrefab ? Rotation.Identity : definition.RotationOffset;
-        var scale = _worldWeaponUsesAuthoredPrefab ? 1f : definition.Scale;
-
-        _worldWeaponObject.WorldPosition = transform.Position + transform.Rotation * positionOffset;
-        _worldWeaponObject.WorldRotation = transform.Rotation * rotationOffset;
-        _worldWeaponObject.LocalScale = Vector3.One * scale;
+        _worldWeaponObject.WorldPosition = transform.Position + transform.Rotation * _worldWeaponPrefabOffset;
+        _worldWeaponObject.WorldRotation = transform.Rotation * _worldWeaponPrefabRotation;
+        _worldWeaponObject.LocalScale = Vector3.One * _worldWeaponPrefabScale;
     }
 
-    private void ApplyWorldWeaponLocalTransform(WorldWeaponVisualDefinition definition)
+    private void ApplyWorldWeaponLocalTransform()
     {
         if (!_worldWeaponObject.IsValid())
             return;
 
-        var positionOffset = _worldWeaponUsesAuthoredPrefab ? Vector3.Zero : definition.PositionOffset;
-        var rotationOffset = _worldWeaponUsesAuthoredPrefab ? Rotation.Identity : definition.RotationOffset;
-        var scale = _worldWeaponUsesAuthoredPrefab ? 1f : definition.Scale;
-
-        _worldWeaponObject.LocalPosition = positionOffset;
-        _worldWeaponObject.LocalRotation = rotationOffset;
-        _worldWeaponObject.LocalScale = Vector3.One * scale;
+        _worldWeaponObject.LocalPosition = _worldWeaponPrefabOffset;
+        _worldWeaponObject.LocalRotation = _worldWeaponPrefabRotation;
+        _worldWeaponObject.LocalScale = Vector3.One * _worldWeaponPrefabScale;
     }
 
-    private GameObject TryGetWeaponVisualParentObject(WorldWeaponVisualDefinition definition, bool strictParentBone)
+    private GameObject TryGetWeaponVisualParentObject()
     {
         EnsureWeaponVisualRendererReady();
 
         if (!Renderer.IsValid())
             return null;
 
-        var parentBone = string.IsNullOrWhiteSpace(definition?.ParentBone) ? "hold_r" : definition.ParentBone;
-        var bone = Renderer.GetBoneObject(parentBone);
-        if (bone.IsValid())
-            return bone;
-
-        if (strictParentBone)
-            return null;
-
-        foreach (var boneName in WeaponVisualBoneNames)
-        {
-            bone = Renderer.GetBoneObject(boneName);
-            if (bone.IsValid())
-                return bone;
-        }
-
-        return null;
+        return HoldRBone;
     }
 
-    private bool TryGetWeaponVisualBaseTransform(WorldWeaponVisualDefinition definition, bool strictParentBone, out Transform transform)
+    private bool TryGetWeaponVisualBaseTransform(out Transform transform)
     {
         transform = default;
 
-        if (Renderer.IsValid())
-        {
-            var parentBone = string.IsNullOrWhiteSpace(definition?.ParentBone) ? "hold_r" : definition.ParentBone;
-            if (Renderer.TryGetBoneTransform(parentBone, out transform))
-                return true;
-
-            if (strictParentBone)
-                return false;
-
-            foreach (var boneName in WeaponVisualBoneNames)
-            {
-                if (Renderer.TryGetBoneTransform(boneName, out transform))
-                    return true;
-            }
-        }
+        if (Renderer.IsValid() && Renderer.TryGetBoneTransform("hold_r", out transform))
+            return true;
 
         transform = new Transform(WorldPosition + Vector3.Up * 48f + WorldRotation.Forward * 12f, WorldRotation, 1f);
         return true;
@@ -2022,8 +1934,11 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         _worldWeaponObject = null;
         _worldWeaponItemId = null;
-        _worldWeaponUsesAuthoredPrefab = false;
         _worldWeaponAttachedToBone = false;
+        _worldWeaponPrefabOffset = Vector3.Zero;
+        _worldWeaponPrefabRotation = Rotation.Identity;
+        _worldWeaponPrefabScale = 1f;
+        _worldWeaponPrefabHandedness = 0;
     }
 
     private void UpdateRemotePhysgunIdleSound()
@@ -2135,11 +2050,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (TryGetWorldWeaponChildTransform("muzzle", out var muzzleTransform))
             return muzzleTransform.Position + muzzleTransform.Rotation.Forward * 2f;
 
-        if (TryGetWeaponVisualBaseTransform(definition: null, strictParentBone: false, out var transform))
+        if (TryGetWeaponVisualBaseTransform(out var transform))
         {
-            var offset = WorldWeaponVisuals.TryGetValue("physgun", out var definition)
-                ? definition.BeamStartOffset
-                : Vector3.Zero;
+            var offset = Vector3.Zero;
+            if (_worldWeaponObject.IsValid()
+                && _worldWeaponObject.Components.TryGet<WeaponWorldModel>(out var wm))
+                offset = wm.BeamStartOffset;
 
             return transform.Position + transform.Rotation * offset + transform.Rotation.Forward * 2f;
         }
@@ -2752,6 +2668,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
                 CurrentWeaponItemId = null;
                 HostSetEquippedWeaponItemId(null);
                 RpcSetHoldType(Renderer, 0);
+                RpcSetHoldTypeHandedness(Renderer, 0);
+                RpcSetPlayerReload(false);
             }
 
             // Время считаем на клиенте; по истечении просим хост освободить.

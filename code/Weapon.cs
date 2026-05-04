@@ -20,6 +20,7 @@ public class Weapon : Component
     [Property, Category("Combat")] public GameObject SpriteFirePrefab { get; set; }
     [Property, Category("Combat")] public bool SpawnSpriteFireOnShot { get; set; } = false;
     [Property, Category("Combat")] public CitizenAnimationHelper.HoldTypes HoldType { get; set; } = CitizenAnimationHelper.HoldTypes.None;
+    [Property, Category("Combat")] public WeaponHandedness HoldTypeHandedness { get; set; } = WeaponHandedness.BothHands;
 
     public WeaponState State { get; protected set; } = WeaponState.None;
 
@@ -60,6 +61,9 @@ public class Weapon : Component
     [Property, Category("Reload")] public virtual float ReloadDurationSeconds { get; set; } = 2f;
 
     [Property] public bool IsIronSight { get; set; } = false;
+
+    /// <summary>Префаб WorldModel для отображения оружия у других игроков. Если не задан — WorldModel не отображается.</summary>
+    [Property, Category("WorldModel")] public GameObject WorldModelPrefab { get; set; }
 
     /// <summary>
     /// Использовать ли стандартный обработчик ввода (огонь/перезарядка/прицеливание).
@@ -289,6 +293,7 @@ public class Weapon : Component
     {
         if (Viewmodel != null)
             Viewmodel.Set("b_reload", true);
+        Player.Local?.RpcSetPlayerReload(true);
     }
 
     /// <summary>Вызывается по окончании перезарядки. По умолчанию переключает b_reload (GetBool → инверт), чтобы animgraph завершил анимацию; сбрасывает b_reloading. Револьвер переопределяет и ничего не ставит.</summary>
@@ -297,6 +302,7 @@ public class Weapon : Component
         if (Viewmodel == null) return;
         Viewmodel.Set("b_reload", !Viewmodel.GetBool("b_reload"));
         Viewmodel.Set("b_reloading", false);
+        Player.Local?.RpcSetPlayerReload(false);
     }
 
     private async Task PlayReloadSoundAsync()
@@ -401,4 +407,14 @@ public enum WeaponState
     None,
     Fire,
     Reload
+}
+
+public enum WeaponHandedness
+{
+    /// <summary>Обе руки (0).</summary>
+    BothHands = 0,
+    /// <summary>Правая рука (1).</summary>
+    RightHand = 1,
+    /// <summary>Левая рука (2).</summary>
+    LeftHand = 2
 }

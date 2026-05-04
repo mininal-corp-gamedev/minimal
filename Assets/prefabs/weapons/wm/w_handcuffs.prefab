@@ -1,0 +1,94 @@
+{
+  "RootObject": {
+    "__guid": "10579e2d-6d24-43ae-8e64-852251296571",
+    "__version": 2,
+    "Flags": 0,
+    "Name": "w_handcuffs",
+    "Position": "0,0,0",
+    "Rotation": "-0.678719759,-0.181330144,0.177669778,0.689123154",
+    "Scale": "0.600000024,0.600000024,0.600000024",
+    "Tags": "",
+    "Enabled": true,
+    "NetworkMode": 2,
+    "NetworkFlags": 0,
+    "NetworkOrphaned": 0,
+    "NetworkTransmit": true,
+    "OwnerTransfer": 1,
+    "Components": [
+      {
+        "__type": "Sandbox.ModelRenderer",
+        "__guid": "b38bac6e-8ba8-42df-b676-f64726222457",
+        "__enabled": true,
+        "Flags": 0,
+        "BodyGroups": 1,
+        "CreateAttachments": false,
+        "LodOverride": null,
+        "MaterialGroup": null,
+        "MaterialOverride": null,
+        "Materials": null,
+        "Model": "props/other/cuffs/handcuffs.vmdl",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "RenderOptions": {
+          "GameLayer": true,
+          "OverlayLayer": false,
+          "BloomLayer": false,
+          "AfterUILayer": false
+        },
+        "RenderType": "On",
+        "Tint": "1,1,1,1"
+      },
+      {
+        "__type": "WeaponWorldModel",
+        "__guid": "f14f1c01-2f83-4bf9-ace4-9bd4d983ab74",
+        "__enabled": true,
+        "Flags": 0,
+        "BeamStartOffset": "0,0,0",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "PositionOffset": "0,0,0",
+        "RotationOffset": "0,0,0,1",
+        "Scale": 1
+      }
+    ],
+    "Children": [],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
+  },
+  "ResourceVersion": 2,
+  "ShowInMenu": false,
+  "MenuPath": null,
+  "MenuIcon": null,
+  "DontBreakAsTemplate": false,
+  "__references": [
+    "thebox.handcuffs#203399"
+  ],
+  "__version": 2
+}

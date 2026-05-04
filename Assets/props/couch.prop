@@ -3,8 +3,10 @@
   "Header": "Chair",
   "Category": "civil",
   "Description": "just chair",
-  "Price": 100,
-  "Ident": "facepunch.wooden_chair_a",
+  "Prefab": {
+    "_type": "gameobject",
+    "prefab": "props/prop_chair.prefab"
+  },
   "__references": [],
   "__version": 0
 }

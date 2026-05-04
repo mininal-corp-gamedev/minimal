@@ -1,10 +1,10 @@
 {
-  "Id": "shelving",
-  "Header": "Shelving",
+  "Id": "wall1",
+  "Header": "Wall 1",
   "Category": "civil",
   "Description": "",
   "Price": 100,
-  "Ident": "facepunch.modern_shelving_a2",
+  "Ident": "subzerostudios.modularwall",
   "__references": [],
   "__version": 0
 }

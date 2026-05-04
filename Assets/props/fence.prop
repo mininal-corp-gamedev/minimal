@@ -1,10 +1,10 @@
 {
-  "Id": "shelving",
-  "Header": "Shelving",
+  "Id": "shelving - 3",
+  "Header": "Fence",
   "Category": "civil",
   "Description": "",
   "Price": 100,
-  "Ident": "facepunch.modern_shelving_a2",
+  "Ident": "brax.fence_128",
   "__references": [],
   "__version": 0
 }

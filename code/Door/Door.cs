@@ -161,12 +161,14 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	/// <summary>Sound played (broadcast to all clients at the door position) when this door closes.</summary>
 	[Property, Category( "Sounds" )] public SoundEvent CloseSound { get; set; }
+    [Property, Category("Sounds")] public SoundEvent BuySound { get; set; }
+    [Property, Category("Sounds")] public SoundEvent SellSound { get; set; }
 
-	/// <summary>
-	/// True on the local client if the local player may lock/unlock this door with the Keys weapon:
-	/// job-allowed for job doors, or owner/roommate for player-owned doors.
-	/// </summary>
-	public bool CanBeControlledByLocalPlayer
+    /// <summary>
+    /// True on the local client if the local player may lock/unlock this door with the Keys weapon:
+    /// job-allowed for job doors, or owner/roommate for player-owned doors.
+    /// </summary>
+    public bool CanBeControlledByLocalPlayer
 	{
 		get
 		{

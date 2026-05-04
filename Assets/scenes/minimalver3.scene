@@ -10574,6 +10574,14 @@
                     },
                     "Property": "NetworkMode",
                     "Value": 1
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "6490aa56-702e-4bc2-9cdb-1c3c478e2c5d"
+                    },
+                    "Property": "Model",
+                    "Value": "models/doors/door_2_window_a.vmdl"
                   }
                 ],
                 "MovedObjects": []
@@ -17624,6 +17632,14 @@
                     },
                     "Property": "NetworkMode",
                     "Value": 1
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "7fd779d5-066d-4116-887d-0a93bb1bd3e4"
+                    },
+                    "Property": "Model",
+                    "Value": "models/doors/door_2_window_a.vmdl"
                   }
                 ],
                 "MovedObjects": []
@@ -17683,6 +17699,14 @@
                     },
                     "Property": "NetworkMode",
                     "Value": 1
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "6490aa56-702e-4bc2-9cdb-1c3c478e2c5d"
+                    },
+                    "Property": "Model",
+                    "Value": "models/doors/door_2_window_a.vmdl"
                   }
                 ],
                 "MovedObjects": []
@@ -17734,6 +17758,14 @@
                     },
                     "Property": "NetworkMode",
                     "Value": 1
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "7fd779d5-066d-4116-887d-0a93bb1bd3e4"
+                    },
+                    "Property": "Model",
+                    "Value": "models/doors/door_2_window_a.vmdl"
                   }
                 ],
                 "MovedObjects": []
@@ -18446,6 +18478,14 @@
                           "go": "9bdfd42b-cdb4-4279-a7d4-9a97c87eab3e",
                           "component_type": "Door"
                         }
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "6490aa56-702e-4bc2-9cdb-1c3c478e2c5d"
+                        },
+                        "Property": "Model",
+                        "Value": "models/doors/door_2_window_a.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -18518,6 +18558,14 @@
                           "go": "9e291407-cb5e-4402-8731-b25dba7393b5",
                           "component_type": "Door"
                         }
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "6490aa56-702e-4bc2-9cdb-1c3c478e2c5d"
+                        },
+                        "Property": "Model",
+                        "Value": "models/doors/door_2_window_a.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -18750,6 +18798,14 @@
                     },
                     "Property": "NetworkMode",
                     "Value": 1
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "6490aa56-702e-4bc2-9cdb-1c3c478e2c5d"
+                    },
+                    "Property": "Model",
+                    "Value": "models/doors/door_2_window_a.vmdl"
                   }
                 ],
                 "MovedObjects": []
@@ -19021,6 +19077,14 @@
                     },
                     "Property": "NetworkMode",
                     "Value": 1
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "6490aa56-702e-4bc2-9cdb-1c3c478e2c5d"
+                    },
+                    "Property": "Model",
+                    "Value": "models/doors/door_2_window_a.vmdl"
                   }
                 ],
                 "MovedObjects": []
@@ -19137,6 +19201,14 @@
                     },
                     "Property": "NetworkMode",
                     "Value": 1
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "6490aa56-702e-4bc2-9cdb-1c3c478e2c5d"
+                    },
+                    "Property": "Model",
+                    "Value": "models/doors/door_2_window_a.vmdl"
                   }
                 ],
                 "MovedObjects": []
@@ -19196,6 +19268,14 @@
                     },
                     "Property": "NetworkMode",
                     "Value": 1
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "7fd779d5-066d-4116-887d-0a93bb1bd3e4"
+                    },
+                    "Property": "Model",
+                    "Value": "models/doors/door_2_window_a.vmdl"
                   }
                 ],
                 "MovedObjects": []
@@ -20965,6 +21045,14 @@
                     },
                     "Property": "NetworkMode",
                     "Value": 1
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "7fd779d5-066d-4116-887d-0a93bb1bd3e4"
+                    },
+                    "Property": "Model",
+                    "Value": "models/doors/door_2_window_a.vmdl"
                   }
                 ],
                 "MovedObjects": []
@@ -21781,6 +21869,14 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
+                        },
+                        "Property": "Model",
+                        "Value": "models/doors/door_2_window_b.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -21861,6 +21957,14 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
+                        },
+                        "Property": "Model",
+                        "Value": "models/doors/door_2_window_b.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -21960,6 +22064,14 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
+                        },
+                        "Property": "Model",
+                        "Value": "models/doors/door_2_window_b.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -22040,6 +22152,14 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
+                        },
+                        "Property": "Model",
+                        "Value": "models/doors/door_2_window_b.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -22139,6 +22259,14 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
+                        },
+                        "Property": "Model",
+                        "Value": "models/doors/door_2_window_b.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -22219,6 +22347,14 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
+                        },
+                        "Property": "Model",
+                        "Value": "models/doors/door_2_window_b.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -22318,6 +22454,14 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
+                        },
+                        "Property": "Model",
+                        "Value": "models/doors/door_2_window_b.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -22398,6 +22542,14 @@
                         },
                         "Property": "Tint",
                         "Value": "0.50233,0.02103,0.02103,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
+                        },
+                        "Property": "Model",
+                        "Value": "models/doors/door_2_window_b.vmdl"
                       }
                     ],
                     "MovedObjects": []
@@ -34260,18 +34412,18 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
-        }
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
       },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "b7c3e9f6-dbbd-4d7c-9f80-7434b612f0ee"
         }
       },
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
+        }
       }
     }
   },
@@ -34308,6 +34460,7 @@
     "facepunch.wheely_bin#143949",
     "facepunch.wire_cage_b_painted#111152",
     "gkaf.door_2_window_a#26046",
+    "gkaf.door_2_window_b#26047",
     "gunsightsoftware.model-deadpigeon#184155",
     "halfpeeps.garage_door#42972",
     "niclude.bench_4#30655",

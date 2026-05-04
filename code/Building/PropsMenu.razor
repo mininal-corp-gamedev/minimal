@@ -111,7 +111,7 @@
 	{
 		return prop is not null
 			&& !string.IsNullOrWhiteSpace( prop.Id )
-			&& prop.Prefab.IsValid()
+			&& !string.IsNullOrWhiteSpace(prop.Ident)
 			&& Player.Local.IsValid()
 			&& GetOwnedPropsCount() < GetMaxProps();
 	}
@@ -199,7 +199,7 @@
 			.GetAll<PropDefinition>()
 			.FirstOrDefault( x => x is not null && string.Equals( x.Id, normalized, StringComparison.Ordinal ) );
 
-		if ( prop is null || !prop.Prefab.IsValid() )
+		if ( prop is null )
 		{
 			NotifyCaller( caller, "Prop not found.", false );
 			return;
@@ -224,28 +224,29 @@
 			yawForward = player.WorldRotation.Forward;
 		yawForward = yawForward.Normal;
 
-		var gameObj = prop.Prefab.Clone( spawnPosition, Rotation.LookAt( yawForward ) );
-		if ( !gameObj.IsValid() )
-		{
-			NotifyCaller( caller, "Could not spawn prop.", false );
-			return;
-		}
+		//todo change to prop.Ident
+		// var gameObj = prop.Prefab.Clone( spawnPosition, Rotation.LookAt( yawForward ) );
+		// if ( !gameObj.IsValid() )
+		// {
+		// 	NotifyCaller( caller, "Could not spawn prop.", false );
+		// 	return;
+		// }
 
-		var propCustom = gameObj.Components.Get<PropCustom>( FindMode.EverythingInSelfAndDescendants );
-		if ( !propCustom.IsValid() )
-			propCustom = gameObj.Components.Create<PropCustom>();
+		// var propCustom = gameObj.Components.Get<PropCustom>( FindMode.EverythingInSelfAndDescendants );
+		// if ( !propCustom.IsValid() )
+		// 	propCustom = gameObj.Components.Create<PropCustom>();
 
-		if ( propCustom.IsValid() )
-		{
-			propCustom.SetOwner( player );
-			player.RegisterSpawnedProp( propCustom );
-		}
+		// if ( propCustom.IsValid() )
+		// {
+		// 	propCustom.SetOwner( player );
+		// 	player.RegisterSpawnedProp( propCustom );
+		// }
 
-		gameObj.Tags.Add("prop");
-		// Dedicated architecture: gameplay owner is PropCustom.PlayerOwner; network authority stays on host.
-		gameObj.NetworkSpawn();
+		// gameObj.Tags.Add("prop");
+		// // Dedicated architecture: gameplay owner is PropCustom.PlayerOwner; network authority stays on host.
+		// gameObj.NetworkSpawn();
 
-		Log.Info( $"[PropsMenu] {caller.DisplayName} ({caller.SteamId.Value}) bought/spawned prop '{GetPropHeader( prop )}' (id: {prop.Id}, price: ${prop.Price}, object: {gameObj.Name})." );
+		//Log.Info( $"[PropsMenu] {caller.DisplayName} ({caller.SteamId.Value}) bought/spawned prop '{GetPropHeader( prop )}' (id: {prop.Id}, price: ${prop.Price}, object: {gameObj.Name})." );
 		NotifyCaller( caller, $"Spawned: {GetPropHeader( prop )}.", true );
 	}
 
@@ -363,7 +364,6 @@
 			hash.Add( prop.Header );
 			hash.Add( prop.Category );
 			hash.Add( prop.Description );
-			hash.Add( prop.Prefab );
 		}
 
 		return hash.ToHashCode();

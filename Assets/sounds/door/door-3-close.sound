@@ -1,18 +1,18 @@
 {
   "UI": false,
-  "Volume": "0.800000012",
-  "Pitch": "0.699999988 1.10000002",
+  "Volume": "1",
+  "Pitch": "1",
   "Decibels": 70,
   "SelectionMode": "Random",
   "Sounds": [
-    "sounds/door/wood_crate_impact_hard2.vsnd"
+    "sounds/door/door-3-close.vsnd"
   ],
   "Occlusion": true,
   "AirAbsorption": true,
   "Transmission": true,
   "OcclusionRadius": 64,
   "DistanceAttenuation": true,
-  "Distance": 1938,
+  "Distance": 15000,
   "Falloff": [
     {
       "x": 0,
@@ -44,8 +44,8 @@
     }
   ],
   "DefaultMixer": {
-    "Name": "game",
-    "Id": "d32191d8-0b1e-470a-8313-cefff5f30112"
+    "Name": "unknown",
+    "Id": "00000000-0000-0000-0000-000000000000"
   },
   "__references": [],
   "__version": 1

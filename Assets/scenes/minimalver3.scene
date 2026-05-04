@@ -22484,14 +22484,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "Component",
-                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
-                        },
-                        "Property": "OpenSound",
-                        "Value": "sounds/door/door_latch3.sound"
-                      },
-                      {
-                        "Target": {
                           "Type": "GameObject",
                           "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                         },
@@ -33306,7 +33298,7 @@
           },
           "WeaponPhysgun": {
             "_type": "gameobject",
-            "prefab": "weapons/physgun/physgun.prefab"
+            "prefab": "prefabs/weapons/physgun.prefab"
           },
           "WeaponPickaxe": {
             "_type": "gameobject",
@@ -33343,7 +33335,7 @@
           },
           "WorldWeaponPhysgun": {
             "_type": "gameobject",
-            "prefab": "weapons/physgun/physgun_wm.prefab"
+            "prefab": "prefabs/weapons/physgun.prefab"
           },
           "WorldWeaponPickaxe": {
             "_type": "gameobject",
@@ -34268,17 +34260,17 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
-        }
-      },
       "Sandbox.MovieMaker.MovieRecorderSystem": {
         "DisableClientRecording": false
       },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "b7c3e9f6-dbbd-4d7c-9f80-7434b612f0ee"
+        }
+      },
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       }
     }

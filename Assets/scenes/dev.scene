@@ -3092,201 +3092,241 @@
               "Children": []
             }
           ]
+        },
+        {
+          "__guid": "d938f790-4e07-49cf-881a-cca689cec307",
+          "__version": 2,
+          "__Prefab": "prefabs/doors/door city2.prefab",
+          "__PrefabInstancePatch": {
+            "AddedObjects": [],
+            "RemovedObjects": [],
+            "PropertyOverrides": [
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "55b1f4a3-b210-4433-ba15-67a1b1ed54ac"
+                },
+                "Property": "Position",
+                "Value": "-27.3253174,899.787842,44.3913383"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "55b1f4a3-b210-4433-ba15-67a1b1ed54ac"
+                },
+                "Property": "Rotation",
+                "Value": "0,0,-2.98023224E-08,1"
+              }
+            ],
+            "MovedObjects": []
+          },
+          "__PrefabIdToInstanceId": {
+            "55b1f4a3-b210-4433-ba15-67a1b1ed54ac": "d938f790-4e07-49cf-881a-cca689cec307",
+            "77f2015e-28d1-469e-8f70-05e60777ebfb": "e3bd9e4c-ea62-4d70-a29f-5ebb1dc8f69d",
+            "6915d782-6ff4-40e8-a67c-35c996879604": "6952c97c-9085-4395-ab8f-0e6f9bb7f90d",
+            "071916b2-afa8-42bc-a830-cf8317abec1a": "dd343a33-b51a-4050-8110-d2976354156c",
+            "80339121-fc6e-4e2a-953e-c57fd1374a75": "e2a1cc21-f701-413a-91e2-794d352285fb",
+            "69252117-36cc-4f58-a93b-5d9075cc43fd": "68cc32e5-cbc8-4a16-896e-5e15f5466707",
+            "ac499c68-26bf-4535-ae73-864522c1449a": "b9d5079a-ef6a-4061-9e54-35c7a53a5fcb",
+            "6363118d-4f59-4862-8243-418d78475618": "247fc269-eb63-47c4-9356-0948232ee8f8",
+            "0e3e1ff9-3813-46b1-988b-b5a001eb253d": "0a9c1d7c-477b-4da3-a3a3-69310effb590",
+            "4b104cf4-31b7-42ab-89c7-63a78ac1160d": "b7ba9566-fb92-457b-b84d-6574646ea78e",
+            "30f23b99-ac61-4f94-9ba3-eafdc4dfadb5": "65def43e-b4d2-4058-929f-7e91e352adee",
+            "7fee6c04-3a29-4d71-be32-d5c0f5929758": "a8026158-fd66-40bd-8a70-58e1a903c836",
+            "215650c0-88f2-4453-a659-aa3046d034bc": "dcac9948-39b9-4121-92a6-e9aa81c13fa8"
+          }
+        },
+        {
+          "__guid": "0eb2a36d-12e1-4668-bf84-67f202a506ab",
+          "__version": 2,
+          "__Prefab": "prefabs/doors/door city.prefab",
+          "__PrefabInstancePatch": {
+            "AddedObjects": [],
+            "RemovedObjects": [],
+            "PropertyOverrides": [
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
+                },
+                "Property": "Position",
+                "Value": "-5.79055786,723.35376,44.3913193"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
+                },
+                "Property": "Rotation",
+                "Value": "0,0,-2.98023224E-08,1"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
+                },
+                "Property": "Rotation",
+                "Value": "0,0,0,1"
+              }
+            ],
+            "MovedObjects": []
+          },
+          "__PrefabIdToInstanceId": {
+            "40bd5a35-cadc-4908-ae99-03f710adceff": "0eb2a36d-12e1-4668-bf84-67f202a506ab",
+            "876306dc-b294-465e-9ed0-16ddda908237": "e4124557-7f41-4979-be56-8e03a67a5791",
+            "ee699862-32ba-4ec6-8bc6-f922fc263704": "2daa0090-5541-46a4-a1cf-8e2a7b4bf1bc",
+            "490556bf-bd20-4c75-8dc4-9a17c306516d": "7369fd98-4d70-49a6-97c6-a810e50a949e",
+            "3d833f6b-90c2-4187-8f42-9f967efdc613": "b560d0d2-eb3e-4e6c-9317-b5edbd58086b",
+            "9e458574-ba98-4fce-82ba-e45da49d1115": "758dfeeb-4607-4d75-a0f0-4106e88686c6",
+            "07c55b96-403e-4880-a5d0-bdbf0a3d9846": "a288b1ea-c740-425d-8890-6230f3f9dd5a",
+            "623055a5-68ab-4b7b-acc2-a98328dcd145": "0eeba137-727a-4ed4-a6a6-dfa83c5a871f",
+            "800becb0-14a6-4e67-b25c-f60c064e1ecc": "3822d3b9-21ef-43fa-bcc2-8971d568174e",
+            "4e9d2163-2318-4ffc-8331-2c21215a35c7": "24db270a-658f-4572-ac16-bcfbc53d6d08",
+            "99d6ce33-d6a1-4814-88b7-813e95afc016": "1947733d-434b-4892-8a55-f94f9bedf24a",
+            "b25faba1-750f-40cc-8dcf-514f5db4d567": "4b0eec2b-2f74-404f-a3c8-6a7391dd4635",
+            "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "7900fd23-0506-43af-bd0b-3e96d3c3d854"
+          }
+        },
+        {
+          "__guid": "521c1dd1-f7c4-4fef-983b-401da945fbc3",
+          "__version": 2,
+          "__Prefab": "prefabs/doors/door police 2.prefab",
+          "__PrefabInstancePatch": {
+            "AddedObjects": [],
+            "RemovedObjects": [],
+            "PropertyOverrides": [
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                },
+                "Property": "Name",
+                "Value": "door police 5"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                },
+                "Property": "Position",
+                "Value": "90.0991211,211.689407,-1.93715096E-06"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                },
+                "Property": "Rotation",
+                "Value": "0,0,0,1"
+              }
+            ],
+            "MovedObjects": []
+          },
+          "__PrefabIdToInstanceId": {
+            "1a32e9e9-0ad9-4c35-9977-694f32effa28": "521c1dd1-f7c4-4fef-983b-401da945fbc3",
+            "0097694d-e91b-41f5-bfff-0ba318adf421": "0ded3de7-4216-4f95-8463-32b88f4ec584",
+            "08598ea3-c937-4b5c-b3ad-a55028f8c819": "67ec48fc-ab71-4001-b27a-f43acfe12c3f",
+            "f3194674-6ea7-4dbb-bce9-467c27446bb9": "f3e5c6ec-00db-4305-8a99-4565f8cbdc67",
+            "06db3ed2-5fdb-417d-b74b-41c4a3270e86": "27e8ce0f-88bb-4362-8f9f-8d892209339a",
+            "4c08e199-1d08-4b00-920e-eb26d13d6a3f": "657b4488-a818-4a68-af8e-75b9f6746faf",
+            "716a032b-dd50-4f3b-a932-f95fdc5823cf": "156a3db6-6290-474f-8c0b-dad209ccccf6",
+            "9e330344-1ee1-4a85-b504-9e3f54b559b1": "220cc436-b9c9-4992-8dbe-d82e9bff3993",
+            "99e34c9b-5f31-4177-81a2-ecfbaceb82ae": "275ff079-913f-4142-8298-1530b9fa45a8",
+            "6416f6fc-7681-43ed-9c5c-558096eae9a3": "311ff180-1413-4587-9221-60419bbce3b3",
+            "7f4dc5fd-a395-4784-9373-49419211a35d": "5ee0ff93-398f-4ff2-b99b-2354be74224e",
+            "eb1fa5a4-7e01-441b-b35e-431f6ae58cc2": "19d7aecd-4e91-48bf-916d-bb389227f2c1",
+            "2263669d-496d-422a-8199-787d54c9e7c3": "6c956078-d42f-477e-ad76-f207bea59380",
+            "8a784562-9c2a-424a-b873-55997556adc6": "262f7dbc-eb6c-4112-a4e3-d76f57396299"
+          }
+        },
+        {
+          "__guid": "e7a1ab7b-6332-4a18-9838-057a8690a63f",
+          "__version": 2,
+          "__Prefab": "prefabs/doors/door police 2.prefab",
+          "__PrefabInstancePatch": {
+            "AddedObjects": [],
+            "RemovedObjects": [],
+            "PropertyOverrides": [
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                },
+                "Property": "Position",
+                "Value": "3.86167145,211.689331,-1.93715096E-06"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                },
+                "Property": "Rotation",
+                "Value": "0,0,0,1"
+              }
+            ],
+            "MovedObjects": []
+          },
+          "__PrefabIdToInstanceId": {
+            "1a32e9e9-0ad9-4c35-9977-694f32effa28": "e7a1ab7b-6332-4a18-9838-057a8690a63f",
+            "0097694d-e91b-41f5-bfff-0ba318adf421": "f3f6733c-c7ea-4e21-b58d-8da5a4753a45",
+            "08598ea3-c937-4b5c-b3ad-a55028f8c819": "7e791658-148f-4a28-8a6f-1fd81d8a9cdb",
+            "f3194674-6ea7-4dbb-bce9-467c27446bb9": "f704314b-377a-444f-9ce8-3308d3373853",
+            "06db3ed2-5fdb-417d-b74b-41c4a3270e86": "4353a7f4-5b85-4557-85b5-988f605c8001",
+            "4c08e199-1d08-4b00-920e-eb26d13d6a3f": "456fa1a7-38e6-471a-b194-84b6a7f92854",
+            "716a032b-dd50-4f3b-a932-f95fdc5823cf": "56c95a34-f170-495e-abc8-845b9e2d091e",
+            "9e330344-1ee1-4a85-b504-9e3f54b559b1": "afe906f1-dfb8-41c6-80dd-18e6c50c2004",
+            "99e34c9b-5f31-4177-81a2-ecfbaceb82ae": "8e9b6911-ec5f-45f0-af20-d7faaa23f442",
+            "6416f6fc-7681-43ed-9c5c-558096eae9a3": "965738ef-3b0b-4bd3-8b8e-ba9c6579c60a",
+            "7f4dc5fd-a395-4784-9373-49419211a35d": "cbef558f-911b-4d9e-a9f5-40ed5898e3cc",
+            "eb1fa5a4-7e01-441b-b35e-431f6ae58cc2": "1560e09d-4734-4d3b-9f74-201bb6e9ecfc",
+            "2263669d-496d-422a-8199-787d54c9e7c3": "25e80a2e-6170-40a6-8d77-0b582d199d94",
+            "8a784562-9c2a-424a-b873-55997556adc6": "2e2c9d6f-afd9-4a65-bf0b-7b8b61312388"
+          }
+        },
+        {
+          "__guid": "8c16fa86-cf46-46ba-8d4e-d37dcad2a1ce",
+          "__version": 2,
+          "__Prefab": "prefabs/doors/door shops.prefab",
+          "__PrefabInstancePatch": {
+            "AddedObjects": [],
+            "RemovedObjects": [],
+            "PropertyOverrides": [
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "d96471b3-e654-45a6-a620-fe204f1aaae2"
+                },
+                "Property": "Position",
+                "Value": "1.52902222,595.414307,-0.141284019"
+              },
+              {
+                "Target": {
+                  "Type": "GameObject",
+                  "IdValue": "d96471b3-e654-45a6-a620-fe204f1aaae2"
+                },
+                "Property": "Rotation",
+                "Value": "0,0,-2.98023224E-08,0.999999881"
+              }
+            ],
+            "MovedObjects": []
+          },
+          "__PrefabIdToInstanceId": {
+            "d96471b3-e654-45a6-a620-fe204f1aaae2": "8c16fa86-cf46-46ba-8d4e-d37dcad2a1ce",
+            "bb2ac2d2-2f94-4b5b-952b-445d5b7538cd": "872d8772-d8e2-4189-8629-0d169ac440d0",
+            "2f08dd7a-cdcf-4965-953b-c11116e3a11e": "6c2a32d3-b306-4d02-905f-78f815403c44",
+            "952eeb2a-4fc2-4f3c-9ca4-4fa141afd557": "d23862b3-5d0c-403b-a061-f082156ec026",
+            "6490aa56-702e-4bc2-9cdb-1c3c478e2c5d": "eacb4560-950a-4da6-9560-3756475e002b",
+            "29193d15-1f0a-4633-8b2e-ba55bbbc5c35": "ab367465-c0e5-44a9-812a-12a82aad1215",
+            "6e42f3d6-7399-4f3d-984a-1bc0f61a7dc4": "3b3558ed-e6cf-40dc-93c7-b237341ffb87",
+            "620c4bca-c480-42d6-8a7d-1b9d71271368": "7444c454-c417-4fae-aa42-0de1943739db",
+            "128de544-3463-4372-8fb2-7364bc928dc9": "4fae7563-0e98-4e3b-b072-eeb60bfa0c93",
+            "48822518-2914-4bb3-a559-d412234d6afa": "b88ff8aa-6cad-42fe-bbb5-88a50314198f",
+            "2d4e4dfc-f5c2-40f4-9d72-a2cbf35d35e8": "36d1e613-1b6d-477a-9534-bafdcfde4ad9",
+            "0a7d5ba5-0f91-4d0e-8f05-0bb49ac9ae00": "8fdea4d5-6837-45ea-a9e0-29f669daf7b8",
+            "85370d32-33ab-4300-9078-715a7b72e52e": "f77df33e-c4e4-4c2e-bcce-4ed26058d8cd"
+          }
         }
       ]
-    },
-    {
-      "__guid": "8c16fa86-cf46-46ba-8d4e-d37dcad2a1ce",
-      "__version": 2,
-      "__Prefab": "prefabs/doors/door shops.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "d96471b3-e654-45a6-a620-fe204f1aaae2"
-            },
-            "Property": "Position",
-            "Value": "592.470215,-240.165771,10.999999"
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "d96471b3-e654-45a6-a620-fe204f1aaae2": "8c16fa86-cf46-46ba-8d4e-d37dcad2a1ce",
-        "bb2ac2d2-2f94-4b5b-952b-445d5b7538cd": "872d8772-d8e2-4189-8629-0d169ac440d0",
-        "2f08dd7a-cdcf-4965-953b-c11116e3a11e": "6c2a32d3-b306-4d02-905f-78f815403c44",
-        "952eeb2a-4fc2-4f3c-9ca4-4fa141afd557": "d23862b3-5d0c-403b-a061-f082156ec026",
-        "6490aa56-702e-4bc2-9cdb-1c3c478e2c5d": "eacb4560-950a-4da6-9560-3756475e002b",
-        "29193d15-1f0a-4633-8b2e-ba55bbbc5c35": "ab367465-c0e5-44a9-812a-12a82aad1215",
-        "6e42f3d6-7399-4f3d-984a-1bc0f61a7dc4": "3b3558ed-e6cf-40dc-93c7-b237341ffb87",
-        "620c4bca-c480-42d6-8a7d-1b9d71271368": "7444c454-c417-4fae-aa42-0de1943739db",
-        "128de544-3463-4372-8fb2-7364bc928dc9": "4fae7563-0e98-4e3b-b072-eeb60bfa0c93",
-        "48822518-2914-4bb3-a559-d412234d6afa": "b88ff8aa-6cad-42fe-bbb5-88a50314198f",
-        "2d4e4dfc-f5c2-40f4-9d72-a2cbf35d35e8": "36d1e613-1b6d-477a-9534-bafdcfde4ad9",
-        "0a7d5ba5-0f91-4d0e-8f05-0bb49ac9ae00": "8fdea4d5-6837-45ea-a9e0-29f669daf7b8",
-        "85370d32-33ab-4300-9078-715a7b72e52e": "f77df33e-c4e4-4c2e-bcce-4ed26058d8cd"
-      }
-    },
-    {
-      "__guid": "e7a1ab7b-6332-4a18-9838-057a8690a63f",
-      "__version": 2,
-      "__Prefab": "prefabs/doors/door police 2.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
-            },
-            "Property": "Position",
-            "Value": "976.19519,-237.83316,11.1412811"
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "1a32e9e9-0ad9-4c35-9977-694f32effa28": "e7a1ab7b-6332-4a18-9838-057a8690a63f",
-        "0097694d-e91b-41f5-bfff-0ba318adf421": "f3f6733c-c7ea-4e21-b58d-8da5a4753a45",
-        "08598ea3-c937-4b5c-b3ad-a55028f8c819": "7e791658-148f-4a28-8a6f-1fd81d8a9cdb",
-        "f3194674-6ea7-4dbb-bce9-467c27446bb9": "f704314b-377a-444f-9ce8-3308d3373853",
-        "06db3ed2-5fdb-417d-b74b-41c4a3270e86": "4353a7f4-5b85-4557-85b5-988f605c8001",
-        "4c08e199-1d08-4b00-920e-eb26d13d6a3f": "456fa1a7-38e6-471a-b194-84b6a7f92854",
-        "716a032b-dd50-4f3b-a932-f95fdc5823cf": "56c95a34-f170-495e-abc8-845b9e2d091e",
-        "9e330344-1ee1-4a85-b504-9e3f54b559b1": "afe906f1-dfb8-41c6-80dd-18e6c50c2004",
-        "99e34c9b-5f31-4177-81a2-ecfbaceb82ae": "8e9b6911-ec5f-45f0-af20-d7faaa23f442",
-        "6416f6fc-7681-43ed-9c5c-558096eae9a3": "965738ef-3b0b-4bd3-8b8e-ba9c6579c60a",
-        "7f4dc5fd-a395-4784-9373-49419211a35d": "cbef558f-911b-4d9e-a9f5-40ed5898e3cc",
-        "eb1fa5a4-7e01-441b-b35e-431f6ae58cc2": "1560e09d-4734-4d3b-9f74-201bb6e9ecfc",
-        "2263669d-496d-422a-8199-787d54c9e7c3": "25e80a2e-6170-40a6-8d77-0b582d199d94",
-        "8a784562-9c2a-424a-b873-55997556adc6": "2e2c9d6f-afd9-4a65-bf0b-7b8b61312388"
-      }
-    },
-    {
-      "__guid": "521c1dd1-f7c4-4fef-983b-401da945fbc3",
-      "__version": 2,
-      "__Prefab": "prefabs/doors/door police 2.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
-            },
-            "Property": "Name",
-            "Value": "door police 5"
-          },
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
-            },
-            "Property": "Position",
-            "Value": "976.195129,-151.595703,11.1412811"
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "1a32e9e9-0ad9-4c35-9977-694f32effa28": "521c1dd1-f7c4-4fef-983b-401da945fbc3",
-        "0097694d-e91b-41f5-bfff-0ba318adf421": "0ded3de7-4216-4f95-8463-32b88f4ec584",
-        "08598ea3-c937-4b5c-b3ad-a55028f8c819": "67ec48fc-ab71-4001-b27a-f43acfe12c3f",
-        "f3194674-6ea7-4dbb-bce9-467c27446bb9": "f3e5c6ec-00db-4305-8a99-4565f8cbdc67",
-        "06db3ed2-5fdb-417d-b74b-41c4a3270e86": "27e8ce0f-88bb-4362-8f9f-8d892209339a",
-        "4c08e199-1d08-4b00-920e-eb26d13d6a3f": "657b4488-a818-4a68-af8e-75b9f6746faf",
-        "716a032b-dd50-4f3b-a932-f95fdc5823cf": "156a3db6-6290-474f-8c0b-dad209ccccf6",
-        "9e330344-1ee1-4a85-b504-9e3f54b559b1": "220cc436-b9c9-4992-8dbe-d82e9bff3993",
-        "99e34c9b-5f31-4177-81a2-ecfbaceb82ae": "275ff079-913f-4142-8298-1530b9fa45a8",
-        "6416f6fc-7681-43ed-9c5c-558096eae9a3": "311ff180-1413-4587-9221-60419bbce3b3",
-        "7f4dc5fd-a395-4784-9373-49419211a35d": "5ee0ff93-398f-4ff2-b99b-2354be74224e",
-        "eb1fa5a4-7e01-441b-b35e-431f6ae58cc2": "19d7aecd-4e91-48bf-916d-bb389227f2c1",
-        "2263669d-496d-422a-8199-787d54c9e7c3": "6c956078-d42f-477e-ad76-f207bea59380",
-        "8a784562-9c2a-424a-b873-55997556adc6": "262f7dbc-eb6c-4112-a4e3-d76f57396299"
-      }
-    },
-    {
-      "__guid": "0eb2a36d-12e1-4668-bf84-67f202a506ab",
-      "__version": 2,
-      "__Prefab": "prefabs/doors/door city.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-            },
-            "Property": "Position",
-            "Value": "464.530792,-247.485321,55.5326042"
-          },
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
-            },
-            "Property": "Rotation",
-            "Value": "0,0,0,1"
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "40bd5a35-cadc-4908-ae99-03f710adceff": "0eb2a36d-12e1-4668-bf84-67f202a506ab",
-        "876306dc-b294-465e-9ed0-16ddda908237": "e4124557-7f41-4979-be56-8e03a67a5791",
-        "ee699862-32ba-4ec6-8bc6-f922fc263704": "2daa0090-5541-46a4-a1cf-8e2a7b4bf1bc",
-        "490556bf-bd20-4c75-8dc4-9a17c306516d": "7369fd98-4d70-49a6-97c6-a810e50a949e",
-        "3d833f6b-90c2-4187-8f42-9f967efdc613": "b560d0d2-eb3e-4e6c-9317-b5edbd58086b",
-        "9e458574-ba98-4fce-82ba-e45da49d1115": "758dfeeb-4607-4d75-a0f0-4106e88686c6",
-        "07c55b96-403e-4880-a5d0-bdbf0a3d9846": "a288b1ea-c740-425d-8890-6230f3f9dd5a",
-        "623055a5-68ab-4b7b-acc2-a98328dcd145": "0eeba137-727a-4ed4-a6a6-dfa83c5a871f",
-        "800becb0-14a6-4e67-b25c-f60c064e1ecc": "3822d3b9-21ef-43fa-bcc2-8971d568174e",
-        "4e9d2163-2318-4ffc-8331-2c21215a35c7": "24db270a-658f-4572-ac16-bcfbc53d6d08",
-        "99d6ce33-d6a1-4814-88b7-813e95afc016": "1947733d-434b-4892-8a55-f94f9bedf24a",
-        "b25faba1-750f-40cc-8dcf-514f5db4d567": "4b0eec2b-2f74-404f-a3c8-6a7391dd4635",
-        "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "7900fd23-0506-43af-bd0b-3e96d3c3d854"
-      }
-    },
-    {
-      "__guid": "d938f790-4e07-49cf-881a-cca689cec307",
-      "__version": 2,
-      "__Prefab": "prefabs/doors/door city2.prefab",
-      "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
-        "PropertyOverrides": [
-          {
-            "Target": {
-              "Type": "GameObject",
-              "IdValue": "55b1f4a3-b210-4433-ba15-67a1b1ed54ac"
-            },
-            "Property": "Position",
-            "Value": "288.096558,-269.02002,55.5326271"
-          }
-        ],
-        "MovedObjects": []
-      },
-      "__PrefabIdToInstanceId": {
-        "55b1f4a3-b210-4433-ba15-67a1b1ed54ac": "d938f790-4e07-49cf-881a-cca689cec307",
-        "77f2015e-28d1-469e-8f70-05e60777ebfb": "e3bd9e4c-ea62-4d70-a29f-5ebb1dc8f69d",
-        "6915d782-6ff4-40e8-a67c-35c996879604": "6952c97c-9085-4395-ab8f-0e6f9bb7f90d",
-        "071916b2-afa8-42bc-a830-cf8317abec1a": "dd343a33-b51a-4050-8110-d2976354156c",
-        "80339121-fc6e-4e2a-953e-c57fd1374a75": "e2a1cc21-f701-413a-91e2-794d352285fb",
-        "69252117-36cc-4f58-a93b-5d9075cc43fd": "68cc32e5-cbc8-4a16-896e-5e15f5466707",
-        "ac499c68-26bf-4535-ae73-864522c1449a": "b9d5079a-ef6a-4061-9e54-35c7a53a5fcb",
-        "6363118d-4f59-4862-8243-418d78475618": "247fc269-eb63-47c4-9356-0948232ee8f8",
-        "0e3e1ff9-3813-46b1-988b-b5a001eb253d": "0a9c1d7c-477b-4da3-a3a3-69310effb590",
-        "4b104cf4-31b7-42ab-89c7-63a78ac1160d": "b7ba9566-fb92-457b-b84d-6574646ea78e",
-        "30f23b99-ac61-4f94-9ba3-eafdc4dfadb5": "65def43e-b4d2-4058-929f-7e91e352adee",
-        "7fee6c04-3a29-4d71-be32-d5c0f5929758": "a8026158-fd66-40bd-8a70-58e1a903c836",
-        "215650c0-88f2-4453-a659-aa3046d034bc": "dcac9948-39b9-4121-92a6-e9aa81c13fa8"
-      }
     }
   ],
   "SceneProperties": {
@@ -3314,14 +3354,14 @@
       "Sandbox.MovieMaker.MovieRecorderSystem": {
         "DisableClientRecording": false
       },
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
-        }
-      },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "70aa36fc-0e79-45bf-8123-506fcd2c0311"
+        }
+      },
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       }
     }

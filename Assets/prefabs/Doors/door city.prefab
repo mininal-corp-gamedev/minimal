@@ -104,7 +104,7 @@
         "Elasticity": null,
         "Friction": null,
         "IsTrigger": false,
-        "Model": "models/doors/door_2_window_b.vmdl",
+        "Model": "models/doors/door_2.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -449,7 +449,8 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "gkaf.door_2_window_b#26047"
+    "gkaf.door_2_window_b#26047",
+    "gkaf.door_2#26045"
   ],
   "__version": 2
 }

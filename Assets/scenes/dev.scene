@@ -3116,6 +3116,14 @@
                 },
                 "Property": "Rotation",
                 "Value": "0,0,-2.98023224E-08,1"
+              },
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "80339121-fc6e-4e2a-953e-c57fd1374a75"
+                },
+                "Property": "Model",
+                "Value": "models/doors/door_1.vmdl"
               }
             ],
             "MovedObjects": []
@@ -3370,6 +3378,7 @@
   "Title": "dev",
   "Description": null,
   "__references": [
+    "gkaf.door_1#26044",
     "gkaf.door_2#26045",
     "keepitdev.dor#150914",
     "pcjr.printer#38720",

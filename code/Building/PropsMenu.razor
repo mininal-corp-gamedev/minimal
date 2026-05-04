@@ -3,6 +3,7 @@
 @using System;
 @using System.Collections.Generic;
 @using System.Linq;
+@using System.Threading.Tasks;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -38,15 +39,23 @@
 							@foreach ( var prop in AvailableProps )
 							{
 								<div class="prop-card">
-									<div class="prop-title">@GetPropHeader( prop )</div>
-									<div class="prop-category">@prop.Category</div>
-									<div class="prop-description">@GetShortDescription( prop.Description )</div>
-									<button
-										class="spawn-btn"
-										disabled=@(!CanRequestSpawn( prop ))
-										onclick=@(() => RequestSpawn( prop ))>
-										Spawn
-									</button>
+									<div class="prop-thumb">
+										@if ( !string.IsNullOrEmpty( GetThumbUrl( prop ) ) )
+										{
+											<img src="@GetThumbUrl( prop )" />
+										}
+									</div>
+									<div class="prop-info">
+										<div class="prop-title">@GetPropHeader( prop )</div>
+										<div class="prop-category">@prop.Category</div>
+										<div class="prop-description">@GetShortDescription( prop.Description )</div>
+										<button
+											class="spawn-btn"
+											disabled=@(!CanRequestSpawn( prop ))
+											onclick=@(() => RequestSpawn( prop ))>
+											Spawn
+										</button>
+									</div>
 								</div>
 							}
 						</div>
@@ -74,6 +83,7 @@
 	bool IsOpen { get; set; } = false;
 	int ActiveTool { get; set; } = 0;
 	List<PropDefinition> AvailableProps { get; set; } = new();
+	Dictionary<string, string> ThumbUrls { get; set; } = new();
 	int PropsVersion { get; set; } = 0;
 
 	private const float SpawnTraceDistance = 420f;
@@ -94,6 +104,40 @@
 			.ToList();
 
 		PropsVersion++;
+
+		_ = LoadThumbnailsAsync();
+	}
+
+	private async Task LoadThumbnailsAsync()
+	{
+		foreach ( var prop in AvailableProps.ToList() )
+		{
+			if ( prop is null || string.IsNullOrWhiteSpace( prop.Ident ) )
+				continue;
+			if ( ThumbUrls.ContainsKey( prop.Ident ) )
+				continue;
+
+			try
+			{
+				var package = await Package.Fetch( prop.Ident, false );
+				if ( package is null )
+					continue;
+
+				ThumbUrls[prop.Ident] = package.Thumb;
+				PropsVersion++;
+			}
+			catch ( Exception e )
+			{
+				Log.Warning( $"[PropsMenu] Failed to fetch thumb for '{prop.Ident}': {e.Message}" );
+			}
+		}
+	}
+
+	private string GetThumbUrl( PropDefinition prop )
+	{
+		if ( prop is null || string.IsNullOrWhiteSpace( prop.Ident ) )
+			return null;
+		return ThumbUrls.TryGetValue( prop.Ident, out var url ) ? url : null;
 	}
 
 	private void RequestSpawn( PropDefinition prop )
@@ -205,6 +249,12 @@
 			return;
 		}
 
+		if ( string.IsNullOrWhiteSpace( prop.Ident ) )
+		{
+			NotifyCaller( caller, "Prop has no cloud ident.", false );
+			return;
+		}
+
 		var forward = eyeForward.LengthSquared > 0.001f ? eyeForward.Normal : player.Controller.EyeTransform.Forward;
 		if ( Vector3.DistanceBetween( player.WorldPosition, eyePosition ) > 220f )
 			eyePosition = player.Controller.EyeTransform.Position;
@@ -224,30 +274,70 @@
 			yawForward = player.WorldRotation.Forward;
 		yawForward = yawForward.Normal;
 
-		//todo change to prop.Ident
-		// var gameObj = prop.Prefab.Clone( spawnPosition, Rotation.LookAt( yawForward ) );
-		// if ( !gameObj.IsValid() )
-		// {
-		// 	NotifyCaller( caller, "Could not spawn prop.", false );
-		// 	return;
-		// }
+		var callerCopy = caller;
+		var playerCopy = player;
+		var propCopy = prop;
+		_ = SpawnCloudPropAsync( callerCopy, playerCopy, propCopy, spawnPosition, Rotation.LookAt( yawForward ) );
+	}
 
-		// var propCustom = gameObj.Components.Get<PropCustom>( FindMode.EverythingInSelfAndDescendants );
-		// if ( !propCustom.IsValid() )
-		// 	propCustom = gameObj.Components.Create<PropCustom>();
+	private static async Task SpawnCloudPropAsync( Connection caller, Player player, PropDefinition prop, Vector3 position, Rotation rotation )
+	{
+		try
+		{
+			var package = await Package.Fetch( prop.Ident, false );
+			if ( package is null || package.Revision is null )
+			{
+				NotifyCaller( caller, "Cloud package not found.", false );
+				return;
+			}
 
-		// if ( propCustom.IsValid() )
-		// {
-		// 	propCustom.SetOwner( player );
-		// 	player.RegisterSpawnedProp( propCustom );
-		// }
+			await package.MountAsync();
 
-		// gameObj.Tags.Add("prop");
-		// // Dedicated architecture: gameplay owner is PropCustom.PlayerOwner; network authority stays on host.
-		// gameObj.NetworkSpawn();
+			var primaryAsset = package.GetMeta<string>( "PrimaryAsset" );
+			if ( string.IsNullOrWhiteSpace( primaryAsset ) )
+			{
+				NotifyCaller( caller, "Package has no primary asset.", false );
+				return;
+			}
 
-		//Log.Info( $"[PropsMenu] {caller.DisplayName} ({caller.SteamId.Value}) bought/spawned prop '{GetPropHeader( prop )}' (id: {prop.Id}, price: ${prop.Price}, object: {gameObj.Name})." );
-		NotifyCaller( caller, $"Spawned: {GetPropHeader( prop )}.", true );
+			var model = Model.Load( primaryAsset );
+			if ( model is null || model.IsError )
+			{
+				NotifyCaller( caller, "Failed to load model.", false );
+				return;
+			}
+
+			if ( !player.IsValid() )
+				return;
+
+			if ( player.OwnedPropsCount >= player.MaxProps )
+			{
+				NotifyCaller( caller, $"Prop limit reached ({player.MaxProps}).", false );
+				return;
+			}
+
+			var gameObj = new GameObject( true, GetPropHeader( prop ) );
+			gameObj.WorldPosition = position;
+			gameObj.WorldRotation = rotation;
+
+			var propComponent = gameObj.Components.Create<Sandbox.Prop>();
+			propComponent.Model = model;
+
+			var propCustom = gameObj.Components.Create<PropCustom>();
+			propCustom.SetOwner( player );
+			player.RegisterSpawnedProp( propCustom );
+
+			gameObj.Tags.Add( "prop" );
+			gameObj.NetworkSpawn();
+
+			Log.Info( $"[PropsMenu] {caller.DisplayName} spawned cloud prop '{GetPropHeader( prop )}' (ident: {prop.Ident})." );
+			NotifyCaller( caller, $"Spawned: {GetPropHeader( prop )}.", true );
+		}
+		catch ( Exception e )
+		{
+			Log.Warning( $"[PropsMenu] Cloud spawn failed for '{prop?.Ident}': {e.Message}" );
+			NotifyCaller( caller, "Cloud spawn failed.", false );
+		}
 	}
 
 	private static void NotifyCaller( Connection caller, string text, bool success )
@@ -364,6 +454,8 @@
 			hash.Add( prop.Header );
 			hash.Add( prop.Category );
 			hash.Add( prop.Description );
+			hash.Add( prop.Ident );
+			hash.Add( GetThumbUrl( prop ) );
 		}
 
 		return hash.ToHashCode();

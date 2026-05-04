@@ -1,5 +1,4 @@
 using Sandbox;
-using System.Numerics;
 
 public sealed class TriggerSafezone : Component, Component.ITriggerListener
 {
@@ -24,5 +23,7 @@ public sealed class TriggerSafezone : Component, Component.ITriggerListener
         if (ply.Network.Owner != Rpc.Caller) return;
 
         ply.IsSafezone = !ply.IsSafezone;
+
+        Log.Info($"[Safezone] {Rpc.Caller.DisplayName} ({Rpc.Caller.SteamId}) - {ply.IsSafezone}");
     }
 }

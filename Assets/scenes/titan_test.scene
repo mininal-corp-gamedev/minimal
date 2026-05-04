@@ -85,25 +85,6 @@
           "ZNear": 1
         },
         {
-          "__type": "Sandbox.Bloom",
-          "__guid": "1b5340ad-946f-4698-9552-06c015562ec6",
-          "__enabled": true,
-          "Flags": 0,
-          "__version": 1,
-          "Filter": "Bilinear",
-          "Gamma": 2.2,
-          "Mode": "Additive",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "Strength": 0.5,
-          "Threshold": 1.25,
-          "Tint": "1,1,1,1"
-        },
-        {
           "__type": "Sandbox.WorldInput",
           "__guid": "ac454c29-25ba-4533-aa7f-b02d8742da3a",
           "__enabled": true,
@@ -805,9 +786,9 @@
       "__version": 2,
       "Flags": 0,
       "Name": "Block",
-      "Position": "-272.860596,140.623505,80.547699",
+      "Position": "-272.860596,140.623505,75.0755539",
       "Rotation": "0,0,0,1",
-      "Scale": "1,1,1",
+      "Scale": "2.10120773,7.87517977,1",
       "Tags": "world",
       "Enabled": true,
       "NetworkMode": 2,
@@ -822,8 +803,8 @@
           "__enabled": true,
           "Flags": 0,
           "ColliderFlags": 0,
-          "Collision": "Mesh",
-          "Color": "0.11667,1,0,1",
+          "Collision": "Hull",
+          "Color": "0.11667,1,0,0.4",
           "Elasticity": null,
           "Friction": null,
           "HideInGame": false,
@@ -1011,14 +992,14 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
-        }
-      },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "4c8d8be3-9b2a-45ca-a21b-eaa302af4bec"
+        }
+      },
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       },
       "Sandbox.MovieMaker.MovieRecorderSystem": {

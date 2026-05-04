@@ -1,6 +1,6 @@
 {
-  "Id": "citizen",
-  "Header": "Citizen",
+  "Id": "hobo",
+  "Header": "Hobo",
   "Category": "Civil",
   "Description": "",
   "MaxCount": 0,

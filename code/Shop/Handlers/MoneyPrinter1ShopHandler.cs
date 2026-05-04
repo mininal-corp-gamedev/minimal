@@ -35,7 +35,11 @@ public sealed class MoneyPrinter1ShopHandler : IShopPurchaseHandler
 		if ( !printerObject.IsValid() )
 			return false;
 
-		var printer = printerObject.Components.Get<MoneyPrinterBase>( FindMode.EverythingInSelfAndDescendants );
+		var shopObj = printerObject.AddComponent<ShopObject>();
+        shopObj.PlayerOwner = buyer;
+		shopObj.Definition = shop;
+
+        var printer = printerObject.Components.Get<MoneyPrinterBase>( FindMode.EverythingInSelfAndDescendants );
 		if ( printer.IsValid() )
 			printer.SetOwner( buyer );
 

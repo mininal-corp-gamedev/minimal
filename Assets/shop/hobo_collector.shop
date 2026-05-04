@@ -1,0 +1,18 @@
+{
+  "Id": "id",
+  "Header": "Unknow",
+  "Category": "Other",
+  "Description": "",
+  "ItemDefinition": null,
+  "Price": 0,
+  "IconPath": "icons/items/default.vtex",
+  "Model": null,
+  "SpawnPrefab": null,
+  "IsAllowEveryone": false,
+  "JobsAllow": [
+    "jobs/hobo.job"
+  ],
+  "HasPostPurchased": false,
+  "__references": [],
+  "__version": 0
+}

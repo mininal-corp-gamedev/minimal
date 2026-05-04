@@ -5,10 +5,15 @@
   "Description": "Creates a money printer in front of you.",
   "ItemDefinition": null,
   "Price": 10,
+  "Max": 1,
   "IconPath": "icons/items/default.vtex",
   "Model": null,
-  "SpawnPrefab": "prefabs/money_printer.prefab",
+  "SpawnPrefab": {
+    "_type": "gameobject",
+    "prefab": "prefabs/money_printer.prefab"
+  },
   "IsAllowEveryone": true,
+  "HasRemoveAfterChangeJob": true,
   "JobsAllow": [],
   "HasPostPurchased": true,
   "__references": [],

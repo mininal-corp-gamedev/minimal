@@ -41,6 +41,7 @@ public sealed class PlayerJob : Component
 
 		if ( hadJob )
 		{
+			ShopManager.RemoveShopObjectsOnJobChange( player );
 			JobHandlerRegistry.FirePostDemote( this, player, oldDef );
 			OnJobChanged?.Invoke( player, newDef );
 		}
@@ -63,6 +64,7 @@ public sealed class PlayerJob : Component
 
 		JobId = "";
 
+		ShopManager.RemoveShopObjectsOnJobChange( player );
 		JobHandlerRegistry.FirePostDemote( this, player, oldDef );
 		OnJobDemote?.Invoke( player );
 	}

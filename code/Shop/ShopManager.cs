@@ -47,6 +47,16 @@ public sealed class ShopManager : Component
 			return;
 		}
 
+		if ( shop.HasPostPurchased && shop.SpawnPrefab.IsValid() && shop.Max > 0 )
+		{
+			var owned = CountOwnedShopObjects( buyer, shop.Id );
+			if ( owned >= shop.Max )
+			{
+				NotifyBuyer( caller, false, $"Limit reached ({owned}/{shop.Max}).", null );
+				return;
+			}
+		}
+
 		var price = Math.Max( 0, shop.Price );
 		if ( buyer.Money < price )
 		{
@@ -85,6 +95,64 @@ public sealed class ShopManager : Component
 		}
 
 		NotifyBuyer( caller, true, $"Purchased: {shop.Header}.", null );
+	}
+
+	public static int CountOwnedShopObjects( Player buyer, string shopId )
+	{
+		if ( !buyer.IsValid() || string.IsNullOrEmpty( shopId ) )
+			return 0;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return 0;
+
+		var count = 0;
+		foreach ( var so in scene.GetAllComponents<ShopObject>() )
+		{
+			if ( so.PlayerOwner != buyer )
+				continue;
+			if ( so.Definition is null )
+				continue;
+			if ( !string.Equals( so.Definition.Id, shopId, StringComparison.Ordinal ) )
+				continue;
+			count++;
+		}
+		return count;
+	}
+
+	/// <summary>
+	/// Хост: удалить все заспавненные объекты игрока, у которых
+	/// <see cref="ShopDefinition.HasRemoveAfterChangeJob"/> = true.
+	/// Вызывается при смене работы игрока.
+	/// </summary>
+	public static void RemoveShopObjectsOnJobChange( Player player )
+	{
+		if ( !Networking.IsHost )
+			return;
+		if ( !player.IsValid() )
+			return;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return;
+
+		var toRemove = new List<ShopObject>();
+		foreach ( var so in scene.GetAllComponents<ShopObject>() )
+		{
+			if ( so.PlayerOwner != player )
+				continue;
+			if ( so.Definition is null )
+				continue;
+			if ( !so.Definition.HasRemoveAfterChangeJob )
+				continue;
+			toRemove.Add( so );
+		}
+
+		foreach ( var so in toRemove )
+		{
+			if ( so.IsValid() && so.GameObject.IsValid() )
+				so.GameObject.Destroy();
+		}
 	}
 
 	public static bool CanBuyByJob( Player buyer, ShopDefinition shop )

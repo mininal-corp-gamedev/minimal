@@ -99,15 +99,15 @@
         "Tint": "0.06512,0.02998,0.02998,1"
       },
       {
-        "__type": "Sandbox.ModelCollider",
-        "__guid": "59c1f46e-3bab-4ea8-9da9-60c104acd255",
+        "__type": "Sandbox.BoxCollider",
+        "__guid": "f37232ae-e673-4a78-82f3-0030fe735d06",
         "__enabled": true,
         "Flags": 0,
+        "Center": "-0.287784576,25.9377174,52.8669052",
         "ColliderFlags": 0,
         "Elasticity": null,
         "Friction": null,
         "IsTrigger": false,
-        "Model": "models/doors/door_1.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -119,7 +119,8 @@
         "OnTriggerEnter": null,
         "OnTriggerExit": null,
         "RollingResistance": null,
-        "Static": true,
+        "Scale": "3.42596245,51.5127182,106.303177",
+        "Static": false,
         "Surface": null,
         "SurfaceVelocity": "0,0,0"
       }

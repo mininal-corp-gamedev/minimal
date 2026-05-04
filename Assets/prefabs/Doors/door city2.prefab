@@ -96,15 +96,15 @@
         "Tint": "0.50196,0.01961,0.01961,1"
       },
       {
-        "__type": "Sandbox.ModelCollider",
-        "__guid": "80339121-fc6e-4e2a-953e-c57fd1374a75",
+        "__type": "Sandbox.BoxCollider",
+        "__guid": "a570f4f8-df9c-459b-9e90-2d8c4bc2e3ac",
         "__enabled": true,
         "Flags": 0,
+        "Center": "-0.287784576,25.9377174,52.8669052",
         "ColliderFlags": 0,
         "Elasticity": null,
         "Friction": null,
         "IsTrigger": false,
-        "Model": "models/doors/door_2.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -116,7 +116,8 @@
         "OnTriggerEnter": null,
         "OnTriggerExit": null,
         "RollingResistance": null,
-        "Static": true,
+        "Scale": "3.42596245,51.5127182,106.303177",
+        "Static": false,
         "Surface": null,
         "SurfaceVelocity": "0,0,0"
       }
@@ -449,8 +450,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "gkaf.door_2_window_b#26047",
-    "gkaf.door_2#26045"
+    "gkaf.door_2_window_b#26047"
   ],
   "__version": 2
 }

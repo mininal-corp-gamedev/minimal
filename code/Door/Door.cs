@@ -555,13 +555,12 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		Close();
 	}
 
-	/// <summary>Locks the door. Requires a non-blocked, non-broken, closed, idle door that is either player-owned or a job-door. Mirrors to <see cref="DoorSecond"/>.</summary>
+	/// <summary>Locks the door. Requires a non-blocked, non-broken, idle door that is either player-owned or a job-door. Mirrors to <see cref="DoorSecond"/>.</summary>
 	public void Lock()
 	{
 		if ( !Networking.IsHost ) return;
 		if ( LockState == DoorLockState.Locked ) return; // idempotent — prevents paired-door recursion
 		if ( IsPlayingAnimation ) return;
-		if ( State == DoorState.Open ) return;
 		if ( IsBrokenLocked ) return;
 		if ( IsBlocked ) return;
 		// Must be either a job-door or player-owned.

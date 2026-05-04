@@ -49,6 +49,7 @@
         "HeldMaxResolveIterations": 4,
         "HeldPlayerPadding": 12,
         "HoldType": "Physgun",
+        "HoldTypeHandedness": "BothHands",
         "IdleSound": "weapons/physgun/sounds/physgun.idle.sound",
         "IsIronSight": false,
         "IsMelee": false,
@@ -93,6 +94,10 @@
           "component_id": "4dac270b-fb42-46f8-b902-28235660cce7",
           "go": "a516f0cf-c8b1-4f42-881b-d626d4316ce1",
           "component_type": "SkinnedModelRenderer"
+        },
+        "WorldModelPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefabs/weapons/wm/w_physgun.prefab"
         }
       },
       {

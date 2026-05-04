@@ -240,6 +240,9 @@ public class Weapon : Component
     {
         if (!tr.Hit || damage <= 0) return;
 
+        // Игрок в сейфзоне не может наносить урон
+        if (Player.Local?.IsSafezone == true) return;
+
         var go = tr.GameObject;
         while (go.IsValid())
         {

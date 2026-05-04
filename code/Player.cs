@@ -37,8 +37,15 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     /// <summary>Maximum number of spawned props this player can own at once.</summary>
     [Property] public int MaxProps { get; set; } = 20;
 
+    [Sync(SyncFlags.FromHost)] public bool IsGod { get; set; } = false;
+    [Sync(SyncFlags.FromHost)] public bool IsSafezone { get; set; } = false;
     [Sync(SyncFlags.FromHost)] public float Health { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public float MaxHealth { get; set; } = 100f;
+    [Sync(SyncFlags.FromHost)] public float Armor { get; set; } = 0f; //todo make
+    [Sync(SyncFlags.FromHost)] public float MaxArmor { get; set; } = 100f; //todo make
+    [Sync(SyncFlags.FromHost)] public int Level { get; set; } = 1; //todo make
+    [Sync(SyncFlags.FromHost)] public int Exp { get; set; } = 0; //todo make
+    [Sync(SyncFlags.FromHost)] public int MaxExp { get; set; } = 0; //todo make
     [Sync(SyncFlags.FromHost)] public bool IsDead { get; private set; }
     [Sync(SyncFlags.FromHost)] public string DeathMessage { get; private set; } = "";
 
@@ -411,6 +418,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         // Server (host) authority: урон применяет ТОЛЬКО хост; клиент только просит.
         if (IsArrested) return;
+        if (IsSafezone) return;
 
         TakeDamageFromWeapon(dmgInfo.Damage, dmgInfo.Attacker);
     }
@@ -494,6 +502,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         if (!Networking.IsHost) return;
         if (IsArrested) return;
+        if (IsSafezone) return;
         if (damage <= 0f) return;
         if (Health <= 0f || IsDead) return;
 

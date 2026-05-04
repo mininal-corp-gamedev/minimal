@@ -47,6 +47,7 @@
         ],
         "AnimationSpeed": 130,
         "BuyPrice": 50,
+        "BuySound": null,
         "CloseSound": "sounds/door/door-3-close.sound",
         "DoorSecond": null,
         "HasOnlyJobs": true,
@@ -65,6 +66,7 @@
         "OnComponentUpdate": null,
         "OpenAngle": 90,
         "OpenSound": "sounds/door/door_latch3.sound",
+        "SellSound": null,
         "SlideAxis": "LocalRight",
         "SlideDistance": 96,
         "SlideSpeed": 120,
@@ -99,31 +101,6 @@
         "Tint": "0.06512,0.02998,0.02998,1"
       },
       {
-        "__type": "Sandbox.ModelCollider",
-        "__guid": "5c875c09-e551-4755-b59f-dcfe6c1adce9",
-        "__enabled": true,
-        "Flags": 0,
-        "ColliderFlags": 0,
-        "Elasticity": null,
-        "Friction": null,
-        "IsTrigger": false,
-        "Model": "models/doors/door_2.vmdl",
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null,
-        "OnObjectTriggerEnter": null,
-        "OnObjectTriggerExit": null,
-        "OnTriggerEnter": null,
-        "OnTriggerExit": null,
-        "RollingResistance": null,
-        "Static": false,
-        "Surface": null,
-        "SurfaceVelocity": "0,0,0"
-      },
-      {
         "__type": "Sandbox.Rigidbody",
         "__guid": "93ce591a-1522-43a5-9943-ff7d16f05575",
         "__enabled": true,
@@ -156,6 +133,32 @@
         "OverrideMassCenter": false,
         "RigidbodyFlags": 0,
         "StartAsleep": false
+      },
+      {
+        "__type": "Sandbox.BoxCollider",
+        "__guid": "f33e6845-567c-4017-97a5-7e34c69d7e97",
+        "__enabled": true,
+        "Flags": 0,
+        "Center": "-0.287784576,25.9377174,52.8669052",
+        "ColliderFlags": 0,
+        "Elasticity": null,
+        "Friction": null,
+        "IsTrigger": false,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OnObjectTriggerEnter": null,
+        "OnObjectTriggerExit": null,
+        "OnTriggerEnter": null,
+        "OnTriggerExit": null,
+        "RollingResistance": null,
+        "Scale": "3.42596245,51.5127182,106.303177",
+        "Static": false,
+        "Surface": null,
+        "SurfaceVelocity": "0,0,0"
       }
     ],
     "Children": [
@@ -486,8 +489,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "gkaf.door_2_window_a#26046",
-    "gkaf.door_2#26045"
+    "gkaf.door_2_window_a#26046"
   ],
   "__version": 2
 }

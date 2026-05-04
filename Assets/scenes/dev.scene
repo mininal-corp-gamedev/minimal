@@ -2662,6 +2662,22 @@
                 },
                 "Property": "Rotation",
                 "Value": "0,0,0,1"
+              },
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                },
+                "Property": "BuySound",
+                "Value": null
+              },
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
+                },
+                "Property": "SellSound",
+                "Value": null
               }
             ],
             "MovedObjects": []
@@ -2711,6 +2727,22 @@
                 },
                 "Property": "BuyPrice",
                 "Value": 300
+              },
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "cd91b72e-f09b-4054-a36a-4acfbad541b8"
+                },
+                "Property": "BuySound",
+                "Value": null
+              },
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "cd91b72e-f09b-4054-a36a-4acfbad541b8"
+                },
+                "Property": "SellSound",
+                "Value": null
               }
             ],
             "MovedObjects": []
@@ -2763,13 +2795,13 @@
             "5326ae98-1381-411d-962a-e8f435855f2d": "d787c8e7-35c8-4bbd-b6b6-d878f8c3ba42",
             "eade69b6-37c0-429b-b88d-716ae56a8db2": "41d5f1c1-18bf-4f92-9220-e77e7d6b075e",
             "05a13b3f-7d5d-4676-8752-74d0335019c2": "1d155705-2811-408d-ab9c-0b95a588ee19",
-            "9ef7c33e-9970-4dca-a99d-aab1b246edc1": "1dfe782a-a255-485d-a314-3b9cd6f47247",
             "50151e23-ff91-4471-8617-2d596fcd655d": "a5c01203-ef65-4ff2-bf09-b64af2a1d9f2",
             "c1c3d81b-ee1a-4bdb-955f-6ea474618e93": "3f2818c2-9767-4ef5-b1ce-f0ba0a6fbd53",
             "66d92844-4710-4ef3-acf2-4377f30e8d23": "9fb3bfd3-493c-4a93-9412-88124169de74",
             "5797e9a2-e09e-4a8e-ba02-193c80781a75": "40503fbf-d214-4b0e-8c0e-4574a86cef82",
             "ac27dd06-c4ae-4cb4-a971-a8e28f228d61": "f1a079ce-4d87-404d-98f2-d1ec9264c598",
-            "db61d807-86da-4a55-852b-493e6fb8e487": "3a011d12-63f9-4191-a62e-55334ea2a81e"
+            "db61d807-86da-4a55-852b-493e6fb8e487": "3a011d12-63f9-4191-a62e-55334ea2a81e",
+            "9fc3b3b9-d9a1-43d1-a1a1-cd10357aa7a1": "5b831e43-19bb-42ca-83c5-c7062e8938d8"
           }
         },
         {
@@ -2804,13 +2836,13 @@
             "2ea819f0-266e-4b1f-9804-5bd9a64b0ff9": "395dcd1b-82fc-42a0-9296-1475f5829c35",
             "62f709b3-1874-4623-bb2b-98d14b556373": "3e0c37f8-9d11-48ae-8ca0-b310c8debc23",
             "bd495c07-9359-492d-b787-619c4eed9408": "d9403d5f-1c86-461e-83fb-a43ccd268ec2",
-            "b9126fa4-7de5-4be8-86dd-b6ded200e7e8": "d52f7ce0-7522-4fed-8192-412d0ba547f4",
             "a447519e-e7ed-455d-9742-5e74a9eb701f": "23e61d6c-f859-49e7-bb3b-d0fc4a86b3da",
             "79d57c60-05f2-4d91-b463-3ac1b0312085": "1313f415-cb62-4ff5-b65e-f0d99ae93de7",
             "03b720b8-99f7-47c8-96ff-51ac1126e8ef": "17acf163-d313-4ee0-b057-4f7da7fb789c",
             "9ef62514-d8ab-4c80-aed6-35cf631af4f4": "0982a53b-0352-44dc-9b49-4f80654af750",
             "8359c0a2-8390-4271-aca1-027a9744d0e1": "96c3bf29-aff5-4270-996c-d611f31989e8",
-            "1e2f2dcf-206c-49f6-af0b-4ef3e7e16c4f": "9c159029-829d-488a-bb5f-6772458efcde"
+            "1e2f2dcf-206c-49f6-af0b-4ef3e7e16c4f": "9c159029-829d-488a-bb5f-6772458efcde",
+            "6c11413f-ff9e-49e1-bf77-f35ebc2183f9": "55652232-4c68-4457-9367-4e4788495fbb"
           }
         },
         {
@@ -2837,13 +2869,13 @@
             "bb258ecd-d440-4ac6-b948-fab39ff54996": "8b619ec8-1980-4b38-aef6-ea6dfc2d2c0a",
             "eab26a99-7a6d-44cb-b2d8-3725b98e878c": "b5456517-abf6-4b7f-89e7-0ee0e3e40d8e",
             "0d900209-9704-45c7-befa-39031e3dcd07": "467345e8-84d7-407c-8a82-5fba92be6c47",
-            "31e430bf-79f1-4207-a3bd-6ff7cadea109": "2fc990de-583a-4c6f-80a7-f81ae35e0c64",
             "22b47d64-1567-42a3-8cd9-3ad56ca0935e": "67d873d9-72e6-4b94-8496-a5a5634040f9",
             "dd041011-8c70-41aa-8df8-1d1a7d664c9d": "2f43cbad-3360-46c6-b7b6-156ee74c659e",
             "81399058-15fa-442e-aede-c54b4ca3f0f5": "0feaa74d-3d5b-4e5d-b5b8-cf7653fe2e27",
             "a9999f53-d989-42ab-880a-d8ef082dd586": "8033a0a6-422f-4fa4-a7de-d0c18c83fa0c",
             "2528e6fc-b58c-4609-ae91-e9ddc55255b7": "9fd27906-054f-4c37-b203-7d71e784f3c9",
-            "d99805fe-be5f-4d5f-a083-68b4aa53a66e": "6f6386b0-2371-41b5-9dd0-e74078b0f42d"
+            "d99805fe-be5f-4d5f-a083-68b4aa53a66e": "6f6386b0-2371-41b5-9dd0-e74078b0f42d",
+            "7d024e49-08dc-4789-b4bc-4e5866cf7e67": "44aa4a39-f07f-4502-afb1-928e70459600"
           }
         },
         {
@@ -2891,6 +2923,7 @@
               "AllowedJobs": [],
               "AnimationSpeed": 90,
               "BuyPrice": 50,
+              "BuySound": null,
               "CloseSound": null,
               "DoorSecond": null,
               "HasOnlyJobs": false,
@@ -2909,6 +2942,7 @@
               "OnComponentUpdate": null,
               "OpenAngle": 90,
               "OpenSound": null,
+              "SellSound": null,
               "SlideAxis": "LocalRight",
               "SlideDistance": 96,
               "SlideSpeed": 120,
@@ -3116,6 +3150,22 @@
                 },
                 "Property": "Rotation",
                 "Value": "0,0,-2.98023224E-08,1"
+              },
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "6915d782-6ff4-40e8-a67c-35c996879604"
+                },
+                "Property": "BuySound",
+                "Value": null
+              },
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "6915d782-6ff4-40e8-a67c-35c996879604"
+                },
+                "Property": "SellSound",
+                "Value": null
               }
             ],
             "MovedObjects": []
@@ -3159,6 +3209,22 @@
                 },
                 "Property": "Rotation",
                 "Value": "0,0,-2.98023224E-08,1"
+              },
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                },
+                "Property": "BuySound",
+                "Value": null
+              },
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
+                },
+                "Property": "SellSound",
+                "Value": null
               }
             ],
             "MovedObjects": []
@@ -3228,8 +3294,7 @@
             "eb1fa5a4-7e01-441b-b35e-431f6ae58cc2": "19d7aecd-4e91-48bf-916d-bb389227f2c1",
             "2263669d-496d-422a-8199-787d54c9e7c3": "6c956078-d42f-477e-ad76-f207bea59380",
             "8a784562-9c2a-424a-b873-55997556adc6": "262f7dbc-eb6c-4112-a4e3-d76f57396299",
-            "ddb79230-060a-4015-8ea3-62de1d631b68": "241a819c-4d0d-4ed3-8c0c-9cd524b406ad",
-            "bebbe442-8f46-4ffc-a168-2a51c1db99f4": "ed04e990-458a-4449-91bc-9320ba64faea"
+            "6675ebfa-8b69-4d2d-84ee-2bd4346a9d67": "c0c70868-86d9-43d9-a077-a516b346e859"
           }
         },
         {
@@ -3273,8 +3338,7 @@
             "eb1fa5a4-7e01-441b-b35e-431f6ae58cc2": "1560e09d-4734-4d3b-9f74-201bb6e9ecfc",
             "2263669d-496d-422a-8199-787d54c9e7c3": "25e80a2e-6170-40a6-8d77-0b582d199d94",
             "8a784562-9c2a-424a-b873-55997556adc6": "2e2c9d6f-afd9-4a65-bf0b-7b8b61312388",
-            "ddb79230-060a-4015-8ea3-62de1d631b68": "63d0b20b-6fba-4e5e-8ecd-57965fe40075",
-            "bebbe442-8f46-4ffc-a168-2a51c1db99f4": "de703c02-2c89-4df2-95b1-a01c7d7c45c1"
+            "6675ebfa-8b69-4d2d-84ee-2bd4346a9d67": "c6c5f43d-74ab-4708-8e7b-f787faf1718d"
           }
         },
         {
@@ -3300,6 +3364,22 @@
                 },
                 "Property": "Rotation",
                 "Value": "0,0,-2.98023224E-08,0.999999881"
+              },
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                },
+                "Property": "BuySound",
+                "Value": null
+              },
+              {
+                "Target": {
+                  "Type": "Component",
+                  "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
+                },
+                "Property": "SellSound",
+                "Value": null
               }
             ],
             "MovedObjects": []

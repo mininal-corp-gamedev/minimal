@@ -1,18 +1,23 @@
 {
-  "Id": "id",
-  "Header": "Unknow",
+  "Id": "hobo_collector",
+  "Header": "Hobo Collector",
   "Category": "Other",
-  "Description": "",
+  "Description": "Сборщик подати для бомжиков",
   "ItemDefinition": null,
   "Price": 0,
+  "Max": 1,
   "IconPath": "icons/items/default.vtex",
   "Model": null,
-  "SpawnPrefab": null,
+  "SpawnPrefab": {
+    "_type": "gameobject",
+    "prefab": "prefabs/hobo_tax_collector.prefab"
+  },
   "IsAllowEveryone": false,
+  "HasRemoveAfterChangeJob": false,
   "JobsAllow": [
     "jobs/hobo.job"
   ],
-  "HasPostPurchased": false,
+  "HasPostPurchased": true,
   "__references": [],
   "__version": 0
 }

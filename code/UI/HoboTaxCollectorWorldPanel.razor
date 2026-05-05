@@ -1,0 +1,20 @@
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="title">@HoboTaxCollector.PlayerOwner.Network.Owner.DisplayName</div>
+	<div class="title">$@(HoboTaxCollector.Money)</div>
+</root>
+
+@code
+{
+
+	[Property] public HoboTaxCollector HoboTaxCollector { get; set; }
+
+	/// <summary>
+	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+	/// </summary>
+	protected override int BuildHash() => System.HashCode.Combine(HoboTaxCollector.Money);
+}

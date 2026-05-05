@@ -5,7 +5,7 @@ namespace Minimal.Shop;
 [AssetType(Name = "Shop Definition", Extension = "shop", Category = "Minimal")]
 public sealed class ShopDefinition : GameResource
 {
-    [Property] public string Id { get; set; } = "id";
+    public string Id => ResourceName;
     [Property] public string Header { get; set; } = "Unknow";
     [Property] public string Category { get; set; } = "Other";
     [Property] public string Description { get; set; } = "";

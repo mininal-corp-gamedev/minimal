@@ -47,10 +47,8 @@ public sealed class MoneyPrinter1ShopHandler : IShopPurchaseHandler
 		// принтера, а по требованию принтер должен браться только gravitygun-ом (ПКМ).
 		// Доступ для gravitygun обеспечивается отдельной веткой в WeaponPhysgun
 		// (по наличию MoneyPrinterBase + PlayerOwner).
-		//
-		// Dedicated architecture: покупатель остаётся gameplay-владельцем,
-		// но сетевой/физический authority держит host.
-		printerObject.NetworkSpawn();
+
+		printerObject.NetworkSpawn(context.Buyer.Network.Owner);
 		return true;
 	}
 }

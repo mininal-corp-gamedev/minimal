@@ -1,0 +1,23 @@
+{
+  "Id": "money_printer_upgrade",
+  "Header": "Money Printer: Upgrade",
+  "Category": "Other",
+  "Description": "",
+  "ItemDefinition": null,
+  "Price": 100,
+  "Max": 1,
+  "IconPath": "icons/items/default.vtex",
+  "Model": "models/floppy_disk/floppy_disk.vmdl",
+  "SpawnPrefab": {
+    "_type": "gameobject",
+    "prefab": "prefabs/money_printer_upgrade.prefab"
+  },
+  "IsAllowEveryone": true,
+  "HasRemoveAfterChangeJob": true,
+  "JobsAllow": [],
+  "HasPostPurchased": true,
+  "__references": [
+    "pxlq.floppy_disk#9541"
+  ],
+  "__version": 0
+}

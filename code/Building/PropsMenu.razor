@@ -3,6 +3,7 @@
 @using System;
 @using System.Collections.Generic;
 @using System.Linq;
+@using System.Text.Json;
 @using System.Threading.Tasks;
 @inherits PanelComponent
 @namespace Sandbox
@@ -25,7 +26,10 @@
 						<div>
 							<div class="page-title">Props</div>
 						</div>
-						<button class="refresh-btn" onclick=@(() => LoadProps())>Refresh</button>
+						<div class="head-actions">
+							<TextEntry class="search-input" Value:bind="@SearchText" Placeholder="Поиск пропов..." />
+							<button class="refresh-btn" onclick=@(() => LoadProps())>Refresh</button>
+						</div>
 					</div>
 
 					@if ( AvailableProps.Count == 0 )
@@ -34,15 +38,22 @@
 					}
 					else
 					{
+						var visibleProps = VisibleProps.ToList();
+
 						<div class="catalog-bar">
-							<button class="catalog-btn @(string.IsNullOrWhiteSpace( SelectedCategory ) ? "active" : "")" onclick=@(() => SelectCategory( null ))>
+							<button class="catalog-btn @(!SelectedFavoritesOnly && string.IsNullOrWhiteSpace( SelectedCategory ) ? "active" : "")" onclick=@(() => SelectCategory( null ))>
 								<div class="catalog-label">Все пропы</div>
 								<div class="catalog-count">@AvailableProps.Count</div>
 							</button>
 
+							<button class="catalog-btn favorite-catalog @(SelectedFavoritesOnly ? "active" : "")" onclick=@(() => SelectFavorites())>
+								<div class="catalog-label">Избранное</div>
+								<div class="catalog-count">@GetFavoritesCount()</div>
+							</button>
+
 							@foreach ( var category in AvailableCategories )
 							{
-								<button class="catalog-btn @(IsSelectedCategory( category ) ? "active" : "")" onclick=@(() => SelectCategory( category ))>
+								<button class="catalog-btn @(!SelectedFavoritesOnly && IsSelectedCategory( category ) ? "active" : "")" onclick=@(() => SelectCategory( category ))>
 									<div class="catalog-label">@category</div>
 									<div class="catalog-count">@GetCategoryCount( category )</div>
 								</button>
@@ -51,37 +62,48 @@
 
 						<div class="props-meta">
 							<div class="props-limit">@( $"Props limit: {GetOwnedPropsCount()} / {GetMaxProps()}" )</div>
-							<div class="props-count">@( $"Показано {VisibleProps.Count()} / {AvailableProps.Count}" )</div>
+							<div class="props-count">@( $"Показано {visibleProps.Count} / {AvailableProps.Count}" )</div>
 						</div>
 
-						<div class="props-grid">
-							@foreach ( var prop in VisibleProps )
-							{
-								var thumbUrl = GetThumbUrl( prop );
+						@if ( visibleProps.Count == 0 )
+						{
+							<div class="empty-state">Ничего не найдено.</div>
+						}
+						else
+						{
+							<div class="props-grid">
+								@foreach ( var prop in visibleProps )
+								{
+									var thumbUrl = GetThumbUrl( prop );
+									var canSpawn = CanRequestSpawn( prop );
+									var isFavorite = IsFavorite( prop );
 
-								<div class="prop-card">
-									<div class="prop-thumb @(string.IsNullOrEmpty( thumbUrl ) ? "loading" : "")">
-										@if ( !string.IsNullOrEmpty( thumbUrl ) )
-										{
-											<img src="@thumbUrl" />
-										}
-									</div>
-									<div class="prop-info">
-										<div class="prop-copy">
-											<div class="prop-title">@GetPropHeader( prop )</div>
-											<div class="prop-category">@GetPropCategory( prop )</div>
-											<div class="prop-description">@GetShortDescription( prop.Description )</div>
-										</div>
+									<div class="prop-card @(canSpawn ? "" : "disabled") @(isFavorite ? "favorite" : "")">
 										<button
-											class="spawn-btn"
-											disabled=@(!CanRequestSpawn( prop ))
+											class="prop-hitbox"
+											disabled=@(!canSpawn)
 											onclick=@(() => RequestSpawn( prop ))>
-											Spawn
+											<div class="prop-thumb @(string.IsNullOrEmpty( thumbUrl ) ? "loading" : "")">
+												@if ( !string.IsNullOrEmpty( thumbUrl ) )
+												{
+													<img src="@thumbUrl" />
+												}
+											</div>
+											<div class="prop-info">
+												<div class="prop-title">@GetPropHeader( prop )</div>
+												<div class="prop-category">@GetPropCategory( prop )</div>
+											</div>
+										</button>
+
+										<button
+											class="favorite-btn @(isFavorite ? "active" : "")"
+											onclick=@(() => ToggleFavorite( prop ))>
+											@(isFavorite ? "♥" : "♡")
 										</button>
 									</div>
-								</div>
-							}
-						</div>
+								}
+							</div>
+						}
 					}
 				</div>
 
@@ -103,24 +125,34 @@
 
 @code
 {
+	public static PropsMenu Instance { get; private set; }
+
 	bool IsOpen { get; set; } = false;
 	int ActiveTool { get; set; } = 0;
 	List<PropDefinition> AvailableProps { get; set; } = new();
 	List<string> AvailableCategories { get; set; } = new();
 	Dictionary<string, string> ThumbUrls { get; set; } = new();
+	HashSet<string> FavoritePropIds { get; set; } = new( StringComparer.Ordinal );
 	string SelectedCategory { get; set; }
+	bool SelectedFavoritesOnly { get; set; }
+	string SearchText { get; set; } = "";
 	int PropsVersion { get; set; } = 0;
-	IEnumerable<PropDefinition> VisibleProps => string.IsNullOrWhiteSpace( SelectedCategory )
-		? AvailableProps
-		: AvailableProps.Where( prop => string.Equals( GetPropCategory( prop ), SelectedCategory, StringComparison.OrdinalIgnoreCase ) );
+	IEnumerable<PropDefinition> VisibleProps => GetVisibleProps();
 
 	private const float SpawnTraceDistance = 420f;
 	private const float FallbackSpawnDistance = 120f;
 	private const float SpawnSurfaceOffset = 24f;
 	private const float LookTraceDistance = 200f;
+	private const string PropFavoritesFolder = "props_favorites";
 
 	string LookedPropName { get; set; }
 	string LookedPropOwnerName { get; set; }
+
+	public sealed class PropFavoritesSaveData
+	{
+		public long SteamId { get; set; }
+		public List<string> PropIds { get; set; } = new();
+	}
 
 	private void LoadProps()
 	{
@@ -153,7 +185,14 @@
 
 	private void SelectCategory( string category )
 	{
+		SelectedFavoritesOnly = false;
 		SelectedCategory = string.IsNullOrWhiteSpace( category ) ? null : category;
+	}
+
+	private void SelectFavorites()
+	{
+		SelectedFavoritesOnly = true;
+		SelectedCategory = null;
 	}
 
 	private bool IsSelectedCategory( string category )
@@ -164,6 +203,76 @@
 	private int GetCategoryCount( string category )
 	{
 		return AvailableProps.Count( prop => string.Equals( GetPropCategory( prop ), category, StringComparison.OrdinalIgnoreCase ) );
+	}
+
+	private int GetFavoritesCount()
+	{
+		return AvailableProps.Count( IsFavorite );
+	}
+
+	private IEnumerable<PropDefinition> GetVisibleProps()
+	{
+		IEnumerable<PropDefinition> props = AvailableProps;
+
+		if ( SelectedFavoritesOnly )
+			props = props.Where( IsFavorite );
+		else if ( !string.IsNullOrWhiteSpace( SelectedCategory ) )
+			props = props.Where( prop => string.Equals( GetPropCategory( prop ), SelectedCategory, StringComparison.OrdinalIgnoreCase ) );
+
+		var search = (SearchText ?? string.Empty).Trim();
+		if ( !string.IsNullOrWhiteSpace( search ) )
+			props = props.Where( prop => MatchesSearch( prop, search ) );
+
+		return props;
+	}
+
+	private static bool MatchesSearch( PropDefinition prop, string search )
+	{
+		if ( prop is null || string.IsNullOrWhiteSpace( search ) )
+			return true;
+
+		return ContainsSearch( GetPropHeader( prop ), search )
+			|| ContainsSearch( GetPropCategory( prop ), search )
+			|| ContainsSearch( prop.Id, search )
+			|| ContainsSearch( prop.Ident, search );
+	}
+
+	private static bool ContainsSearch( string value, string search )
+	{
+		return (value ?? string.Empty).IndexOf( search, StringComparison.OrdinalIgnoreCase ) >= 0;
+	}
+
+	private bool IsFavorite( PropDefinition prop )
+	{
+		var id = GetFavoriteId( prop );
+		return !string.IsNullOrWhiteSpace( id ) && FavoritePropIds.Contains( id );
+	}
+
+	private void ToggleFavorite( PropDefinition prop )
+	{
+		var id = GetFavoriteId( prop );
+		if ( string.IsNullOrWhiteSpace( id ) )
+			return;
+
+		var shouldFavorite = !FavoritePropIds.Contains( id );
+		if ( shouldFavorite )
+			FavoritePropIds.Add( id );
+		else
+			FavoritePropIds.Remove( id );
+
+		PropsVersion++;
+		RpcSetPropFavorite( id, shouldFavorite );
+	}
+
+	private void ApplyFavoriteIds( IEnumerable<string> ids )
+	{
+		FavoritePropIds = new HashSet<string>(
+			(ids ?? Enumerable.Empty<string>())
+				.Where( id => !string.IsNullOrWhiteSpace( id ) )
+				.Select( id => id.Trim() ),
+			StringComparer.Ordinal );
+
+		PropsVersion++;
 	}
 
 	private async Task LoadThumbnailsAsync()
@@ -245,14 +354,9 @@
 		return string.IsNullOrWhiteSpace( category ) ? "Other" : category;
 	}
 
-	private static string GetShortDescription( string description )
+	private static string GetFavoriteId( PropDefinition prop )
 	{
-		var text = (description ?? string.Empty).Trim();
-		if ( text.Length <= 0 )
-			return "No description";
-
-		const int maxLen = 120;
-		return text.Length <= maxLen ? text : $"{text[..maxLen]}...";
+		return (prop?.Id ?? string.Empty).Trim();
 	}
 
 	private string GetToolTitle()
@@ -277,6 +381,128 @@
 			3 => "Disables collisions between selected props.",
 			_ => "Select a tool."
 		};
+	}
+
+	[Rpc.Host]
+	private static void RpcRequestPropFavorites()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		var caller = Rpc.Caller;
+		if ( caller is null )
+			return;
+
+		SendPropFavorites( caller, LoadPropFavorites( caller.SteamId.Value ).PropIds );
+	}
+
+	[Rpc.Host]
+	private static void RpcSetPropFavorite( string propId, bool favorite )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		var caller = Rpc.Caller;
+		if ( caller is null )
+			return;
+
+		var normalized = (propId ?? string.Empty).Trim();
+		if ( string.IsNullOrWhiteSpace( normalized ) )
+			return;
+
+		var data = LoadPropFavorites( caller.SteamId.Value );
+		data.SteamId = caller.SteamId.Value;
+		data.PropIds ??= new();
+
+		if ( favorite )
+		{
+			if ( !data.PropIds.Any( id => string.Equals( id, normalized, StringComparison.Ordinal ) ) )
+				data.PropIds.Add( normalized );
+		}
+		else
+		{
+			data.PropIds.RemoveAll( id => string.Equals( id, normalized, StringComparison.Ordinal ) );
+		}
+
+		data.PropIds = data.PropIds
+			.Where( id => !string.IsNullOrWhiteSpace( id ) )
+			.Select( id => id.Trim() )
+			.Distinct( StringComparer.Ordinal )
+			.OrderBy( id => id, StringComparer.Ordinal )
+			.ToList();
+
+		SavePropFavorites( data );
+		SendPropFavorites( caller, data.PropIds );
+	}
+
+	private static void SendPropFavorites( Connection caller, IEnumerable<string> propIds )
+	{
+		if ( caller is null )
+			return;
+
+		var json = JsonSerializer.Serialize( propIds?.ToList() ?? new List<string>() );
+		using ( Rpc.FilterInclude( x => x.SteamId.Value == caller.SteamId.Value ) )
+		{
+			RpcReceivePropFavorites( json );
+		}
+	}
+
+	[Rpc.Broadcast]
+	private static void RpcReceivePropFavorites( string propIdsJson )
+	{
+		try
+		{
+			var ids = JsonSerializer.Deserialize<List<string>>( propIdsJson ?? "[]" ) ?? new();
+			Instance?.ApplyFavoriteIds( ids );
+		}
+		catch ( Exception e )
+		{
+			Log.Warning( $"[PropsMenu] Failed to receive favorites: {e.Message}" );
+		}
+	}
+
+	private static void EnsurePropFavoritesFolder()
+	{
+		FileSystem.Data.CreateDirectory( PropFavoritesFolder );
+	}
+
+	private static string GetPropFavoritesPath( long steamId )
+	{
+		return $"{PropFavoritesFolder}/{steamId}.json";
+	}
+
+	private static PropFavoritesSaveData LoadPropFavorites( long steamId )
+	{
+		EnsurePropFavoritesFolder();
+
+		try
+		{
+			var path = GetPropFavoritesPath( steamId );
+			if ( !FileSystem.Data.FileExists( path ) )
+				return new PropFavoritesSaveData { SteamId = steamId };
+
+			var data = FileSystem.Data.ReadJsonOrDefault<PropFavoritesSaveData>( path );
+			if ( data is null )
+				return new PropFavoritesSaveData { SteamId = steamId };
+
+			data.SteamId = steamId;
+			data.PropIds ??= new();
+			return data;
+		}
+		catch ( Exception e )
+		{
+			Log.Warning( $"[PropsMenu] Failed to load favorites for {steamId}: {e.Message}" );
+			return new PropFavoritesSaveData { SteamId = steamId };
+		}
+	}
+
+	private static void SavePropFavorites( PropFavoritesSaveData data )
+	{
+		if ( data is null || data.SteamId <= 0 )
+			return;
+
+		EnsurePropFavoritesFolder();
+		FileSystem.Data.WriteJson( GetPropFavoritesPath( data.SteamId ), data );
 	}
 
 	[Rpc.Host]
@@ -424,7 +650,9 @@
 
 	protected override void OnStart()
 	{
+		Instance = this;
 		LoadProps();
+		RpcRequestPropFavorites();
 	}
 
 	protected override void OnDisabled()
@@ -435,6 +663,8 @@
 	protected override void OnDestroy()
 	{
 		ReleaseCrosshairBlock();
+		if ( Instance == this )
+			Instance = null;
 	}
 
 	private void ReleaseCrosshairBlock()
@@ -443,7 +673,7 @@
 		Crosshair.SetBlocked( nameof( PropsMenu ), false );
 	}
 
-		private void SetOpen( bool open )
+	private void SetOpen( bool open )
 	{
 		IsOpen = open;
 
@@ -452,6 +682,9 @@
 	#pragma warning disable CS0612
 		Mouse.Visible = open;
 	#pragma warning restore CS0612
+
+		if ( open )
+			RpcRequestPropFavorites();
 	}
 
 	protected override void OnUpdate()
@@ -509,11 +742,19 @@
 		hash.Add( AvailableProps.Count );
 		hash.Add( AvailableCategories.Count );
 		hash.Add( SelectedCategory );
+		hash.Add( SelectedFavoritesOnly );
+		hash.Add( SearchText );
+		hash.Add( FavoritePropIds.Count );
 		hash.Add( PropsVersion );
 		hash.Add( Player.Local?.OwnedPropsCount ?? 0 );
 		hash.Add( Player.Local?.MaxProps ?? 0 );
 		hash.Add( LookedPropName );
 		hash.Add( LookedPropOwnerName );
+
+		foreach ( var favoriteId in FavoritePropIds.OrderBy( id => id, StringComparer.Ordinal ) )
+		{
+			hash.Add( favoriteId );
+		}
 
 		foreach ( var prop in AvailableProps )
 		{

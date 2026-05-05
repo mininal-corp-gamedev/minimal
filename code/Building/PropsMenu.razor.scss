@@ -95,6 +95,33 @@ PropsMenu {
 		color: $pm-text;
 	}
 
+	.head-actions {
+		margin-left: auto;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.search-input {
+		width: 260px;
+		height: 36px;
+		flex-shrink: 0;
+		margin-right: 10px;
+		padding-left: 13px;
+		padding-right: 13px;
+		background-color: rgba(255, 255, 255, 0.045);
+		border: 1px solid rgba(255, 255, 255, 0.10);
+		border-radius: 8px;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.90);
+
+		&:focus {
+			border-color: rgba(255, 67, 108, 0.62);
+			background-color: rgba(255, 215, 226, 0.06);
+		}
+	}
+
 	.catalog-bar {
 		width: 100%;
 		max-height: 92px;
@@ -194,7 +221,6 @@ PropsMenu {
 		width: 104px;
 		height: 36px;
 		flex-shrink: 0;
-		margin-left: auto;
 		border-radius: 8px;
 		background-color: rgba(255, 67, 108, 0.18);
 		border: 1px solid rgba(255, 67, 108, 0.62);
@@ -219,13 +245,14 @@ PropsMenu {
 	}
 
 	.prop-card {
-		width: 32%;
-		min-height: 172px;
+		position: relative;
+		width: 18.8%;
+		min-height: 178px;
 		flex-grow: 0;
 		flex-shrink: 0;
 		margin-bottom: 16px;
-		padding: 14px;
-		flex-direction: row;
+		padding: 10px;
+		flex-direction: column;
 		align-items: stretch;
 		background-color: rgba(255, 255, 255, 0.055);
 		border: 1px solid rgba(255, 255, 255, 0.10);
@@ -236,13 +263,69 @@ PropsMenu {
 			background-color: rgba(255, 255, 255, 0.075);
 			border-color: rgba(255, 67, 108, 0.36);
 		}
+
+		&.favorite {
+			border-color: rgba(255, 67, 108, 0.44);
+		}
+
+		&.disabled {
+			opacity: 0.52;
+		}
+	}
+
+	.prop-hitbox {
+		width: 100%;
+		height: 100%;
+		flex-grow: 1;
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: flex-start;
+		padding: 0;
+		background-color: transparent;
+		border: 0;
+
+		&[disabled] {
+			background-color: transparent;
+			border: 0;
+		}
+	}
+
+	.favorite-btn {
+		position: absolute;
+		top: 9px;
+		right: 9px;
+		width: 30px;
+		height: 30px;
+		z-index: 2;
+		flex-shrink: 0;
+		border-radius: 8px;
+		background-color: rgba(18, 22, 25, 0.86);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		font-family: Poppins;
+		font-size: 20px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.72);
+		justify-content: center;
+		align-items: center;
+
+		&:hover {
+			background-color: rgba(255, 67, 108, 0.18);
+			border-color: rgba(255, 67, 108, 0.56);
+			color: $pm-accent-light;
+		}
+
+		&.active {
+			background-color: rgba(255, 67, 108, 0.22);
+			border-color: rgba(255, 67, 108, 0.70);
+			color: #ff436c;
+		}
 	}
 
 	.prop-thumb {
-		width: 124px;
-		height: 124px;
+		width: 100%;
+		height: 122px;
 		flex-shrink: 0;
-		margin-right: 14px;
+		margin-bottom: 10px;
 		background-color: rgba(18, 22, 25, 0.92);
 		border: 1px solid rgba(255, 255, 255, 0.10);
 		border-radius: 8px;
@@ -252,8 +335,8 @@ PropsMenu {
 		box-shadow: inset 0 0 26px rgba(0, 0, 0, 0.34);
 
 		img {
-			width: 118px;
-			height: 118px;
+			width: 112px;
+			height: 112px;
 			object-fit: contain;
 		}
 
@@ -264,20 +347,14 @@ PropsMenu {
 	}
 
 	.prop-info {
-		flex-grow: 1;
 		flex-direction: column;
-		justify-content: space-between;
-		min-width: 0;
-	}
-
-	.prop-copy {
-		flex-direction: column;
+		justify-content: flex-start;
 		min-width: 0;
 	}
 
 	.prop-title {
 		font-family: Poppins;
-		font-size: 17px;
+		font-size: 14px;
 		font-weight: 700;
 		color: rgba(255, 255, 255, 0.95);
 		white-space: nowrap;
@@ -290,41 +367,7 @@ PropsMenu {
 		font-size: 12px;
 		font-weight: 700;
 		color: $pm-accent-light;
-		margin-top: 4px;
-		margin-bottom: 8px;
-	}
-
-	.prop-description {
-		flex-grow: 1;
-		font-family: Poppins;
-		font-size: 13px;
-		font-weight: 500;
-		color: rgba(255, 255, 255, 0.62);
-		margin-bottom: 12px;
-	}
-
-	.spawn-btn {
-		width: 100%;
-		height: 36px;
-		border-radius: 8px;
-		background-color: rgba(255, 67, 108, 0.18);
-		border: 1px solid rgba(255, 67, 108, 0.62);
-		font-family: Poppins;
-		font-size: 13px;
-		font-weight: 700;
-		color: $pm-accent-light;
-		justify-content: center;
-		align-items: center;
-
-		&:hover {
-			background-color: rgba(255, 67, 108, 0.30);
-		}
-
-		&[disabled] {
-			background-color: rgba(255, 255, 255, 0.08);
-			border-color: rgba(255, 255, 255, 0.16);
-			color: rgba(255, 255, 255, 0.45);
-		}
+		margin-top: 3px;
 	}
 
 	.empty-state {

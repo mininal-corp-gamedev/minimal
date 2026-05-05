@@ -294,7 +294,8 @@
             "OnComponentEnabled": null,
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
-            "OnComponentUpdate": null
+            "OnComponentUpdate": null,
+            "SalaryDelay": 500
           }
         ],
         "Children": []

@@ -24,6 +24,7 @@
 					<div class="page-head">
 						<div>
 							<div class="page-title">Props</div>
+							<div class="page-subtitle">@GetCatalogTitle()</div>
 						</div>
 						<button class="refresh-btn" onclick=@(() => LoadProps())>Refresh</button>
 					</div>
@@ -34,21 +35,44 @@
 					}
 					else
 					{
-						<div class="props-limit">Props limit: @GetOwnedPropsCount() / @GetMaxProps()</div>
-						<div class="props-grid">
-							@foreach ( var prop in AvailableProps )
+						<div class="catalog-bar">
+							<button class="catalog-btn @(string.IsNullOrWhiteSpace( SelectedCategory ) ? "active" : "")" onclick=@(() => SelectCategory( null ))>
+								Все пропы
+								<span>@AvailableProps.Count</span>
+							</button>
+
+							@foreach ( var category in AvailableCategories )
 							{
+								<button class="catalog-btn @(IsSelectedCategory( category ) ? "active" : "")" onclick=@(() => SelectCategory( category ))>
+									@category
+									<span>@GetCategoryCount( category )</span>
+								</button>
+							}
+						</div>
+
+						<div class="props-meta">
+							<div class="props-limit">Props limit: @GetOwnedPropsCount() / @GetMaxProps()</div>
+							<div class="props-count">Показано @VisibleProps.Count() / @AvailableProps.Count</div>
+						</div>
+
+						<div class="props-grid">
+							@foreach ( var prop in VisibleProps )
+							{
+								var thumbUrl = GetThumbUrl( prop );
+
 								<div class="prop-card">
-									<div class="prop-thumb">
-										@if ( !string.IsNullOrEmpty( GetThumbUrl( prop ) ) )
+									<div class="prop-thumb @(string.IsNullOrEmpty( thumbUrl ) ? "loading" : "")">
+										@if ( !string.IsNullOrEmpty( thumbUrl ) )
 										{
-											<img src="@GetThumbUrl( prop )" />
+											<img src="@thumbUrl" />
 										}
 									</div>
 									<div class="prop-info">
-										<div class="prop-title">@GetPropHeader( prop )</div>
-										<div class="prop-category">@prop.Category</div>
-										<div class="prop-description">@GetShortDescription( prop.Description )</div>
+										<div class="prop-copy">
+											<div class="prop-title">@GetPropHeader( prop )</div>
+											<div class="prop-category">@GetPropCategory( prop )</div>
+											<div class="prop-description">@GetShortDescription( prop.Description )</div>
+										</div>
 										<button
 											class="spawn-btn"
 											disabled=@(!CanRequestSpawn( prop ))
@@ -83,8 +107,13 @@
 	bool IsOpen { get; set; } = false;
 	int ActiveTool { get; set; } = 0;
 	List<PropDefinition> AvailableProps { get; set; } = new();
+	List<string> AvailableCategories { get; set; } = new();
 	Dictionary<string, string> ThumbUrls { get; set; } = new();
+	string SelectedCategory { get; set; }
 	int PropsVersion { get; set; } = 0;
+	IEnumerable<PropDefinition> VisibleProps => string.IsNullOrWhiteSpace( SelectedCategory )
+		? AvailableProps
+		: AvailableProps.Where( prop => string.Equals( GetPropCategory( prop ), SelectedCategory, StringComparison.OrdinalIgnoreCase ) );
 
 	private const float SpawnTraceDistance = 420f;
 	private const float FallbackSpawnDistance = 120f;
@@ -99,13 +128,43 @@
 		AvailableProps = ResourceLibrary
 			.GetAll<PropDefinition>()
 			.Where( x => x is not null )
-			.OrderBy( x => x.Category )
+			.OrderBy( x => GetPropCategory( x ) )
 			.ThenBy( x => GetPropHeader( x ) )
 			.ToList();
+
+		RefreshCategories();
 
 		PropsVersion++;
 
 		_ = LoadThumbnailsAsync();
+	}
+
+	private void RefreshCategories()
+	{
+		AvailableCategories = AvailableProps
+			.Select( GetPropCategory )
+			.GroupBy( category => category, StringComparer.OrdinalIgnoreCase )
+			.Select( group => group.Key )
+			.OrderBy( category => category, StringComparer.OrdinalIgnoreCase )
+			.ToList();
+
+		if ( !string.IsNullOrWhiteSpace( SelectedCategory ) && !AvailableCategories.Any( IsSelectedCategory ) )
+			SelectedCategory = null;
+	}
+
+	private void SelectCategory( string category )
+	{
+		SelectedCategory = string.IsNullOrWhiteSpace( category ) ? null : category;
+	}
+
+	private bool IsSelectedCategory( string category )
+	{
+		return string.Equals( SelectedCategory, category, StringComparison.OrdinalIgnoreCase );
+	}
+
+	private int GetCategoryCount( string category )
+	{
+		return AvailableProps.Count( prop => string.Equals( GetPropCategory( prop ), category, StringComparison.OrdinalIgnoreCase ) );
 	}
 
 	private async Task LoadThumbnailsAsync()
@@ -179,6 +238,20 @@
 			return prop.Header;
 
 		return string.IsNullOrWhiteSpace( prop.Id ) ? "Unknown" : prop.Id;
+	}
+
+	private static string GetPropCategory( PropDefinition prop )
+	{
+		var category = (prop?.Category ?? string.Empty).Trim();
+		return string.IsNullOrWhiteSpace( category ) ? "Other" : category;
+	}
+
+	private string GetCatalogTitle()
+	{
+		if ( string.IsNullOrWhiteSpace( SelectedCategory ) )
+			return "Все пропы";
+
+		return $"Каталог: {SelectedCategory}";
 	}
 
 	private static string GetShortDescription( string description )
@@ -443,6 +516,8 @@
 		hash.Add( IsOpen );
 		hash.Add( ActiveTool );
 		hash.Add( AvailableProps.Count );
+		hash.Add( AvailableCategories.Count );
+		hash.Add( SelectedCategory );
 		hash.Add( PropsVersion );
 		hash.Add( Player.Local?.OwnedPropsCount ?? 0 );
 		hash.Add( Player.Local?.MaxProps ?? 0 );

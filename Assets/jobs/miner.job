@@ -1,0 +1,15 @@
+{
+  "Id": "miner",
+  "Header": "Miner",
+  "Category": "civil",
+  "Description": "Добывайте камушки, дворфы!",
+  "MaxCount": 4,
+  "Salary": 50,
+  "Vote": false,
+  "CanDemote": true,
+  "HasPostSpawned": true,
+  "HasPostDemote": false,
+  "HasPostJoined": true,
+  "__references": [],
+  "__version": 0
+}

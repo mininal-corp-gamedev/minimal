@@ -16,8 +16,8 @@ namespace Minimal.Weapons;
 public sealed class WeaponPhysgun : Weapon
 {
     private const string HeldCollisionTag = "physgun_held";
-    private const float HostMaxRangeLimit = 8196f;
-    private const float HostMaxHoldDistanceLimit = 8196f;
+    private const float HostMaxRangeLimit = 1024f;
+    private const float HostMaxHoldDistanceLimit = 1024;
     private const float HostMaxLinearSpeedLimit = 24000f;
     private const float HostMinResponsiveLinearSpeed = 12000f;
     private const float HostMaxLaunchForceLimit = 5000f;
@@ -31,9 +31,9 @@ public sealed class WeaponPhysgun : Weapon
     private static readonly SoundEvent DefaultDeploySound = new("weapons/common/foley/foley_deploy_weapon_01.sound");
     private static readonly SoundEvent DefaultIdleSound = new("weapons/physgun/sounds/physgun.idle.sound");
 
-    [Property, Category("Physgun")] public float MaxRange { get; set; } = 8196f;
+    [Property, Category("Physgun")] public float MaxRange { get; set; } = 1024f;
     [Property, Category("Physgun")] public float MinHoldDistance { get; set; } = 50f;
-    [Property, Category("Physgun")] public float MaxHoldDistance { get; set; } = 8196f;
+    [Property, Category("Physgun")] public float MaxHoldDistance { get; set; } = 1024f;
     [Property, Category("Physgun")] public float GravityGunHoldDistance { get; set; } = 0f;
     [Property, Category("Physgun")] public float PullDistance { get; set; } = 200f;
     [Property, Category("Physgun")] public float PullForce { get; set; } = 1000f;
@@ -45,7 +45,7 @@ public sealed class WeaponPhysgun : Weapon
     [Property, Category("Physgun")] public float SeekRadius { get; set; } = 28f;
     [Property, Category("Physgun")] public bool LocalVisualPrediction { get; set; } = true;
 
-    [Property, Category("Physgun Beam")] public float BeamMaxLength { get; set; } = 8196f;
+    [Property, Category("Physgun Beam")] public float BeamMaxLength { get; set; } = 1024f;
     [Property, Category("Physgun Beam")] public float BeamSag { get; set; } = 48f;
     [Property, Category("Physgun Beam")] public float BeamMoveBendScale { get; set; } = 0.035f;
     [Property, Category("Physgun Beam")] public float BeamMaxBend { get; set; } = 140f;

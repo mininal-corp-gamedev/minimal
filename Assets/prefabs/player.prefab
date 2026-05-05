@@ -82,7 +82,7 @@
           "component_type": "SkinnedModelRenderer"
         },
         "RespawnDelaySeconds": 5,
-        "SafeFallDistance": 420,
+        "SafeFallDistance": 110,
         "WorldHud": {
           "_type": "component",
           "component_id": "30bcf53b-4115-487c-80bb-387d61c32651",
@@ -3025,7 +3025,7 @@
             "Children": []
           },
           {
-            "__guid": "36277eab-0f9d-4a06-8bc7-d498876653af",
+            "__guid": "21202518-a799-42ad-8428-4720b16ce1f2",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - y_front_pants_white",
@@ -3042,7 +3042,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "79fe0fea-9b92-40d6-aeb2-09e98804fa36",
+                "__guid": "829d9792-3645-4fe2-859d-df710372f6e4",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,

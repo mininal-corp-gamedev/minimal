@@ -13974,6 +13974,14 @@
                       },
                       {
                         "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
+                      },
+                      {
+                        "Target": {
                           "Type": "Component",
                           "IdValue": "0097694d-e91b-41f5-bfff-0ba318adf421"
                         },
@@ -14167,6 +14175,14 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
                       },
                       {
                         "Target": {
@@ -14377,6 +14393,14 @@
                       },
                       {
                         "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
+                      },
+                      {
+                        "Target": {
                           "Type": "Component",
                           "IdValue": "0097694d-e91b-41f5-bfff-0ba318adf421"
                         },
@@ -14570,6 +14594,14 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
                       },
                       {
                         "Target": {
@@ -19458,6 +19490,14 @@
                   {
                     "Target": {
                       "Type": "GameObject",
+                      "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
+                    },
+                    "Property": "NetworkMode",
+                    "Value": 1
+                  },
+                  {
+                    "Target": {
+                      "Type": "GameObject",
                       "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                     },
                     "Property": "Rotation",
@@ -20952,6 +20992,14 @@
                       },
                       {
                         "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "fe0e7bcb-7c0b-4124-9d3e-bcc7b6bbbc0f"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
+                      },
+                      {
+                        "Target": {
                           "Type": "Component",
                           "IdValue": "62f709b3-1874-4623-bb2b-98d14b556373"
                         },
@@ -21045,6 +21093,14 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,0,1"
+                      },
+                      {
+                        "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "fe0e7bcb-7c0b-4124-9d3e-bcc7b6bbbc0f"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
                       },
                       {
                         "Target": {
@@ -27920,6 +27976,14 @@
                       },
                       {
                         "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "55b1f4a3-b210-4433-ba15-67a1b1ed54ac"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
+                      },
+                      {
+                        "Target": {
                           "Type": "Component",
                           "IdValue": "77f2015e-28d1-469e-8f70-05e60777ebfb"
                         },
@@ -28039,6 +28103,14 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "55b1f4a3-b210-4433-ba15-67a1b1ed54ac"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
                       },
                       {
                         "Target": {
@@ -28183,6 +28255,14 @@
                       },
                       {
                         "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "55b1f4a3-b210-4433-ba15-67a1b1ed54ac"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
+                      },
+                      {
+                        "Target": {
                           "Type": "Component",
                           "IdValue": "77f2015e-28d1-469e-8f70-05e60777ebfb"
                         },
@@ -28302,6 +28382,14 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "55b1f4a3-b210-4433-ba15-67a1b1ed54ac"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
                       },
                       {
                         "Target": {
@@ -28446,6 +28534,14 @@
                       },
                       {
                         "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "55b1f4a3-b210-4433-ba15-67a1b1ed54ac"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
+                      },
+                      {
+                        "Target": {
                           "Type": "Component",
                           "IdValue": "77f2015e-28d1-469e-8f70-05e60777ebfb"
                         },
@@ -28565,6 +28661,14 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "55b1f4a3-b210-4433-ba15-67a1b1ed54ac"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
                       },
                       {
                         "Target": {
@@ -28709,6 +28813,14 @@
                       },
                       {
                         "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "55b1f4a3-b210-4433-ba15-67a1b1ed54ac"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
+                      },
+                      {
+                        "Target": {
                           "Type": "Component",
                           "IdValue": "77f2015e-28d1-469e-8f70-05e60777ebfb"
                         },
@@ -28828,6 +28940,14 @@
                         },
                         "Property": "Rotation",
                         "Value": "0,0,1,1.49011612E-07"
+                      },
+                      {
+                        "Target": {
+                          "Type": "GameObject",
+                          "IdValue": "55b1f4a3-b210-4433-ba15-67a1b1ed54ac"
+                        },
+                        "Property": "NetworkMode",
+                        "Value": 1
                       },
                       {
                         "Target": {
@@ -40397,7 +40517,16 @@
           }
         ],
         "RemovedObjects": [],
-        "PropertyOverrides": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "bfa99d0c-d2e8-43e1-b19b-faa0754a35dc"
+            },
+            "Property": "Flags",
+            "Value": 0
+          }
+        ],
         "MovedObjects": []
       },
       "__PrefabIdToInstanceId": {
@@ -40559,6 +40688,194 @@
         }
       ],
       "Children": []
+    },
+    {
+      "__guid": "538f3dfb-f092-4f01-93a8-8e5fb8e2c24d",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Block",
+      "Position": "248,-64,360.545288",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "world",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.MeshComponent",
+          "__guid": "b9ff1eb1-bb44-46f1-8b88-3eb60e18ae69",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Collision": "Hull",
+          "Color": "1,1,1,1",
+          "Elasticity": null,
+          "Friction": null,
+          "HideInGame": true,
+          "IsTrigger": true,
+          "Mesh": {
+            "Topology": "H4sIAAAAAAAACl2QCQ7CMAwEp4Qj3NBy/f+laMRGsohUVbFn1+t04ANs+Z0VsM69AwfgBFyAKZ9MPXdgk3qLnsI+Um/h/me9i2ZXfFvYOazafTJN0XRgKZmPyWtfXvYVL73PZRd52WdYPa7xtC8veys7u6t17/7t6Tn0ZtFjvIXZR895zjKjPWf4NiOrGt+ivpXZ3XnozaOndVn9vvVkkTjEAQAA",
+            "Positions": [
+              "-360,-352,360.545288",
+              "360,-352,360.545288",
+              "360,352,360.545288",
+              "-360,352,360.545288",
+              "-360,352,-360.545288",
+              "360,352,-360.545288",
+              "360,-352,-360.545288",
+              "-360,-352,-360.545288"
+            ],
+            "Blends": [
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0"
+            ],
+            "Colors": [
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0",
+              "0,0,0,0"
+            ],
+            "TextureCoord": [
+              "4.75,3.25",
+              "-0.875,-5.63352013",
+              "4.75,-2.25",
+              "-3.25,-5.63352013",
+              "-0.875,-2.25",
+              "-4.75,-5.63352013",
+              "-0.875,3.25",
+              "-2.25,-5.63352013",
+              "4.75,-2.25",
+              "0.875,0",
+              "4.75,3.25",
+              "2.25,0",
+              "-0.875,3.25",
+              "4.75,0",
+              "-0.875,-2.25",
+              "3.25,0",
+              "3.25,-5.63352013",
+              "-0.875,0",
+              "-2.25,0",
+              "0.875,-5.63352013",
+              "-3.25,0",
+              "4.75,-5.63352013",
+              "2.25,-5.63352013",
+              "-4.75,0"
+            ],
+            "MaterialIndex": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "EdgeFlags": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "Materials": [
+              "materials/glass/glass_a.vmat"
+            ]
+          },
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RenderType": "Off",
+          "RollingResistance": null,
+          "SmoothingAngle": 40,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "TriggerSafezone",
+          "__guid": "120a2b0f-cf52-4d8a-9265-bd15c99d7b31",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {
@@ -40583,17 +40900,17 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "b7c3e9f6-dbbd-4d7c-9f80-7434b612f0ee"
-        }
-      },
       "Sandbox.MovieMaker.MovieRecorderSystem": {
         "DisableClientRecording": false
       },
       "Sandbox.SelectionSetsSystem": {
         "Data": {
           "SelectionSets": []
+        }
+      },
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "b7c3e9f6-dbbd-4d7c-9f80-7434b612f0ee"
         }
       }
     }

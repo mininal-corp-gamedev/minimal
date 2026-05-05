@@ -8,7 +8,7 @@ public sealed class JobManager : Component
     [Property, Category("Arrest")] public float ArrestDurationSeconds { get; set; } = 120f;
     [Property, Category("Arrest")] public float ArrestInteractRange { get; set; } = 110f; //todo transfer to WeaponHandcuff
 
-    [Property, Category("General")] public float SalaryDelay { get; set; } = 2f;
+    [Property, Category("General")] public float SalaryDelay { get; set; } = 500f;
 
     public TimeUntil SalaryTime { get; private set; }
 

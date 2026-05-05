@@ -71,37 +71,39 @@
 						}
 						else
 						{
-							<div class="props-grid">
-								@foreach ( var prop in visibleProps )
-								{
-									var thumbUrl = GetThumbUrl( prop );
-									var canSpawn = CanRequestSpawn( prop );
-									var isFavorite = IsFavorite( prop );
+							<div class="props-list">
+								<div class="props-grid">
+									@foreach ( var prop in visibleProps )
+									{
+										var thumbUrl = GetThumbUrl( prop );
+										var canSpawn = CanRequestSpawn( prop );
+										var isFavorite = IsFavorite( prop );
 
-									<div class="prop-card @(canSpawn ? "" : "disabled") @(isFavorite ? "favorite" : "")">
-										<button
-											class="prop-hitbox"
-											disabled=@(!canSpawn)
-											onclick=@(() => RequestSpawn( prop ))>
-											<div class="prop-thumb @(string.IsNullOrEmpty( thumbUrl ) ? "loading" : "")">
-												@if ( !string.IsNullOrEmpty( thumbUrl ) )
-												{
-													<img src="@thumbUrl" />
-												}
-											</div>
-											<div class="prop-info">
-												<div class="prop-title">@GetPropHeader( prop )</div>
-												<div class="prop-category">@GetPropCategory( prop )</div>
-											</div>
-										</button>
+										<div class="prop-card @(canSpawn ? "" : "disabled") @(isFavorite ? "favorite" : "")">
+											<button
+												class="prop-hitbox"
+												disabled=@(!canSpawn)
+												onclick=@(() => RequestSpawn( prop ))>
+												<div class="prop-thumb @(string.IsNullOrEmpty( thumbUrl ) ? "loading" : "")">
+													@if ( !string.IsNullOrEmpty( thumbUrl ) )
+													{
+														<img src="@thumbUrl" />
+													}
+												</div>
+												<div class="prop-info">
+													<div class="prop-title">@GetPropHeader( prop )</div>
+													<div class="prop-category">@GetPropCategory( prop )</div>
+												</div>
+											</button>
 
-										<button
-											class="favorite-btn @(isFavorite ? "active" : "")"
-											onclick=@(() => ToggleFavorite( prop ))>
-											@(isFavorite ? "♥" : "♡")
-										</button>
-									</div>
-								}
+											<button
+												class="favorite-btn @(isFavorite ? "active" : "")"
+												onclick=@(() => ToggleFavorite( prop ))>
+												@(isFavorite ? "♥" : "♡")
+											</button>
+										</div>
+									}
+								</div>
 							</div>
 						}
 					}

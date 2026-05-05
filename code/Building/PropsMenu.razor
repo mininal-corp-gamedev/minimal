@@ -24,7 +24,6 @@
 					<div class="page-head">
 						<div>
 							<div class="page-title">Props</div>
-							<div class="page-subtitle">@GetCatalogTitle()</div>
 						</div>
 						<button class="refresh-btn" onclick=@(() => LoadProps())>Refresh</button>
 					</div>
@@ -37,22 +36,22 @@
 					{
 						<div class="catalog-bar">
 							<button class="catalog-btn @(string.IsNullOrWhiteSpace( SelectedCategory ) ? "active" : "")" onclick=@(() => SelectCategory( null ))>
-								Все пропы
-								<span>@AvailableProps.Count</span>
+								<div class="catalog-label">Все пропы</div>
+								<div class="catalog-count">@AvailableProps.Count</div>
 							</button>
 
 							@foreach ( var category in AvailableCategories )
 							{
 								<button class="catalog-btn @(IsSelectedCategory( category ) ? "active" : "")" onclick=@(() => SelectCategory( category ))>
-									@category
-									<span>@GetCategoryCount( category )</span>
+									<div class="catalog-label">@category</div>
+									<div class="catalog-count">@GetCategoryCount( category )</div>
 								</button>
 							}
 						</div>
 
 						<div class="props-meta">
-							<div class="props-limit">Props limit: @GetOwnedPropsCount() / @GetMaxProps()</div>
-							<div class="props-count">Показано @VisibleProps.Count() / @AvailableProps.Count</div>
+							<div class="props-limit">@( $"Props limit: {GetOwnedPropsCount()} / {GetMaxProps()}" )</div>
+							<div class="props-count">@( $"Показано {VisibleProps.Count()} / {AvailableProps.Count}" )</div>
 						</div>
 
 						<div class="props-grid">
@@ -244,14 +243,6 @@
 	{
 		var category = (prop?.Category ?? string.Empty).Trim();
 		return string.IsNullOrWhiteSpace( category ) ? "Other" : category;
-	}
-
-	private string GetCatalogTitle()
-	{
-		if ( string.IsNullOrWhiteSpace( SelectedCategory ) )
-			return "Все пропы";
-
-		return $"Каталог: {SelectedCategory}";
 	}
 
 	private static string GetShortDescription( string description )

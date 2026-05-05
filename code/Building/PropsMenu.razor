@@ -322,6 +322,7 @@
 
 			var propComponent = gameObj.Components.Create<Sandbox.Prop>();
 			propComponent.Model = model;
+			propComponent.Health = 999999f;
 
 			var propCustom = gameObj.Components.Create<PropCustom>();
 			propCustom.SetOwner( player );

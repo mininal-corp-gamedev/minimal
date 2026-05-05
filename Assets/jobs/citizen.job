@@ -4,6 +4,7 @@
   "Category": "Civil",
   "Description": "",
   "MaxCount": 0,
+  "Salary": 5,
   "HasPostSpawned": true,
   "HasPostDemote": true,
   "HasPostJoined": true,

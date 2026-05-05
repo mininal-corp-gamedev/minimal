@@ -242,6 +242,14 @@
               "_type": "gameobject",
               "go": "d1981975-a0c7-44e7-ab0e-e45833b3b6a3"
             }
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "0e51fb74-dbd4-4105-a215-507127aadb8a"
+            },
+            "Property": "SalaryDelay",
+            "Value": 2
           }
         ],
         "MovedObjects": []
@@ -992,18 +1000,18 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "4c8d8be3-9b2a-45ca-a21b-eaa302af4bec"
+        }
       },
       "Sandbox.SelectionSetsSystem": {
         "Data": {
           "SelectionSets": []
         }
       },
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "4c8d8be3-9b2a-45ca-a21b-eaa302af4bec"
-        }
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
       }
     }
   },

@@ -6,6 +6,7 @@ public sealed class JobDefinition : GameResource
     [Property] public string Category { get; set; } = "Other";
     [Property] public string Description { get; set; } = "";
     [Property] public int MaxCount { get; set; } = 0; // 0 for unlimited
+    [Property] public int Salary { get; set; } = 0;
 
     [Property] public bool HasPostSpawned { get; set; } = false;
     [Property] public bool HasPostDemote { get; set; } = false;

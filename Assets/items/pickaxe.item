@@ -1,0 +1,15 @@
+{
+  "Id": "pickaxe",
+  "Category": "weapons",
+  "Header": "Кирка",
+  "Description": "Добывайте руду!",
+  "MaxCount": 1,
+  "IconPath": "icons/weapons/pickaxe.vtex",
+  "Model": null,
+  "CanUse": true,
+  "CanDrop": true,
+  "IsJobItem": false,
+  "CanSave": true,
+  "__references": [],
+  "__version": 0
+}

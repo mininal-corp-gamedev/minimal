@@ -26,6 +26,21 @@
 
 			<div class="context-hint">Нажми действие или C, чтобы закрыть.</div>
 		</div>
+
+		@if ( VotePanel.HasOpenVote )
+		{
+			<div class="context-vote-panel">
+				<div class="context-vote-header">@VotePanel.CurrentHeader</div>
+
+				@if ( VotePanel.CanAnswer )
+				{
+					<div class="context-vote-actions">
+						<button class="vote-yes" onclick=@(() => VotePanel.SubmitCurrent( true ))>Yes</button>
+						<button class="vote-no" onclick=@(() => VotePanel.SubmitCurrent( false ))>No</button>
+					</div>
+				}
+			</div>
+		}
 	}
 </root>
 
@@ -37,7 +52,8 @@
 	static readonly ContextAction[] Actions =
 	{
 		new( "drop_money", "Выкинуть деньги", "Наличные", "pos-left", "money" ),
-		new( "transfer_money", "Передать деньги", "Игрок напротив", "pos-right", "money" )
+		new( "transfer_money", "Передать деньги", "Игрок напротив", "pos-right", "money" ),
+		new( "demote", "Уволить", "Голосование", "pos-bottom", "job" )
 	};
 
 	void RunAction( string id )
@@ -53,6 +69,9 @@
 
 		if ( id == "transfer_money" )
 			TransferMoneyConfirmPanel.TryOpenForLookTarget();
+
+		if ( id == "demote" )
+			DemotePanel.Open();
 	}
 
 	void Close()
@@ -107,7 +126,10 @@
 		ActiveAction,
 		Player.Local?.Money ?? 0,
 		Player.Local?.Job?.JobDefinition?.Header,
-		Player.Local?.Health ?? 0f );
+		Player.Local?.Health ?? 0f,
+		VotePanel.HasOpenVote,
+		VotePanel.CanAnswer,
+		VotePanel.CurrentHeader );
 
 	sealed class ContextAction
 	{

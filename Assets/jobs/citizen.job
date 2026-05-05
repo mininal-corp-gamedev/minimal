@@ -5,6 +5,8 @@
   "Description": "",
   "MaxCount": 0,
   "Salary": 5,
+  "Vote": false,
+  "CanDemote": false,
   "HasPostSpawned": true,
   "HasPostDemote": true,
   "HasPostJoined": true,

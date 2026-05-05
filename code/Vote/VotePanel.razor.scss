@@ -1,0 +1,55 @@
+$vote-panel-bg: rgba(5, 8, 20, 0.96);
+$vote-accent: rgba(255, 67, 108, 0.88);
+$vote-text: rgba(255, 255, 255, 0.94);
+
+VotePanel {
+	position: absolute;
+	top: 24px;
+	left: 24px;
+	z-index: 101;
+	flex-direction: column;
+
+	.vote-panel {
+		width: 330px;
+		flex-direction: column;
+		padding: 16px;
+		background-color: $vote-panel-bg;
+		border: 1px solid rgba(255, 255, 255, 0.10);
+		border-radius: 8px;
+		box-shadow: 0 10px 48px rgba(0, 0, 0, 0.80);
+	}
+
+	.vote-header {
+		font-family: Poppins;
+		font-size: 16px;
+		font-weight: 800;
+		color: $vote-text;
+		margin-bottom: 12px;
+	}
+
+	.vote-actions {
+		flex-direction: row;
+		gap: 10px;
+	}
+
+	button {
+		z-index: 101;
+		height: 36px;
+		flex-grow: 1;
+		border-radius: 8px;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 800;
+		color: white;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.yes {
+		background-color: rgba(52, 168, 83, 0.86);
+	}
+
+	.no {
+		background-color: $vote-accent;
+	}
+}

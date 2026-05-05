@@ -1,0 +1,226 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen )
+	{
+		<div class="demote-overlay">
+			<div class="demote-panel">
+				<button class="close-btn" onclick=@(() => Close())>X</button>
+
+				<div class="panel-title">Demote</div>
+				<div class="panel-subtitle">Choose a player to start a demote vote.</div>
+
+				<div class="demote-table">
+					@if ( EligiblePlayers.Count == 0 )
+					{
+						<div class="empty-row">No players can be demoted.</div>
+					}
+					else
+					{
+						@foreach ( var player in EligiblePlayers )
+						{
+							var owner = player.GameObject.Network.Owner;
+							var steamId = owner?.SteamId.Value ?? 0;
+							var name = owner?.DisplayName ?? "Player";
+							var jobName = player.Job?.JobDefinition?.Header ?? "No Job";
+
+							<div class="player-row">
+								<div class="player-avatar" style="background-image: url( avatar:@steamId )"></div>
+								<div class="player-info">
+									<div class="player-name">@name</div>
+									<div class="player-job">@jobName</div>
+								</div>
+								<button class="demote-btn" onclick=@(() => RequestDemote( steamId ))>Demote</button>
+							</div>
+						}
+					}
+				</div>
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	public static DemotePanel Instance { get; private set; }
+
+	private bool IsOpen { get; set; }
+	private List<Player> EligiblePlayers { get; set; } = new();
+
+	public static void Open()
+	{
+		EnsureInstance();
+		Instance?.OpenInternal();
+	}
+
+	private static void EnsureInstance()
+	{
+		if ( Instance.IsValid() )
+			return;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return;
+
+		var obj = scene.CreateObject();
+		obj.Name = "DemotePanel";
+		obj.Components.Create<DemotePanel>();
+	}
+
+	private void OpenInternal()
+	{
+		RefreshPlayers();
+		SetOpen( true );
+	}
+
+	private void Close()
+	{
+		SetOpen( false );
+	}
+
+	private void SetOpen( bool open )
+	{
+		IsOpen = open;
+		Crosshair.SetBlocked( nameof( DemotePanel ), open );
+
+#pragma warning disable CS0612
+		Mouse.Visible = open;
+#pragma warning restore CS0612
+	}
+
+	private void RefreshPlayers()
+	{
+		var local = Player.Local;
+		var scene = Game.ActiveScene;
+		EligiblePlayers.Clear();
+
+		if ( scene is null || !local.IsValid() )
+			return;
+
+		foreach ( var player in scene.GetAllComponents<Player>() )
+		{
+			if ( !player.IsValid() || player == local )
+				continue;
+
+			if ( !VoteManager.CanDemoteTarget( player, out _ ) )
+				continue;
+
+			EligiblePlayers.Add( player );
+		}
+
+		EligiblePlayers = EligiblePlayers
+			.OrderBy( x => x.GameObject.Network.Owner?.DisplayName ?? "" )
+			.ToList();
+	}
+
+	private void RequestDemote( long steamId )
+	{
+		if ( steamId <= 0 )
+			return;
+
+		Close();
+		RpcRequestDemote( steamId );
+	}
+
+	[Rpc.Host]
+	private static void RpcRequestDemote( long targetSteamId )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		var caller = Rpc.Caller;
+		if ( caller is null )
+			return;
+
+		if ( caller.SteamId.Value == targetSteamId )
+		{
+			NotifyCaller( caller, "You cannot demote yourself.", false );
+			return;
+		}
+
+		var target = Player.FindPlayerBySteamId( targetSteamId );
+		if ( !target.IsValid() )
+		{
+			NotifyCaller( caller, "Player not found.", false );
+			return;
+		}
+
+		if ( !VoteManager.CanDemoteTarget( target, out var reason ) )
+		{
+			NotifyCaller( caller, reason, false );
+			return;
+		}
+
+		if ( VoteManager.TryStartDemoteVote( target ) )
+			NotifyCaller( caller, "Demote vote started.", true );
+		else
+			NotifyCaller( caller, "Could not start vote.", false );
+	}
+
+	private static void NotifyCaller( Connection caller, string text, bool success )
+	{
+		using ( Rpc.FilterInclude( x => x.SteamId.Value == caller.SteamId.Value ) )
+		{
+			RpcReceiveDemoteResult( text, success );
+		}
+	}
+
+	[Rpc.Broadcast]
+	private static void RpcReceiveDemoteResult( string text, bool success )
+	{
+		if ( success )
+			Notification.Info( text, 3.5f );
+		else
+			Notification.Error( text, 3.5f );
+	}
+
+	protected override void OnStart()
+	{
+		if ( Instance.IsValid() && Instance != this )
+			return;
+
+		Instance = this;
+	}
+
+	protected override void OnDisabled()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	protected override void OnDestroy()
+	{
+		ReleaseCrosshairBlock();
+
+		if ( Instance == this )
+			Instance = null;
+	}
+
+	private void ReleaseCrosshairBlock()
+	{
+		IsOpen = false;
+		Crosshair.SetBlocked( nameof( DemotePanel ), false );
+	}
+
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( IsOpen );
+		hash.Add( EligiblePlayers.Count );
+
+		foreach ( var player in EligiblePlayers )
+		{
+			hash.Add( player.GameObject.Network.Owner?.SteamId.Value ?? 0 );
+			hash.Add( player.GameObject.Network.Owner?.DisplayName );
+			hash.Add( player.Job?.JobId );
+			hash.Add( player.Job?.JobDefinition?.Header );
+		}
+
+		return hash.ToHashCode();
+	}
+}

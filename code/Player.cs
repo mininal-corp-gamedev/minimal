@@ -1263,6 +1263,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         ItemUseRegistry.Register("keys", new WepKeysUseHandler());
         ItemUseRegistry.Register("handcuff", new WepHandcuffUseHandler());
         ItemUseRegistry.Register("picklock", new WepPicklockUseHandler());
+        ItemUseRegistry.Register("pickaxe", new WepPickaxeUseHandler());
         ItemUseRegistry.Register("ammo_usp", new AmmoUseHandler(AmmoWeaponType.Usp));
         ItemUseRegistry.Register("ammo_mp5", new AmmoUseHandler(AmmoWeaponType.Mp5));
         ItemUseRegistry.Register("ammo_m4a1", new AmmoUseHandler(AmmoWeaponType.M4A1));

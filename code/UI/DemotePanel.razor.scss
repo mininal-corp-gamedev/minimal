@@ -1,0 +1,142 @@
+DemotePanel {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 102;
+	pointer-events: none;
+
+	.demote-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba(0, 0, 0, 0.34);
+		backdrop-filter: blur(4px) saturate(75%);
+		pointer-events: all;
+	}
+
+	.demote-panel {
+		position: relative;
+		width: 520px;
+		max-height: 640px;
+		flex-direction: column;
+		padding: 22px;
+		background-color: rgba(20, 20, 24, 0.94);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 8px;
+		box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
+	}
+
+	.close-btn {
+		position: absolute;
+		top: 12px;
+		right: 12px;
+		z-index: 103;
+		width: 32px;
+		height: 32px;
+		border-radius: 6px;
+		background-color: rgba(255, 255, 255, 0.10);
+		font-family: Poppins;
+		font-size: 22px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.86);
+		justify-content: center;
+		align-items: center;
+	}
+
+	.panel-title {
+		font-family: Poppins;
+		font-size: 24px;
+		font-weight: 900;
+		color: rgba(255, 255, 255, 0.96);
+	}
+
+	.panel-subtitle {
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.58);
+		margin-top: 5px;
+		margin-bottom: 18px;
+	}
+
+	.demote-table {
+		flex-direction: column;
+		overflow-y: scroll;
+	}
+
+	.empty-row {
+		height: 48px;
+		align-items: center;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.55);
+	}
+
+	.player-row {
+		height: 58px;
+		flex-direction: row;
+		align-items: center;
+		padding: 8px 0;
+		border-top: 1px solid rgba(255, 255, 255, 0.07);
+	}
+
+	.player-avatar {
+		width: 38px;
+		height: 38px;
+		border-radius: 999px;
+		flex-shrink: 0;
+		margin-right: 12px;
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center;
+		background-color: rgba(255, 255, 255, 0.08);
+	}
+
+	.player-info {
+		flex-grow: 1;
+		min-width: 0;
+		flex-direction: column;
+	}
+
+	.player-name {
+		font-family: Poppins;
+		font-size: 15px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.92);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.player-job {
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 700;
+		color: #ff436c;
+		margin-top: 2px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.demote-btn {
+		width: 96px;
+		height: 36px;
+		flex-shrink: 0;
+		border-radius: 6px;
+		background-color: #ff436c;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 800;
+		color: white;
+		justify-content: center;
+		align-items: center;
+	}
+}

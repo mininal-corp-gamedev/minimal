@@ -289,6 +289,7 @@
             "ArrestDurationSeconds": 120,
             "ArrestInteractRange": 110,
             "ArrestSpawnPoint": null,
+            "DemoteJob": "jobs/citizen.job",
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,
@@ -298,6 +299,24 @@
             "SalaryDelay": 500
           }
         ],
+        "Children": []
+      },
+      {
+        "__guid": "15a823ff-f95a-440f-bfa6-a779a4f674fe",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Vote Manager",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [],
         "Children": []
       },
       {
@@ -537,6 +556,30 @@
             "OnComponentStart": null,
             "OnComponentUpdate": null,
             "ShowCrosshair": true
+          },
+          {
+            "__type": "Sandbox.VotePanel",
+            "__guid": "f8fdb7de-52f0-45c7-afcf-c4aa9055dae5",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.DemotePanel",
+            "__guid": "38a38e67-23cb-4b18-aaf1-3b16a4c5ed93",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
           }
         ],
         "Children": []

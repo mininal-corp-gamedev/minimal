@@ -14,6 +14,7 @@ ContextMenu {
 	left: 0;
 	right: 0;
 	bottom: 0;
+	z-index: 100;
 	pointer-events: none;
 
 	.context-overlay {
@@ -150,6 +151,10 @@ ContextMenu {
 		background-image: url("icons/wallet.vtex");
 	}
 
+	.action-icon.job {
+		background-image: url("icons/job.vtex");
+	}
+
 	.action-icon.surrender {
 		background-image: url("icons/health.vtex");
 	}
@@ -223,5 +228,55 @@ ContextMenu {
 		border-radius: 8px;
 		padding: 9px 18px;
 		box-shadow: 0 5px 20px rgba(0, 0, 0, 0.42);
+	}
+
+	.context-vote-panel {
+		position: absolute;
+		top: 24px;
+		left: 24px;
+		z-index: 102;
+		width: 330px;
+		flex-direction: column;
+		padding: 16px;
+		background-color: rgba(5, 8, 20, 0.96);
+		border: 1px solid rgba(255, 255, 255, 0.10);
+		border-radius: 8px;
+		box-shadow: 0 10px 48px rgba(0, 0, 0, 0.80);
+		pointer-events: all;
+	}
+
+	.context-vote-header {
+		font-family: Poppins;
+		font-size: 16px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.94);
+		margin-bottom: 12px;
+	}
+
+	.context-vote-actions {
+		flex-direction: row;
+		gap: 10px;
+	}
+
+	.vote-yes,
+	.vote-no {
+		z-index: 103;
+		height: 36px;
+		flex-grow: 1;
+		border-radius: 8px;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 800;
+		color: white;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.vote-yes {
+		background-color: rgba(52, 168, 83, 0.86);
+	}
+
+	.vote-no {
+		background-color: rgba(255, 67, 108, 0.88);
 	}
 }

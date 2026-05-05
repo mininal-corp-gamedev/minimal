@@ -4,6 +4,8 @@
   "Category": "Police",
   "Description": "",
   "MaxCount": 4,
+  "Salary": 0,
+  "Vote": true,
   "HasPostSpawned": false,
   "HasPostDemote": true,
   "HasPostJoined": true,

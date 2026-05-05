@@ -249,10 +249,27 @@
               "IdValue": "0e51fb74-dbd4-4105-a215-507127aadb8a"
             },
             "Property": "SalaryDelay",
-            "Value": 2
+            "Value": 100
           }
         ],
-        "MovedObjects": []
+        "MovedObjects": [
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "f8fdb7de-52f0-45c7-afcf-c4aa9055dae5"
+            },
+            "NewParent": {
+              "Type": "GameObject",
+              "IdValue": "1eb7475f-1c69-4490-90c5-e0137be5e753"
+            },
+            "NewContainerProperty": "Components",
+            "IsNewContainerArray": true,
+            "NewPreviousElement": {
+              "Type": "Component",
+              "IdValue": "ebb7c758-103c-4dba-9fc8-5d4f4b5f515c"
+            }
+          }
+        ]
       },
       "__PrefabIdToInstanceId": {
         "3472ab49-201b-4eac-9402-b92a526b1bc1": "bdea3a53-6045-4a85-8a16-605f5453701b",
@@ -285,7 +302,10 @@
         "628471c1-e9af-4a99-903a-cfc54c59b21d": "ca3ed8e5-523c-48f7-a255-6483467b7d4e",
         "f2c128dc-5efe-402c-8dcc-6ace485f0460": "57b364f7-c2bb-481e-922a-ac18939e173a",
         "c616e912-f145-4e48-9958-57afa098a1f1": "49bd3c82-7192-4b18-b477-7776f349d279",
-        "0e51fb74-dbd4-4105-a215-507127aadb8a": "6f414082-6b4f-4b56-aa57-76accc1f112e"
+        "0e51fb74-dbd4-4105-a215-507127aadb8a": "6f414082-6b4f-4b56-aa57-76accc1f112e",
+        "15a823ff-f95a-440f-bfa6-a779a4f674fe": "23a08478-99bd-46f1-9f40-87fab2f8d147",
+        "f8fdb7de-52f0-45c7-afcf-c4aa9055dae5": "eaf8f839-0cd1-4a14-b6bf-c96af7519544",
+        "38a38e67-23cb-4b18-aaf1-3b16a4c5ed93": "87350aff-4216-4983-b686-aa47a8db1952"
       }
     },
     {
@@ -1005,13 +1025,13 @@
           "$blob": "4c8d8be3-9b2a-45ca-a21b-eaa302af4bec"
         }
       },
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
+      },
       "Sandbox.SelectionSetsSystem": {
         "Data": {
           "SelectionSets": []
         }
-      },
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
       }
     }
   },

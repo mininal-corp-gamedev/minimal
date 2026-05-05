@@ -1,0 +1,125 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen )
+	{
+		<div class="vote-panel">
+			<div class="vote-header">@Header</div>
+
+			@if ( !HasAnswered )
+			{
+				<div class="vote-actions">
+					<button class="yes" onclick=@(() => Submit( true ))>Yes</button>
+					<button class="no" onclick=@(() => Submit( false ))>No</button>
+				</div>
+			}
+		</div>
+	}
+</root>
+
+@code
+{
+	public static VotePanel Instance { get; private set; }
+
+	public static bool HasOpenVote => Instance.IsValid() && Instance.IsOpen;
+	public static bool CanAnswer => Instance.IsValid() && Instance.IsOpen && !Instance.HasAnswered && Instance.VoteId > 0;
+	public static string CurrentHeader => Instance.IsValid() ? Instance.Header : "";
+
+	private bool IsOpen { get; set; }
+	private bool HasAnswered { get; set; }
+	private int VoteId { get; set; }
+	private string Header { get; set; } = "";
+
+	public static void Open( int voteId, string header )
+	{
+		EnsureInstance();
+		Instance?.OpenInternal( voteId, header );
+	}
+
+	public static void MarkAnswered( int voteId )
+	{
+		if ( !Instance.IsValid() || Instance.VoteId != voteId )
+			return;
+
+		Instance.HasAnswered = true;
+	}
+
+	public static void Close( int voteId )
+	{
+		if ( !Instance.IsValid() || Instance.VoteId != voteId )
+			return;
+
+		Instance.IsOpen = false;
+		Instance.HasAnswered = false;
+		Instance.Header = "";
+		Instance.VoteId = 0;
+	}
+
+	public static void SubmitCurrent( bool yes )
+	{
+		Instance?.Submit( yes );
+	}
+
+	private static void EnsureInstance()
+	{
+		if ( Instance.IsValid() )
+			return;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return;
+
+		var obj = scene.CreateObject();
+		obj.Name = "VotePanel";
+		obj.Components.Create<VotePanel>();
+	}
+
+	private void OpenInternal( int voteId, string header )
+	{
+		VoteId = voteId;
+		Header = string.IsNullOrWhiteSpace( header ) ? "Vote" : header;
+		HasAnswered = false;
+		IsOpen = true;
+	}
+
+	private void Submit( bool yes )
+	{
+		if ( !IsOpen || HasAnswered || VoteId <= 0 )
+			return;
+
+		HasAnswered = true;
+		VoteManager.RpcSubmitVote( VoteId, yes );
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( !CanAnswer )
+			return;
+
+		if ( Input.Pressed( "VoteAccept" ) )
+			Submit( true );
+
+		if ( Input.Pressed( "VoteCancel" ) )
+			Submit( false );
+	}
+
+	protected override void OnStart()
+	{
+		if ( Instance.IsValid() && Instance != this )
+			return;
+
+		Instance = this;
+	}
+
+	protected override void OnDestroy()
+	{
+		if ( Instance == this )
+			Instance = null;
+	}
+
+	protected override int BuildHash() => HashCode.Combine( IsOpen, HasAnswered, VoteId, Header );
+}

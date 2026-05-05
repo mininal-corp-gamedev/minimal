@@ -396,24 +396,20 @@
 			return;
 		}
 
-		if ( jobDefinition.MaxCount > 0 )
+		if ( !VoteManager.CanTakeJob( callerPlayer, jobDefinition, out var reason ) )
 		{
-			var usedSlots = 0;
-			var scene = Game.ActiveScene;
-			if ( scene is not null )
-			{
-				foreach ( var player in scene.GetAllComponents<Player>() )
-				{
-					if ( string.Equals( player?.Job?.JobId, normalized, StringComparison.Ordinal ) )
-						usedSlots++;
-				}
-			}
+			NotifyCaller( caller, reason, false );
+			return;
+		}
 
-			if ( usedSlots >= jobDefinition.MaxCount )
-			{
-				NotifyCaller( caller, $"No free slots for {jobDefinition.Header}.", false );
-				return;
-			}
+		if ( jobDefinition.Vote )
+		{
+			if ( VoteManager.TryStartJobVote( callerPlayer, jobDefinition ) )
+				NotifyCaller( caller, $"Vote started for {jobDefinition.Header}.", true );
+			else
+				NotifyCaller( caller, "Could not start vote.", false );
+
+			return;
 		}
 
 		callerPlayer.Job.SetJob( normalized );

@@ -1690,30 +1690,42 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         EnsureWeaponVisualRendererReady();
         UpdateProxyWeaponHoldType();
 
-        if (!IsProxy || IsArrested || string.IsNullOrWhiteSpace(EquippedWeaponItemId))
+        var itemId = GetWorldWeaponVisualItemId();
+        if (IsArrested || string.IsNullOrWhiteSpace(itemId))
         {
             DestroyWorldWeaponVisual();
             return;
         }
 
-        var wmPrefab = GetWorldModelPrefabForItem(EquippedWeaponItemId);
+        var wmPrefab = GetWorldModelPrefabForItem(itemId);
         if (!wmPrefab.IsValid())
         {
             DestroyWorldWeaponVisual();
             return;
         }
 
-        if (_worldWeaponFailedItemId == EquippedWeaponItemId)
+        if (_worldWeaponFailedItemId == itemId)
         {
-            if (!string.Equals(_worldWeaponItemId, EquippedWeaponItemId, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(_worldWeaponItemId, itemId, StringComparison.OrdinalIgnoreCase))
                 DestroyWorldWeaponVisual();
             return;
         }
 
-        if (!EnsureWorldWeaponVisual(EquippedWeaponItemId, wmPrefab))
+        if (!EnsureWorldWeaponVisual(itemId, wmPrefab))
             return;
 
         UpdateWorldWeaponTransform();
+        ConfigureWorldWeaponVisualRendering();
+    }
+
+    private string GetWorldWeaponVisualItemId()
+    {
+        if (IsProxy)
+            return EquippedWeaponItemId;
+
+        return !string.IsNullOrWhiteSpace(CurrentWeaponItemId)
+            ? CurrentWeaponItemId
+            : EquippedWeaponItemId;
     }
 
     private bool EnsureWorldWeaponVisual(string itemId, GameObject wmPrefab)
@@ -1765,8 +1777,33 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         _worldWeaponItemId = itemId;
         _worldWeaponFailedItemId = null;
+        ConfigureWorldWeaponVisualRendering();
         Log.Info($"[Player] World weapon visual '{itemId}' spawned from WM prefab");
         return true;
+    }
+
+    private void ConfigureWorldWeaponVisualRendering()
+    {
+        if (!_worldWeaponObject.IsValid())
+            return;
+
+        var renderType = IsProxy
+            ? ModelRenderer.ShadowRenderType.On
+            : ModelRenderer.ShadowRenderType.ShadowsOnly;
+
+        foreach (var renderer in _worldWeaponObject.Components.GetAll<ModelRenderer>(FindMode.EverythingInSelfAndDescendants))
+        {
+            if (!renderer.IsValid())
+                continue;
+
+            renderer.RenderType = renderType;
+
+            if (renderer.SceneObject is not null)
+                renderer.SceneObject.Flags.CastShadows = true;
+
+            if (renderer is SkinnedModelRenderer skinnedRenderer && skinnedRenderer.SceneModel is not null)
+                skinnedRenderer.SceneModel.Flags.CastShadows = true;
+        }
     }
 
     private static Weapon GetWeaponInstanceForItem(string itemId)
@@ -1905,6 +1942,29 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _weaponVisualRendererPrepared = true;
     }
 
+    public void PostCameraSetup(CameraComponent camera)
+    {
+        ApplyLocalFirstPersonShadowRendering();
+    }
+
+    private void ApplyLocalFirstPersonShadowRendering()
+    {
+        if (IsProxy || !Controller.IsValid() || !Renderer.IsValid())
+            return;
+
+        var renderType = !Controller.ThirdPerson && IsAlive
+            ? ModelRenderer.ShadowRenderType.ShadowsOnly
+            : ModelRenderer.ShadowRenderType.On;
+
+        foreach (var renderer in Renderer.GameObject.Components.GetAll<SkinnedModelRenderer>(FindMode.EverythingInSelfAndDescendants))
+        {
+            if (!renderer.IsValid())
+                continue;
+
+            renderer.RenderType = renderType;
+        }
+    }
+
     private bool TryGetWorldWeaponChildTransform(string childName, out Transform transform)
     {
         transform = default;
@@ -2007,6 +2067,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         MakeLocalInstance();
         TryApplyOwnerClothing();
+        ApplyLocalFirstPersonShadowRendering();
         EnsureWeaponVisualRendererReady();
         UpdateWorldWeaponVisual();
         UpdateRemotePhysgunIdleSound();

@@ -78,6 +78,7 @@ public class Weapon : Component
     private bool _attack1WasReleased = true;
     private bool _attack2WasReleased = true;
     private bool _reloadWasReleased = true;
+    private bool _viewmodelRenderingPrepared = false;
 
     /// <summary>True только в тот кадр, когда реально был выстрел (для b_attack во viewmodel).</summary>
     protected bool _firedThisFrame = false;
@@ -96,6 +97,30 @@ public class Weapon : Component
     /// <summary>Хук на ПКМ для ближнего боя (ironsights в этом случае не используются).</summary>
     protected virtual void OnSecondaryAttack() { }
 
+    private void ConfigureViewmodelRendering()
+    {
+        var allRenderersReady = true;
+
+        foreach (var renderer in GameObject.Components.GetAll<ModelRenderer>(FindMode.EverythingInSelfAndDescendants))
+        {
+            if (!renderer.IsValid())
+                continue;
+
+            if (renderer.SceneObject is null)
+            {
+                allRenderersReady = false;
+                continue;
+            }
+
+            renderer.SceneObject.Flags.CastShadows = false;
+
+            if (renderer is SkinnedModelRenderer skinnedRenderer && skinnedRenderer.SceneModel is not null)
+                skinnedRenderer.SceneModel.Flags.CastShadows = false;
+        }
+
+        _viewmodelRenderingPrepared = allRenderersReady;
+    }
+
     protected override void OnAwake()
     {
         Log.Trace($"[Weapon] OnAwake {GameObject.Name}");
@@ -105,11 +130,14 @@ public class Weapon : Component
     protected override void OnStart()
     {
         Log.Info($"[Weapon] OnStart {GameObject.Name}, ClipSize={ClipSize}, Damage={Damage}");
+        ConfigureViewmodelRendering();
         OnWeaponStart();
     }
 
     protected override void OnEnabled()
     {
+        _viewmodelRenderingPrepared = false;
+        ConfigureViewmodelRendering();
         ResetViewmodelState();
     }
 
@@ -132,6 +160,9 @@ public class Weapon : Component
 
     protected override void OnUpdate()
     {
+        if (!_viewmodelRenderingPrepared)
+            ConfigureViewmodelRendering();
+
         OnWeaponUpdate();
     }
 

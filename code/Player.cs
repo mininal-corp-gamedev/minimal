@@ -2442,6 +2442,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if ( amount <= 0 )
         {
+            Log.Warning( $"[RpcRequestDropMoney] Caller {caller.DisplayName} ({caller.SteamId}) sent non-positive amount: {amount}" );
             NotifyMoneyResult( caller, "Некорректная сумма.", false );
             return;
         }
@@ -2485,6 +2486,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if ( amount <= 0 )
         {
+            Log.Warning( $"[RpcRequestTransferMoney] Caller {caller.DisplayName} ({caller.SteamId}) sent non-positive amount: {amount}" );
             NotifyMoneyResult( caller, "Некорректная сумма.", false );
             return;
         }

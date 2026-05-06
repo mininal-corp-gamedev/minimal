@@ -200,6 +200,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	private bool _hasPendingPrediction;
 	private double _predictionCorrectionAt;
 
+	private const string JobDeniedInteractionMessage = "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0432\u0437\u0430\u0438\u043c\u043e\u0434\u0435\u0439\u0441\u0442\u0432\u043e\u0432\u0430\u0442\u044c \u0441 \u044d\u0442\u043e\u0439 \u0434\u0432\u0435\u0440\u044c\u044e.";
 	private const double PredictionCorrectionDelaySeconds = 0.35;
 
 	/// <summary>True while the post-break cooldown prevents closing or locking.</summary>
@@ -454,6 +455,12 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		if ( Networking.IsHost )
 		{
+			if ( ShouldDenyLockedJobDoorInteraction( player ) )
+			{
+				NotifyJobDeniedInteraction( GetPlayerConnection( player ) );
+				return true;
+			}
+
 			Toggle( player );
 		}
 		else
@@ -482,6 +489,11 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		var caller = FindRpcCallerPlayer();
 		if ( !CanPlayerInteract( caller ) ) return;
+		if ( ShouldDenyLockedJobDoorInteraction( caller ) )
+		{
+			NotifyJobDeniedInteraction( Rpc.Caller );
+			return;
+		}
 
 		Toggle( caller );
 	}
@@ -523,6 +535,11 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		var opener = FindRpcCallerPlayer();
 		if ( !CanPlayerInteract( opener ) ) return;
+		if ( ShouldDenyLockedJobDoorInteraction( opener ) )
+		{
+			NotifyJobDeniedInteraction( Rpc.Caller );
+			return;
+		}
 
 		Open( opener );
 	}
@@ -551,6 +568,11 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		var closer = FindRpcCallerPlayer();
 		if ( !CanPlayerInteract( closer ) ) return;
+		if ( ShouldDenyLockedJobDoorInteraction( closer ) )
+		{
+			NotifyJobDeniedInteraction( Rpc.Caller );
+			return;
+		}
 
 		Close();
 	}
@@ -591,7 +613,12 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		var caller = Rpc.Caller;
 		var player = FindRpcCallerPlayer();
 		if ( caller is null || !CanPlayerInteract( player ) ) return;
-		if ( !CallerCanLock( caller.SteamId ) ) return;
+		if ( !CallerCanLock( caller.SteamId ) )
+		{
+			if ( HasOnlyJobs )
+				NotifyJobDeniedInteraction( caller );
+			return;
+		}
 
 		var wasUnlocked = LockState == DoorLockState.Unlocked;
 		Lock();
@@ -633,7 +660,12 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		var caller = Rpc.Caller;
 		var player = FindRpcCallerPlayer();
 		if ( caller is null || !CanPlayerInteract( player ) ) return;
-		if ( !CallerCanLock( caller.SteamId ) ) return;
+		if ( !CallerCanLock( caller.SteamId ) )
+		{
+			if ( HasOnlyJobs )
+				NotifyJobDeniedInteraction( caller );
+			return;
+		}
 
 		var wasLocked = LockState == DoorLockState.Locked;
 		Unlock();
@@ -654,6 +686,11 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		if ( IsOwnedBy( steamId ) ) return true;
 		if ( IsRoommate( steamId ) ) return true;
 		return false;
+	}
+
+	private bool ShouldDenyLockedJobDoorInteraction( Player player )
+	{
+		return HasOnlyJobs && LockState == DoorLockState.Locked && !IsJobAllowed( player );
 	}
 
 	/// <summary>Buys the door for the given player. Host-authoritative: validates blocked state, ownership, and funds.</summary>
@@ -838,7 +875,10 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	public void RpcRequestHit( SoundEvent hitSound )
 	{
 		if ( !Networking.IsHost ) return;
-		if ( !CanPlayerInteract( FindRpcCallerPlayer() ) ) return;
+		var player = FindRpcCallerPlayer();
+		if ( !CanPlayerInteract( player ) ) return;
+		if ( HasOnlyJobs && !IsJobAllowed( player ) )
+			NotifyJobDeniedInteraction( Rpc.Caller );
 		if ( !hitSound.IsValid() ) return;
 		RpcPlaySoundAtDoor( hitSound );
 	}
@@ -858,6 +898,33 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		var caller = Rpc.Caller;
 		if ( caller is null ) return null;
 		return FindPlayerBySteamId( caller.SteamId );
+	}
+
+	private static Connection GetPlayerConnection( Player player )
+	{
+		return player.IsValid() ? player.Network.Owner : null;
+	}
+
+	private static void NotifyJobDeniedInteraction( Connection target )
+	{
+		if ( target is null ) return;
+
+		using ( Rpc.FilterInclude( c => c.SteamId.Value == target.SteamId.Value ) )
+		{
+			RpcShowDoorInteractionNotification( JobDeniedInteractionMessage, (int)NotificationType.Warn, 2.5f );
+		}
+	}
+
+	[Rpc.Broadcast]
+	private static void RpcShowDoorInteractionNotification( string text, int type, float aliveSeconds )
+	{
+		var notificationType = (NotificationType)type;
+		switch ( notificationType )
+		{
+			case NotificationType.Warn: Notification.Warn( text, aliveSeconds ); break;
+			case NotificationType.Error: Notification.Error( text, aliveSeconds ); break;
+			default: Notification.Info( text, aliveSeconds ); break;
+		}
 	}
 
 	private bool CanPlayerInteract( Player player )

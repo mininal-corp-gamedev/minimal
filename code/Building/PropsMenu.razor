@@ -152,6 +152,12 @@
 	private const float FallbackSpawnDistance = 120f;
 	private const float SpawnSurfaceOffset = 24f;
 	private const float LookTraceDistance = 200f;
+	private const float PropsWheelScrollStep = 74f;
+	private const float PropsCardWidth = 210f;
+	private const float PropsCardHeight = 202f;
+	private const float PropsGridColumnGap = 16f;
+	private const float PropsGridRowGap = 16f;
+	private const float PropsListVerticalPadding = 12f;
 	private const string PropFavoritesFolder = "props_favorites";
 
 	string LookedPropName { get; set; }
@@ -793,7 +799,21 @@
 
 	protected override void OnUpdate()
 	{
+		UpdatePropsListWheelScroll();
 		UpdateLookedPropInfo();
+	}
+
+	private void UpdatePropsListWheelScroll()
+	{
+		if ( !IsOpen || !PropsListRef.IsValid() || !PropsListRef.HasHovered )
+			return;
+
+		var wheelY = Input.MouseWheel.y;
+		if ( MathF.Abs( wheelY ) <= 0f )
+			return;
+
+		ScrollPanel( PropsListRef, -wheelY * PropsWheelScrollStep );
+		Input.MouseWheel = Vector2.Zero;
 	}
 
 	private static void ScrollPanel( Panel panel, float deltaY )
@@ -801,8 +821,29 @@
 		if ( !panel.IsValid() )
 			return;
 
+		var maxOffsetY = GetPropsListMaxScrollOffset( panel );
+		if ( maxOffsetY <= 0f )
+			return;
+
+		var nextY = Math.Clamp( panel.ScrollOffset.y + deltaY, 0f, maxOffsetY );
+
 		panel.ScrollVelocity = Vector2.Zero;
-		panel.ScrollOffset += new Vector2( 0f, deltaY );
+		panel.ScrollOffset = new Vector2( 0f, nextY );
+	}
+
+	private static float GetPropsListMaxScrollOffset( Panel panel )
+	{
+		var visiblePropsCount = Instance?.VisibleProps.Count() ?? 0;
+		if ( visiblePropsCount <= 0 )
+			return 0f;
+
+		var viewportWidth = Math.Max( 1f, panel.Box.RectInner.Width );
+		var viewportHeight = Math.Max( 1f, panel.Box.RectInner.Height );
+		var columns = Math.Max( 1, (int)MathF.Floor( (viewportWidth + PropsGridColumnGap) / (PropsCardWidth + PropsGridColumnGap) ) );
+		var rows = (int)MathF.Ceiling( visiblePropsCount / (float)columns );
+		var contentHeight = rows * PropsCardHeight + Math.Max( 0, rows - 1 ) * PropsGridRowGap + PropsListVerticalPadding;
+
+		return Math.Max( 0f, contentHeight - viewportHeight );
 	}
 
 	private void UpdateLookedPropInfo()

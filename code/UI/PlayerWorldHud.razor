@@ -5,15 +5,18 @@
 @namespace Sandbox
 
 <root>
-	<div class="title">@Name</div>
-	@if ( !string.IsNullOrWhiteSpace( JobName ) )
+	@if ( ShouldShow )
 	{
-		<div class="job">@JobName</div>
+		<div class="title">@Name</div>
+		@if ( !string.IsNullOrWhiteSpace( JobName ) )
+		{
+			<div class="job">@JobName</div>
+		}
+		<div class="health-bar">
+			<div class="health-fill" style="width: @(HealthPercent)%;"></div>
+			<div class="health-text">@HealthDisplay / @MaxHealthDisplay</div>
+		</div>
 	}
-	<div class="health-bar">
-		<div class="health-fill" style="width: @(HealthPercent)%;"></div>
-		<div class="health-text">@HealthDisplay / @MaxHealthDisplay</div>
-	</div>
 </root>
 
 @code
@@ -21,6 +24,8 @@
 	[Sync] public string Name { get; set; } = "";
 
 	Player TargetPlayer => Components.Get<Player>( FindMode.EverythingInSelfAndAncestors );
+
+	bool ShouldShow => TargetPlayer is null || !TargetPlayer.IsLocalPlayer;
 
 	float HealthValue => TargetPlayer?.Health ?? 0f;
 	float MaxHealthValue => TargetPlayer is { MaxHealth: > 0f } p ? p.MaxHealth : 1f;
@@ -33,5 +38,5 @@
 
 	public void WorldHudRefresh() => StateHasChanged();
 
-	protected override int BuildHash() => System.HashCode.Combine( Name, JobName, HealthValue, MaxHealthValue );
+	protected override int BuildHash() => System.HashCode.Combine( ShouldShow, Name, JobName, HealthValue, MaxHealthValue );
 }

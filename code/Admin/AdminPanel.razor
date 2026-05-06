@@ -7,7 +7,7 @@
 @namespace Sandbox
 
 <root>
-	@if ( IsOpen )
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
 	{
 		<div class="overlay">
 			<div class="admin-panel" @ref="FocusSinkRef">
@@ -90,6 +90,7 @@
 
 @code
 {
+	private const string ModalId = nameof( AdminPanel );
 	private readonly List<AdminAbilityDefinition> Abilities = new()
 	{
 		new( "kick", "Kick", "Kick an online player from the server.", 1, true, false, false, true, "", "" ),
@@ -122,8 +123,27 @@
 
 	private void SetOpen( bool open )
 	{
+		if ( open )
+			UiModalManager.Open( ModalId );
+		else
+			UiModalManager.Close( ModalId );
+
 		IsOpen = open;
-		Crosshair.SetBlocked( nameof( AdminPanel ), open );
+		Crosshair.SetBlocked( ModalId, open );
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen )
+			return;
+
+		IsOpen = false;
+		ClearFormState();
+		CachedPlayers.Clear();
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
 	}
 
 	private void SelectAbility( string id )
@@ -250,9 +270,7 @@
 			if ( IsOpen )
 				SetOpen( false );
 
-#pragma warning disable CS0612
-			Mouse.Visible = false;
-#pragma warning restore CS0612
+			UiModalManager.UpdateMouseVisibility();
 
 			return;
 		}
@@ -269,9 +287,12 @@
 			}
 		}
 
-#pragma warning disable CS0612
-		Mouse.Visible = IsOpen;
-#pragma warning restore CS0612
+		UiModalManager.UpdateMouseVisibility();
+	}
+
+	protected override void OnStart()
+	{
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
 	}
 
 	protected override void OnDisabled()
@@ -281,13 +302,15 @@
 
 	protected override void OnDestroy()
 	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
 		ReleaseCrosshairBlock();
 	}
 
 	private void ReleaseCrosshairBlock()
 	{
 		IsOpen = false;
-		Crosshair.SetBlocked( nameof( AdminPanel ), false );
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
 	}
 
 	protected override int BuildHash()
@@ -301,6 +324,7 @@
 
 		return HashCode.Combine(
 			IsOpen,
+			UiModalManager.Version,
 			ActiveAbility,
 			CurrentRank,
 			SelectedSteamId,

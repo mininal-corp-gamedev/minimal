@@ -5,7 +5,7 @@
 @namespace Sandbox
 
 <root>
-	@if ( IsOpen )
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
 	{
 		<div class="context-overlay">
 			<div class="context-wheel">
@@ -46,6 +46,7 @@
 
 @code
 {
+	const string ModalId = nameof( ContextMenu );
 	bool IsOpen { get; set; }
 	string ActiveAction { get; set; } = "drop_money";
 
@@ -81,13 +82,27 @@
 
 		private void SetOpen( bool open )
 	{
+		if ( open )
+			UiModalManager.Open( ModalId );
+		else
+			UiModalManager.Close( ModalId );
+
 		IsOpen = open;
 
-		Crosshair.SetBlocked( nameof( ContextMenu ), open );
+		Crosshair.SetBlocked( ModalId, open );
 
-	#pragma warning disable CS0612
-		Mouse.Visible = open;
-	#pragma warning restore CS0612
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen )
+			return;
+
+		IsOpen = false;
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
 	}
 
 	protected override void OnUpdate()
@@ -99,10 +114,13 @@
 
 		if ( IsOpen )
 		{
-	#pragma warning disable CS0612
-			Mouse.Visible = true;
-	#pragma warning restore CS0612
+			UiModalManager.UpdateMouseVisibility();
 		}
+	}
+
+	protected override void OnStart()
+	{
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
 	}
 
 	protected override void OnDisabled()
@@ -112,24 +130,31 @@
 
 	protected override void OnDestroy()
 	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
 		ReleaseCrosshairBlock();
 	}
 
 	private void ReleaseCrosshairBlock()
 	{
 		IsOpen = false;
-		Crosshair.SetBlocked( nameof( ContextMenu ), false );
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine(
-		IsOpen,
-		ActiveAction,
-		Player.Local?.Money ?? 0,
-		Player.Local?.Job?.JobDefinition?.Header,
-		Player.Local?.Health ?? 0f,
-		VotePanel.HasOpenVote,
-		VotePanel.CanAnswer,
-		VotePanel.CurrentHeader );
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( IsOpen );
+		hash.Add( UiModalManager.Version );
+		hash.Add( ActiveAction );
+		hash.Add( Player.Local?.Money ?? 0 );
+		hash.Add( Player.Local?.Job?.JobDefinition?.Header );
+		hash.Add( Player.Local?.Health ?? 0f );
+		hash.Add( VotePanel.HasOpenVote );
+		hash.Add( VotePanel.CanAnswer );
+		hash.Add( VotePanel.CurrentHeader );
+		return hash.ToHashCode();
+	}
 
 	sealed class ContextAction
 	{

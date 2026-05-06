@@ -6,7 +6,7 @@
 @namespace Sandbox
 
 <root>
-	@if ( IsOpen )
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
 	{
 		<div class="inv-overlay">
 			<div class="inv-bg-close" onclick=@Close></div>
@@ -100,6 +100,7 @@
 
 @code
 {
+	const string ModalId = nameof( InventoryPanel );
 	bool IsOpen { get; set; }
 	bool CtxVisible { get; set; }
 	float CtxX { get; set; }
@@ -139,9 +140,7 @@
 
 		CtxVisible = false;
 
-	#pragma warning disable CS0612
-		Mouse.Visible = true;
-	#pragma warning restore CS0612
+		UiModalManager.UpdateMouseVisibility();
 	}
 
 	void Close()
@@ -150,9 +149,7 @@
 
 		CtxVisible = false;
 
-	#pragma warning disable CS0612
-		Mouse.Visible = false;
-	#pragma warning restore CS0612
+		UiModalManager.UpdateMouseVisibility();
 	}
 
 	void OnPanelClick()
@@ -211,9 +208,27 @@
 
 	private void SetOpen( bool open )
 	{
+		if ( open )
+			UiModalManager.Open( ModalId );
+		else
+			UiModalManager.Close( ModalId );
+
 		IsOpen = open;
 
-		Crosshair.SetBlocked( nameof( InventoryPanel ), open );
+		Crosshair.SetBlocked( ModalId, open );
+		StateHasChanged();
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen )
+			return;
+
+		IsOpen = false;
+		CtxVisible = false;
+		HoverSlotIndex = -1;
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
 	}
 
 	protected override void OnUpdate()
@@ -226,9 +241,7 @@
 
 		if ( IsOpen )
 		{
-	#pragma warning disable CS0612
-			Mouse.Visible = true;
-	#pragma warning restore CS0612
+			UiModalManager.UpdateMouseVisibility();
 
 			if ( HoverSlotIndex >= 0 )
 			{
@@ -243,15 +256,23 @@
 		ReleaseCrosshairBlock();
 	}
 
+	protected override void OnStart()
+	{
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
+	}
+
 	protected override void OnDestroy()
 	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
 		ReleaseCrosshairBlock();
 	}
 
 	private void ReleaseCrosshairBlock()
 	{
 		IsOpen = false;
-		Crosshair.SetBlocked( nameof( InventoryPanel ), false );
+		CtxVisible = false;
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
 	}
 
 	float GetMousePanelX() => Mouse.Position.x * Panel.ScaleFromScreen;
@@ -260,10 +281,21 @@
 	protected override int BuildHash()
 	{
 		if (IsOpen)
-			return System.HashCode.Combine(Time.Now);
+			return System.HashCode.Combine(Time.Now, UiModalManager.Version);
 
-		var hash = System.HashCode.Combine( IsOpen, CtxVisible, CtxSlotIndex, CtxX, CtxY, SlotCount, HoverSlotIndex, TipX );
-		hash = System.HashCode.Combine( hash, TipY );
+		var hashBuilder = new HashCode();
+		hashBuilder.Add( IsOpen );
+		hashBuilder.Add( UiModalManager.Version );
+		hashBuilder.Add( CtxVisible );
+		hashBuilder.Add( CtxSlotIndex );
+		hashBuilder.Add( CtxX );
+		hashBuilder.Add( CtxY );
+		hashBuilder.Add( SlotCount );
+		hashBuilder.Add( HoverSlotIndex );
+		hashBuilder.Add( TipX );
+		hashBuilder.Add( TipY );
+
+		var hash = hashBuilder.ToHashCode();
 		if ( Inv is not null )
 		{
 			foreach ( var slot in Inv.Slots )

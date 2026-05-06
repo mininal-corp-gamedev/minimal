@@ -140,7 +140,7 @@
           "Id": "00000000-0000-0000-0000-000000000000"
         },
         "FootstepVolume": 1,
-        "HideBodyInFirstPerson": true,
+        "HideBodyInFirstPerson": false,
         "JumpSpeed": 300,
         "LookSensitivity": 1,
         "OnComponentDestroy": null,
@@ -3025,7 +3025,7 @@
             "Children": []
           },
           {
-            "__guid": "21202518-a799-42ad-8428-4720b16ce1f2",
+            "__guid": "15684a52-3ef1-41ed-8dbe-850a70a8e8da",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - y_front_pants_white",
@@ -3042,7 +3042,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "829d9792-3645-4fe2-859d-df710372f6e4",
+                "__guid": "caa71068-1151-440c-8f3e-b0d64459026c",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,

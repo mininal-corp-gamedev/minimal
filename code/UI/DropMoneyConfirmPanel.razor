@@ -5,7 +5,7 @@
 @namespace Sandbox
 
 <root>
-	@if ( IsOpen )
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
 	{
 		<div class="money-confirm-overlay">
 			<div class="money-confirm-panel" @ref="FocusSinkRef">
@@ -26,6 +26,7 @@
 
 @code
 {
+	private const string ModalId = nameof( DropMoneyConfirmPanel );
 	public static DropMoneyConfirmPanel Instance { get; private set; }
 
 	private bool IsOpen { get; set; }
@@ -54,33 +55,29 @@
 
 		private void SetOpen( bool open )
 	{
+		if ( open )
+			UiModalManager.Open( ModalId );
+		else
+			UiModalManager.Close( ModalId );
+
 		IsOpen = open;
 
-		Crosshair.SetBlocked( nameof( DropMoneyConfirmPanel ), open );
+		Crosshair.SetBlocked( ModalId, open );
 
-	#pragma warning disable CS0612
-		Mouse.Visible = open;
-	#pragma warning restore CS0612
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
 	}
 
 	private void OpenInternal()
 	{
 		AmountInput = "";
 		SetOpen(true);
-
-#pragma warning disable CS0612
-		Mouse.Visible = true;
-#pragma warning restore CS0612
 	}
 
 	private void Close()
 	{
 		SetOpen(false);
 		FocusSinkRef?.Focus();
-
-#pragma warning disable CS0612
-		Mouse.Visible = false;
-#pragma warning restore CS0612
 	}
 
 	private void Submit()
@@ -109,10 +106,12 @@
 			return;
 
 		Instance = this;
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
 	}
 
 	protected override void OnDestroy()
 	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
 		ReleaseCrosshairBlock();
 
 		if ( Instance == this )
@@ -127,8 +126,21 @@
 	private void ReleaseCrosshairBlock()
 	{
 		IsOpen = false;
-		Crosshair.SetBlocked( nameof( DropMoneyConfirmPanel ), false );
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
 	}
 
-	protected override int BuildHash() => HashCode.Combine( IsOpen, AmountInput );
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen )
+			return;
+
+		IsOpen = false;
+		AmountInput = "";
+		FocusSinkRef?.Focus();
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
+	}
+
+	protected override int BuildHash() => HashCode.Combine( IsOpen, UiModalManager.Version, AmountInput );
 }

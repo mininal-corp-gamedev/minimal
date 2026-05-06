@@ -9,7 +9,7 @@
 @namespace Sandbox
 
 <root>
-	@if ( IsOpen )
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
 	{
 		<div class="overlay">
 			<div class="tm-panel">
@@ -152,6 +152,7 @@
 
 @code
 {
+	const string ModalId = nameof( TabMenu );
 	bool IsOpen { get; set; } = false;
 	int ActiveTab { get; set; } = 0;
 	List<Connection> CachedPlayers { get; set; } = new();
@@ -450,6 +451,7 @@
 
 	protected override void OnStart()
 	{
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
 		LoadJobs();
 		LoadShop();
 	}
@@ -461,20 +463,39 @@
 
 	protected override void OnDestroy()
 	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
 		ReleaseCrosshairBlock();
 	}
 
 	private void ReleaseCrosshairBlock()
 	{
 		IsOpen = false;
-		Crosshair.SetBlocked( nameof( TabMenu ), false );
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
 	}
 
 	private void SetOpen( bool open )
 	{
+		if ( open )
+			UiModalManager.Open( ModalId );
+		else
+			UiModalManager.Close( ModalId );
+
 		IsOpen = open;
 
-		Crosshair.SetBlocked( nameof( TabMenu ), open );
+		Crosshair.SetBlocked( ModalId, open );
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen )
+			return;
+
+		IsOpen = false;
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
 	}
 
 		protected override void OnUpdate()
@@ -482,15 +503,14 @@
 		if ( Input.Pressed( "Score" ) )
 			SetOpen( !IsOpen );
 
-#pragma warning disable CS0612
-	Mouse.Visible = IsOpen;
-#pragma warning restore CS0612
+		UiModalManager.UpdateMouseVisibility();
 	}
 
 	protected override int BuildHash()
 	{
 		var hash = new HashCode();
 		hash.Add( IsOpen );
+		hash.Add( UiModalManager.Version );
 		hash.Add( ActiveTab );
 		hash.Add( Player.Local?.Money ?? 0 );
 		hash.Add( Player.Local?.Job?.JobId );

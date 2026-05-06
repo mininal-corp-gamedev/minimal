@@ -17,18 +17,18 @@
 		</div>
 	}
 
-	@if ( IsOpen )
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
 	{
-		<div class="overlay">
-			<div class="pm-panel">
+		<div class="overlay" onmouseup=@ClearTextFocus>
+			<div class="pm-panel" @ref="FocusSinkRef">
 				<div class="props-area">
 					<div class="page-head">
-						<div>
+						<div onmouseup=@ClearTextFocus>
 							<div class="page-title">Props</div>
 						</div>
 						<div class="head-actions">
-							<TextEntry class="search-input" Value:bind="@SearchText" Placeholder="Поиск пропов..." />
-							<button class="refresh-btn" onclick=@(() => LoadProps())>Refresh</button>
+							<TextEntry @ref="SearchInputRef" class="search-input" Value:bind="@SearchText" Placeholder="Поиск пропов..." OnTextEdited=@OnSearchTextEdited onfocus=@OnSearchFocus onblur=@OnSearchBlur />
+							<button class="refresh-btn" onclick=@(() => RefreshProps())>Refresh</button>
 						</div>
 					</div>
 
@@ -40,7 +40,7 @@
 					{
 						var visibleProps = VisibleProps.ToList();
 
-						<div class="catalog-bar">
+						<div class="catalog-bar" @ref="CatalogBarRef" onmouseup=@ClearTextFocus>
 							<button class="catalog-btn @(!SelectedFavoritesOnly && string.IsNullOrWhiteSpace( SelectedCategory ) ? "active" : "")" onclick=@(() => SelectCategory( null ))>
 								<div class="catalog-label">Все пропы</div>
 								<div class="catalog-count">@AvailableProps.Count</div>
@@ -60,7 +60,7 @@
 							}
 						</div>
 
-						<div class="props-meta">
+						<div class="props-meta" onmouseup=@ClearTextFocus>
 							<div class="props-limit">@( $"Props limit: {GetOwnedPropsCount()} / {GetMaxProps()}" )</div>
 							<div class="props-count">@( $"Показано {visibleProps.Count} / {AvailableProps.Count}" )</div>
 						</div>
@@ -71,7 +71,7 @@
 						}
 						else
 						{
-							<div class="props-list">
+							<div class="props-list" @ref="PropsListRef" onmouseup=@ClearTextFocus>
 								<div class="props-grid">
 									@foreach ( var prop in visibleProps )
 									{
@@ -110,13 +110,13 @@
 				</div>
 
 				<div class="tool-strip">
-					<button class="tool-btn @(ActiveTool == 0 ? "active" : "")" onclick=@(() => ActiveTool = 0)>Rope</button>
-					<button class="tool-btn @(ActiveTool == 1 ? "active" : "")" onclick=@(() => ActiveTool = 1)>Weld</button>
-					<button class="tool-btn @(ActiveTool == 2 ? "active" : "")" onclick=@(() => ActiveTool = 2)>Construction</button>
-					<button class="tool-btn @(ActiveTool == 3 ? "active" : "")" onclick=@(() => ActiveTool = 3)>No Collide</button>
+					<button class="tool-btn @(ActiveTool == 0 ? "active" : "")" onclick=@(() => SelectTool( 0 ))>Rope</button>
+					<button class="tool-btn @(ActiveTool == 1 ? "active" : "")" onclick=@(() => SelectTool( 1 ))>Weld</button>
+					<button class="tool-btn @(ActiveTool == 2 ? "active" : "")" onclick=@(() => SelectTool( 2 ))>Construction</button>
+					<button class="tool-btn @(ActiveTool == 3 ? "active" : "")" onclick=@(() => SelectTool( 3 ))>No Collide</button>
 				</div>
 
-				<div class="tool-content">
+				<div class="tool-content" onmouseup=@ClearTextFocus>
 					<div class="tool-title">@GetToolTitle()</div>
 					<div class="tool-text">@GetToolDescription()</div>
 				</div>
@@ -127,6 +127,7 @@
 
 @code
 {
+	const string ModalId = nameof( PropsMenu );
 	public static PropsMenu Instance { get; private set; }
 
 	bool IsOpen { get; set; } = false;
@@ -138,7 +139,13 @@
 	string SelectedCategory { get; set; }
 	bool SelectedFavoritesOnly { get; set; }
 	string SearchText { get; set; } = "";
+	string LastSearchText { get; set; } = "";
 	int PropsVersion { get; set; } = 0;
+	Panel FocusSinkRef { get; set; }
+	TextEntry SearchInputRef { get; set; }
+	Panel PropsListRef { get; set; }
+	Panel CatalogBarRef { get; set; }
+	bool IsSearchFocused { get; set; }
 	IEnumerable<PropDefinition> VisibleProps => GetVisibleProps();
 
 	private const float SpawnTraceDistance = 420f;
@@ -172,6 +179,13 @@
 		_ = LoadThumbnailsAsync();
 	}
 
+	private void RefreshProps()
+	{
+		ClearTextFocus();
+		ResetPropsListScroll();
+		LoadProps();
+	}
+
 	private void RefreshCategories()
 	{
 		AvailableCategories = AvailableProps
@@ -187,14 +201,72 @@
 
 	private void SelectCategory( string category )
 	{
+		ClearTextFocus();
+		ResetPropsListScroll();
 		SelectedFavoritesOnly = false;
 		SelectedCategory = string.IsNullOrWhiteSpace( category ) ? null : category;
 	}
 
 	private void SelectFavorites()
 	{
+		ClearTextFocus();
+		ResetPropsListScroll();
 		SelectedFavoritesOnly = true;
 		SelectedCategory = null;
+	}
+
+	private void SelectTool( int tool )
+	{
+		ClearTextFocus();
+		ActiveTool = tool;
+	}
+
+	private void ClearTextFocus()
+	{
+		SearchInputRef?.Blur();
+		FocusSinkRef?.Focus();
+	}
+
+	private void OnSearchFocus()
+	{
+		IsSearchFocused = true;
+	}
+
+	private void OnSearchBlur()
+	{
+		IsSearchFocused = false;
+	}
+
+	private void OnSearchTextEdited( string text )
+	{
+		var previous = LastSearchText ?? string.Empty;
+		var next = text ?? string.Empty;
+
+		if ( IsSearchFocused
+			&& next.Length == previous.Length + 1
+			&& next.EndsWith( "q", StringComparison.OrdinalIgnoreCase ) )
+		{
+			SearchText = previous;
+			LastSearchText = previous;
+			if ( SearchInputRef.IsValid() )
+				SearchInputRef.Text = previous;
+
+			SetOpen( false );
+			return;
+		}
+
+		SearchText = next;
+		LastSearchText = next;
+		ResetPropsListScroll();
+	}
+
+	private void ResetPropsListScroll()
+	{
+		if ( PropsListRef.IsValid() )
+		{
+			PropsListRef.ScrollVelocity = Vector2.Zero;
+			PropsListRef.ScrollOffset = Vector2.Zero;
+		}
 	}
 
 	private bool IsSelectedCategory( string category )
@@ -252,6 +324,8 @@
 
 	private void ToggleFavorite( PropDefinition prop )
 	{
+		ClearTextFocus();
+
 		var id = GetFavoriteId( prop );
 		if ( string.IsNullOrWhiteSpace( id ) )
 			return;
@@ -311,6 +385,8 @@
 
 	private void RequestSpawn( PropDefinition prop )
 	{
+		ClearTextFocus();
+
 		if ( !CanRequestSpawn( prop ) )
 			return;
 		if ( !Player.Local.IsValid() || !Player.Local.Controller.IsValid() )
@@ -652,6 +728,7 @@
 
 	protected override void OnStart()
 	{
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
 		Instance = this;
 		LoadProps();
 		RpcRequestPropFavorites();
@@ -664,6 +741,7 @@
 
 	protected override void OnDestroy()
 	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
 		ReleaseCrosshairBlock();
 		if ( Instance == this )
 			Instance = null;
@@ -672,29 +750,59 @@
 	private void ReleaseCrosshairBlock()
 	{
 		IsOpen = false;
-		Crosshair.SetBlocked( nameof( PropsMenu ), false );
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
 	}
 
 	private void SetOpen( bool open )
 	{
+		if ( open )
+			UiModalManager.Open( ModalId );
+		else
+			UiModalManager.Close( ModalId );
+
 		IsOpen = open;
+		ClearTextFocus();
 
-		Crosshair.SetBlocked( nameof( PropsMenu ), open );
+		Crosshair.SetBlocked( ModalId, open );
 
-	#pragma warning disable CS0612
-		Mouse.Visible = open;
-	#pragma warning restore CS0612
+		UiModalManager.UpdateMouseVisibility();
 
 		if ( open )
 			RpcRequestPropFavorites();
+
+		StateHasChanged();
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen )
+			return;
+
+		IsOpen = false;
+		ClearTextFocus();
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
+	}
+
+	protected override void OnFixedUpdate()
+	{
+		if ( Input.Pressed( "PropsMenu" ) )
+			SetOpen(!IsOpen);
 	}
 
 	protected override void OnUpdate()
 	{
 		UpdateLookedPropInfo();
+	}
 
-		if ( Input.Pressed( "PropsMenu" ) )
-			SetOpen(!IsOpen);
+	private static void ScrollPanel( Panel panel, float deltaY )
+	{
+		if ( !panel.IsValid() )
+			return;
+
+		panel.ScrollVelocity = Vector2.Zero;
+		panel.ScrollOffset += new Vector2( 0f, deltaY );
 	}
 
 	private void UpdateLookedPropInfo()
@@ -740,6 +848,7 @@
 	{
 		var hash = new HashCode();
 		hash.Add( IsOpen );
+		hash.Add( UiModalManager.Version );
 		hash.Add( ActiveTool );
 		hash.Add( AvailableProps.Count );
 		hash.Add( AvailableCategories.Count );

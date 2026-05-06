@@ -7,7 +7,7 @@
 @namespace Sandbox
 
 <root>
-	@if ( IsOpen )
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
 	{
 		<div class="demote-overlay">
 			<div class="demote-panel">
@@ -48,6 +48,7 @@
 
 @code
 {
+	private const string ModalId = nameof( DemotePanel );
 	public static DemotePanel Instance { get; private set; }
 
 	private bool IsOpen { get; set; }
@@ -86,12 +87,16 @@
 
 	private void SetOpen( bool open )
 	{
-		IsOpen = open;
-		Crosshair.SetBlocked( nameof( DemotePanel ), open );
+		if ( open )
+			UiModalManager.Open( ModalId );
+		else
+			UiModalManager.Close( ModalId );
 
-#pragma warning disable CS0612
-		Mouse.Visible = open;
-#pragma warning restore CS0612
+		IsOpen = open;
+		Crosshair.SetBlocked( ModalId, open );
+
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
 	}
 
 	private void RefreshPlayers()
@@ -186,6 +191,7 @@
 			return;
 
 		Instance = this;
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
 	}
 
 	protected override void OnDisabled()
@@ -195,6 +201,7 @@
 
 	protected override void OnDestroy()
 	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
 		ReleaseCrosshairBlock();
 
 		if ( Instance == this )
@@ -204,13 +211,27 @@
 	private void ReleaseCrosshairBlock()
 	{
 		IsOpen = false;
-		Crosshair.SetBlocked( nameof( DemotePanel ), false );
+		EligiblePlayers.Clear();
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen )
+			return;
+
+		IsOpen = false;
+		EligiblePlayers.Clear();
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
 	}
 
 	protected override int BuildHash()
 	{
 		var hash = new HashCode();
 		hash.Add( IsOpen );
+		hash.Add( UiModalManager.Version );
 		hash.Add( EligiblePlayers.Count );
 
 		foreach ( var player in EligiblePlayers )

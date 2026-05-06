@@ -8,7 +8,7 @@
 @namespace Sandbox
 
 <root>
-	@if ( Door is null )
+	@if ( Door is null || !UiModalManager.IsActive( ModalId ) )
 	{
 	}
 	else
@@ -140,6 +140,7 @@
 
 @code
 {
+	private const string ModalId = nameof( DoorHud );
 	private Door _door;
 
 	[Property]
@@ -152,7 +153,14 @@
 				return;
 
 			_door = value;
-			Crosshair.SetBlocked( nameof( DoorHud ), _door is not null );
+			if ( _door is null )
+				UiModalManager.Close( ModalId );
+			else
+				UiModalManager.Open( ModalId );
+
+			Crosshair.SetBlocked( ModalId, _door is not null );
+			UiModalManager.UpdateMouseVisibility();
+			StateHasChanged();
 		}
 	}
 
@@ -264,8 +272,14 @@
 		ReleaseCrosshairBlock();
 	}
 
+	protected override void OnStart()
+	{
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
+	}
+
 	protected override void OnDestroy()
 	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
 		ReleaseCrosshairBlock();
 	}
 
@@ -273,12 +287,25 @@
 	{
 		_door = null;
 		ShowRoommateList = false;
-		Crosshair.SetBlocked( nameof( DoorHud ), false );
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || _door is null )
+			return;
+
+		_door = null;
+		ShowRoommateList = false;
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
 	}
 
 	protected override int BuildHash()
 	{
 		var h = new HashCode();
+		h.Add( UiModalManager.Version );
 		h.Add( Door );
 		h.Add( Door?.Header );
 		h.Add( Door?.IsBlocked );

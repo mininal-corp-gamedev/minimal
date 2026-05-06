@@ -138,6 +138,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private TimeUntil _nextOwnerClothingApplyAttempt = 0f;
     private TimeUntil _nextLocalUiEnsure = 0f;
     private static bool _jobInventoryEventsRegistered;
+    private const float MovementSafePitchClamp = 89f;
     private const int OwnerClothingMaxApplyPasses = 3;
 
     /// <summary>
@@ -2042,6 +2043,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 	{
         GameObject.Tags.Add( "player" );
         EnsureWeaponVisualRendererReady();
+        EnsureMovementSafePitchClamp();
         MakeLocalInstance();
         RegisterItemUseHandlers();
         RegisterJobInventoryEvents();
@@ -2051,6 +2053,14 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         // молча обрывается. Сейв инициализируется по запросу клиента из
         // NetworkInit (см. RpcRequestPlayerSaveInit / RpcRequestPlayerInventoryInit).
         NetworkInit();
+    }
+
+    private void EnsureMovementSafePitchClamp()
+    {
+        if (!Controller.IsValid() || Controller.PitchClamp <= MovementSafePitchClamp)
+            return;
+
+        Controller.PitchClamp = MovementSafePitchClamp;
     }
 
     protected override void OnFixedUpdate()

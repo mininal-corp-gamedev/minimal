@@ -149,7 +149,7 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "PitchClamp": 92.975204,
+        "PitchClamp": 89,
         "ReachLength": 100,
         "Renderer": {
           "_type": "component",

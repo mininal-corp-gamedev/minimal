@@ -29,9 +29,12 @@
 	private const string ModalId = nameof( DropMoneyConfirmPanel );
 	public static DropMoneyConfirmPanel Instance { get; private set; }
 
+	[Property] public float DropCooldown { get; set; } = 5f;
+
 	private bool IsOpen { get; set; }
 	private string AmountInput { get; set; } = "";
 	private Panel FocusSinkRef { get; set; }
+	private TimeUntil _nextDropAllowed;
 
 	public static void Open()
 	{
@@ -84,12 +87,19 @@
 	{
 		FocusSinkRef?.Focus();
 
+		if ( !_nextDropAllowed )
+		{
+			Notification.Error( $"Подожди ещё {_nextDropAllowed:F1} сек.", 3.5f );
+			return;
+		}
+
 		if ( !TryParseAmount( AmountInput, out var amount ) )
 		{
 			Notification.Error( "Укажи корректную сумму.", 3.5f );
 			return;
 		}
 
+		_nextDropAllowed = DropCooldown;
 		Close();
 		Player.Local?.RequestDropMoney( amount );
 	}

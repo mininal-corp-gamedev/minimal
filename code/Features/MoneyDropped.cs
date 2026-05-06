@@ -30,10 +30,7 @@ public sealed class MoneyDropped : Component, Component.IPressable
 
         var dropped = moneyGo.Components.Get<MoneyDropped>();
         if ( !dropped.IsValid() || dropped.Money <= 0 )
-        {
-            Log.Warning( $"[RpcTakeDroppedMoney] Invalid money object or non-positive amount from {caller.DisplayName} ({caller.SteamId}): Money={dropped?.Money}" );
             return;
-        }
 
         var player = FindPlayerBySteamId( caller.SteamId.Value );
         if ( !player.IsValid() )
@@ -45,6 +42,8 @@ public sealed class MoneyDropped : Component, Component.IPressable
         var amount = dropped.Money;
         dropped.Money = 0;
         player.Money += amount;
+
+        Log.Info( $"[RpcTakeDroppedMoney] {caller.DisplayName} ({caller.SteamId}) picked up ${amount}" );
 
         using ( Rpc.FilterInclude( c => c.SteamId.Value == caller.SteamId.Value ) )
         {

@@ -11,6 +11,7 @@
 	{
 		<div class="overlay">
 			<div class="admin-panel" @ref="FocusSinkRef">
+				<button class="close-btn" onclick=@(() => SetOpen( false ))>✕</button>
 				<div class="sidebar">
 					<div class="sidebar-profile">
 						<div class="sb-name">@(Connection.Local?.DisplayName ?? "-")</div>
@@ -42,41 +43,44 @@
 							@if ( ActiveDefinition.NeedsOnlinePlayer )
 							{
 								<div class="field-label">Online player</div>
-								<div class="player-list">
-									@foreach ( var conn in CachedPlayers )
-									{
-										<button class="player-row @(SelectedSteamId == conn.SteamId.Value ? "active" : "")" onclick=@(() => SelectPlayer( conn.SteamId.Value ))>
-											<div class="player-avatar" style="background-image: url( avatar:@conn.SteamId.Value )"></div>
-											<div class="player-main">
-												<div class="player-name">@conn.DisplayName</div>
-												<div class="player-steamid">@conn.SteamId.Value</div>
-											</div>
-											@if ( SelectedSteamId == conn.SteamId.Value )
-											{
-												<div class="player-selected">SELECTED</div>
-											}
-											<div class="player-ping">@conn.Ping ms</div>
-										</button>
-									}
+								<div class="player-list-area">
+									<div class="player-list">
+										@foreach ( var conn in CachedPlayers )
+										{
+											<button class="player-row @(SelectedSteamId == conn.SteamId.Value ? "active" : "")" onclick=@(() => SelectPlayer( conn.SteamId.Value ))>
+												<div class="player-avatar" style="background-image: url( avatar:@conn.SteamId.Value )"></div>
+												<div class="player-main">
+													<div class="player-name">@conn.DisplayName</div>
+													<div class="player-steamid">@conn.SteamId.Value</div>
+												</div>
+												@if ( SelectedSteamId == conn.SteamId.Value )
+												{
+													<div class="player-selected">SELECTED</div>
+												}
+												<div class="player-ping">@conn.Ping ms</div>
+											</button>
+										}
+									</div>
+									<div class="scrollbar-placeholder"></div>
 								</div>
 							}
 
 							@if ( ActiveDefinition.NeedsSteamIdInput )
 							{
 								<div class="field-label">SteamId</div>
-								<TextEntry class="admin-input" Value:bind="@SteamIdInput" Placeholder="SteamId" onsubmit="@SubmitActiveAbility"></TextEntry>
+								<TextEntry @ref="SteamIdEntryRef" class="admin-input" Value:bind="@SteamIdInput" Placeholder="SteamId" onsubmit="@SubmitActiveAbility"></TextEntry>
 							}
 
 							@if ( ActiveDefinition.NeedsValue )
 							{
 								<div class="field-label">@ActiveDefinition.ValueLabel</div>
-								<TextEntry class="admin-input" Value:bind="@ValueInput" Placeholder="@ActiveDefinition.ValuePlaceholder" onsubmit="@SubmitActiveAbility"></TextEntry>
+								<TextEntry @ref="ValueEntryRef" class="admin-input" Value:bind="@ValueInput" Placeholder="@ActiveDefinition.ValuePlaceholder" onsubmit="@SubmitActiveAbility"></TextEntry>
 							}
 
 							@if ( ActiveDefinition.NeedsReason )
 							{
 								<div class="field-label">Reason</div>
-								<TextEntry class="admin-input" Value:bind="@ReasonInput" Placeholder="Reason" onsubmit="@SubmitActiveAbility"></TextEntry>
+								<TextEntry @ref="ReasonEntryRef" class="admin-input" Value:bind="@ReasonInput" Placeholder="Reason" onsubmit="@SubmitActiveAbility"></TextEntry>
 							}
 
 							<button class="execute-btn" onclick=@(() => SubmitActiveAbility())>Execute</button>
@@ -116,6 +120,9 @@
 	private string ReasonInput { get; set; } = "";
 	private int PlayersVersion { get; set; }
 	private Panel FocusSinkRef { get; set; }
+	private TextEntry SteamIdEntryRef { get; set; }
+	private TextEntry ValueEntryRef { get; set; }
+	private TextEntry ReasonEntryRef { get; set; }
 
 	private int CurrentRank => Player.Local?.AdminRank ?? 0;
 	private IEnumerable<AdminAbilityDefinition> VisibleAbilities => Abilities.Where( x => CurrentRank >= x.RequiredRank );
@@ -149,9 +156,9 @@
 	private void SelectAbility( string id )
 	{
 		ActiveAbility = id;
+		ClearTextFocus();
 		ClearFormState();
 		RefreshPlayers();
-		ClearTextFocus();
 	}
 
 	private void SelectPlayer( long steamId )
@@ -177,7 +184,9 @@
 
 	private void ClearTextFocus()
 	{
-		FocusSinkRef?.Focus();
+		SteamIdEntryRef?.Blur();
+		ValueEntryRef?.Blur();
+		ReasonEntryRef?.Blur();
 	}
 
 	private long GetTargetSteamId()
@@ -198,6 +207,12 @@
 		var ability = ActiveDefinition;
 		if ( ability is null )
 			return;
+
+		if ( CurrentRank < ability.RequiredRank )
+		{
+			Notification.Error( "Access denied.", 3f );
+			return;
+		}
 
 		var steamId = GetTargetSteamId();
 		if ( (ability.NeedsOnlinePlayer || ability.NeedsSteamIdInput) && steamId == 0 )
@@ -324,6 +339,7 @@
 
 		return HashCode.Combine(
 			IsOpen,
+			IsOpen ? (int)Time.Now : 0,
 			UiModalManager.Version,
 			ActiveAbility,
 			CurrentRank,

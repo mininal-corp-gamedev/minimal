@@ -2442,7 +2442,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if ( amount <= 0 )
         {
-            Log.Warning( $"[RpcRequestDropMoney] Caller {caller.DisplayName} ({caller.SteamId}) sent non-positive amount: {amount}" );
             NotifyMoneyResult( caller, "Некорректная сумма.", false );
             return;
         }
@@ -2466,6 +2465,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
 
         player.Money -= amount;
+        Log.Info( $"[RpcRequestDropMoney] {caller.DisplayName} ({caller.SteamId}) dropped ${amount}" );
         NotifyMoneyResult( caller, $"Ты выкинул ${amount}.", true );
     }
 
@@ -2486,7 +2486,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if ( amount <= 0 )
         {
-            Log.Warning( $"[RpcRequestTransferMoney] Caller {caller.DisplayName} ({caller.SteamId}) sent non-positive amount: {amount}" );
             NotifyMoneyResult( caller, "Некорректная сумма.", false );
             return;
         }
@@ -2520,6 +2519,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         target.Money += amount;
 
         var targetConnection = target.GameObject.Network.Owner;
+        Log.Info( $"[RpcRequestTransferMoney] {caller.DisplayName} ({caller.SteamId}) transferred ${amount} to {GetConnectionName( targetConnection )} ({targetConnection?.SteamId})" );
         NotifyMoneyResult( caller, $"Ты передал ${amount} игроку {GetConnectionName( targetConnection )}.", true );
 
         if ( targetConnection is not null )

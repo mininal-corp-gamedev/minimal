@@ -727,6 +727,9 @@ public sealed class AdminManager : Component, Component.INetworkListener
 			return;
 		}
 
+		if ( type == AdminNotifyType.Info )
+			Log.Info( $"[Admin] {caller.DisplayName} ({caller.SteamId.Value}): {text}" );
+
 		using ( Rpc.FilterInclude( c => c.SteamId.Value == caller.SteamId.Value ) )
 		{
 			RpcNotify( text, type );

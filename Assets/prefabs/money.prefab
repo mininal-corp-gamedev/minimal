@@ -116,7 +116,69 @@
         "SurfaceVelocity": "0,0,0"
       }
     ],
-    "Children": [],
+    "Children": [
+      {
+        "__guid": "b2b03855-0f0f-4cb5-b213-f9f6f182d8d7",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "World Panel",
+        "Position": "0,0,4.41177893",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.WorldPanel",
+            "__guid": "9eab8917-cfd9-479f-a0a7-f110a7e58b80",
+            "__enabled": true,
+            "Flags": 0,
+            "HorizontalAlign": "Center",
+            "InteractionRange": 1000,
+            "LookAtCamera": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PanelSize": "256,128",
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderScale": 1,
+            "VerticalAlign": "Center"
+          },
+          {
+            "__type": "Sandbox.MoneyDroppedWorldPanel",
+            "__guid": "89041800-612c-4205-bde8-ea62e85778cd",
+            "__enabled": true,
+            "Flags": 0,
+            "MoneyDropped": {
+              "_type": "component",
+              "component_id": "b0d13232-c565-4b2f-9058-86f88c6979ef",
+              "go": "406143fb-cedc-4458-8551-afdc7aacdd1d",
+              "component_type": "MoneyDropped"
+            },
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          }
+        ],
+        "Children": []
+      }
+    ],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,

@@ -161,8 +161,12 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	/// <summary>Sound played (broadcast to all clients at the door position) when this door closes.</summary>
 	[Property, Category( "Sounds" )] public SoundEvent CloseSound { get; set; }
-    [Property, Category("Sounds")] public SoundEvent BuySound { get; set; }
-    [Property, Category("Sounds")] public SoundEvent SellSound { get; set; }
+
+	/// <summary>Sound played only for the buyer when this door is bought.</summary>
+	[Property, Category( "Sounds" )] public SoundEvent BuySound { get; set; }
+
+	/// <summary>Sound played only for the seller when this door is sold.</summary>
+	[Property, Category( "Sounds" )] public SoundEvent SellSound { get; set; }
 
     /// <summary>
     /// True on the local client if the local player may lock/unlock this door with the Keys weapon:
@@ -694,15 +698,15 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	}
 
 	/// <summary>Buys the door for the given player. Host-authoritative: validates blocked state, ownership, and funds.</summary>
-	public void Buy( Player buyer )
+	public bool Buy( Player buyer )
 	{
-		if ( !Networking.IsHost ) return;
-		if ( !buyer.IsValid() ) return;
-		if ( IsBlocked ) return;
-		if ( HasOnlyJobs ) return; // Job-only doors cannot be bought.
-		if ( HasOwner ) return;
-		if ( buyer.Money < BuyPrice ) return;
-		if ( buyer.OwnedDoorsCount >= buyer.MaxDoors ) return; // Player has reached their door limit.
+		if ( !Networking.IsHost ) return false;
+		if ( !buyer.IsValid() ) return false;
+		if ( IsBlocked ) return false;
+		if ( HasOnlyJobs ) return false; // Job-only doors cannot be bought.
+		if ( HasOwner ) return false;
+		if ( buyer.Money < BuyPrice ) return false;
+		if ( buyer.OwnedDoorsCount >= buyer.MaxDoors ) return false; // Player has reached their door limit.
 
 		buyer.Money -= BuyPrice;
 		PlayerOwner = buyer;
@@ -713,6 +717,8 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		{
 			DoorSecond.PlayerOwner = buyer;
 		}
+
+		return true;
 	}
 
 	[Rpc.Host]
@@ -729,16 +735,23 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		}
 		if ( !CanPlayerInteract( buyer ) ) return;
 
-		Buy( buyer );
+		if ( !Buy( buyer ) ) return;
+
+		NotifyDoorFeedback(
+			caller,
+			$"Door bought for ${BuyPrice}. Doors: {buyer.OwnedDoorsCount}/{buyer.MaxDoors}.",
+			NotificationType.Info,
+			2.5f,
+			BuySound );
 	}
 
 	/// <summary>Sells the door. Refunds half the buy price to the owner, clears ownership, and unlocks.</summary>
-	public void Sell()
+	public bool Sell()
 	{
-		if ( !Networking.IsHost ) return;
-		if ( IsBlocked ) return;
-		if ( HasOnlyJobs ) return; // Job-only doors cannot be sold.
-		if ( !HasOwner ) return;
+		if ( !Networking.IsHost ) return false;
+		if ( IsBlocked ) return false;
+		if ( HasOnlyJobs ) return false; // Job-only doors cannot be sold.
+		if ( !HasOwner ) return false;
 
 		if ( PlayerOwner.IsValid() )
 			PlayerOwner.Money += SellPrice; // Refund half, once — not doubled for paired doors.
@@ -757,6 +770,8 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 			partner.LockState = DoorLockState.Unlocked;
 			partner.RoommateIdsSerialized = "";
 		}
+
+		return true;
 	}
 
 	[Rpc.Host]
@@ -770,7 +785,14 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		// Only the gameplay owner can sell.
 		if ( !IsOwnedBy( caller.SteamId ) ) return;
-		Sell();
+		if ( !Sell() ) return;
+
+		NotifyDoorFeedback(
+			caller,
+			$"Door sold for ${SellPrice}. Doors: {seller.OwnedDoorsCount}/{seller.MaxDoors}.",
+			NotificationType.Info,
+			2.5f,
+			SellSound );
 	}
 
 	/// <summary>Returns true if the given SteamId matches the gameplay owner of this door.</summary>
@@ -903,6 +925,33 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	private static Connection GetPlayerConnection( Player player )
 	{
 		return player.IsValid() ? player.Network.Owner : null;
+	}
+
+	private void NotifyDoorFeedback( Connection target, string text, NotificationType type, float aliveSeconds, SoundEvent sound )
+	{
+		if ( target is null ) return;
+
+		using ( Rpc.FilterInclude( c => c.SteamId.Value == target.SteamId.Value ) )
+		{
+			RpcShowDoorFeedback( text, (int)type, aliveSeconds, sound );
+		}
+	}
+
+	[Rpc.Broadcast]
+	private void RpcShowDoorFeedback( string text, int type, float aliveSeconds, SoundEvent sound )
+	{
+		if ( !Networking.IsHost && Rpc.Caller is not null && !Rpc.Caller.IsHost ) return;
+
+		var notificationType = (NotificationType)type;
+		switch ( notificationType )
+		{
+			case NotificationType.Warn: Notification.Warn( text, aliveSeconds ); break;
+			case NotificationType.Error: Notification.Error( text, aliveSeconds ); break;
+			default: Notification.Info( text, aliveSeconds ); break;
+		}
+
+		if ( sound.IsValid() )
+			Sound.Play( sound, WorldPosition );
 	}
 
 	private static void NotifyJobDeniedInteraction( Connection target )

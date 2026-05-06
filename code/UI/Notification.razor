@@ -26,6 +26,7 @@
 @code
 {
 	public static Notification Instance { get; private set; }
+	private const int MaxVisibleNotifications = 5;
 
 	[Property] public float DefaultAliveSeconds { get; set; } = 2.5f;
 	[Property] public float FadeSeconds { get; set; } = 0.2f;
@@ -103,6 +104,8 @@
 	private void AddNotification( string text, float timeAlive, NotificationType type )
 	{
 		var safeTimeAlive = MathF.Max( 0.05f, timeAlive > 0f ? timeAlive : DefaultAliveSeconds );
+		TrimOldNotifications();
+
 		var item = new NotificationMessage
 		{
 			Id = NextId++,
@@ -117,6 +120,12 @@
 		_ = AutoRemoveAsync( item, safeTimeAlive );
 
 		PlayTypeSound( type );
+	}
+
+	private void TrimOldNotifications()
+	{
+		while ( Notifications.Count >= MaxVisibleNotifications )
+			Notifications.RemoveAt( 0 );
 	}
 
 	private void PlayTypeSound( NotificationType type )

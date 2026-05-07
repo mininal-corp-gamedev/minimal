@@ -25,7 +25,7 @@
 
 	Player TargetPlayer => Components.Get<Player>( FindMode.EverythingInSelfAndAncestors );
 
-	bool ShouldShow => TargetPlayer is null || !TargetPlayer.IsLocalPlayer;
+	bool ShouldShow => TargetPlayer is null || (!TargetPlayer.IsLocalPlayer && !TargetPlayer.IsDead);
 
 	float HealthValue => TargetPlayer?.Health ?? 0f;
 	float MaxHealthValue => TargetPlayer is { MaxHealth: > 0f } p ? p.MaxHealth : 1f;

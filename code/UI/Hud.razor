@@ -4,7 +4,7 @@
 @inherits PanelComponent
 @namespace Sandbox
 
-<root>
+<root class="@RootClass">
 	<div class="hud-stack">
 		<div class="top-panel hud-panel">
 			<div class="job-icon"></div>
@@ -33,7 +33,7 @@
 			</div>
 		}
 	</div>
-	@if ( Player.Local?.IsDead == true )
+	@if ( IsDead )
 	{
 		<div class="death-screen">
 			<div class="death-window">
@@ -47,6 +47,9 @@
 
 @code
 {
+	bool IsDead => Player.Local?.IsDead == true;
+	string RootClass => IsDead ? "dead" : "";
+
 	float HealthPercent => Player.Local != null
 		? Math.Clamp( Player.Local.Health / Player.Local.MaxHealth * 100f, 0f, 100f )
 		: 0f;
@@ -78,7 +81,7 @@
 
 		return System.HashCode.Combine(
 			hash,
-			Player.Local?.IsDead ?? false,
+			IsDead,
 			DeathSecondsLeft,
 			Player.Local?.DeathMessage );
 	}

@@ -252,6 +252,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         {
             SpawnInternal(spawnPosition, spawnRotation);
             RpcClearDeathRagdoll();
+            HostSetLifePresentationEnabled(true);
             return;
         }
 
@@ -325,6 +326,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         DeathTimeUntilRespawn = 0f;
         DeathMessage = "";
         RestoreDeathState();
+        RequestHostLifePresentationEnabled(true);
         ResetFallDamageGrace();
         WorldHud?.WorldHudRefresh();
     }
@@ -389,6 +391,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         DeathTimeUntilRespawn = 0f;
         DeathMessage = "";
         RestoreDeathState();
+        RequestHostLifePresentationEnabled(true);
         ResetFallDamageGrace();
         WorldHud?.WorldHudRefresh();
         ClearQueuedElevatorCarryDelta();
@@ -536,6 +539,14 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         RpcOwnerDied(DeathMessage, (float)DeathTimeUntilRespawn);
         RpcCreateDeathRagdoll();
+        HostSetLifePresentationEnabled(false);
+    }
+
+    public void HostKill(string deathMessage = null)
+    {
+        if (!Networking.IsHost) return;
+
+        HostDie(deathMessage);
     }
 
     [Rpc.Owner]
@@ -551,6 +562,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             CurrentWeapon.GameObject.Enabled = false;
 
         ApplyDeathControls();
+        RequestHostLifePresentationEnabled(false);
     }
 
     [Rpc.Broadcast]
@@ -563,6 +575,73 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private void RpcClearDeathRagdoll()
     {
         RestoreDeathState();
+    }
+
+    private void RequestHostLifePresentationEnabled(bool enabled)
+    {
+        if (IsProxy)
+            return;
+
+        if (Networking.IsHost)
+        {
+            HostSetLifePresentationEnabled(enabled);
+            return;
+        }
+
+        RpcRequestHostLifePresentationEnabled(enabled);
+    }
+
+    [Rpc.Host]
+    private void RpcRequestHostLifePresentationEnabled(bool enabled)
+    {
+        if (!Networking.IsHost)
+            return;
+
+        var caller = Rpc.Caller;
+        if (caller is null)
+            return;
+
+        if (GameObject.Network.Owner != caller)
+            return;
+
+        HostSetLifePresentationEnabled(enabled);
+    }
+
+    private void HostSetLifePresentationEnabled(bool enabled)
+    {
+        if (!Networking.IsHost)
+            return;
+
+        ApplyLifePresentationEnabled(enabled);
+        RpcApplyLifePresentationEnabled(enabled);
+    }
+
+    [Rpc.Broadcast]
+    private void RpcApplyLifePresentationEnabled(bool enabled)
+    {
+        if (!Networking.IsHost && Rpc.Caller is not null && !Rpc.Caller.IsHost)
+            return;
+
+        ApplyLifePresentationEnabled(enabled);
+    }
+
+    private void ApplyLifePresentationEnabled(bool enabled)
+    {
+        if (Controller.IsValid())
+        {
+            Controller.Enabled = enabled;
+
+            if (!enabled)
+            {
+                Controller.WishVelocity = Vector3.Zero;
+
+                if (Controller.Body.IsValid())
+                    Controller.Body.Velocity = Vector3.Zero;
+            }
+        }
+
+        if (Renderer.IsValid() && Renderer.GameObject.IsValid())
+            Renderer.GameObject.Enabled = enabled;
     }
 
     private void HostUpdateDeathRespawn()

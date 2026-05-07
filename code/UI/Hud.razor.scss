@@ -16,6 +16,10 @@ Hud {
 	padding: 24px;
 	pointer-events: none;
 
+	&.dead {
+		background-color: #020817;
+	}
+
 	.hud-stack {
 		flex-direction: column;
 		width: $hud-panel-width;
@@ -191,7 +195,7 @@ Hud {
 		bottom: 0;
 		align-items: center;
 		justify-content: center;
-		background-color: rgba(18, 22, 25, 0.42);
+		background-color: #020817;
 	}
 
 	.death-window {

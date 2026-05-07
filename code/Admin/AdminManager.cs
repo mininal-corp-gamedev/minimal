@@ -64,6 +64,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 	[Rpc.Host] public static void RpcRequestSpawn( long steamId ) => Respawn( Rpc.Caller, steamId );
 	[Rpc.Host] public static void RpcRequestSetMoney( long steamId, int value ) => SetMoney( Rpc.Caller, steamId, value );
 	[Rpc.Host] public static void RpcRequestSetHp( long steamId, float value ) => SetHp( Rpc.Caller, steamId, value );
+	[Rpc.Host] public static void RpcRequestKill( long steamId ) => Kill( Rpc.Caller, steamId );
 	[Rpc.Host] public static void RpcRequestSetJob( long steamId, string jobId ) => SetJob( Rpc.Caller, steamId, jobId );
 	[Rpc.Host] public static void RpcRequestSellDoor() => SellDoor( Rpc.Caller );
 	[Rpc.Host] public static void RpcRequestSellDoorAt( Vector3 eyePosition, Vector3 eyeForward ) => SellDoor( Rpc.Caller, eyePosition, eyeForward );
@@ -104,6 +105,9 @@ public sealed class AdminManager : Component, Component.INetworkListener
 				if ( float.TryParse( value, out var hp ) ) SetHp( caller, steamId, hp );
 				else NotifyCaller( caller, "Invalid hp value.", AdminNotifyType.Error );
 				break;
+			case "kill":
+				Kill( caller, steamId );
+				break;
 			case "setjob":
 				SetJob( caller, steamId, value );
 				break;
@@ -124,7 +128,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 				else NotifyCaller( caller, "Invalid rank value.", AdminNotifyType.Error );
 				break;
 			default:
-				NotifyCaller( caller, "Usage: adm <kick|ban|unban|spawn|setmoney|sethp|setjob|selldoor|goto|tp|return|giverank> ...", AdminNotifyType.Warn );
+				NotifyCaller( caller, "Usage: adm <kick|ban|unban|spawn|setmoney|sethp|kill|setjob|selldoor|goto|tp|return|giverank> ...", AdminNotifyType.Warn );
 				break;
 		}
 	}
@@ -303,8 +307,40 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		}
 
 		target.Health = Math.Clamp( value, 0f, target.MaxHealth );
+		if ( target.Health <= 0f )
+		{
+			target.HostKill( "Вас убил администратор." );
+			NotifyCaller( caller, $"Killed {GetPlayerName( target )} by setting hp to 0.", AdminNotifyType.Info );
+			return;
+		}
+
 		target.WorldHud?.WorldHudRefresh();
 		NotifyCaller( caller, $"Set {GetPlayerName( target )} hp to {target.Health:0}.", AdminNotifyType.Info );
+	}
+
+	private static void Kill( Connection caller, long steamId )
+	{
+		if ( !HasAccess( caller, AdministratorRank, out var error ) )
+		{
+			NotifyCaller( caller, error, AdminNotifyType.Error );
+			return;
+		}
+
+		var target = FindPlayerBySteamId( steamId );
+		if ( !target.IsValid() )
+		{
+			NotifyCaller( caller, "Player is not online.", AdminNotifyType.Error );
+			return;
+		}
+
+		if ( target.IsDead )
+		{
+			NotifyCaller( caller, "Player is already dead.", AdminNotifyType.Warn );
+			return;
+		}
+
+		target.HostKill( "Вас убил администратор." );
+		NotifyCaller( caller, $"Killed {GetPlayerName( target )}.", AdminNotifyType.Info );
 	}
 
 	private static void SetJob( Connection caller, long steamId, string jobId )

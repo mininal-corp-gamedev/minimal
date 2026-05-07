@@ -10398,7 +10398,7 @@
                   "RollingResistance": null,
                   "SmoothingAngle": 40,
                   "Static": true,
-                  "Surface": "surfaces/glass.surface",
+                  "Surface": "surfaces/grass.surface",
                   "SurfaceVelocity": "0,0,0"
                 }
               ],
@@ -42398,7 +42398,8 @@
         "f2c128dc-5efe-402c-8dcc-6ace485f0460": "9671656a-60c9-4026-930f-adf9c5e7b8f1",
         "15a823ff-f95a-440f-bfa6-a779a4f674fe": "52738249-7cd4-461e-abc8-1bd609afdfaf",
         "f8fdb7de-52f0-45c7-afcf-c4aa9055dae5": "998226c2-5f40-4d49-8ba7-8498b7526542",
-        "38a38e67-23cb-4b18-aaf1-3b16a4c5ed93": "e44ba402-ed5b-452d-8f8f-60e2bf7cd066"
+        "38a38e67-23cb-4b18-aaf1-3b16a4c5ed93": "e44ba402-ed5b-452d-8f8f-60e2bf7cd066",
+        "a8a62c56-48f9-47cc-83f2-76a57f9ae300": "4bc88c80-2f5f-47a5-b39a-21c1f6f80bb3"
       }
     },
     {
@@ -42738,18 +42739,18 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "b7c3e9f6-dbbd-4d7c-9f80-7434b612f0ee"
-        }
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
       },
       "Sandbox.SelectionSetsSystem": {
         "Data": {
           "SelectionSets": []
         }
       },
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "b7c3e9f6-dbbd-4d7c-9f80-7434b612f0ee"
+        }
       }
     }
   },

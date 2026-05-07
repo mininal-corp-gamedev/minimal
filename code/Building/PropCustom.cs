@@ -3,7 +3,10 @@ using Sandbox;
 public sealed class PropCustom : Component, Component.INetworkListener
 {
 	[Sync( SyncFlags.FromHost )] public Player PlayerOwner { get; private set; }
+	[Sync( SyncFlags.FromHost )] public Color PropTint { get; private set; } = Color.White;
 	private bool _registeredLocally;
+	private bool _tintApplied;
+	private Color _lastAppliedTint;
 
 	public void SetOwner( Player owner )
 	{
@@ -13,8 +16,20 @@ public sealed class PropCustom : Component, Component.INetworkListener
 		PlayerOwner = owner;
 	}
 
+	public void SetTint( Color tint )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		PropTint = tint;
+		ApplyTint();
+	}
+
 	protected override void OnUpdate()
 	{
+		if ( !_tintApplied || _lastAppliedTint != PropTint )
+			ApplyTint();
+
 		if ( _registeredLocally )
 			return;
 		if ( !PlayerOwner.IsValid() || PlayerOwner.IsProxy )
@@ -22,6 +37,23 @@ public sealed class PropCustom : Component, Component.INetworkListener
 
 		PlayerOwner.RegisterSpawnedProp( this );
 		_registeredLocally = true;
+	}
+
+	protected override void OnDestroy()
+	{
+		PlayerOwner?.UnregisterSpawnedProp( this );
+	}
+
+	private void ApplyTint()
+	{
+		foreach ( var renderer in GameObject.Components.GetAll<ModelRenderer>( FindMode.EverythingInSelfAndDescendants ) )
+		{
+			if ( renderer.IsValid() )
+				renderer.Tint = PropTint;
+		}
+
+		_lastAppliedTint = PropTint;
+		_tintApplied = true;
 	}
 
 	void Component.INetworkListener.OnDisconnected( Connection channel )

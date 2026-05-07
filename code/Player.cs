@@ -2694,6 +2694,14 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _ownedPropSpawnStack.Add( prop );
     }
 
+    public void UnregisterSpawnedProp( PropCustom prop )
+    {
+        if ( !prop.IsValid() )
+            return;
+
+        _ownedPropSpawnStack.RemoveAll( x => !x.IsValid() || x == prop );
+    }
+
     private void TryUndoLastOwnedProp()
     {
         if ( IsProxy )

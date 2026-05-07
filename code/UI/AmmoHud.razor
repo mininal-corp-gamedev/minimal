@@ -1,5 +1,7 @@
 @using Sandbox;
 @using Sandbox.UI;
+@using Minimal.Toolgun;
+@using Minimal.Weapons;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -15,15 +17,20 @@
 @code
 {
 	Weapon CurrentWeapon => Player.Local?.CurrentWeapon;
-	bool ShouldShow => CurrentWeapon != null && CurrentWeapon.UsesAmmunition;
+	bool IsToolgun => CurrentWeapon is WeaponToolgun;
+	bool ShouldShow => CurrentWeapon != null && (CurrentWeapon.UsesAmmunition || IsToolgun);
 	int CurrentAmmo => CurrentWeapon?.Ammo ?? 0;
 	/// <summary>Запас патронов вне магазина (поле <see cref="Weapon.TotalReserveAmmo"/>).</summary>
 	int TotalAmmo => CurrentWeapon?.TotalReserveAmmo ?? 0;
-	string AmmoDisplayText => $"{CurrentAmmo}/{TotalAmmo}";
+	string AmmoDisplayText => IsToolgun
+		? $"Tool: {ToolgunClientState.SelectedToolTitle ?? "None"}"
+		: $"{CurrentAmmo}/{TotalAmmo}";
 
 	protected override int BuildHash() => System.HashCode.Combine(
 		Player.Local?.CurrentWeapon?.GetHashCode() ?? 0,
 		CurrentWeapon?.Ammo ?? 0,
-		CurrentWeapon?.TotalReserveAmmo ?? 0
+		CurrentWeapon?.TotalReserveAmmo ?? 0,
+		ToolgunClientState.SelectedToolId,
+		ToolgunClientState.Version
 	);
 }

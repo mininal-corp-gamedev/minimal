@@ -5,6 +5,7 @@
 @using System.Linq;
 @using System.Text.Json;
 @using System.Threading.Tasks;
+@using Minimal.Toolgun;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -110,15 +111,62 @@
 				</div>
 
 				<div class="tool-strip">
-					<button class="tool-btn @(ActiveTool == 0 ? "active" : "")" onclick=@(() => SelectTool( 0 ))>Rope</button>
-					<button class="tool-btn @(ActiveTool == 1 ? "active" : "")" onclick=@(() => SelectTool( 1 ))>Weld</button>
-					<button class="tool-btn @(ActiveTool == 2 ? "active" : "")" onclick=@(() => SelectTool( 2 ))>Construction</button>
-					<button class="tool-btn @(ActiveTool == 3 ? "active" : "")" onclick=@(() => SelectTool( 3 ))>No Collide</button>
+					@foreach ( var tool in ToolMode.All )
+					{
+						<button class="tool-btn @(IsActiveTool( tool ) ? "active" : "")" onclick=@(() => SelectTool( tool.Id ))>@tool.Title</button>
+					}
 				</div>
 
 				<div class="tool-content" onmouseup=@ClearTextFocus>
-					<div class="tool-title">@GetToolTitle()</div>
-					<div class="tool-text">@GetToolDescription()</div>
+					@if ( GetActiveTool() is null )
+					{
+						<div class="tool-title">Tool</div>
+						<div class="tool-text">Выбери инструмент справа.</div>
+					}
+					else
+					{
+						var activeTool = GetActiveTool();
+						<div class="tool-title">@activeTool.Title</div>
+						<div class="tool-text">@activeTool.Description</div>
+
+						@if ( activeTool.ConfigFields.Count > 0 )
+						{
+							<div class="tool-config">
+								@foreach ( var field in activeTool.ConfigFields )
+								{
+									<div class="tool-config-field">
+										<div class="tool-config-label">@field.Label</div>
+
+										@if ( field.Type == ToolConfigType.Button )
+										{
+											<div class="tool-config-buttons">
+												@foreach ( var option in field.Buttons )
+												{
+													<button class="tool-config-btn @(IsConfigValue( field.Id, option.Value ) ? "active" : "")" onclick=@(() => SetToolConfigValue( field.Id, option.Value ))>
+														@if ( !string.IsNullOrWhiteSpace( option.Swatch ) )
+														{
+															<div class="tool-color-swatch" style=@($"background-color: {option.Swatch};")></div>
+														}
+														<div class="tool-config-btn-label">@option.Label</div>
+													</button>
+												}
+											</div>
+										}
+										else if ( field.Type == ToolConfigType.Bool )
+										{
+											<button class="tool-toggle @(IsConfigValue( field.Id, "true" ) ? "active" : "")" onclick=@(() => ToggleToolBool( field.Id ))>
+												@(IsConfigValue( field.Id, "true" ) ? "Enabled" : "Disabled")
+											</button>
+										}
+										else
+										{
+											<TextEntry class="tool-input" Value="@GetToolConfigValue( field.Id )" Placeholder="@field.Label" OnTextEdited=@( (string text) => SetToolConfigValue( field.Id, text ) ) />
+										}
+									</div>
+								}
+							</div>
+						}
+					}
 				</div>
 			</div>
 		</div>
@@ -131,7 +179,6 @@
 	public static PropsMenu Instance { get; private set; }
 
 	bool IsOpen { get; set; } = false;
-	int ActiveTool { get; set; } = 0;
 	List<PropDefinition> AvailableProps { get; set; } = new();
 	List<string> AvailableCategories { get; set; } = new();
 	Dictionary<string, string> ThumbUrls { get; set; } = new();
@@ -221,10 +268,44 @@
 		SelectedCategory = null;
 	}
 
-	private void SelectTool( int tool )
+	private void SelectTool( string toolId )
 	{
 		ClearTextFocus();
-		ActiveTool = tool;
+		ToolgunClientState.SelectTool( toolId );
+
+		var tool = ToolMode.Get( toolId );
+		if ( tool is ColorTool && string.IsNullOrWhiteSpace( ToolgunClientState.GetConfigValue( ColorTool.ColorConfigKey ) ) )
+			ToolgunClientState.SetConfigValue( ColorTool.ColorConfigKey, "white" );
+	}
+
+	private ToolMode GetActiveTool()
+	{
+		return ToolgunClientState.SelectedTool;
+	}
+
+	private bool IsActiveTool( ToolMode tool )
+	{
+		return tool is not null && string.Equals( ToolgunClientState.SelectedToolId, tool.Id, StringComparison.Ordinal );
+	}
+
+	private string GetToolConfigValue( string key )
+	{
+		return ToolgunClientState.GetConfigValue( key ) ?? string.Empty;
+	}
+
+	private bool IsConfigValue( string key, string value )
+	{
+		return string.Equals( ToolgunClientState.GetConfigValue( key ), value, StringComparison.OrdinalIgnoreCase );
+	}
+
+	private void SetToolConfigValue( string key, string value )
+	{
+		ToolgunClientState.SetConfigValue( key, value );
+	}
+
+	private void ToggleToolBool( string key )
+	{
+		ToolgunClientState.SetConfigValue( key, IsConfigValue( key, "true" ) ? "false" : "true" );
 	}
 
 	private void ClearTextFocus()
@@ -441,30 +522,6 @@
 	private static string GetFavoriteId( PropDefinition prop )
 	{
 		return (prop?.Id ?? string.Empty).Trim();
-	}
-
-	private string GetToolTitle()
-	{
-		return ActiveTool switch
-		{
-			0 => "Rope",
-			1 => "Weld",
-			2 => "Construction",
-			3 => "No Collide",
-			_ => "Tool"
-		};
-	}
-
-	private string GetToolDescription()
-	{
-		return ActiveTool switch
-		{
-			0 => "A rope constraint between two objects.",
-			1 => "Locks two props together.",
-			2 => "Build helpers for spawned props.",
-			3 => "Disables collisions between selected props.",
-			_ => "Select a tool."
-		};
 	}
 
 	[Rpc.Host]
@@ -890,7 +947,8 @@
 		var hash = new HashCode();
 		hash.Add( IsOpen );
 		hash.Add( UiModalManager.Version );
-		hash.Add( ActiveTool );
+		hash.Add( ToolgunClientState.SelectedToolId );
+		hash.Add( ToolgunClientState.Version );
 		hash.Add( AvailableProps.Count );
 		hash.Add( AvailableCategories.Count );
 		hash.Add( SelectedCategory );

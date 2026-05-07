@@ -2603,7 +2603,49 @@
           "__version": 2,
           "__Prefab": "prefabs/doors/door mayor.prefab",
           "__PrefabInstancePatch": {
-            "AddedObjects": [],
+            "AddedObjects": [
+              {
+                "Id": {
+                  "Type": "Component",
+                  "IdValue": "93b09de0-42ce-4c80-96b0-ddc281caa830"
+                },
+                "Parent": {
+                  "Type": "GameObject",
+                  "IdValue": "802dbe9f-eb25-433d-99b3-5afd7867de4c"
+                },
+                "PreviousElement": {
+                  "Type": "Component",
+                  "IdValue": "96011bd9-8a58-4fb6-96f5-0c39259f2afb"
+                },
+                "ContainerProperty": "Components",
+                "IsContainerArray": true,
+                "Data": {
+                  "__type": "Sandbox.ModelCollider",
+                  "__guid": "93b09de0-42ce-4c80-96b0-ddc281caa830",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "ColliderFlags": 0,
+                  "Elasticity": null,
+                  "Friction": null,
+                  "IsTrigger": false,
+                  "Model": "models/doors/door_2.vmdl",
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "OnObjectTriggerEnter": null,
+                  "OnObjectTriggerExit": null,
+                  "OnTriggerEnter": null,
+                  "OnTriggerExit": null,
+                  "RollingResistance": null,
+                  "Static": true,
+                  "Surface": null,
+                  "SurfaceVelocity": "0,0,0"
+                }
+              }
+            ],
             "RemovedObjects": [],
             "PropertyOverrides": [
               {
@@ -2644,7 +2686,49 @@
           "__version": 2,
           "__Prefab": "prefabs/doors/door police.prefab",
           "__PrefabInstancePatch": {
-            "AddedObjects": [],
+            "AddedObjects": [
+              {
+                "Id": {
+                  "Type": "Component",
+                  "IdValue": "363778a8-f3a7-494e-95cb-48a530411cf2"
+                },
+                "Parent": {
+                  "Type": "GameObject",
+                  "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
+                },
+                "PreviousElement": {
+                  "Type": "Component",
+                  "IdValue": "f37232ae-e673-4a78-82f3-0030fe735d06"
+                },
+                "ContainerProperty": "Components",
+                "IsContainerArray": true,
+                "Data": {
+                  "__type": "Sandbox.ModelCollider",
+                  "__guid": "363778a8-f3a7-494e-95cb-48a530411cf2",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "ColliderFlags": 0,
+                  "Elasticity": null,
+                  "Friction": null,
+                  "IsTrigger": false,
+                  "Model": "models/doors/door_1.vmdl",
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "OnObjectTriggerEnter": null,
+                  "OnObjectTriggerExit": null,
+                  "OnTriggerEnter": null,
+                  "OnTriggerExit": null,
+                  "RollingResistance": null,
+                  "Static": true,
+                  "Surface": null,
+                  "SurfaceVelocity": "0,0,0"
+                }
+              }
+            ],
             "RemovedObjects": [],
             "PropertyOverrides": [
               {
@@ -2662,22 +2746,6 @@
                 },
                 "Property": "Rotation",
                 "Value": "0,0,0,1"
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
-                },
-                "Property": "BuySound",
-                "Value": null
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
-                },
-                "Property": "SellSound",
-                "Value": null
               }
             ],
             "MovedObjects": []
@@ -2733,14 +2801,6 @@
                   "Type": "Component",
                   "IdValue": "cd91b72e-f09b-4054-a36a-4acfbad541b8"
                 },
-                "Property": "BuySound",
-                "Value": null
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "cd91b72e-f09b-4054-a36a-4acfbad541b8"
-                },
                 "Property": "SellSound",
                 "Value": null
               }
@@ -2760,7 +2820,8 @@
             "02ff4d3d-3450-4f81-913b-4018196ee1c5": "0ef22ba6-03c7-420a-87d3-fc6ababee2d2",
             "1c4bd146-6513-4af3-88e2-f4bfb85a28ef": "94a2ef6c-c280-4087-8c07-2fd09c40a203",
             "21a3d70c-6b29-40b2-b413-03af61a591f4": "c136caea-68bd-4ed2-bf17-de6a494e8d1c",
-            "396e6d04-6a32-477d-8566-d6311f6f9cd2": "04cfd95c-f8df-4d2c-8409-1ab22e421204"
+            "396e6d04-6a32-477d-8566-d6311f6f9cd2": "04cfd95c-f8df-4d2c-8409-1ab22e421204",
+            "b7b3cfd2-19a2-4547-b09c-b726d69e3aed": "5c25f951-419d-48b7-9291-66ddf396cc35"
           }
         },
         {
@@ -2801,7 +2862,8 @@
             "5797e9a2-e09e-4a8e-ba02-193c80781a75": "40503fbf-d214-4b0e-8c0e-4574a86cef82",
             "ac27dd06-c4ae-4cb4-a971-a8e28f228d61": "f1a079ce-4d87-404d-98f2-d1ec9264c598",
             "db61d807-86da-4a55-852b-493e6fb8e487": "3a011d12-63f9-4191-a62e-55334ea2a81e",
-            "9fc3b3b9-d9a1-43d1-a1a1-cd10357aa7a1": "5b831e43-19bb-42ca-83c5-c7062e8938d8"
+            "9fc3b3b9-d9a1-43d1-a1a1-cd10357aa7a1": "5b831e43-19bb-42ca-83c5-c7062e8938d8",
+            "77c63f31-4921-4995-9de2-9dd4e3ab1fb1": "2059a22e-f07c-4265-a3d9-b70c0055bfe0"
           }
         },
         {
@@ -2809,7 +2871,49 @@
           "__version": 2,
           "__Prefab": "prefabs/doors/door tier 3.prefab",
           "__PrefabInstancePatch": {
-            "AddedObjects": [],
+            "AddedObjects": [
+              {
+                "Id": {
+                  "Type": "Component",
+                  "IdValue": "50a17b0f-7693-43af-89a0-989d399114bd"
+                },
+                "Parent": {
+                  "Type": "GameObject",
+                  "IdValue": "fe0e7bcb-7c0b-4124-9d3e-bcc7b6bbbc0f"
+                },
+                "PreviousElement": {
+                  "Type": "Component",
+                  "IdValue": "6c11413f-ff9e-49e1-bf77-f35ebc2183f9"
+                },
+                "ContainerProperty": "Components",
+                "IsContainerArray": true,
+                "Data": {
+                  "__type": "Sandbox.ModelCollider",
+                  "__guid": "50a17b0f-7693-43af-89a0-989d399114bd",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "ColliderFlags": 0,
+                  "Elasticity": null,
+                  "Friction": null,
+                  "IsTrigger": false,
+                  "Model": "models/doors/door_2.vmdl",
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "OnObjectTriggerEnter": null,
+                  "OnObjectTriggerExit": null,
+                  "OnTriggerEnter": null,
+                  "OnTriggerExit": null,
+                  "RollingResistance": null,
+                  "Static": true,
+                  "Surface": null,
+                  "SurfaceVelocity": "0,0,0"
+                }
+              }
+            ],
             "RemovedObjects": [],
             "PropertyOverrides": [
               {
@@ -2829,7 +2933,24 @@
                 "Value": "0,0,0,1"
               }
             ],
-            "MovedObjects": []
+            "MovedObjects": [
+              {
+                "Id": {
+                  "Type": "Component",
+                  "IdValue": "2709b09f-2cf4-4eb6-a4c9-d4d99a502d97"
+                },
+                "NewParent": {
+                  "Type": "GameObject",
+                  "IdValue": "fe0e7bcb-7c0b-4124-9d3e-bcc7b6bbbc0f"
+                },
+                "NewContainerProperty": "Components",
+                "IsNewContainerArray": true,
+                "NewPreviousElement": {
+                  "Type": "Component",
+                  "IdValue": "50a17b0f-7693-43af-89a0-989d399114bd"
+                }
+              }
+            ]
           },
           "__PrefabIdToInstanceId": {
             "fe0e7bcb-7c0b-4124-9d3e-bcc7b6bbbc0f": "864b91b3-31fa-4c8c-89cc-2378daa7cce6",
@@ -2842,7 +2963,8 @@
             "9ef62514-d8ab-4c80-aed6-35cf631af4f4": "0982a53b-0352-44dc-9b49-4f80654af750",
             "8359c0a2-8390-4271-aca1-027a9744d0e1": "96c3bf29-aff5-4270-996c-d611f31989e8",
             "1e2f2dcf-206c-49f6-af0b-4ef3e7e16c4f": "9c159029-829d-488a-bb5f-6772458efcde",
-            "6c11413f-ff9e-49e1-bf77-f35ebc2183f9": "55652232-4c68-4457-9367-4e4788495fbb"
+            "6c11413f-ff9e-49e1-bf77-f35ebc2183f9": "55652232-4c68-4457-9367-4e4788495fbb",
+            "2709b09f-2cf4-4eb6-a4c9-d4d99a502d97": "943c25a5-202d-41f8-9d3f-a516435d8f9c"
           }
         },
         {
@@ -2875,7 +2997,8 @@
             "a9999f53-d989-42ab-880a-d8ef082dd586": "8033a0a6-422f-4fa4-a7de-d0c18c83fa0c",
             "2528e6fc-b58c-4609-ae91-e9ddc55255b7": "9fd27906-054f-4c37-b203-7d71e784f3c9",
             "d99805fe-be5f-4d5f-a083-68b4aa53a66e": "6f6386b0-2371-41b5-9dd0-e74078b0f42d",
-            "7d024e49-08dc-4789-b4bc-4e5866cf7e67": "44aa4a39-f07f-4502-afb1-928e70459600"
+            "7d024e49-08dc-4789-b4bc-4e5866cf7e67": "44aa4a39-f07f-4502-afb1-928e70459600",
+            "8851298a-2b64-426a-9531-e596616c4b38": "f09f37f5-e6a3-41a8-a140-957db9ca6fa4"
           }
         },
         {
@@ -3132,7 +3255,49 @@
           "__version": 2,
           "__Prefab": "prefabs/doors/door city2.prefab",
           "__PrefabInstancePatch": {
-            "AddedObjects": [],
+            "AddedObjects": [
+              {
+                "Id": {
+                  "Type": "Component",
+                  "IdValue": "e5d9c318-3f80-4602-bc24-1dc9fb399a88"
+                },
+                "Parent": {
+                  "Type": "GameObject",
+                  "IdValue": "55b1f4a3-b210-4433-ba15-67a1b1ed54ac"
+                },
+                "PreviousElement": {
+                  "Type": "Component",
+                  "IdValue": "a570f4f8-df9c-459b-9e90-2d8c4bc2e3ac"
+                },
+                "ContainerProperty": "Components",
+                "IsContainerArray": true,
+                "Data": {
+                  "__type": "Sandbox.ModelCollider",
+                  "__guid": "e5d9c318-3f80-4602-bc24-1dc9fb399a88",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "ColliderFlags": 0,
+                  "Elasticity": null,
+                  "Friction": null,
+                  "IsTrigger": false,
+                  "Model": "models/doors/door_2_window_b.vmdl",
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "OnObjectTriggerEnter": null,
+                  "OnObjectTriggerExit": null,
+                  "OnTriggerEnter": null,
+                  "OnTriggerExit": null,
+                  "RollingResistance": null,
+                  "Static": true,
+                  "Surface": null,
+                  "SurfaceVelocity": "0,0,0"
+                }
+              }
+            ],
             "RemovedObjects": [],
             "PropertyOverrides": [
               {
@@ -3150,22 +3315,6 @@
                 },
                 "Property": "Rotation",
                 "Value": "0,0,-2.98023224E-08,1"
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "6915d782-6ff4-40e8-a67c-35c996879604"
-                },
-                "Property": "BuySound",
-                "Value": null
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "6915d782-6ff4-40e8-a67c-35c996879604"
-                },
-                "Property": "SellSound",
-                "Value": null
               }
             ],
             "MovedObjects": []
@@ -3191,7 +3340,49 @@
           "__version": 2,
           "__Prefab": "prefabs/doors/door city.prefab",
           "__PrefabInstancePatch": {
-            "AddedObjects": [],
+            "AddedObjects": [
+              {
+                "Id": {
+                  "Type": "Component",
+                  "IdValue": "b85e3c5d-5684-4cd7-8032-68dc8a846196"
+                },
+                "Parent": {
+                  "Type": "GameObject",
+                  "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
+                },
+                "PreviousElement": {
+                  "Type": "Component",
+                  "IdValue": "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8"
+                },
+                "ContainerProperty": "Components",
+                "IsContainerArray": true,
+                "Data": {
+                  "__type": "Sandbox.ModelCollider",
+                  "__guid": "b85e3c5d-5684-4cd7-8032-68dc8a846196",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "ColliderFlags": 0,
+                  "Elasticity": null,
+                  "Friction": null,
+                  "IsTrigger": false,
+                  "Model": "models/doors/door_2_window_b.vmdl",
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "OnObjectTriggerEnter": null,
+                  "OnObjectTriggerExit": null,
+                  "OnTriggerEnter": null,
+                  "OnTriggerExit": null,
+                  "RollingResistance": null,
+                  "Static": true,
+                  "Surface": null,
+                  "SurfaceVelocity": "0,0,0"
+                }
+              }
+            ],
             "RemovedObjects": [],
             "PropertyOverrides": [
               {
@@ -3209,22 +3400,6 @@
                 },
                 "Property": "Rotation",
                 "Value": "0,0,-2.98023224E-08,1"
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
-                },
-                "Property": "BuySound",
-                "Value": null
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
-                },
-                "Property": "SellSound",
-                "Value": null
               }
             ],
             "MovedObjects": []
@@ -3250,7 +3425,49 @@
           "__version": 2,
           "__Prefab": "prefabs/doors/door police 2.prefab",
           "__PrefabInstancePatch": {
-            "AddedObjects": [],
+            "AddedObjects": [
+              {
+                "Id": {
+                  "Type": "Component",
+                  "IdValue": "eeda6e65-982d-4971-8010-a0c6fa4b9f99"
+                },
+                "Parent": {
+                  "Type": "GameObject",
+                  "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                },
+                "PreviousElement": {
+                  "Type": "Component",
+                  "IdValue": "6675ebfa-8b69-4d2d-84ee-2bd4346a9d67"
+                },
+                "ContainerProperty": "Components",
+                "IsContainerArray": true,
+                "Data": {
+                  "__type": "Sandbox.ModelCollider",
+                  "__guid": "eeda6e65-982d-4971-8010-a0c6fa4b9f99",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "ColliderFlags": 0,
+                  "Elasticity": null,
+                  "Friction": null,
+                  "IsTrigger": false,
+                  "Model": "models/doors/door_2_window_a.vmdl",
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "OnObjectTriggerEnter": null,
+                  "OnObjectTriggerExit": null,
+                  "OnTriggerEnter": null,
+                  "OnTriggerExit": null,
+                  "RollingResistance": null,
+                  "Static": false,
+                  "Surface": null,
+                  "SurfaceVelocity": "0,0,0"
+                }
+              }
+            ],
             "RemovedObjects": [],
             "PropertyOverrides": [
               {
@@ -3302,7 +3519,49 @@
           "__version": 2,
           "__Prefab": "prefabs/doors/door police 2.prefab",
           "__PrefabInstancePatch": {
-            "AddedObjects": [],
+            "AddedObjects": [
+              {
+                "Id": {
+                  "Type": "Component",
+                  "IdValue": "6c8369ad-6a34-428b-bd86-77409b35f1ef"
+                },
+                "Parent": {
+                  "Type": "GameObject",
+                  "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                },
+                "PreviousElement": {
+                  "Type": "Component",
+                  "IdValue": "6675ebfa-8b69-4d2d-84ee-2bd4346a9d67"
+                },
+                "ContainerProperty": "Components",
+                "IsContainerArray": true,
+                "Data": {
+                  "__type": "Sandbox.ModelCollider",
+                  "__guid": "6c8369ad-6a34-428b-bd86-77409b35f1ef",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "ColliderFlags": 0,
+                  "Elasticity": null,
+                  "Friction": null,
+                  "IsTrigger": false,
+                  "Model": "models/doors/door_2_window_a.vmdl",
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null,
+                  "OnObjectTriggerEnter": null,
+                  "OnObjectTriggerExit": null,
+                  "OnTriggerEnter": null,
+                  "OnTriggerExit": null,
+                  "RollingResistance": null,
+                  "Static": false,
+                  "Surface": null,
+                  "SurfaceVelocity": "0,0,0"
+                }
+              }
+            ],
             "RemovedObjects": [],
             "PropertyOverrides": [
               {
@@ -3372,14 +3631,6 @@
                 },
                 "Property": "BuySound",
                 "Value": null
-              },
-              {
-                "Target": {
-                  "Type": "Component",
-                  "IdValue": "2f08dd7a-cdcf-4965-953b-c11116e3a11e"
-                },
-                "Property": "SellSound",
-                "Value": null
               }
             ],
             "MovedObjects": []
@@ -3397,7 +3648,8 @@
             "2d4e4dfc-f5c2-40f4-9d72-a2cbf35d35e8": "36d1e613-1b6d-477a-9534-bafdcfde4ad9",
             "0a7d5ba5-0f91-4d0e-8f05-0bb49ac9ae00": "8fdea4d5-6837-45ea-a9e0-29f669daf7b8",
             "85370d32-33ab-4300-9078-715a7b72e52e": "f77df33e-c4e4-4c2e-bcce-4ed26058d8cd",
-            "7f6dea42-98c3-4789-aef0-3c7abb130dab": "c989838e-1c87-496d-8f77-ca6c5d746b63"
+            "7f6dea42-98c3-4789-aef0-3c7abb130dab": "c989838e-1c87-496d-8f77-ca6c5d746b63",
+            "2121dcdb-6222-4a08-92b0-5ce8147174c4": "24764e7b-3dac-415d-bcf8-53116434293b"
           }
         }
       ]
@@ -3444,6 +3696,9 @@
   "Title": "dev",
   "Description": null,
   "__references": [
+    "gkaf.door_1#26044",
+    "gkaf.door_2_window_a#26046",
+    "gkaf.door_2_window_b#26047",
     "gkaf.door_2#26045",
     "keepitdev.dor#150914",
     "pcjr.printer#38720",

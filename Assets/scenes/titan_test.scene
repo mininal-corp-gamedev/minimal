@@ -273,7 +273,8 @@
         "0e51fb74-dbd4-4105-a215-507127aadb8a": "6f414082-6b4f-4b56-aa57-76accc1f112e",
         "15a823ff-f95a-440f-bfa6-a779a4f674fe": "23a08478-99bd-46f1-9f40-87fab2f8d147",
         "f8fdb7de-52f0-45c7-afcf-c4aa9055dae5": "eaf8f839-0cd1-4a14-b6bf-c96af7519544",
-        "38a38e67-23cb-4b18-aaf1-3b16a4c5ed93": "87350aff-4216-4983-b686-aa47a8db1952"
+        "38a38e67-23cb-4b18-aaf1-3b16a4c5ed93": "87350aff-4216-4983-b686-aa47a8db1952",
+        "a8a62c56-48f9-47cc-83f2-76a57f9ae300": "12572aa3-268d-417e-a8ba-f42ceacd47a7"
       }
     },
     {
@@ -1668,6 +1669,54 @@
         }
       ],
       "Children": []
+    },
+    {
+      "__guid": "0b3667ad-f0ec-409b-bf26-7f86608e2d74",
+      "__version": 2,
+      "__Prefab": "prefabs/atm.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "b6148c88-eb95-4f48-832e-ce6a4783a68c"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "f65a94c5-8917-4a8b-a3a0-919ac7f45b6d"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "68d7d38c-182a-4270-828e-2d78d27e904f"
+            }
+          }
+        ],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ecc69083-ca0f-4808-a855-d82fb01309fb"
+            },
+            "Property": "Position",
+            "Value": "69.2905045,358.479797,16.5522976"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "ecc69083-ca0f-4808-a855-d82fb01309fb": "0b3667ad-f0ec-409b-bf26-7f86608e2d74",
+        "0d9d4269-cf23-4faf-91dc-3f4d8962015d": "8fc64076-1e84-4b81-a6f8-2478b16bade2",
+        "d3054d77-6460-4ad8-8737-b65e6b00dd54": "161140a2-f8ee-4f85-a166-ca164e7bb28e",
+        "cac5b277-2370-4b92-aae4-740f0b9bbc5e": "85a54c30-cd07-45c3-985b-2412584e24d4",
+        "b6148c88-eb95-4f48-832e-ce6a4783a68c": "7794f9b5-3805-4b71-b1a8-65beb6241cf3",
+        "f65a94c5-8917-4a8b-a3a0-919ac7f45b6d": "3fba74d5-8c5f-4ddd-abba-8518c974a1f9",
+        "68d7d38c-182a-4270-828e-2d78d27e904f": "49ac6b72-f6f4-4bd7-afb0-cebfd6f49646"
+      }
     }
   ],
   "SceneProperties": {
@@ -1692,14 +1741,14 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
-        }
-      },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "4c8d8be3-9b2a-45ca-a21b-eaa302af4bec"
+        }
+      },
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       },
       "Sandbox.MovieMaker.MovieRecorderSystem": {

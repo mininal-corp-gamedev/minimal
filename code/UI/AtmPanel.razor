@@ -1,0 +1,214 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
+	{
+		<div class="atm-overlay">
+			<div class="atm-dialog">
+
+				<div class="atm-titlebar">
+					<div class="atm-title">БАНКОМАТ</div>
+					<button class="close-btn" onclick=@Close>✕</button>
+				</div>
+
+				<div class="atm-content">
+					<div class="col-left">
+						<div class="player-name">@PlayerName</div>
+
+						<div class="balances">
+							<div class="balance-card">
+								<div class="balance-label">НАЛИЧНЫЕ</div>
+								<div class="balance-value">$@CashMoney</div>
+							</div>
+							<div class="balance-card accent">
+								<div class="balance-label">СЧЁТ</div>
+								<div class="balance-value">$@AtmMoney</div>
+							</div>
+						</div>
+
+						<div class="input-row">
+							<div class="input-display">@(string.IsNullOrEmpty( _inputStr ) ? "0" : _inputStr)</div>
+							<button class="clear-btn" onclick=@ClearInput>C</button>
+						</div>
+
+						<div class="quick-add-row">
+							<button class="quick-btn" onclick=@(() => AddAmount( 1 ))>+1</button>
+							<button class="quick-btn" onclick=@(() => AddAmount( 10 ))>+10</button>
+							<button class="quick-btn" onclick=@(() => AddAmount( 100 ))>+100</button>
+							<button class="quick-btn" onclick=@(() => AddAmount( 1000 ))>+1K</button>
+							<button class="quick-btn" onclick=@(() => AddAmount( 10000 ))>+10K</button>
+						</div>
+
+						<div class="action-col">
+							<button class="action-btn deposit-btn" onclick=@OnDeposit>ВНЕСТИ</button>
+							<button class="action-btn withdraw-btn" onclick=@OnWithdraw>СНЯТЬ</button>
+						</div>
+					</div>
+
+					<div class="col-right">
+						<div class="numpad-row">
+							<button class="num-btn" onclick=@(() => AppendDigit( "7" ))>7</button>
+							<button class="num-btn" onclick=@(() => AppendDigit( "8" ))>8</button>
+							<button class="num-btn" onclick=@(() => AppendDigit( "9" ))>9</button>
+						</div>
+						<div class="numpad-row">
+							<button class="num-btn" onclick=@(() => AppendDigit( "4" ))>4</button>
+							<button class="num-btn" onclick=@(() => AppendDigit( "5" ))>5</button>
+							<button class="num-btn" onclick=@(() => AppendDigit( "6" ))>6</button>
+						</div>
+						<div class="numpad-row">
+							<button class="num-btn" onclick=@(() => AppendDigit( "1" ))>1</button>
+							<button class="num-btn" onclick=@(() => AppendDigit( "2" ))>2</button>
+							<button class="num-btn" onclick=@(() => AppendDigit( "3" ))>3</button>
+						</div>
+						<div class="numpad-row">
+							<button class="num-btn" onclick=@(() => AppendDigit( "0" ))>0</button>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	private const string ModalId = nameof( AtmPanel );
+	public static AtmPanel Instance { get; private set; }
+	private static Atm _currentAtm;
+
+	private bool IsOpen { get; set; }
+	private string _inputStr = "";
+
+	string PlayerName => Player.Local?.GameObject.Network.Owner?.DisplayName ?? "—";
+	int CashMoney => Player.Local?.Money ?? 0;
+	int AtmMoney => Player.Local?.MoneyAtm ?? 0;
+
+	public static void Open( Atm atm )
+	{
+		_currentAtm = atm;
+		EnsureInstance();
+		Instance?.OpenInternal();
+	}
+
+	private static void EnsureInstance()
+	{
+		if ( Instance.IsValid() ) return;
+		var scene = Game.ActiveScene;
+		if ( scene is null ) return;
+		var go = scene.CreateObject();
+		go.Name = "AtmPanel";
+		go.Components.Create<AtmPanel>();
+	}
+
+	private void OpenInternal()
+	{
+		_inputStr = "";
+		SetOpen( true );
+	}
+
+	private void Close()
+	{
+		SetOpen( false );
+	}
+
+	private void SetOpen( bool open )
+	{
+		if ( open )
+			UiModalManager.Open( ModalId );
+		else
+			UiModalManager.Close( ModalId );
+
+		IsOpen = open;
+		Crosshair.SetBlocked( ModalId, open );
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void AppendDigit( string digit )
+	{
+		if ( _inputStr.Length >= 9 ) return;
+		if ( _inputStr == "0" ) _inputStr = "";
+		_inputStr += digit;
+		StateHasChanged();
+	}
+
+	private void AddAmount( int amount )
+	{
+		var current = string.IsNullOrEmpty( _inputStr ) ? 0 : (int.TryParse( _inputStr, out var v ) ? v : 0);
+		var next = current + amount;
+		if ( next < 0 ) next = 0;
+		_inputStr = next.ToString();
+		if ( _inputStr.Length > 9 ) _inputStr = _inputStr.Substring( 0, 9 );
+		StateHasChanged();
+	}
+
+	private void ClearInput()
+	{
+		_inputStr = "";
+		StateHasChanged();
+	}
+
+	private int GetInputAmount() =>
+		string.IsNullOrEmpty( _inputStr ) ? 0 : (int.TryParse( _inputStr, out var v ) ? v : 0);
+
+	private void OnDeposit()
+	{
+		var amount = GetInputAmount();
+		_currentAtm?.RequestDeposit( amount );
+		ClearInput();
+	}
+
+	private void OnWithdraw()
+	{
+		var amount = GetInputAmount();
+		_currentAtm?.RequestWithdraw( amount );
+		ClearInput();
+	}
+
+	protected override void OnStart()
+	{
+		if ( Instance.IsValid() && Instance != this )
+		{
+			GameObject.Destroy();
+			return;
+		}
+		Instance = this;
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
+	}
+
+	protected override void OnDestroy()
+	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
+		ReleaseCrosshairBlock();
+		if ( Instance == this ) Instance = null;
+	}
+
+	protected override void OnDisabled()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	private void ReleaseCrosshairBlock()
+	{
+		IsOpen = false;
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen ) return;
+		IsOpen = false;
+		_inputStr = "";
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
+	}
+
+	protected override int BuildHash() => HashCode.Combine( IsOpen, UiModalManager.Version, _inputStr, CashMoney, AtmMoney );
+}

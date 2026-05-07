@@ -1,0 +1,257 @@
+AtmPanel {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	pointer-events: none;
+
+	.atm-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba(0, 0, 0, 0.52);
+		backdrop-filter: blur(6px) saturate(70%);
+		pointer-events: all;
+	}
+
+	.atm-dialog {
+		width: 520px;
+		flex-direction: column;
+		background-color: rgba(5, 8, 20, 0.97);
+		border: 1px solid rgba(255, 67, 108, 0.30);
+		border-radius: 12px;
+		overflow: hidden;
+		box-shadow: 0 24px 80px rgba(0, 0, 0, 0.70);
+	}
+
+	.atm-titlebar {
+		height: 48px;
+		flex-shrink: 0;
+		flex-direction: row;
+		align-items: center;
+		padding: 0 14px;
+		background-color: #03050e;
+		border-bottom: 1px solid rgba(255, 67, 108, 0.22);
+	}
+
+	.atm-title {
+		flex-grow: 1;
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 800;
+		color: #ff436c;
+		letter-spacing: 5px;
+	}
+
+	.close-btn {
+		width: 30px;
+		height: 30px;
+		flex-shrink: 0;
+		border-radius: 6px;
+		background-color: rgba(255, 255, 255, 0.07);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		font-size: 13px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.60);
+		justify-content: center;
+		align-items: center;
+
+		&:hover {
+			background-color: rgba(255, 67, 108, 0.25);
+			color: #ffd7e2;
+		}
+	}
+
+	.atm-content {
+		flex-direction: row;
+		padding: 14px;
+		gap: 12px;
+		height: 320px;
+	}
+
+	.col-left {
+		width: 232px;
+		flex-shrink: 0;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.col-right {
+		width: 240px;
+		flex-shrink: 0;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.player-name {
+		height: 22px;
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.92);
+		justify-content: center;
+		align-items: center;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.balances {
+		flex-direction: row;
+		gap: 8px;
+	}
+
+	.balance-card {
+		flex-grow: 1;
+		flex-direction: column;
+		background-color: rgba(255, 255, 255, 0.04);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 8px;
+		padding: 8px 10px;
+		gap: 2px;
+
+		&.accent {
+			border-color: rgba(255, 67, 108, 0.38);
+			background-color: rgba(255, 67, 108, 0.08);
+		}
+	}
+
+	.balance-label {
+		font-family: Poppins;
+		font-size: 9px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.50);
+		text-transform: uppercase;
+		letter-spacing: 1px;
+	}
+
+	.balance-value {
+		font-family: Poppins;
+		font-size: 20px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.92);
+	}
+
+	.input-row {
+		flex-direction: row;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.input-display {
+		flex-grow: 1;
+		height: 44px;
+		background-color: rgba(0, 0, 0, 0.45);
+		border: 1px solid rgba(255, 255, 255, 0.11);
+		border-radius: 8px;
+		padding: 0 12px;
+		font-family: Poppins;
+		font-size: 22px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.92);
+		justify-content: flex-end;
+		align-items: center;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+
+	.clear-btn {
+		width: 44px;
+		height: 44px;
+		flex-shrink: 0;
+		border-radius: 8px;
+		background-color: rgba(255, 67, 108, 0.16);
+		border: 1px solid rgba(255, 67, 108, 0.42);
+		font-family: Poppins;
+		font-size: 16px;
+		font-weight: 800;
+		color: #ffd7e2;
+		justify-content: center;
+		align-items: center;
+
+		&:hover { background-color: rgba(255, 67, 108, 0.28); }
+	}
+
+	.quick-add-row {
+		flex-direction: row;
+		gap: 5px;
+	}
+
+	.quick-btn {
+		flex-grow: 1;
+		height: 30px;
+		border-radius: 6px;
+		background-color: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.09);
+		font-family: Poppins;
+		font-size: 11px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.55);
+		justify-content: center;
+		align-items: center;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.10);
+			color: rgba(255, 255, 255, 0.92);
+		}
+	}
+
+	.action-col {
+		flex-grow: 1;
+		flex-direction: column;
+		gap: 8px;
+	}
+
+	.action-btn {
+		flex-grow: 1;
+		border-radius: 8px;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 800;
+		letter-spacing: 1px;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.deposit-btn {
+		background-color: rgba(255, 67, 108, 0.20);
+		border: 1px solid rgba(255, 67, 108, 0.52);
+		color: #ffd7e2;
+
+		&:hover { background-color: rgba(255, 67, 108, 0.34); }
+	}
+
+	.withdraw-btn {
+		background-color: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		color: rgba(255, 255, 255, 0.92);
+
+		&:hover { background-color: rgba(255, 255, 255, 0.11); }
+	}
+
+	.numpad-row {
+		flex-grow: 1;
+		flex-direction: row;
+		gap: 6px;
+	}
+
+	.num-btn {
+		flex-grow: 1;
+		border-radius: 8px;
+		background-color: rgba(255, 255, 255, 0.07);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		font-family: Poppins;
+		font-size: 22px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.92);
+		justify-content: center;
+		align-items: center;
+
+		&:hover { background-color: rgba(255, 255, 255, 0.14); }
+	}
+}

@@ -78,6 +78,20 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
     }
 
+    private int _moneyAtm;
+    [Sync(SyncFlags.FromHost)]
+    public int MoneyAtm
+    {
+        get => _moneyAtm;
+        set
+        {
+            if (_moneyAtm == value) return;
+            _moneyAtm = value;
+            if (Networking.IsHost && _saveInitialized)
+                SavePlayerData();
+        }
+    }
+
     [Sync(SyncFlags.FromHost)] public int AdminRank { get; set; } = 0;
 
     /// <summary>Арестован ли игрок. Меняется только хостом.</summary>
@@ -218,6 +232,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         [JsonPropertyName( "steamId" )] public long SteamId { get; set; }
         [JsonPropertyName( "money" )] public int Money { get; set; }
+        [JsonPropertyName( "moneyAtm" )] public int MoneyAtm { get; set; }
     }
 
     public void Spawn()
@@ -1608,7 +1623,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             data = new PlayerSaveData
             {
                 SteamId = steamId,
-                Money = DefaultStartingMoney
+                Money = DefaultStartingMoney,
+                MoneyAtm = 0
             };
         }
 
@@ -1620,6 +1636,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         // напрямую не уведомляла клиентов, из-за чего Hud не показывал
         // загруженное значение после инициализации.
         Money = data.Money;
+        MoneyAtm = data.MoneyAtm;
 
         // Гарантируем файл на диске даже если значение совпало с дефолтом
         // (тогда сеттер не вызвал бы SavePlayerData).
@@ -1693,7 +1710,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             var data = new PlayerSaveData
             {
                 SteamId = steamId,
-                Money = _money
+                Money = _money,
+                MoneyAtm = _moneyAtm
             };
             FileSystem.Data.WriteJson( GetPlayerSavePath( steamId ), data );
         }

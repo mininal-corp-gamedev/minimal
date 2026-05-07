@@ -472,4 +472,98 @@ PropsMenu {
 		margin-bottom: 18px;
 	}
 
+	.tool-config {
+		flex-direction: column;
+	}
+
+	.tool-config-field {
+		flex-direction: column;
+		margin-bottom: 16px;
+	}
+
+	.tool-config-label {
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.74);
+		margin-bottom: 8px;
+	}
+
+	.tool-config-buttons {
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.tool-config-btn {
+		width: 118px;
+		height: 34px;
+		flex-shrink: 0;
+		flex-direction: row;
+		align-items: center;
+		padding-left: 8px;
+		padding-right: 8px;
+		background-color: rgba(255, 255, 255, 0.045);
+		border: 1px solid rgba(255, 255, 255, 0.10);
+		border-radius: 8px;
+		font-family: Poppins;
+		font-size: 11px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.68);
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.07);
+			color: rgba(255, 255, 255, 0.90);
+		}
+
+		&.active {
+			background-color: rgba(255, 67, 108, 0.18);
+			border-color: rgba(255, 67, 108, 0.66);
+			color: $pm-accent-light;
+		}
+	}
+
+	.tool-color-swatch {
+		width: 16px;
+		height: 16px;
+		flex-shrink: 0;
+		margin-right: 7px;
+		border-radius: 4px;
+		border: 1px solid rgba(255, 255, 255, 0.28);
+	}
+
+	.tool-config-btn-label {
+		min-width: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.tool-toggle,
+	.tool-input {
+		width: 100%;
+		height: 36px;
+		flex-shrink: 0;
+		padding-left: 12px;
+		padding-right: 12px;
+		background-color: rgba(255, 255, 255, 0.045);
+		border: 1px solid rgba(255, 255, 255, 0.10);
+		border-radius: 8px;
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.82);
+	}
+
+	.tool-toggle {
+		justify-content: center;
+		align-items: center;
+
+		&.active {
+			background-color: rgba(255, 67, 108, 0.18);
+			border-color: rgba(255, 67, 108, 0.66);
+			color: $pm-accent-light;
+		}
+	}
+
 }

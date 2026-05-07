@@ -1,6 +1,6 @@
 {
   "UI": false,
-  "Volume": "0.200000003",
+  "Volume": "0.100000001",
   "Pitch": "0.899999976",
   "Decibels": 70,
   "SelectionMode": "Random",
@@ -12,26 +12,30 @@
   "Transmission": true,
   "OcclusionRadius": 14,
   "DistanceAttenuation": true,
-  "Distance": 400,
-  "Falloff": {
-    "rangey": "0,0.502777815",
-    "frames": [
-      {
-        "x": 0,
-        "y": 0.99447507,
-        "in": -0,
-        "out": -0,
-        "mode": "Mirrored"
-      },
-      {
-        "x": 1,
-        "y": 0,
-        "in": -0,
-        "out": -0,
-        "mode": "Mirrored"
-      }
-    ]
-  },
+  "Distance": 800,
+  "Falloff": [
+    {
+      "x": 0,
+      "y": 1,
+      "in": -0,
+      "out": -0,
+      "mode": "Mirrored"
+    },
+    {
+      "x": 0.3609375,
+      "y": 0.30066663,
+      "in": 0.9859451,
+      "out": -0.9859451,
+      "mode": "Mirrored"
+    },
+    {
+      "x": 1,
+      "y": 0,
+      "in": -0,
+      "out": -0,
+      "mode": "Mirrored"
+    }
+  ],
   "DefaultMixer": {
     "Name": "game",
     "Id": "d32191d8-0b1e-470a-8313-cefff5f30112"

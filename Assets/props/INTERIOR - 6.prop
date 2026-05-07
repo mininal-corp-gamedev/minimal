@@ -1,0 +1,10 @@
+{
+  "Id": "interior - 6",
+  "Header": "Полка 2",
+  "Category": "Интерьер",
+  "Description": "",
+  "Price": 0,
+  "Ident": "facepunch.industrial_shelving_01",
+  "__references": [],
+  "__version": 0
+}

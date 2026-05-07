@@ -1,0 +1,10 @@
+{
+  "Id": "interior - 7",
+  "Header": "Стиральная машина",
+  "Category": "Интерьер",
+  "Description": "",
+  "Price": 0,
+  "Ident": "facepunch.washingmachine",
+  "__references": [],
+  "__version": 0
+}

@@ -1,0 +1,10 @@
+{
+  "Id": "build - 4",
+  "Header": "Стенка (гофр)",
+  "Category": "Стройка",
+  "Description": "",
+  "Price": 0,
+  "Ident": "facepunch.corrugated_wall_a_128",
+  "__references": [],
+  "__version": 0
+}

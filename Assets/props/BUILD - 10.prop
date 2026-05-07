@@ -1,0 +1,10 @@
+{
+  "Id": "build - 10",
+  "Header": "Плета 2на2",
+  "Category": "Стройка",
+  "Description": "",
+  "Price": 0,
+  "Ident": "mattergun.plate_2x2",
+  "__references": [],
+  "__version": 0
+}

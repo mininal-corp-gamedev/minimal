@@ -1,0 +1,10 @@
+{
+  "Id": "build - 2",
+  "Header": "Забор",
+  "Category": "Стройка",
+  "Description": "",
+  "Price": 0,
+  "Ident": "facepunch.fence_panel_large",
+  "__references": [],
+  "__version": 0
+}

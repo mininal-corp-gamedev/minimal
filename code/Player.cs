@@ -48,6 +48,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Sync(SyncFlags.FromHost)] public int MaxExp { get; set; } = 0; //todo make
     [Sync(SyncFlags.FromHost)] public bool IsDead { get; private set; }
     [Sync(SyncFlags.FromHost)] public string DeathMessage { get; private set; } = "";
+    [Sync(SyncFlags.FromHost)] public string JobWorkshopItemsSerialized { get; private set; } = "";
+    [Sync(SyncFlags.FromHost)] public int JobWorkshopClothingRevision { get; private set; }
 
     // TimeUntil должен жить в backing field: с auto-property обратный отсчёт может ломаться.
     private TimeUntil _deathTimeUntilRespawn;
@@ -149,6 +151,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private bool _ownerClothingApplied;
     private long _ownerClothingSteamId;
     private int _ownerClothingApplyPasses;
+    private string _observedJobWorkshopItemsSerialized = "";
+    private int _observedJobWorkshopClothingRevision = -1;
+    private bool _jobWorkshopItemsSyncPending = true;
     private TimeUntil _nextOwnerClothingApplyAttempt = 0f;
     private TimeUntil _nextLocalUiEnsure = 0f;
     private static bool _jobInventoryEventsRegistered;
@@ -1301,6 +1306,31 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         return HostAddItem(Item.Create(itemId, count, canDrop, isJobItem: true, canSave: canSave));
     }
 
+    public bool HostAddJobWorkshopItem(string packageId)
+    {
+        if (!Networking.IsHost) return false;
+        if (string.IsNullOrWhiteSpace(packageId)) return false;
+
+        var items = DeserializeJobWorkshopItems(JobWorkshopItemsSerialized);
+        if (items.Contains(packageId)) return false;
+
+        items.Add(packageId);
+        HostSetJobWorkshopItems(items);
+        return true;
+    }
+
+    public bool HostRemoveJobWorkshopItem(string packageId)
+    {
+        if (!Networking.IsHost) return false;
+        if (string.IsNullOrWhiteSpace(packageId)) return false;
+
+        var items = DeserializeJobWorkshopItems(JobWorkshopItemsSerialized);
+        if (!items.Remove(packageId)) return false;
+
+        HostSetJobWorkshopItems(items);
+        return true;
+    }
+
     public int HostRemoveJobItems()
     {
         if (!Networking.IsHost) return 0;
@@ -1393,6 +1423,8 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         // apply visuals from the network owner connection instead.
         return;
 #else
+        RefreshJobWorkshopClothingApplyState();
+
         var ownerSteamId = GetOwnerSteamId();
         if (ownerSteamId <= 0L)
         {
@@ -1434,7 +1466,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         try
         {
-            Dresser.Source = Sandbox.Dresser.ClothingSource.OwnerConnection;
+            Dresser.Source = Dresser.ClothingSource.OwnerConnection;
             await Dresser.Apply();
 
             var currentOwnerSteamId = GameObject.IsValid() ? GetOwnerSteamId() : 0L;
@@ -1466,12 +1498,123 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _ownerClothingSteamId = ownerSteamId;
         _ownerClothingApplied = false;
         _ownerClothingApplyPasses = 0;
+        _ownerClothingApplyInProgress = false;
         _nextOwnerClothingApplyAttempt = 0f;
     }
 
     private void ScheduleOwnerClothingRetry(float delaySeconds)
     {
         _nextOwnerClothingApplyAttempt = MathF.Max(0.05f, delaySeconds);
+    }
+
+    private void RefreshJobWorkshopClothingApplyState()
+    {
+        var serialized = JobWorkshopItemsSerialized ?? "";
+        var revisionChanged = _observedJobWorkshopClothingRevision != JobWorkshopClothingRevision;
+        var serializedChanged = !string.Equals(_observedJobWorkshopItemsSerialized, serialized, StringComparison.Ordinal);
+
+        if (!revisionChanged && !serializedChanged && !_jobWorkshopItemsSyncPending)
+            return;
+
+        if (!Dresser.IsValid())
+        {
+            _jobWorkshopItemsSyncPending = true;
+            return;
+        }
+
+        SyncJobWorkshopItemsToDresser(serialized);
+        _observedJobWorkshopItemsSerialized = serialized;
+        _observedJobWorkshopClothingRevision = JobWorkshopClothingRevision;
+        _jobWorkshopItemsSyncPending = false;
+        ResetOwnerClothingApplyState(GetOwnerSteamId());
+        ScheduleOwnerClothingRetry(0.05f);
+    }
+
+    private void HostRefreshJobWorkshopClothing()
+    {
+        if (!Networking.IsHost)
+            return;
+
+        JobWorkshopClothingRevision++;
+    }
+
+    private void HostSetJobWorkshopItems(List<string> items)
+    {
+        if (!Networking.IsHost)
+            return;
+
+        JobWorkshopItemsSerialized = SerializeJobWorkshopItems(items);
+
+        if (Dresser.IsValid())
+            SyncJobWorkshopItemsToDresser(JobWorkshopItemsSerialized);
+
+        HostRefreshJobWorkshopClothing();
+    }
+
+    private void SyncJobWorkshopItemsToDresser(string serialized)
+    {
+        if (!Dresser.IsValid())
+            return;
+
+        var desiredItems = DeserializeJobWorkshopItems(serialized);
+        var currentItems = new List<string>(Dresser.WorkshopItems);
+
+        foreach (var currentItem in currentItems)
+        {
+            if (!desiredItems.Contains(currentItem))
+                Dresser.WorkshopItems.Remove(currentItem);
+        }
+
+        foreach (var desiredItem in desiredItems)
+        {
+            if (!Dresser.WorkshopItems.Contains(desiredItem))
+                Dresser.WorkshopItems.Add(desiredItem);
+        }
+    }
+
+    private static List<string> DeserializeJobWorkshopItems(string serialized)
+    {
+        var result = new List<string>();
+        if (string.IsNullOrWhiteSpace(serialized))
+            return result;
+
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var parts = serialized.Split(';', StringSplitOptions.RemoveEmptyEntries);
+        foreach (var part in parts)
+        {
+            var packageId = part.Trim();
+            if (string.IsNullOrWhiteSpace(packageId))
+                continue;
+            if (!seen.Add(packageId))
+                continue;
+
+            result.Add(packageId);
+        }
+
+        return result;
+    }
+
+    private static string SerializeJobWorkshopItems(List<string> items)
+    {
+        if (items is null || items.Count == 0)
+            return "";
+
+        var uniqueItems = new List<string>(items.Count);
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+
+        foreach (var item in items)
+        {
+            if (string.IsNullOrWhiteSpace(item))
+                continue;
+
+            var packageId = item.Trim();
+            if (!seen.Add(packageId))
+                continue;
+
+            uniqueItems.Add(packageId);
+        }
+
+        return string.Join(";", uniqueItems);
     }
 
     private void HookInventoryEvents()
@@ -1502,9 +1645,19 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (_jobInventoryEventsRegistered)
             return;
 
-        PlayerJob.OnJobChanged += (player, _) => player?.HostRemoveJobItems();
-        PlayerJob.OnJobDemote += player => player?.HostRemoveJobItems();
+        PlayerJob.OnJobChanged += HandleJobChangedRemoveJobItems;
+        PlayerJob.OnJobDemote += HandleJobDemoteRemoveJobItems;
         _jobInventoryEventsRegistered = true;
+    }
+
+    private static void HandleJobChangedRemoveJobItems(Player player, JobDefinition _)
+    {
+        player?.HostRemoveJobItems();
+    }
+
+    private static void HandleJobDemoteRemoveJobItems(Player player)
+    {
+        player?.HostRemoveJobItems();
     }
 
     private void HostOnInventoryChanged()

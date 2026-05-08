@@ -403,7 +403,7 @@
 			return;
 		}
 
-		if ( jobDefinition.Vote )
+		if ( jobDefinition.Vote && Connection.All.Count > 2 )
 		{
 			if ( VoteManager.TryStartJobVote( callerPlayer, jobDefinition ) )
 				NotifyCaller( caller, $"Vote started for {jobDefinition.Header}.", true );

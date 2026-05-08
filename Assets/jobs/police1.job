@@ -6,7 +6,7 @@
   "MaxCount": 4,
   "Salary": 0,
   "Vote": true,
-  "HasPostSpawned": false,
+  "HasPostSpawned": true,
   "HasPostDemote": true,
   "HasPostJoined": true,
   "__references": [],

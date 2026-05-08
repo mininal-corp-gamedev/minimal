@@ -1466,7 +1466,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         try
         {
-            Dresser.Source = Dresser.ClothingSource.OwnerConnection;
+            Dresser.Source = Dresser.ClothingSource.Manual;
+            var a = ClothingContainer.CreateFromConnection(GameObject.Network.Owner, false); //todo Изменил под будущую систему Job Skins, но в dresser жуткий пиздец, надо доделывать
+            Dresser.Clothing = a.Clothing;
             await Dresser.Apply();
 
             var currentOwnerSteamId = GameObject.IsValid() ? GetOwnerSteamId() : 0L;

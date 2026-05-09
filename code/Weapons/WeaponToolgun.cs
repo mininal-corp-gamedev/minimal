@@ -36,11 +36,16 @@ public sealed class WeaponToolgun : Weapon
 			return;
 		if (!_timeUntilNextFire)
 			return;
-		if (!Input.Pressed("Attack1"))
+
+		var primaryPressed = Input.Pressed("Attack1");
+		var secondaryPressed = !primaryPressed && Input.Pressed("Attack2");
+		if (!primaryPressed && !secondaryPressed)
 			return;
 
 		var tool = ToolgunClientState.SelectedTool;
 		if (tool is null)
+			return;
+		if (secondaryPressed && !tool.SupportsSecondary)
 			return;
 
 		_timeUntilNextFire = FireDelay;
@@ -50,9 +55,9 @@ public sealed class WeaponToolgun : Weapon
 		var configJson = ToolgunClientState.GetConfigJson();
 
 		if (Networking.IsHost)
-			HostUseTool(GetLocalPlayerConnection(), tool.Id, configJson, eye.Position, eye.Forward, AttackRange);
+			HostUseTool(GetLocalPlayerConnection(), tool.Id, configJson, eye.Position, eye.Forward, AttackRange, secondaryPressed);
 		else
-			RpcRequestUseTool(tool.Id, configJson, eye.Position, eye.Forward, AttackRange);
+			RpcRequestUseTool(tool.Id, configJson, eye.Position, eye.Forward, AttackRange, secondaryPressed);
 
 		var origin = ShotPos != null ? ShotPos.WorldPosition : WorldPosition;
 		var muzzleRot = ShotPos != null ? ShotPos.WorldRotation : GameObject.WorldRotation;
@@ -65,15 +70,15 @@ public sealed class WeaponToolgun : Weapon
 	}
 
 	[Rpc.Host]
-	private static void RpcRequestUseTool(string toolId, string configJson, Vector3 eyePosition, Vector3 eyeForward, float attackRange)
+	private static void RpcRequestUseTool(string toolId, string configJson, Vector3 eyePosition, Vector3 eyeForward, float attackRange, bool isSecondary)
 	{
 		if (!Networking.IsHost)
 			return;
 
-		HostUseTool(Rpc.Caller, toolId, configJson, eyePosition, eyeForward, attackRange);
+		HostUseTool(Rpc.Caller, toolId, configJson, eyePosition, eyeForward, attackRange, isSecondary);
 	}
 
-	private static void HostUseTool(Connection caller, string toolId, string configJson, Vector3 eyePosition, Vector3 eyeForward, float attackRange)
+	private static void HostUseTool(Connection caller, string toolId, string configJson, Vector3 eyePosition, Vector3 eyeForward, float attackRange, bool isSecondary)
 	{
 		if (!Networking.IsHost)
 			return;
@@ -99,6 +104,8 @@ public sealed class WeaponToolgun : Weapon
 			NotifyCaller(caller, "Tool не выбран.", false);
 			return;
 		}
+		if (isSecondary && !tool.SupportsSecondary)
+			return;
 
 		var eye = player.Controller.EyeTransform;
 		var origin = Vector3.DistanceBetween(player.WorldPosition, eyePosition) <= EyePositionTrustDistance
@@ -123,7 +130,8 @@ public sealed class WeaponToolgun : Weapon
 			Caller = caller,
 			Trace = trace,
 			TargetProp = targetProp,
-			Config = ToolMode.ParseConfig(configJson)
+			Config = ToolMode.ParseConfig(configJson),
+			IsSecondary = isSecondary
 		};
 
 		var validation = tool.Validate(context);
@@ -133,7 +141,7 @@ public sealed class WeaponToolgun : Weapon
 			return;
 		}
 
-		var result = tool.Use(context);
+		var result = isSecondary ? tool.UseSecondary(context) : tool.Use(context);
 		if (!string.IsNullOrWhiteSpace(result.Message))
 			NotifyCaller(caller, result.Message, result.Success);
 	}

@@ -36,6 +36,7 @@ public sealed class ToolUseContext
 	public SceneTraceResult Trace { get; init; }
 	public global::PropCustom TargetProp { get; init; }
 	public IReadOnlyDictionary<string, string> Config { get; init; } = new Dictionary<string, string>();
+	public bool IsSecondary { get; init; }
 }
 
 public readonly struct ToolUseResult
@@ -59,7 +60,8 @@ public abstract class ToolMode
 	{
 		new RemoverTool(),
 		new ColorTool(),
-		new FadingDoorTool()
+		new FadingDoorTool(),
+		new NoCollideTool()
 	});
 
 	public static IReadOnlyList<ToolMode> All => LazyTools.Value;
@@ -90,9 +92,11 @@ public abstract class ToolMode
 	public abstract string Title { get; }
 	public abstract string Description { get; }
 	public virtual bool RequiresOwnedProp => true;
+	public virtual bool SupportsSecondary => false;
 	public virtual IReadOnlyList<ToolConfigField> ConfigFields => Array.Empty<ToolConfigField>();
 
 	public abstract ToolUseResult Use(ToolUseContext context);
+	public virtual ToolUseResult UseSecondary(ToolUseContext context) => ToolUseResult.Fail(null);
 
 	public virtual ToolUseResult Validate(ToolUseContext context)
 	{

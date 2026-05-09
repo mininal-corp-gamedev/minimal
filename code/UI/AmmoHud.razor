@@ -9,7 +9,7 @@
 	@if (ShouldShow)
 	{
 		<div class="ammo-panel">
-			<div class="ammo-value @(CurrentAmmo <= 0 ? "empty" : "")">@AmmoDisplayText</div>
+			<div class="ammo-value @(!IsToolgun && CurrentAmmo <= 0 ? "empty" : "")">@AmmoDisplayText</div>
 		</div>
 	}
 </root>
@@ -23,7 +23,7 @@
 	/// <summary>Запас патронов вне магазина (поле <see cref="Weapon.TotalReserveAmmo"/>).</summary>
 	int TotalAmmo => CurrentWeapon?.TotalReserveAmmo ?? 0;
 	string AmmoDisplayText => IsToolgun
-		? $"Tool: {ToolgunClientState.SelectedToolTitle ?? "None"}"
+		? ToolgunClientState.SelectedToolTitle ?? "None"
 		: $"{CurrentAmmo}/{TotalAmmo}";
 
 	protected override int BuildHash() => System.HashCode.Combine(

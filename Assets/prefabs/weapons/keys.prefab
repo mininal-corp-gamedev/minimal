@@ -26,12 +26,13 @@
         "CanAttackWithoutAmmo": true,
         "ClipSize": 0,
         "Damage": 0,
-        "DoorHitSound": "sounds/door/wood_crate_impact_hard2.sound",
+        "DoorHitSound": "sounds/tryingtoopen.sound",
         "FireDelay": 0.25,
-        "FireSound": null,
+        "FireSound": "sound/click1.sound",
         "HasHipFire": false,
         "HasReload": false,
         "HoldType": "None",
+        "HoldTypeHandedness": "BothHands",
         "IsIronSight": false,
         "IsMelee": true,
         "LockSound": "sounds/door/gear1.sound",
@@ -49,7 +50,8 @@
         "SpriteFirePrefab": null,
         "TotalReserveAmmo": 0,
         "UnlockSound": "sounds/door/gear3.sound",
-        "Viewmodel": null
+        "Viewmodel": null,
+        "WorldModelPrefab": null
       }
     ],
     "Children": [
@@ -146,7 +148,8 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "facepunch.v_first_person_arms_human#205798"
+    "facepunch.v_first_person_arms_human#205798",
+    "igrotronika.click1#51268"
   ],
   "__version": 2
 }

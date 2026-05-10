@@ -50,7 +50,7 @@
       "Position": "0,0,0",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
-      "Tags": "",
+      "Tags": "hidden",
       "Enabled": true,
       "NetworkMode": 2,
       "NetworkFlags": 0,
@@ -42536,7 +42536,7 @@
       "Position": "248,-64,360.545288",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
-      "Tags": "world,hidden",
+      "Tags": "world",
       "Enabled": true,
       "NetworkMode": 2,
       "NetworkFlags": 0,
@@ -42715,6 +42715,2828 @@
         }
       ],
       "Children": []
+    },
+    {
+      "__guid": "98501610-0865-4e26-a95c-4b6b6c5dd75c",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/slot machine.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Position",
+            "Value": "-1940.26465,2014.45752,32"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "31730b76-d972-4f03-8a4d-8832b4b1a441"
+            },
+            "Property": "Static",
+            "Value": true
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "7329cf41-7bda-4510-9829-6ae0fcf72642": "98501610-0865-4e26-a95c-4b6b6c5dd75c",
+        "31ae4c57-435e-41ab-8993-19e80b51be95": "40d1f239-9f00-457e-9eab-0e7731b21652",
+        "31730b76-d972-4f03-8a4d-8832b4b1a441": "7abc9fdd-0980-474d-a1a6-f2061f151827",
+        "f6c15593-7711-466a-a291-bbd1bf32e78b": "173e1264-d171-48d2-827b-0f59a9c62527",
+        "071e56f3-2f63-46a9-9135-6dcbed631ad6": "a0eed86f-f48b-4f47-ad02-13c934fcf9c4",
+        "9cab967a-78fd-494b-960c-a25b9dad8232": "4f8374b6-bf08-4c3a-ac6c-58689c0f36a9",
+        "b9f52408-ebe2-4167-b562-af2bc94ef357": "ce834e68-3c17-4fb0-bc87-11ed85f77607"
+      }
+    },
+    {
+      "__guid": "0a330db3-2f48-41ba-ae1a-b960fee93e6e",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/slot machine.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Name",
+            "Value": "slot machine (3)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Position",
+            "Value": "-1940.26465,1972,32"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "31730b76-d972-4f03-8a4d-8832b4b1a441"
+            },
+            "Property": "Static",
+            "Value": true
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "7329cf41-7bda-4510-9829-6ae0fcf72642": "0a330db3-2f48-41ba-ae1a-b960fee93e6e",
+        "31ae4c57-435e-41ab-8993-19e80b51be95": "4300d52b-ff94-428e-8597-3c5d8a726dea",
+        "31730b76-d972-4f03-8a4d-8832b4b1a441": "5211f9cb-7cca-4452-8479-ad2e8fc4f75c",
+        "f6c15593-7711-466a-a291-bbd1bf32e78b": "9d31dd64-c24a-4b22-92ef-51f5c3b0a38c",
+        "071e56f3-2f63-46a9-9135-6dcbed631ad6": "00a05946-d95c-4558-a18c-69bdc990ab8c",
+        "9cab967a-78fd-494b-960c-a25b9dad8232": "c47a256c-9984-4c10-a758-a437e42f9f45",
+        "b9f52408-ebe2-4167-b562-af2bc94ef357": "7884188c-c82b-4d55-886e-927fd664c63f"
+      }
+    },
+    {
+      "__guid": "996eba55-44d4-46c5-87c9-130e9e266d41",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/safecrack.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "0d00018c-045d-4a7c-8cef-63f904c5696d"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "88d01b21-e774-4008-ae85-094735785683"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "0d00018c-045d-4a7c-8cef-63f904c5696d",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 45131246251,
+              "BoneMergeTarget": null,
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/slot_machine/slot_machine.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "1,1,1,1",
+              "UseAnimGraph": true
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "6932b0a5-9da9-4a23-82ba-a227922c4cc4"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "0d00018c-045d-4a7c-8cef-63f904c5696d"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "6932b0a5-9da9-4a23-82ba-a227922c4cc4",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/slot_machine/slot_machine.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          }
+        ],
+        "RemovedObjects": [
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "8fecf69b-77bd-4ab8-8196-7bb897f8b88c"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "287f0e92-005b-460a-9a1b-ff929832e394"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "4b65f192-b9c4-4a34-9916-7aee1e083d2e"
+            }
+          }
+        ],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Name",
+            "Value": "slot machine (15)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Position",
+            "Value": "-1940.26465,1309.48328,32"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,0,1"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "dd97675e-389c-4966-a06f-2dc80738988e"
+            },
+            "Property": "IsStatic",
+            "Value": true
+          }
+        ],
+        "MovedObjects": [
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "88d01b21-e774-4008-ae85-094735785683"
+            },
+            "NewParent": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "NewContainerProperty": "Components",
+            "IsNewContainerArray": true,
+            "NewPreviousElement": {
+              "Type": "Component",
+              "IdValue": "dd97675e-389c-4966-a06f-2dc80738988e"
+            }
+          }
+        ]
+      },
+      "__PrefabIdToInstanceId": {
+        "03f7bae7-4be9-4e95-82f5-179df5f6b69a": "996eba55-44d4-46c5-87c9-130e9e266d41",
+        "dd97675e-389c-4966-a06f-2dc80738988e": "f1017812-08bd-4eac-a2fd-88ab952d234f",
+        "8fecf69b-77bd-4ab8-8196-7bb897f8b88c": "18d2b1cf-6c38-4e40-bea9-e5b29524cd0e",
+        "287f0e92-005b-460a-9a1b-ff929832e394": "3ecf3980-5bf7-4bfc-b028-f914537ac0fc",
+        "4b65f192-b9c4-4a34-9916-7aee1e083d2e": "c03edd38-bb45-40a7-b791-b2976962184a",
+        "88d01b21-e774-4008-ae85-094735785683": "bd29d6d0-ca31-4cdb-a19d-0db2d67f8b7a",
+        "3ba3b7d8-b923-4724-86c2-cdbd53a516a8": "e36d796b-b525-48ea-b428-cdfcd26487c9",
+        "e10e4f62-f88a-4f1f-b1e9-06fc9210fd29": "aa357087-c849-47d2-b497-9ef1820c506f",
+        "94df2dcd-5638-4403-b96e-103ab85ac148": "5e01fb16-34cc-4120-8c24-fb8ad3f53116",
+        "7949c9db-589b-48e9-9631-c1daf915a29a": "b1001e99-3a4b-4e21-87a0-4f8f697fce27",
+        "3ccb27a6-03e5-4c76-a810-b6eebbef33cd": "d997b624-214a-4ea2-8538-e33e57d29460"
+      }
+    },
+    {
+      "__guid": "07f193e2-a8e3-4dbf-9fd4-48c5620b205f",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/safecrack.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "b2661aa8-eaba-4a44-9df0-70f947946e30"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "88d01b21-e774-4008-ae85-094735785683"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "b2661aa8-eaba-4a44-9df0-70f947946e30",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 45131246251,
+              "BoneMergeTarget": null,
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/slot_machine/slot_machine.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "1,1,1,1",
+              "UseAnimGraph": true
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "aea48c1a-8cf7-466e-bdbf-1affef33c492"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "b2661aa8-eaba-4a44-9df0-70f947946e30"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.ModelCollider",
+              "__guid": "aea48c1a-8cf7-466e-bdbf-1affef33c492",
+              "__enabled": true,
+              "Flags": 0,
+              "ColliderFlags": 0,
+              "Elasticity": null,
+              "Friction": null,
+              "IsTrigger": false,
+              "Model": "models/slot_machine/slot_machine.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "OnObjectTriggerEnter": null,
+              "OnObjectTriggerExit": null,
+              "OnTriggerEnter": null,
+              "OnTriggerExit": null,
+              "RollingResistance": null,
+              "Static": true,
+              "Surface": null,
+              "SurfaceVelocity": "0,0,0"
+            }
+          }
+        ],
+        "RemovedObjects": [
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "8fecf69b-77bd-4ab8-8196-7bb897f8b88c"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "287f0e92-005b-460a-9a1b-ff929832e394"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "4b65f192-b9c4-4a34-9916-7aee1e083d2e"
+            }
+          }
+        ],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Name",
+            "Value": "slot machine (14)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Position",
+            "Value": "-1940.26465,1267.02576,32"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,0,1"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "dd97675e-389c-4966-a06f-2dc80738988e"
+            },
+            "Property": "IsStatic",
+            "Value": true
+          }
+        ],
+        "MovedObjects": [
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "88d01b21-e774-4008-ae85-094735785683"
+            },
+            "NewParent": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "NewContainerProperty": "Components",
+            "IsNewContainerArray": true,
+            "NewPreviousElement": {
+              "Type": "Component",
+              "IdValue": "dd97675e-389c-4966-a06f-2dc80738988e"
+            }
+          }
+        ]
+      },
+      "__PrefabIdToInstanceId": {
+        "03f7bae7-4be9-4e95-82f5-179df5f6b69a": "07f193e2-a8e3-4dbf-9fd4-48c5620b205f",
+        "dd97675e-389c-4966-a06f-2dc80738988e": "1d4bbb99-573a-453e-9654-8bf0cdeb8c38",
+        "8fecf69b-77bd-4ab8-8196-7bb897f8b88c": "3fda9311-a08b-4971-9323-6ffe92cc716f",
+        "287f0e92-005b-460a-9a1b-ff929832e394": "c6c38c99-cf39-4f25-a716-f4df38a9a120",
+        "4b65f192-b9c4-4a34-9916-7aee1e083d2e": "4828bcd3-7c66-4ca7-bb08-f21d00973b2b",
+        "88d01b21-e774-4008-ae85-094735785683": "bc0a0d79-7561-44b4-8a82-2f559e1a91e3",
+        "3ba3b7d8-b923-4724-86c2-cdbd53a516a8": "f11b9427-0cb1-4fb4-a62a-6b27edaee827",
+        "e10e4f62-f88a-4f1f-b1e9-06fc9210fd29": "7511e4ad-caa2-45d0-bea7-e2eea10571ff",
+        "94df2dcd-5638-4403-b96e-103ab85ac148": "73c419a8-74ae-4db2-a340-aef90a00ec2e",
+        "7949c9db-589b-48e9-9631-c1daf915a29a": "2cce7fbb-db51-4d1b-baf2-e3642e9f5aa5",
+        "3ccb27a6-03e5-4c76-a810-b6eebbef33cd": "faee2f3f-9c78-443e-bccc-5968d64656aa"
+      }
+    },
+    {
+      "__guid": "aea0cd2c-0191-4a12-ad59-22de376eedb2",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/slot machine.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Name",
+            "Value": "slot machine (11)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Position",
+            "Value": "-1793.66736,2035.92725,32.0000153"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,-0.707106709,0.707106829"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "31730b76-d972-4f03-8a4d-8832b4b1a441"
+            },
+            "Property": "Static",
+            "Value": true
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "7329cf41-7bda-4510-9829-6ae0fcf72642": "aea0cd2c-0191-4a12-ad59-22de376eedb2",
+        "31ae4c57-435e-41ab-8993-19e80b51be95": "a24d20bb-31e3-4417-9386-d59c73396887",
+        "31730b76-d972-4f03-8a4d-8832b4b1a441": "6ce72e3d-f840-4ff7-8099-ae6ccd4b557e",
+        "f6c15593-7711-466a-a291-bbd1bf32e78b": "98870ede-51be-4625-9d64-7c2d810ddd16",
+        "071e56f3-2f63-46a9-9135-6dcbed631ad6": "f9d9f6e6-b763-4898-b601-a45655c34f12",
+        "9cab967a-78fd-494b-960c-a25b9dad8232": "1e854572-d94e-4943-94fa-f84b74ef0bc7",
+        "b9f52408-ebe2-4167-b562-af2bc94ef357": "15a83228-174e-4818-a705-da1b5be4cd86"
+      }
+    },
+    {
+      "__guid": "9a787d2c-8861-4432-8133-7be51f2ec006",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/slot machine.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Name",
+            "Value": "slot machine (10)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Position",
+            "Value": "-1836.12488,2035.92725,32.0000153"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,-0.707106709,0.707106829"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "31730b76-d972-4f03-8a4d-8832b4b1a441"
+            },
+            "Property": "Static",
+            "Value": true
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "7329cf41-7bda-4510-9829-6ae0fcf72642": "9a787d2c-8861-4432-8133-7be51f2ec006",
+        "31ae4c57-435e-41ab-8993-19e80b51be95": "5aeb2044-b397-436d-94c1-ca373c4b1225",
+        "31730b76-d972-4f03-8a4d-8832b4b1a441": "dcfb5bca-3281-4414-9a8d-22e13d50a557",
+        "f6c15593-7711-466a-a291-bbd1bf32e78b": "0cec3fed-ccb4-44e2-bb2d-1dd74da8b6ae",
+        "071e56f3-2f63-46a9-9135-6dcbed631ad6": "d07e7c59-0e06-420a-91a9-e708fe74fcba",
+        "9cab967a-78fd-494b-960c-a25b9dad8232": "7bfd84d1-7a2b-4827-8728-222dd1398b41",
+        "b9f52408-ebe2-4167-b562-af2bc94ef357": "56e2b8d7-36e0-455c-83da-620b62186e57"
+      }
+    },
+    {
+      "__guid": "084bf853-218f-406b-9911-f14345228e41",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/slot machine.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Name",
+            "Value": "slot machine (1)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Position",
+            "Value": "-1940.26465,1889.5647,32"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "31730b76-d972-4f03-8a4d-8832b4b1a441"
+            },
+            "Property": "Static",
+            "Value": true
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "7329cf41-7bda-4510-9829-6ae0fcf72642": "084bf853-218f-406b-9911-f14345228e41",
+        "31ae4c57-435e-41ab-8993-19e80b51be95": "82ee4105-8269-4fc7-83e6-2ee411b2fd87",
+        "31730b76-d972-4f03-8a4d-8832b4b1a441": "e3bf0ac0-55e9-4448-9d86-37ede6c0f93c",
+        "f6c15593-7711-466a-a291-bbd1bf32e78b": "06992886-b7a5-4e73-afee-538ab5947aa1",
+        "071e56f3-2f63-46a9-9135-6dcbed631ad6": "5b7ea107-5979-480c-838b-a70e14914c2e",
+        "9cab967a-78fd-494b-960c-a25b9dad8232": "e86118bc-38d7-4700-b8df-4311c3ad93a9",
+        "b9f52408-ebe2-4167-b562-af2bc94ef357": "da8e9471-dcda-4ec4-ab55-95578ec1a106"
+      }
+    },
+    {
+      "__guid": "9a06a89b-5cd6-47e6-a588-d55aa1db3bdd",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/slot machine.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Name",
+            "Value": "slot machine (2)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "7329cf41-7bda-4510-9829-6ae0fcf72642"
+            },
+            "Property": "Position",
+            "Value": "-1940.26465,1932,32"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "31730b76-d972-4f03-8a4d-8832b4b1a441"
+            },
+            "Property": "Static",
+            "Value": true
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "7329cf41-7bda-4510-9829-6ae0fcf72642": "9a06a89b-5cd6-47e6-a588-d55aa1db3bdd",
+        "31ae4c57-435e-41ab-8993-19e80b51be95": "06d21c9d-ea0a-404f-8e64-7f09b3fbe32b",
+        "31730b76-d972-4f03-8a4d-8832b4b1a441": "b3757b0f-d93a-4acd-b481-c287e9626a58",
+        "f6c15593-7711-466a-a291-bbd1bf32e78b": "46c6aa99-3960-431f-9943-fa78f3e149eb",
+        "071e56f3-2f63-46a9-9135-6dcbed631ad6": "58445e08-f159-40cf-bad1-936342b85656",
+        "9cab967a-78fd-494b-960c-a25b9dad8232": "ce93c4dc-65ef-4a97-ace8-e5e7a2d5b8bb",
+        "b9f52408-ebe2-4167-b562-af2bc94ef357": "efa3363b-a94d-40db-b8a8-0eeedcf65f90"
+      }
+    },
+    {
+      "__guid": "37bb67bc-12ff-4845-b837-33946aebabcf",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/safecrack.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Name",
+            "Value": "slot machine (13)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Position",
+            "Value": "-1940.26465,1181.68738,32"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,0,1"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "03f7bae7-4be9-4e95-82f5-179df5f6b69a": "37bb67bc-12ff-4845-b837-33946aebabcf",
+        "dd97675e-389c-4966-a06f-2dc80738988e": "30ba56a9-1e39-4779-9629-ffe110be9756",
+        "8fecf69b-77bd-4ab8-8196-7bb897f8b88c": "7f2de406-dcac-4b66-afc6-d1112e09007f",
+        "287f0e92-005b-460a-9a1b-ff929832e394": "b8b4ac3e-1ca3-4b6a-9f21-72b7fff9d5f6",
+        "4b65f192-b9c4-4a34-9916-7aee1e083d2e": "50e3aeb9-6b44-495f-8c41-fa0edb4026d1",
+        "88d01b21-e774-4008-ae85-094735785683": "b94760f2-7885-4214-9208-b95a83532598",
+        "3ba3b7d8-b923-4724-86c2-cdbd53a516a8": "f5a3a432-064b-465b-be57-8bd8065e424b",
+        "e10e4f62-f88a-4f1f-b1e9-06fc9210fd29": "77d5dc7a-6962-4ee1-96b5-1f6a9ad5831b",
+        "94df2dcd-5638-4403-b96e-103ab85ac148": "c5d4ac55-0ba9-4c32-85aa-a34629271c5a",
+        "7949c9db-589b-48e9-9631-c1daf915a29a": "8cb35d37-79e8-48db-a9d6-9170e8753e91",
+        "3ccb27a6-03e5-4c76-a810-b6eebbef33cd": "6c2038f6-dcc7-414a-96a7-a0caf26fec43"
+      }
+    },
+    {
+      "__guid": "f71ffc91-d919-4fda-9291-feb574ffdb4d",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/safecrack.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Name",
+            "Value": "slot machine (16)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Position",
+            "Value": "-1940.26465,1138.94373,32"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,0,1"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "03f7bae7-4be9-4e95-82f5-179df5f6b69a": "f71ffc91-d919-4fda-9291-feb574ffdb4d",
+        "dd97675e-389c-4966-a06f-2dc80738988e": "71d49183-e8d2-43f1-ac78-d3dd4d25d9f4",
+        "8fecf69b-77bd-4ab8-8196-7bb897f8b88c": "e2766b39-cd49-4fc0-b4ac-dd739c83f173",
+        "287f0e92-005b-460a-9a1b-ff929832e394": "f34a911f-859f-4957-b1fa-7bdd05e41413",
+        "4b65f192-b9c4-4a34-9916-7aee1e083d2e": "cd8c9620-0233-477b-8827-dc0953546fb7",
+        "88d01b21-e774-4008-ae85-094735785683": "18ea210b-0cc8-4cf1-b9f7-727d77097894",
+        "3ba3b7d8-b923-4724-86c2-cdbd53a516a8": "862e5bd0-6159-4923-a643-c69114279df4",
+        "e10e4f62-f88a-4f1f-b1e9-06fc9210fd29": "ee96b4b6-9ca0-4ff8-8c25-f0f65d2f04e0",
+        "94df2dcd-5638-4403-b96e-103ab85ac148": "9f399b91-9679-430d-befe-d18798fef8c6",
+        "7949c9db-589b-48e9-9631-c1daf915a29a": "deb1d201-40d9-4b92-b274-2ef5198f84bf",
+        "3ccb27a6-03e5-4c76-a810-b6eebbef33cd": "e8710c2a-1941-4656-bbb0-697058e6945d"
+      }
+    },
+    {
+      "__guid": "f29ff43f-e435-4791-ba2a-dc04501b529e",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/safecrack.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Name",
+            "Value": "slot machine (17)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Position",
+            "Value": "-1757.45557,1138.94373,32"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,1,1.94707184E-07"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "03f7bae7-4be9-4e95-82f5-179df5f6b69a": "f29ff43f-e435-4791-ba2a-dc04501b529e",
+        "dd97675e-389c-4966-a06f-2dc80738988e": "c41f46e0-5a81-4c58-93ca-12c163d485c1",
+        "8fecf69b-77bd-4ab8-8196-7bb897f8b88c": "7032218e-184b-4499-9a1d-53fd3a29c57a",
+        "287f0e92-005b-460a-9a1b-ff929832e394": "393dc577-ffca-417f-8c8b-afcf4c2b88b3",
+        "4b65f192-b9c4-4a34-9916-7aee1e083d2e": "88738cde-ccd9-4229-abb6-e9c388c76630",
+        "88d01b21-e774-4008-ae85-094735785683": "2c818fb7-9d07-4dce-8fe3-fde462adac5c",
+        "3ba3b7d8-b923-4724-86c2-cdbd53a516a8": "c9b04987-f8b3-4828-8328-6deebd23a86f",
+        "e10e4f62-f88a-4f1f-b1e9-06fc9210fd29": "69fe34e2-9135-4ce0-ae2a-d32a04fa0e05",
+        "94df2dcd-5638-4403-b96e-103ab85ac148": "9b8523cb-1341-4d77-b360-812fdd3f27c5",
+        "7949c9db-589b-48e9-9631-c1daf915a29a": "f6b5c123-02c2-4486-a87c-da3683d398f2",
+        "3ccb27a6-03e5-4c76-a810-b6eebbef33cd": "553b167f-fc03-4a70-afbe-46804cd1b7de"
+      }
+    },
+    {
+      "__guid": "89053540-4baf-4f35-818a-bfe3e92732e6",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/safecrack.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Name",
+            "Value": "slot machine (12)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Position",
+            "Value": "-1940.26465,1224.34387,32"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "03f7bae7-4be9-4e95-82f5-179df5f6b69a"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,0,1"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "03f7bae7-4be9-4e95-82f5-179df5f6b69a": "89053540-4baf-4f35-818a-bfe3e92732e6",
+        "dd97675e-389c-4966-a06f-2dc80738988e": "51ef6e59-ee75-4be6-aa61-52042c313fa4",
+        "8fecf69b-77bd-4ab8-8196-7bb897f8b88c": "c575f6af-ac2b-4312-9bfd-58790aedc82b",
+        "287f0e92-005b-460a-9a1b-ff929832e394": "91f6f189-eb6e-469a-9316-38e558437127",
+        "4b65f192-b9c4-4a34-9916-7aee1e083d2e": "b21ff772-2786-484d-a987-2b7f1755d326",
+        "88d01b21-e774-4008-ae85-094735785683": "577638c7-21bd-404f-a796-4b9d2d71d308",
+        "3ba3b7d8-b923-4724-86c2-cdbd53a516a8": "b72a0ffc-d4e5-4aaa-bdbb-25e6426def55",
+        "e10e4f62-f88a-4f1f-b1e9-06fc9210fd29": "97f842b0-64d3-4568-b316-10c19630b310",
+        "94df2dcd-5638-4403-b96e-103ab85ac148": "ea3f562e-d8fa-4642-8be5-23040b01cb24",
+        "7949c9db-589b-48e9-9631-c1daf915a29a": "ef2781f4-635e-4f73-a660-4d363fc8d9ba",
+        "3ccb27a6-03e5-4c76-a810-b6eebbef33cd": "16d334c7-05c8-4dfb-b9c4-0600b14bffee"
+      }
+    },
+    {
+      "__guid": "1650a84a-c7fe-4b25-bc4e-e99b982ef5f7",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/riskladder.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Name",
+            "Value": "slot machine (7)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Position",
+            "Value": "-1168.35291,1893.48157,32"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,1,1.04308128E-07"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "ea856024-835c-4c9d-a24e-f8d506662625": "1650a84a-c7fe-4b25-bc4e-e99b982ef5f7",
+        "b951628c-0230-4f7e-b57f-b86a36ddbe37": "c8b0ff7a-0f98-46e4-9f42-99c9a1ad242c",
+        "28e476c3-9b2d-4324-9d27-985d9fa888bd": "4c7b8495-2ba9-4183-b0d3-ecdc77040c3d",
+        "95012378-3e2e-4a08-bd1a-bd5c25ca92ac": "5d9db546-c95d-4f3d-83bf-d48a9f812408",
+        "e2cf2b7d-8176-491a-9b9f-8e4db82ef4a7": "c33d41a2-9e22-47fd-9aac-3ba910c18a5e",
+        "fcbac0f5-1257-40ab-9935-b434e7ca45af": "87d68f7f-c1ed-4af0-a030-617cbd25d13e",
+        "1d9a2f2b-c791-4e38-a94d-5bcc9e09f4d2": "478ca573-f1c9-4347-8041-09f2ff25c9ff",
+        "013d3fb6-dac3-475e-9105-2feeb776c5b7": "4f20a160-cb22-492c-88b5-a07e13b459c9",
+        "cd3f8eac-5902-4677-b2dd-4e75be645658": "bdcaea7d-79fc-413c-aa42-ee610705d2e0",
+        "c48c827d-ddc5-48b3-af67-e6d1cb83a4ba": "11668599-9b7a-4922-845b-e4a97c7631d2"
+      }
+    },
+    {
+      "__guid": "3f7d3e2f-bbd1-4738-b26a-c93e50b8242d",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/riskladder.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Name",
+            "Value": "slot machine (6)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Position",
+            "Value": "-1168.35291,1933.00757,32"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,1,1.04308128E-07"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "ea856024-835c-4c9d-a24e-f8d506662625": "3f7d3e2f-bbd1-4738-b26a-c93e50b8242d",
+        "b951628c-0230-4f7e-b57f-b86a36ddbe37": "f5029937-9f5a-461b-b7e2-5e26ad170220",
+        "28e476c3-9b2d-4324-9d27-985d9fa888bd": "1fea2170-1c74-40cb-8f9f-b3ff96d0d73d",
+        "95012378-3e2e-4a08-bd1a-bd5c25ca92ac": "74882804-2ae6-4fb9-804d-f62f8213781c",
+        "e2cf2b7d-8176-491a-9b9f-8e4db82ef4a7": "734d6bd0-d514-4434-9d15-d7e47d0dca01",
+        "fcbac0f5-1257-40ab-9935-b434e7ca45af": "7be6b252-221e-4d33-9fdc-6324b9aecf68",
+        "1d9a2f2b-c791-4e38-a94d-5bcc9e09f4d2": "ed7ebc4a-41a8-46d8-b4cc-e245b52dc0d7",
+        "013d3fb6-dac3-475e-9105-2feeb776c5b7": "a6dcff7c-a150-4198-b65e-e216ce473e79",
+        "cd3f8eac-5902-4677-b2dd-4e75be645658": "91621617-dac2-483f-98af-aa3d213d0c1d",
+        "c48c827d-ddc5-48b3-af67-e6d1cb83a4ba": "3407941d-8a12-43b7-8e5a-27cc5daf9b32"
+      }
+    },
+    {
+      "__guid": "923681b2-8900-4831-b4ba-563a7274deb3",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/riskladder.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Name",
+            "Value": "slot machine (5)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Position",
+            "Value": "-1168.35291,2012.19299,32"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,1,1.04308128E-07"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "ea856024-835c-4c9d-a24e-f8d506662625": "923681b2-8900-4831-b4ba-563a7274deb3",
+        "b951628c-0230-4f7e-b57f-b86a36ddbe37": "f0a310ed-5504-47e5-be24-95ac64f2a3c4",
+        "28e476c3-9b2d-4324-9d27-985d9fa888bd": "0826bf5a-cce8-40c4-b874-3f483b9ac611",
+        "95012378-3e2e-4a08-bd1a-bd5c25ca92ac": "b19a2013-1686-4f5a-93a6-4cec0add03ec",
+        "e2cf2b7d-8176-491a-9b9f-8e4db82ef4a7": "5b8dd84b-9bac-48d6-878a-338596cfe273",
+        "fcbac0f5-1257-40ab-9935-b434e7ca45af": "c47c76c9-5cc8-4175-925e-67c5702fcfb4",
+        "1d9a2f2b-c791-4e38-a94d-5bcc9e09f4d2": "29a0dc44-880c-4302-a8e3-80bc5f4fc028",
+        "013d3fb6-dac3-475e-9105-2feeb776c5b7": "3dc2a11f-876f-4fbd-8258-c7facc94b4b3",
+        "cd3f8eac-5902-4677-b2dd-4e75be645658": "1c1180b6-3f50-4c3e-abf5-1fea6e9cf8af",
+        "c48c827d-ddc5-48b3-af67-e6d1cb83a4ba": "1b502943-f6b3-4636-be91-76b2907a266a"
+      }
+    },
+    {
+      "__guid": "b965a47b-451a-4915-bf1e-29317d41c91b",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/riskladder.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Name",
+            "Value": "slot machine (4)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Position",
+            "Value": "-1168.35291,1972.52991,32"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,1,1.04308128E-07"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "ea856024-835c-4c9d-a24e-f8d506662625": "b965a47b-451a-4915-bf1e-29317d41c91b",
+        "b951628c-0230-4f7e-b57f-b86a36ddbe37": "7e1e23b2-7dda-4112-bf16-d145045424e0",
+        "28e476c3-9b2d-4324-9d27-985d9fa888bd": "79a656b5-8199-497f-b990-0ec0c440e781",
+        "95012378-3e2e-4a08-bd1a-bd5c25ca92ac": "f0b47422-a098-46ec-82b0-9431f4dca591",
+        "e2cf2b7d-8176-491a-9b9f-8e4db82ef4a7": "bfc1b885-29e0-4b4d-80a8-4294f3bd942f",
+        "fcbac0f5-1257-40ab-9935-b434e7ca45af": "c71acd83-044f-4fdc-8a64-574883a14b61",
+        "1d9a2f2b-c791-4e38-a94d-5bcc9e09f4d2": "be87df1f-4bfb-451e-a659-fc554d965d51",
+        "013d3fb6-dac3-475e-9105-2feeb776c5b7": "0a26fd8f-fb0c-40d6-b64d-3e8276f01031",
+        "cd3f8eac-5902-4677-b2dd-4e75be645658": "2055df27-70e9-4381-bd5d-7babc4f9d9ed",
+        "c48c827d-ddc5-48b3-af67-e6d1cb83a4ba": "9419e1cd-1b23-40d9-826a-890db3f61cec"
+      }
+    },
+    {
+      "__guid": "0ece2fc4-953c-43f1-9387-10d96247d82a",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/riskladder.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Name",
+            "Value": "slot machine (9)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Position",
+            "Value": "-1308.68567,2031.10669,31.9999332"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,0.707106888,-0.70710659"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "ea856024-835c-4c9d-a24e-f8d506662625": "0ece2fc4-953c-43f1-9387-10d96247d82a",
+        "b951628c-0230-4f7e-b57f-b86a36ddbe37": "855da5bb-21fb-4fbb-a262-63fb06e670e0",
+        "28e476c3-9b2d-4324-9d27-985d9fa888bd": "956681d6-5466-4844-896b-35d397c0f433",
+        "95012378-3e2e-4a08-bd1a-bd5c25ca92ac": "ec7a3fc7-a442-4386-b7c6-3a7874a48961",
+        "e2cf2b7d-8176-491a-9b9f-8e4db82ef4a7": "d92c1114-b0ea-4026-932a-bc7615cd6371",
+        "fcbac0f5-1257-40ab-9935-b434e7ca45af": "86085b50-e44c-4061-8c23-b62b79230963",
+        "1d9a2f2b-c791-4e38-a94d-5bcc9e09f4d2": "1ee964f7-f6bd-4f9f-b37e-35e81ff584a6",
+        "013d3fb6-dac3-475e-9105-2feeb776c5b7": "6b12075a-0881-4a4e-a8c2-efa1464ba951",
+        "cd3f8eac-5902-4677-b2dd-4e75be645658": "bac58992-752a-4e82-ab8a-5f534f5dcd05",
+        "c48c827d-ddc5-48b3-af67-e6d1cb83a4ba": "098fd4dd-9ef8-4934-90f2-8e52bed42203"
+      }
+    },
+    {
+      "__guid": "4bebd532-256b-4f9d-b86c-ac0e7f9ea015",
+      "__version": 2,
+      "__Prefab": "prefabs/casino/riskladder.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Name",
+            "Value": "slot machine (8)"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Position",
+            "Value": "-1269.02258,2031.10669,31.9999332"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "ea856024-835c-4c9d-a24e-f8d506662625"
+            },
+            "Property": "Rotation",
+            "Value": "0,0,0.707106888,-0.70710659"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "ea856024-835c-4c9d-a24e-f8d506662625": "4bebd532-256b-4f9d-b86c-ac0e7f9ea015",
+        "b951628c-0230-4f7e-b57f-b86a36ddbe37": "6b68c481-7dd9-4d24-91ba-af4822e6ac23",
+        "28e476c3-9b2d-4324-9d27-985d9fa888bd": "066c99eb-e5db-4a53-a2e1-164d00847b1c",
+        "95012378-3e2e-4a08-bd1a-bd5c25ca92ac": "f37e617c-325b-4e57-86ae-d762ed80e0c4",
+        "e2cf2b7d-8176-491a-9b9f-8e4db82ef4a7": "294aafa3-cb75-4db7-8827-f788a5e10710",
+        "fcbac0f5-1257-40ab-9935-b434e7ca45af": "a0abbb77-4bcb-4c71-accc-d67c6f5461d7",
+        "1d9a2f2b-c791-4e38-a94d-5bcc9e09f4d2": "163e9033-bdf6-4433-9447-456d0e7ea56d",
+        "013d3fb6-dac3-475e-9105-2feeb776c5b7": "7a2f153c-f8a5-4926-b1d2-e389131fd6e2",
+        "cd3f8eac-5902-4677-b2dd-4e75be645658": "7f943b87-25fb-43fa-8198-5c18e3374fc9",
+        "c48c827d-ddc5-48b3-af67-e6d1cb83a4ba": "da197f1a-c5c2-40a9-8e5c-e22054eef389"
+      }
+    },
+    {
+      "__guid": "4e0f3e4a-d42f-4ac9-9839-6abf3acd3c11",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "roulette",
+      "Position": "-1556.22791,1626.24976,54.5282021",
+      "Rotation": "0,0,0,1",
+      "Scale": "0.0274351686,0.0274351686,0.0274351686",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "d3679611-6820-49eb-a693-51ccd620be1c",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "library/map/roulette/roulette.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.BoxCollider",
+          "__guid": "5682731f-ec43-4480-bda8-3c71451de4e5",
+          "__enabled": true,
+          "Flags": 0,
+          "Center": "-376.425171,1209.62866,-324.242188",
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Scale": "2479.59033,4135.14844,993.883911",
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "Sandbox.BoxCollider",
+          "__guid": "31db9005-b628-41fa-b70c-286f2180e7b8",
+          "__enabled": true,
+          "Flags": 0,
+          "Center": "0,0,0",
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Scale": "50,50,50",
+          "Static": false,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "ec227eb6-335c-4c78-84d9-694c457736a7",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "table1",
+      "Position": "-1243.6095,1575.6333,32.1902733",
+      "Rotation": "0,0,-1,1.94707184E-07",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "9bf67579-f838-4d12-9d46-3f0969f5bc41",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": false,
+          "MaterialGroup": null,
+          "Model": "models/table/table1.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "d70ca953-6c11-492e-aa6f-86fdb540dc10",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/table/table1.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "bf43c7bd-9c1e-487c-973c-0b85fa4736c0",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/table/table1.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": false,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "Sandbox.Rigidbody",
+          "__guid": "dc75c292-483c-4121-a930-ac89d45f34e4",
+          "__enabled": true,
+          "Flags": 0,
+          "AngularDamping": 0,
+          "EnableImpactDamage": true,
+          "EnhancedCcd": false,
+          "Gravity": true,
+          "GravityScale": 1,
+          "ImpactDamage": 0,
+          "LinearDamping": 0,
+          "Locking": {
+            "X": false,
+            "Y": false,
+            "Z": false,
+            "Pitch": false,
+            "Yaw": false,
+            "Roll": false
+          },
+          "MassCenterOverride": "0,0,0",
+          "MassOverride": 0,
+          "MinImpactDamageSpeed": 500,
+          "MotionEnabled": true,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OverrideMassCenter": false,
+          "RigidbodyFlags": 0,
+          "StartAsleep": false
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "6c9cfdf5-99ba-401a-900b-9a0e63b0f77a",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "bar_stool",
+      "Position": "-1276.78064,1664.81641,32.3238335",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "b69902df-32d5-4883-9e35-ac2d6807ddfd",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "78139b00-cccc-4c47-bbb5-19b0552b7996",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "beb11284-215e-43bc-930d-45fbb8fc5057",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "310e6b48-5e7a-4912-8c6c-cfa5415f4876",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "bar_stool (1)",
+      "Position": "-1276.78064,1626.67261,32.3238335",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "0cd00acb-e914-4c0e-b993-2d53e2ed2b9b",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "d45f8bff-acf1-4056-8c02-d71f31e9a19d",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "323c7f1b-a6da-4060-a0b2-05b62c280496",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "fd66c28c-82b8-45c5-9a82-8de09a5fe503",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "bar_stool (2)",
+      "Position": "-1276.78064,1589.03564,32.3238335",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "052b8a62-36a0-41fd-875f-0c887184d502",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "a53237cc-172b-436d-b250-deae08ee4610",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "1341adab-7022-4eeb-9ab1-76890e08d840",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "92110243-729f-41b1-ae26-30f547a62a91",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "bar_stool (3)",
+      "Position": "-1276.78064,1526.93103,32.3238335",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "0213a818-abb2-4d40-8cd7-69c29246ac21",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "41f4638d-321e-4c1c-a3a1-1561caca9c04",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "1892436f-9fdd-4bd1-95c7-64f9847b6a82",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "9cb2d621-1c8c-403b-84ac-41acd1609f57",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "bar_stool (4)",
+      "Position": "-1276.78064,1495.30408,32.3238335",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "06d601e5-3f5f-4ffb-82a7-2994edaa3f1c",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "ab40b83a-b1f2-49a7-9565-3c7de07d5dd3",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "ee20c0b0-657f-4e3b-a617-cfbb4f410bbf",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "394cfac4-e7ed-4985-ad92-fd1f56b260ba",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "bar_stool (5)",
+      "Position": "-1178.33484,1389.39355,32.323761",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "2b8b81d0-1967-4a5e-84e6-147a9ed4387e",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "61dbc8e2-58a5-4458-96a1-6f82b9cf6f95",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "d2bbbab9-b123-4554-846d-09f8bb184bcd",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "76616abc-a5cd-40b5-a0a0-b4d6a39bcbb4",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "bar_stool (6)",
+      "Position": "-1214.85938,1389.39355,32.323761",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "92752baf-aec0-4297-aba7-94a903ccf93e",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "0ca62d31-c4c2-4aa2-b9f8-79a66dbda66a",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "541b6446-7c1d-4d18-bd39-d59a6ef660d6",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/indoor/bar/bar_stool/bar_stool.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "3ebf99f5-89be-4851-b78e-8b89324ac714",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "bartap",
+      "Position": "-1255.01416,1450.30212,80.0611572",
+      "Rotation": "0,0,-0.522212863,0.85281527",
+      "Scale": "0.463077068,0.463077068,0.463077068",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "1ff0f2be-5777-463e-9663-401c1f48ef9c",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/newcliffy/bartap.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "c2e8083e-7984-413f-a1e7-6c69944cb5d1",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/newcliffy/bartap.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "5c6ea0c5-f1cd-4693-8528-61a5ad6641f3",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/newcliffy/bartap.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "9b9adf34-666f-4f0e-bc60-6f7789a97d07",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "barrier",
+      "Position": "-1551.35889,1220.60864,32",
+      "Rotation": "0,0,0,1",
+      "Scale": "0.701454699,0.701454699,0.701454699",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "f5315e32-bc40-4f91-ab26-5b0e8a3323db",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "library/map/rope barrier/barrier.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "42346e11-0d29-417d-b73a-ea8d72166067",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "barrier (1)",
+      "Position": "-1734.47607,1220.60864,32",
+      "Rotation": "0,0,0,1",
+      "Scale": "0.701454699,0.701454699,0.701454699",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "2326278f-b9ff-4267-b65b-d56545ede853",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "library/map/rope barrier/barrier.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "77d792ba-e181-4791-8427-ae713d5acea0",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "barrier (2)",
+      "Position": "-1734.47607,1323.77954,32",
+      "Rotation": "0,0,0,1",
+      "Scale": "0.701454699,0.701454699,0.701454699",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "a0f1be91-b556-43ec-b338-991801033507",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "library/map/rope barrier/barrier.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "06ebd0d7-7a8f-4baa-bce9-734ef0f98b25",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "barrier (3)",
+      "Position": "-1734.47607,1425.11438,32",
+      "Rotation": "0,0,0,1",
+      "Scale": "0.701454699,0.701454699,0.701454699",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "2adef49a-a274-4098-894a-d3a0fb030e6a",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "library/map/rope barrier/barrier.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "2abad3ec-c0e7-4776-b628-87c07c389d80",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "barrier (6)",
+      "Position": "-1369.26562,1220.60864,32",
+      "Rotation": "0,0,0,1",
+      "Scale": "0.701454699,0.701454699,0.701454699",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "ad5f8e9f-7ea7-49dd-b6d9-151c843b9b22",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "library/map/rope barrier/barrier.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "0ee7ea06-abbf-44a0-b488-40a0642d66d2",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "barrier (5)",
+      "Position": "-1369.26562,1323.77954,32",
+      "Rotation": "0,0,0,1",
+      "Scale": "0.701454699,0.701454699,0.701454699",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "d127ff60-9912-4e87-9fc7-514dc65d0200",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "library/map/rope barrier/barrier.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "f92fa12e-a2a7-411a-a6aa-b0cbd655527d",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "barrier (4)",
+      "Position": "-1369.26562,1425.11438,32",
+      "Rotation": "0,0,0,1",
+      "Scale": "0.701454699,0.701454699,0.701454699",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "075f5b1d-7343-4070-9b32-2c1d2651b798",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "library/map/rope barrier/barrier.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "600a88c6-acfc-45a5-815b-3c96d591c4ab",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "c_bazaar_sniper",
+      "Position": "-1137.27551,1582.81628,164.659134",
+      "Rotation": "0,0,1,0",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "0e7fb4fb-1020-4b44-b364-d7309aea63f3",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/weapons/c_models/c_bazaar_sniper/c_bazaar_sniper.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.SkinnedModelRenderer",
+          "__guid": "74a1ce32-44f3-4c40-b2b0-17b6b8806e47",
+          "__enabled": true,
+          "Flags": 0,
+          "AnimationGraph": null,
+          "BodyGroups": 18446744073709551615,
+          "BoneMergeTarget": null,
+          "CreateAttachments": false,
+          "CreateBoneObjects": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/weapons/c_models/c_bazaar_sniper/c_bazaar_sniper.vmdl",
+          "Morphs": {},
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Parameters": {
+            "bools": {},
+            "ints": {},
+            "floats": {},
+            "vectors": {},
+            "rotations": {}
+          },
+          "PlaybackRate": 1,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Sequence": {
+            "Name": null,
+            "Looping": true,
+            "Blending": false
+          },
+          "Tint": "1,1,1,1",
+          "UseAnimGraph": true
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "055e9774-de94-423b-8fee-ed6782438023",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/weapons/c_models/c_bazaar_sniper/c_bazaar_sniper.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "947349f6-3057-4fb1-a36c-10e83986a509",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "gta5_prop_cs_beer_bot_01",
+      "Position": "-1260.09912,1458.46375,80.0529785",
+      "Rotation": "0,0,0.965925813,0.258819193",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "64dee097-3d3b-4881-b9d0-de7195523b1c",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "pr/gta5_prop_cs_beer_bot_01.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "e8527672-1ae5-489c-8c1f-b3c9bc8c1c9a",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "pr/gta5_prop_cs_beer_bot_01.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "6349a4a7-bff3-4a3a-b47f-1f414277d49b",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "pr/gta5_prop_cs_beer_bot_01.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "d151dc0c-39e0-4baf-9806-6376ba86fbe4",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "gta5_prop_cs_beer_bot_01 (2)",
+      "Position": "-1259.65454,1462.53589,80.0529938",
+      "Rotation": "0,0,0.965925813,0.258819193",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "d72f737d-dffa-4cbc-ae30-f50d73b65834",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "pr/gta5_prop_cs_beer_bot_01.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "5a84fa50-4eb1-451d-b62e-935dca5eba0a",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "pr/gta5_prop_cs_beer_bot_01.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "28adc6f1-dd66-4915-b344-bbf2ec1680f2",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "pr/gta5_prop_cs_beer_bot_01.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "e089e734-c744-4105-99ef-760a6fe22b05",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "gta5_prop_cs_beer_bot_01 (1)",
+      "Position": "-1256.13147,1461.51941,80.0529938",
+      "Rotation": "0,0,0.965925813,0.258819193",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "30fb83b6-67bb-46b8-9b10-78eca8f25e85",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "pr/gta5_prop_cs_beer_bot_01.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "3216e464-b491-44bd-a4c4-b0dcae459a83",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "pr/gta5_prop_cs_beer_bot_01.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "169efdcb-9679-4837-81c8-25429f775d34",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "pr/gta5_prop_cs_beer_bot_01.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {
@@ -42746,11 +45568,6 @@
         "Data": {
           "SelectionSets": []
         }
-      },
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "b7c3e9f6-dbbd-4d7c-9f80-7434b612f0ee"
-        }
       }
     }
   },
@@ -42759,8 +45576,11 @@
   "Description": null,
   "__references": [
     "apetavern.wlb_manhole_lid#45094",
+    "bteam.bar_counter#10206",
     "constablezeehond.plantpotempty#164920",
     "constablezeehond.plantpotpotted#164919",
+    "defqwop.ropebarrier#206397",
+    "defqwop.roulettetable#206404",
     "facepunch.banana#143288",
     "facepunch.beech_bush_large#145427",
     "facepunch.beech_bush_medium_wall_corner#145431",
@@ -42786,16 +45606,21 @@
     "facepunch.weapon_crate_stacka#143532",
     "facepunch.wheely_bin#143949",
     "facepunch.wire_cage_b_painted#111152",
+    "fish.slot_machine#105356",
+    "frogpond.bar_stool#12950",
     "gkaf.door_1#26044",
     "gkaf.door_2_window_a#26046",
     "gkaf.door_2_window_b#26047",
     "gkaf.door_2#26045",
+    "gtavteam.gta5propcsbeerbot01#97061",
     "gunsightsoftware.model-deadpigeon#184155",
     "halfpeeps.garage_door#42972",
+    "mingoelgato.c_bazaar_sniper#43437",
     "niclude.bench_4#30655",
     "smlp.sanae#10353",
     "subzerostudios.wood058#148619",
-    "thebox.metalplatform#168259"
+    "thebox.metalplatform#168259",
+    "tones.bartap#36845"
   ],
   "__version": 3
 }

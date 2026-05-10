@@ -52,7 +52,7 @@
         "InteractRange": 100,
         "IsBlocked": false,
         "LockpickCooldownSeconds": 60,
-        "LockpickInteractRange": 120,
+        "LockpickInteractRange": 80,
         "LockpickSuccessChance": 0.5,
         "MovementMode": "Swing",
         "OnComponentDestroy": null,

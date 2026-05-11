@@ -209,7 +209,7 @@ public sealed class WeaponPhysgun : Weapon
         }
 
         if (!HostCanUsePhysgun(state.Player)
-            || !HostCanGrabRigidbody(state.Player, state.Body, state.Mode)
+            || !HostCanGrabRigidbody(state.Player, state.Body)
             || !state.Body.MotionEnabled
             || state.Body.IsProxy
             || !state.Body.PhysicsBody.IsValid())
@@ -566,10 +566,10 @@ public sealed class WeaponPhysgun : Weapon
         if (!rb.IsValid())
             return false;
 
-        return LocalPlayerCanGrab(rb, mode);
+        return LocalPlayerCanGrab(rb);
     }
 
-    private static bool LocalPlayerCanGrab(Rigidbody rb, GrabMode mode)
+    private static bool LocalPlayerCanGrab(Rigidbody rb)
     {
         var player = Player.Local;
         if (!player.IsValid() || !rb.IsValid() || !rb.GameObject.IsValid())
@@ -577,9 +577,6 @@ public sealed class WeaponPhysgun : Weapon
 
         var prop = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors);
         var ownsProp = prop.IsValid() && IsSamePlayer(prop.PlayerOwner, player);
-
-        if (mode == GrabMode.Physgun)
-            return ownsProp;
 
         var printer = rb.GameObject.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors);
         var ownsPrinter = printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player);
@@ -1067,7 +1064,7 @@ public sealed class WeaponPhysgun : Weapon
             return;
 
         if (!HostCanUsePhysgun(state.Player)
-            || !HostCanGrabRigidbody(state.Player, state.Body, state.Mode)
+            || !HostCanGrabRigidbody(state.Player, state.Body)
             || !state.Body.MotionEnabled
             || state.Body.IsProxy
             || !state.Body.PhysicsBody.IsValid())
@@ -1352,16 +1349,13 @@ public sealed class WeaponPhysgun : Weapon
         if (!rb.IsValid() || !rb.GameObject.IsValid())
             return false;
 
-        return HostCanGrabRigidbody(player, rb, mode);
+        return HostCanGrabRigidbody(player, rb);
     }
 
-    private static bool HostCanGrabRigidbody(Player player, Rigidbody rb, GrabMode mode)
+    private static bool HostCanGrabRigidbody(Player player, Rigidbody rb)
     {
         var prop = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors);
         var ownsProp = prop.IsValid() && IsSamePlayer(prop.PlayerOwner, player);
-
-        if (mode == GrabMode.Physgun)
-            return ownsProp;
 
         var printer = rb.GameObject.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors);
         var ownsPrinter = printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player);

@@ -962,6 +962,33 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null
+        },
+        {
+          "__type": "TriggerCasino",
+          "__guid": "0e21473e-6f40-43f3-8d88-c778d679bffe",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
+        },
+        {
+          "__type": "TriggerBuilding",
+          "__guid": "111ae990-c731-4ebf-9280-727076625021",
+          "__enabled": true,
+          "Flags": 0,
+          "AllowedJobs": [
+            "jobs/gun_dealer.job"
+          ],
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null
         }
       ],
       "Children": []

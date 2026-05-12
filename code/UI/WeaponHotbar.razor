@@ -60,9 +60,9 @@
 
 		var wheel = Input.MouseWheel.y;
 		if ( wheel > 0f )
-			UseHotbarSlotOffset( 1 );
-		else if ( wheel < 0f )
 			UseHotbarSlotOffset( -1 );
+		else if ( wheel < 0f )
+			UseHotbarSlotOffset( 1 );
 	}
 
 	void UseHotbarSlotOffset( int offset )

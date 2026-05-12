@@ -122,6 +122,10 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null,
+            "WeaponBurger": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/burger.prefab"
+            },
             "WeaponHandcuff": {
               "_type": "gameobject",
               "prefab": "prefabs/weapons/handcuff.prefab"

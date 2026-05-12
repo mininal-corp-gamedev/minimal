@@ -1392,6 +1392,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         ItemUseRegistry.Register("ammo_usp", new AmmoUseHandler(AmmoWeaponType.Usp));
         ItemUseRegistry.Register("ammo_mp5", new AmmoUseHandler(AmmoWeaponType.Mp5));
         ItemUseRegistry.Register("ammo_m4a1", new AmmoUseHandler(AmmoWeaponType.M4A1));
+        ItemUseRegistry.Register("burger", new WepBurgerUseHandler());
 
         _itemUseHandlersRegistered = true;
     }

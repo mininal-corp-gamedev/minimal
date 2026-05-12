@@ -21,6 +21,7 @@ public sealed class WeaponManager : Component
     [Property, Category("Weapon Prefabs")] public GameObject WeaponHandcuff { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponPicklock { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponKeys { get; set; }
+    [Property, Category("Weapon Prefabs")] public GameObject WeaponBurger { get; set; }
 
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponPickaxe { get; set; }
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponUspPrefab { get; set; }
@@ -43,6 +44,7 @@ public sealed class WeaponManager : Component
     public Weapon Handcuff { get; private set; }
     public Weapon Picklock { get; private set; }
     public Weapon Keys { get; private set; }
+    public Weapon Burger { get; private set; }
     private bool _weaponsSpawned;
 
     /// <summary>Подходит ли оружие под отображение патронов / перезарядку.</summary>
@@ -92,6 +94,7 @@ public sealed class WeaponManager : Component
         Handcuff = SpawnWeapon(WeaponHandcuff, camera, "Handcuff");
         Picklock = SpawnWeapon(WeaponPicklock, camera, "Picklock");
         Keys = SpawnWeapon(WeaponKeys, camera, "Keys");
+        Burger = SpawnWeapon(WeaponBurger, camera, "Burger");
         _weaponsSpawned = true;
 
         Log.Info("[WeaponManager] Spawned all weapons");

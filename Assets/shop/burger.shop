@@ -1,0 +1,18 @@
+{
+  "Id": "burger",
+  "Header": "Burger",
+  "Category": "Food",
+  "Description": "",
+  "ItemDefinition": "items/burger.item",
+  "Price": 55,
+  "Max": 0,
+  "IconPath": "icons/items/default.vtex",
+  "Model": null,
+  "SpawnPrefab": null,
+  "IsAllowEveryone": true,
+  "HasRemoveAfterChangeJob": false,
+  "JobsAllow": [],
+  "HasPostPurchased": false,
+  "__references": [],
+  "__version": 0
+}

@@ -39,6 +39,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     [Sync(SyncFlags.FromHost)] public bool IsGod { get; set; } = false;
     [Sync(SyncFlags.FromHost)] public bool IsSafezone { get; set; } = false;
+    [Sync(SyncFlags.FromHost)] public bool IsCasino { get; set; } = false;
     [Sync(SyncFlags.FromHost)] public float Health { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public float MaxHealth { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public float Armor { get; set; } = 0f; //todo make

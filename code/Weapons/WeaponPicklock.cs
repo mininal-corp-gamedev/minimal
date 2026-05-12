@@ -3,8 +3,8 @@ using Sandbox;
 namespace Minimal.Weapons;
 
 /// <summary>
-/// Отмычка: ЛКМ — попытаться взломать заблокированную дверь перед собой.
-/// Шанс успеха и длительность настраиваются на самой двери. Все важные проверки делает хост.
+/// Отмычка: ЛКМ — начать мини-игру взлома для IDoorHackable перед собой.
+/// Все важные проверки и результат применяет хост.
 /// </summary>
 public sealed class WeaponPicklock : Weapon
 {
@@ -22,15 +22,14 @@ public sealed class WeaponPicklock : Weapon
         _firedThisFrame = true;
         _timeUntilNextFire = FireDelay;
 
-        var door = TraceForDoor();
-        if (!door.IsValid()) return;
-        if (!door.CanBeLockpicked()) return;
+        var hackable = TraceForHackable();
+        if (hackable is null) return;
 
-        door.RpcRequestLockpick();
+        hackable.RequestDoorHack();
     }
 
-    /// <summary>Луч из глаз игрока вперёд на AttackRange. Возвращает первую найденную Door.</summary>
-    private Door TraceForDoor()
+    /// <summary>Луч из глаз игрока вперёд на AttackRange. Возвращает первый IDoorHackable.</summary>
+    private IDoorHackable TraceForHackable()
     {
         if (!Player.Local.IsValid() || !Player.Local.Controller.IsValid())
             return null;
@@ -46,14 +45,9 @@ public sealed class WeaponPicklock : Weapon
 
         if (!tr.Hit) return null;
 
-        var go = tr.GameObject;
-        while (go.IsValid())
-        {
-            if (go.Components.TryGet<Door>(out var d, FindMode.EverythingInSelfAndParent))
-                return d;
-            go = go.Parent;
-        }
+        if (!DoorHackSystem.TryGetHackable(tr.GameObject, out var hackable))
+            return null;
 
-        return null;
+        return hackable;
     }
 }

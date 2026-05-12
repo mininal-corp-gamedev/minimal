@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 
 /// <summary>A door component with open/close animation, lock state, and break mechanics.</summary>
-public sealed class Door : Component, Component.IPressable, Component.INetworkListener
+public sealed class Door : Component, Component.IPressable, Component.INetworkListener, IDoorHackable
 {
 	public enum DoorState { Closed, Open }
 	public enum DoorLockState { Unlocked, Locked }
@@ -233,14 +233,12 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 	// ===== Lockpick =====
 
-	/// <summary>How long (seconds) the player cooldown lasts after a lockpick attempt.</summary>
-	[Property, Category( "Lockpick" )] public float LockpickCooldownSeconds { get; set; } = 60f;
-
-	/// <summary>Chance (0..1) for a lockpick attempt to succeed.</summary>
-	[Property, Category( "Lockpick" ), Range( 0f, 1f )] public float LockpickSuccessChance { get; set; } = 0.5f;
-
 	/// <summary>Maximum distance between the picker and the door for the host to accept an attempt.</summary>
 	[Property, Category( "Lockpick" )] public float LockpickInteractRange { get; set; } = 120f;
+
+	public string DoorHackName => Header;
+	public Vector3 DoorHackWorldPosition => WorldPosition;
+	public float DoorHackInteractRange => LockpickInteractRange;
 
 	private float _currentYaw;
 	private float _currentSlideDistance;
@@ -1111,9 +1109,15 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	/// <summary>True if this door is currently a valid candidate for a fresh lockpick attempt.</summary>
 	public bool CanBeLockpicked()
 	{
+		return CanBeDoorHacked( Player.Local );
+	}
+
+	public bool CanBeDoorHacked( Player hacker )
+	{
 		if ( IsBlocked ) return false;
 		if ( IsBroken ) return false;
 		if ( LockState != DoorLockState.Locked ) return false;
+		if ( hacker.IsValid() && hacker.IsArrested ) return false;
 		// Только покупные (с владельцем) или job-двери — на остальных замок не имеет смысла.
 		if ( !HasOnlyJobs && !HasOwner ) return false;
 		return true;
@@ -1123,87 +1127,25 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	[Rpc.Host]
 	public void RpcRequestLockpick()
 	{
+		DoorHackSystem.HostRequestStartHackFromRpc( GameObject );
+	}
+
+	public void RequestDoorHack()
+	{
+		RpcRequestLockpick();
+	}
+
+	public void HostOnDoorHackSucceeded( Player hacker )
+	{
 		if ( !Networking.IsHost ) return;
+		if ( !CanBeDoorHacked( hacker ) ) return;
 
-		var caller = Rpc.Caller;
-		if ( caller is null ) return;
-
-		var picker = FindPlayerBySteamId( caller.SteamId );
-		if ( !picker.IsValid() ) return;
-		if ( picker.IsArrested ) return;
-
-		if ( !CanBeLockpicked() )
-		{
-			NotifyLockpicker( caller, GameLocalization.Phrase( "notify.lockpick.cannot_lockpick", "This door cannot be lockpicked." ), NotificationType.Warn, 3.0f );
-			return;
-		}
-
-		if ( picker.LockpickCooldown > 0f )
-		{
-			var secondsLeft = (float)picker.LockpickCooldown;
-			NotifyLockpicker( caller, GameLocalization.Format( "notify.lockpick.wait", "Wait {0:0}s before the next attempt.", secondsLeft ), NotificationType.Warn, 2.5f );
-			return;
-		}
-
-		if ( Vector3.DistanceBetween( picker.WorldPosition, WorldPosition ) > LockpickInteractRange )
-		{
-			NotifyLockpicker( caller, GameLocalization.Phrase( "notify.lockpick.too_far", "Too far from the door." ), NotificationType.Warn, 2.5f );
-			return;
-		}
-
-		var cooldown = MathF.Max( 0.5f, LockpickCooldownSeconds );
-
-		// Бросок 50/50 происходит сразу, результат сразу отправляется клиенту.
-		var roll = Game.Random.Float( 0f, 1f );
-		var success = roll < MathF.Max( 0f, MathF.Min( 1f, LockpickSuccessChance ) );
-
-		// Устанавливаем кулдаун на игроке
-		picker.LockpickCooldown = cooldown;
-
-		if ( success )
-		{
-			// Сразу разблокируем и открываем дверь
-			LockState = DoorLockState.Unlocked;
-			if ( DoorSecond.IsValid() && DoorSecond.LockState == DoorLockState.Locked )
-				DoorSecond.LockState = DoorLockState.Unlocked;
-			Open( picker );
-
-			NotifyLockpicker( caller, GameLocalization.Format( "notify.lockpick.success", "Lockpick succeeded! Door opened. Next attempt in {0:0}s.", cooldown ), NotificationType.Info, 3.5f );
-		}
-		else
-		{
-			NotifyLockpicker( caller, GameLocalization.Format( "notify.lockpick.failed", "Lockpick failed. Next attempt in {0:0}s.", cooldown ), NotificationType.Error, 3.5f );
-		}
+		Unlock();
+		Open( hacker );
 	}
 
-	private static void NotifyLockpicker( Connection target, string text, NotificationType type, float aliveSeconds )
+	public void HostOnDoorHackFailed( Player hacker )
 	{
-		if ( target is null ) return;
-
-		using ( Rpc.FilterInclude( c => c.SteamId.Value == target.SteamId.Value ) )
-		{
-			RpcShowLockpickNotification( text, (int)type, aliveSeconds );
-		}
+		if ( !Networking.IsHost ) return;
 	}
-
-	[Rpc.Broadcast]
-	private static void RpcShowLockpickNotification( string text, int type, float aliveSeconds )
-	{
-		var t = (NotificationType)type;
-		switch ( t )
-		{
-			case NotificationType.Warn: Notification.Warn( text, aliveSeconds ); break;
-			case NotificationType.Error: Notification.Error( text, aliveSeconds ); break;
-			default: Notification.Info( text, aliveSeconds ); break;
-		}
-	}
-
-	[Rpc.Broadcast]
-	public void RpcHui(SteamId sid)
-	{
-        using (Rpc.FilterInclude(connect => connect.SteamId == sid))
-		{ 
-			//
-		}
-    }
 }

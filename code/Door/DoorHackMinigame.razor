@@ -1,0 +1,306 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Collections.Generic;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
+	{
+		<div class="hack-overlay">
+			<div class="hack-panel">
+				<div class="hack-head">
+					<div class="hack-title">@GetTitle()</div>
+					<div class="hack-timer">@GetTimerText()</div>
+				</div>
+
+				<div class="hack-subtitle">@GetSubtitle()</div>
+
+				<div class="hack-stage @(IsInstructionPhase ? "instruction" : "playing")">
+					@foreach ( var square in Squares )
+					{
+						if ( square.Clicked )
+							continue;
+
+						<button
+							class="hack-square"
+							disabled=@IsInstructionPhase
+							style="@GetSquareStyle( square )"
+							onclick=@(() => ClickSquare( square.Id ))>
+						</button>
+					}
+				</div>
+
+				<div class="hack-footer">
+					<div class="hack-progress">
+						@GameLocalization.Format( "ui.lockpick.progress", "{0}/{1}", ClickedCount, Squares.Count )
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	private const string ModalId = nameof( DoorHackMinigame );
+	private const int DefaultSquareCount = 10;
+	private const float DefaultInstructionSeconds = 3f;
+	private const float DefaultGameSeconds = 4f;
+
+	public static DoorHackMinigame Instance { get; private set; }
+
+	[Property, Category( "Lockpick" ), Range( 1f, 24f )] public int SquareCount { get; set; } = DefaultSquareCount;
+	[Property, Category( "Lockpick" )] public float InstructionSeconds { get; set; } = DefaultInstructionSeconds;
+	[Property, Category( "Lockpick" )] public float GameSeconds { get; set; } = DefaultGameSeconds;
+
+	private bool IsOpen { get; set; }
+	private int AttemptId { get; set; }
+	private readonly List<HackSquare> Squares = new();
+	private TimeUntil _instructionUntil;
+	private TimeUntil _gameUntil;
+	private bool _submitted;
+
+	private int ClickedCount
+	{
+		get
+		{
+			var count = 0;
+			foreach ( var square in Squares )
+			{
+				if ( square.Clicked )
+					count++;
+			}
+
+			return count;
+		}
+	}
+
+	private bool IsInstructionPhase => IsOpen && !_instructionUntil;
+	private bool IsPlayingPhase => IsOpen && _instructionUntil && !_gameUntil;
+
+	public static int GetConfiguredSquareCount()
+	{
+		return Math.Clamp( Instance.IsValid() ? Instance.SquareCount : DefaultSquareCount, 1, 24 );
+	}
+
+	public static float GetConfiguredInstructionSeconds()
+	{
+		var value = Instance.IsValid() ? Instance.InstructionSeconds : DefaultInstructionSeconds;
+		return MathF.Max( 0.1f, value );
+	}
+
+	public static float GetConfiguredGameSeconds()
+	{
+		var value = Instance.IsValid() ? Instance.GameSeconds : DefaultGameSeconds;
+		return MathF.Max( 0.5f, value );
+	}
+
+	public static void Open( int attemptId, int squareCount, float instructionSeconds, float gameSeconds )
+	{
+		EnsureInstance();
+		Instance?.OpenInternal( attemptId, squareCount, instructionSeconds, gameSeconds );
+	}
+
+	private static void EnsureInstance()
+	{
+		if ( Instance.IsValid() )
+			return;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return;
+
+		var panelObject = scene.CreateObject();
+		panelObject.Name = "DoorHackMinigame";
+		panelObject.Components.Create<ScreenPanel>();
+		panelObject.Components.Create<DoorHackMinigame>();
+	}
+
+	private void OpenInternal( int attemptId, int squareCount, float instructionSeconds, float gameSeconds )
+	{
+		AttemptId = attemptId;
+		_submitted = false;
+
+		var safeInstructionSeconds = MathF.Max( 0.1f, instructionSeconds );
+		var safeGameSeconds = MathF.Max( 0.5f, gameSeconds );
+		var safeSquareCount = Math.Clamp( squareCount, 1, 24 );
+
+		GenerateSquares( safeSquareCount, attemptId );
+		_instructionUntil = safeInstructionSeconds;
+		_gameUntil = safeInstructionSeconds + safeGameSeconds;
+
+		IsOpen = true;
+		UiModalManager.Open( ModalId );
+		Crosshair.SetBlocked( ModalId, true );
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void ClickSquare( int id )
+	{
+		if ( !IsPlayingPhase || _submitted )
+			return;
+
+		foreach ( var square in Squares )
+		{
+			if ( square.Id != id )
+				continue;
+
+			square.Clicked = true;
+			break;
+		}
+
+		if ( ClickedCount >= Squares.Count )
+		{
+			Submit( true );
+			return;
+		}
+
+		StateHasChanged();
+	}
+
+	private void Submit( bool completed )
+	{
+		if ( _submitted )
+			return;
+
+		_submitted = true;
+		var attemptId = AttemptId;
+		Close();
+
+		global::DoorHackSystem.RpcSubmitHackResult( attemptId, completed );
+	}
+
+	private void Close()
+	{
+		IsOpen = false;
+		Squares.Clear();
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void GenerateSquares( int count, int seed )
+	{
+		Squares.Clear();
+
+		var rng = new Random( seed * 977 + 31 );
+		for ( var i = 0; i < count; i++ )
+		{
+			var angle = (MathF.PI * 2f * i / count) + (float)rng.NextDouble() * 0.55f;
+			var radius = 14f + (float)rng.NextDouble() * 22f;
+			var x = 50f + MathF.Cos( angle ) * radius;
+			var y = 50f + MathF.Sin( angle ) * radius * 0.72f;
+
+			Squares.Add( new HackSquare
+			{
+				Id = i + 1,
+				X = Math.Clamp( x, 28f, 72f ),
+				Y = Math.Clamp( y, 26f, 74f ),
+				Color = GetSquareColor( i )
+			} );
+		}
+	}
+
+	private static string GetSquareColor( int index )
+	{
+		return (index % 10) switch
+		{
+			0 => "#ff436c",
+			1 => "#27d3ff",
+			2 => "#ffe15c",
+			3 => "#6dff99",
+			4 => "#c77dff",
+			5 => "#ff8f3d",
+			6 => "#74f2ce",
+			7 => "#ff6bd6",
+			8 => "#9ab2ff",
+			_ => "#f3ff74"
+		};
+	}
+
+	private string GetSquareStyle( HackSquare square )
+	{
+		return $"left: {square.X:0.##}%; top: {square.Y:0.##}%; background-color: {square.Color};";
+	}
+
+	private string GetTitle()
+	{
+		if ( IsInstructionPhase )
+			return GameLocalization.Phrase( "ui.lockpick.prepare_title", "Lockpick protocol" );
+
+		return GameLocalization.Phrase( "ui.lockpick.play_title", "Break the lock" );
+	}
+
+	private string GetSubtitle()
+	{
+		if ( IsInstructionPhase )
+			return GameLocalization.Phrase( "ui.lockpick.prepare_subtitle", "Wait for the signal. Then click every square before time runs out." );
+
+		return GameLocalization.Phrase( "ui.lockpick.play_subtitle", "Click all active squares." );
+	}
+
+	private string GetTimerText()
+	{
+		var seconds = IsInstructionPhase ? (float)_instructionUntil : (float)_gameUntil;
+		return $"{MathF.Max( 0f, seconds ):0.0}s";
+	}
+
+	protected override void OnStart()
+	{
+		if ( Instance.IsValid() && Instance != this )
+			return;
+
+		Instance = this;
+	}
+
+	protected override void OnDestroy()
+	{
+		if ( Instance == this )
+			Instance = null;
+
+		if ( IsOpen )
+			Close();
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( !IsOpen || _submitted )
+			return;
+
+		if ( _gameUntil )
+		{
+			Submit( false );
+			return;
+		}
+
+		StateHasChanged();
+	}
+
+	protected override int BuildHash()
+	{
+		if ( !IsOpen )
+			return HashCode.Combine( IsOpen, GameLocalization.CurrentCode );
+
+		return HashCode.Combine(
+			IsOpen,
+			AttemptId,
+			Squares.Count,
+			ClickedCount,
+			IsInstructionPhase,
+			(int)(Time.Now * 10f),
+			GameLocalization.CurrentCode );
+	}
+
+	private sealed class HackSquare
+	{
+		public int Id { get; init; }
+		public float X { get; init; }
+		public float Y { get; init; }
+		public string Color { get; init; }
+		public bool Clicked { get; set; }
+	}
+}

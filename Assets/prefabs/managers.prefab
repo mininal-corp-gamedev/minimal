@@ -597,6 +597,19 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.DoorHackMinigame",
+            "__guid": "90e0b204-7e91-4fa0-95d8-af5422fab591",
+            "__enabled": true,
+            "Flags": 0,
+            "MyStringValue": "Hello World!",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
           }
         ],
         "Children": []

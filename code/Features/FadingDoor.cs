@@ -1,9 +1,26 @@
 using Sandbox;
 
-public sealed class FadingDoor : Component
+public sealed class FadingDoor : Component, IDoorHackable
 {
 	[Sync( SyncFlags.FromHost )] public Player PlayerOwner { get; private set; }
 	[Sync( SyncFlags.FromHost )] public bool IsOpen { get; private set; }
+
+	[Property, Category( "Lockpick" )] public float LockpickInteractRange { get; set; } = 120f;
+
+	public string DoorHackName => "Fading Door";
+	public Vector3 DoorHackWorldPosition => WorldPosition;
+	public float DoorHackInteractRange => LockpickInteractRange;
+	private Player EffectiveOwner
+	{
+		get
+		{
+			if ( PlayerOwner.IsValid() )
+				return PlayerOwner;
+
+			var prop = GameObject.Components.Get<PropCustom>( FindMode.EverythingInSelfAndAncestors );
+			return prop.IsValid() ? prop.PlayerOwner : null;
+		}
+	}
 
 	private bool _collisionApplied;
 	private bool _lastAppliedOpen;
@@ -42,7 +59,7 @@ public sealed class FadingDoor : Component
 
 	protected override void OnFixedUpdate()
 	{
-		if ( Player.Local != PlayerOwner )
+		if ( Player.Local != EffectiveOwner )
 			return;
 		if ( !Input.Pressed( "FadingDoorOpenClose" ) )
 			return;
@@ -74,13 +91,46 @@ public sealed class FadingDoor : Component
 	{
 		if ( !Networking.IsHost )
 			return;
-		if ( !player.IsValid() || player != PlayerOwner )
+		if ( !player.IsValid() || player != EffectiveOwner )
 			return;
 
 		if ( IsOpen )
 			Close();
 		else
 			Open();
+	}
+
+	[Rpc.Host]
+	public void RpcRequestLockpick()
+	{
+		DoorHackSystem.HostRequestStartHackFromRpc( GameObject );
+	}
+
+	public void RequestDoorHack()
+	{
+		RpcRequestLockpick();
+	}
+
+	public bool CanBeDoorHacked( Player hacker )
+	{
+		if ( IsOpen ) return false;
+		var owner = EffectiveOwner;
+		if ( !owner.IsValid() ) return false;
+		if ( hacker.IsValid() && hacker.IsArrested ) return false;
+		return true;
+	}
+
+	public void HostOnDoorHackSucceeded( Player hacker )
+	{
+		if ( !Networking.IsHost ) return;
+		if ( !CanBeDoorHacked( hacker ) ) return;
+
+		Open();
+	}
+
+	public void HostOnDoorHackFailed( Player hacker )
+	{
+		if ( !Networking.IsHost ) return;
 	}
 
 	private void ApplyCollisionState()

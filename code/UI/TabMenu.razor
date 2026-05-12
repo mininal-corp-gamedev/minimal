@@ -9,6 +9,10 @@
 @namespace Sandbox
 
 <root>
+	@if ( IsDiscordOpening )
+	{
+		<WebPanel class="discord-webpanel" Url="https://discord.gg/minimalrp" />
+	}
 	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
 	{
 		<div class="overlay">
@@ -30,7 +34,7 @@
 					<div class="sidebar-bottom">
 						<button class="bottom-btn">@GameLocalization.Phrase( "ui.sidebar.rules" )</button>
 						<button class="bottom-btn">@GameLocalization.Phrase( "ui.sidebar.donate" )</button>
-						<button class="bottom-btn">Discord</button>
+						<button class="bottom-btn" onclick=@OpenDiscord>Discord</button>
 						<div class="language-switcher">
 							<button class="language-btn @(IsLanguage( GameLocalization.EnglishCode ) ? "active" : "")" onmousedown=@(() => SetLanguage( GameLocalization.EnglishCode )) onclick=@(() => SetLanguage( GameLocalization.EnglishCode ))>EN</button>
 							<button class="language-btn @(IsLanguage( GameLocalization.RussianCode ) ? "active" : "")" onmousedown=@(() => SetLanguage( GameLocalization.RussianCode )) onclick=@(() => SetLanguage( GameLocalization.RussianCode ))>RU</button>
@@ -161,6 +165,15 @@
 {
 	const string ModalId = nameof( TabMenu );
 	bool IsOpen { get; set; } = false;
+	TimeUntil DiscordCloseAt { get; set; } = 0f;
+	bool IsDiscordOpening { get; set; } = false;
+
+	private void OpenDiscord()
+	{
+		IsDiscordOpening = true;
+		DiscordCloseAt = 5f;
+		StateHasChanged();
+	}
 	int ActiveTab { get; set; } = 0;
 	List<Connection> CachedPlayers { get; set; } = new();
 	List<JobDefinition> AvailableJobs { get; set; } = new();
@@ -563,6 +576,12 @@
 	{
 		if ( Input.Pressed( "Score" ) )
 			SetOpen( !IsOpen );
+
+		if ( IsDiscordOpening && DiscordCloseAt <= 0f )
+		{
+			IsDiscordOpening = false;
+			StateHasChanged();
+		}
 
 		UiModalManager.UpdateMouseVisibility();
 	}

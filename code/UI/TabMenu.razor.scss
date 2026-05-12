@@ -14,6 +14,16 @@ TabMenu {
 	right: 0;
 	bottom: 0;
 
+	.discord-webpanel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+		pointer-events: none;
+	}
+
 	.overlay {
 		position: absolute;
 		top: 0;

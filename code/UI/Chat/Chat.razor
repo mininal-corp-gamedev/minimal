@@ -34,7 +34,7 @@
 		@if ( IsChatOpen )
 		{
 			<div class="chat-input-row">
-				<TextEntry @ref="ChatInputRef" class="chat-input" Value:bind="@PendingText" Placeholder="Type message..." onsubmit="@OnInputSubmit" />
+				<TextEntry @ref="ChatInputRef" class="chat-input" Value:bind="@PendingText" Placeholder="@GameLocalization.Phrase( "ui.chat.placeholder", "Type message..." )" onsubmit="@OnInputSubmit" />
 				<button class="send-button" @onclick="OnSendButtonPressed">&gt;&gt;</button>
 			</div>
 		}
@@ -267,7 +267,7 @@
 				SendReportMessage( caller, args );
 				break;
 			default:
-				SendToCaller( caller, "Unknown command.", ChatMessageType.System );
+				SendToCaller( caller, GameLocalization.Phrase( "notify.chat.unknown_command", "Unknown command." ), ChatMessageType.System );
 				break;
 		}
 	}
@@ -300,10 +300,10 @@
 
 	private void SendReportMessage( Connection caller, string reason )
 	{
-		var text = $"SteamId {caller.SteamId.Value} ({caller.DisplayName}) called for help.";
+		var text = GameLocalization.Format( "notify.chat.report_called", "SteamId {0} ({1}) called for help.", caller.SteamId.Value, caller.DisplayName );
 		var normalizedReason = NormalizeText( reason );
 		if ( normalizedReason.Length > 0 )
-			text += $" Reason: {normalizedReason}";
+			text += GameLocalization.Format( "notify.chat.report_reason", " Reason: {0}", normalizedReason );
 
 		var recipients = GetAllPlayers()
 			.Where( x => x.AdminRank > 0 )
@@ -313,17 +313,17 @@
 
 		using ( Rpc.FilterInclude( connection => recipients.Contains( connection.SteamId.Value ) ) )
 		{
-			BroadcastChatMessage( "Report", caller.SteamId.Value, text, ChatMessageType.Report );
+		BroadcastChatMessage( GameLocalization.Phrase( "ui.chat.report", "Report" ), caller.SteamId.Value, text, ChatMessageType.Report );
 		}
 
-		SendToCaller( caller, "Report sent.", ChatMessageType.System );
+		SendToCaller( caller, GameLocalization.Phrase( "notify.chat.report_sent", "Report sent." ), ChatMessageType.System );
 	}
 
 	private void SendToCaller( Connection caller, string message, ChatMessageType type )
 	{
 		using ( Rpc.FilterInclude( connection => connection.SteamId == caller.SteamId ) )
 		{
-			BroadcastChatMessage( "System", 0L, message, type );
+			BroadcastChatMessage( GameLocalization.Phrase( "ui.chat.system", "System" ), 0L, message, type );
 		}
 	}
 
@@ -463,6 +463,7 @@
 		return HashCode.Combine(
 			IsChatOpen,
 			PendingText,
+			GameLocalization.CurrentCode,
 			Messages.Count,
 			Messages.Count > 0 ? Messages[^1].BuildHash() : 0,
 			VisibleMessages.Count()

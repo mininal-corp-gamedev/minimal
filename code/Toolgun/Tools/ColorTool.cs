@@ -47,7 +47,7 @@ public sealed class ColorTool : ToolMode
 
 	public override string Id => "color";
 	public override string Title => "Color";
-	public override string Description => "Красит твой prop выбранным цветом.";
+	public override string Description => "Paints your prop with the selected color.";
 	public override IReadOnlyList<ToolConfigField> ConfigFields => Fields;
 
 	public override ToolUseResult Use(ToolUseContext context)
@@ -57,6 +57,6 @@ public sealed class ColorTool : ToolMode
 			color = Color.White;
 
 		context.TargetProp.SetTint(color);
-		return ToolUseResult.Ok("Prop покрашен.");
+		return ToolUseResult.Ok(GameLocalization.Phrase( "notify.toolgun.prop_colored", "Prop painted." ));
 	}
 }

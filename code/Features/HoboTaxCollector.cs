@@ -32,7 +32,7 @@ public sealed class HoboTaxCollector : Component, Component.IPressable, Componen
         {
             if (ply != PlayerOwner)
             {
-                Notification.Make("Просто дропните деньги через С меню", 5f);
+                Notification.Make(GameLocalization.Phrase( "notify.hobo_collector.drop_money_hint", "Drop money through the C menu." ), 5f);
 
                 return false;
             }

@@ -31,7 +31,7 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 	private readonly Dictionary<long, float> _nextActionTimeBySteamId = new();
 
 	private int _localLocksOpened;
-	private string _localStatusText = "Ready";
+	private string _localStatusText = GameLocalization.Phrase( "ui.common.ready", "Ready" );
 	private string _localVisualState = "idle";
 
 	private bool _pendingReveal;
@@ -88,32 +88,32 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 		var steamId = connection.SteamId.Value;
 		if ( !CanPlayerUseMachine( player ) )
 		{
-			SendRejectedToOwner( connection, "Too far" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "notify.casino.too_far", "Too far" ) );
 			return;
 		}
 
 		if ( IsOnCooldown( steamId ) )
 		{
-			SendRejectedToOwner( connection, "Wait" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "notify.casino.wait", "Wait" ) );
 			return;
 		}
 
 		if ( BetCost <= 0 )
 		{
-			SendRejectedToOwner( connection, "Invalid bet" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "notify.casino.invalid_bet", "Invalid bet" ) );
 			return;
 		}
 
 		if ( player.Money < BetCost )
 		{
-			SendRejectedToOwner( connection, "Not enough money" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "ui.shop.not_enough_money", "Not enough money" ) );
 			return;
 		}
 
 		var session = GetSession( steamId );
 		if ( session.IsSpinning )
 		{
-			SendRejectedToOwner( connection, "Spinning" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "ui.casino.spinning_short", "Spinning" ) );
 			return;
 		}
 
@@ -177,7 +177,7 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 	private void RpcOwnerStartSpin( string outcome, int locksOpened, int payout, int lostValue, float revealDelay )
 	{
 		_localVisualState = "spinning";
-		_localStatusText = "Cracking...";
+		_localStatusText = GameLocalization.Phrase( "ui.casino.cracking", "Cracking..." );
 
 		_pendingOutcome = string.IsNullOrWhiteSpace( outcome ) ? "reset" : outcome;
 		_pendingLocksOpened = Math.Clamp( locksOpened, 0, RequiredLocks );
@@ -282,7 +282,7 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 	protected override void OnStart()
 	{
 		_localLocksOpened = 0;
-		_localStatusText = "Ready";
+		_localStatusText = GameLocalization.Phrase( "ui.common.ready", "Ready" );
 		_localVisualState = "idle";
 	}
 
@@ -301,26 +301,26 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 			case "open":
 				_localLocksOpened = _pendingLocksOpened;
 				_localVisualState = "open";
-				_localStatusText = $"Lock {_localLocksOpened}/{RequiredLocks}";
-				Notification.Info( $"Safe crack: lock {_localLocksOpened}/{RequiredLocks}", 2.1f );
+				_localStatusText = GameLocalization.Format( "ui.casino.lock_progress", "Lock {0}/{1}", _localLocksOpened, RequiredLocks );
+				Notification.Info( GameLocalization.Format( "notify.casino.safe_lock", "Safe crack: lock {0}/{1}", _localLocksOpened, RequiredLocks ), 2.1f );
 				break;
 			case "small":
 				_localLocksOpened = _pendingLocksOpened;
 				_localVisualState = "small";
-				_localStatusText = $"Found +${_pendingPayout}";
-				Notification.Info( $"Safe crack found cash: +${_pendingPayout}", 2.1f );
+				_localStatusText = GameLocalization.Format( "ui.casino.found_money", "Found +${0}", _pendingPayout );
+				Notification.Info( GameLocalization.Format( "notify.casino.safe_found", "Safe crack found cash: +${0}", _pendingPayout ), 2.1f );
 				break;
 			case "jackpot":
 				_localLocksOpened = 0;
 				_localVisualState = "jackpot";
-				_localStatusText = $"Jackpot +${_pendingPayout}";
-				Notification.Info( $"Safe crack jackpot: +${_pendingPayout}", 2.6f );
+				_localStatusText = GameLocalization.Format( "ui.casino.jackpot_money", "Jackpot +${0}", _pendingPayout );
+				Notification.Info( GameLocalization.Format( "notify.casino.safe_jackpot", "Safe crack jackpot: +${0}", _pendingPayout ), 2.6f );
 				break;
 			default:
 				_localLocksOpened = 0;
 				_localVisualState = "reset";
-				_localStatusText = $"Reset -${_pendingLostValue}";
-				Notification.Error( $"Safe crack reset: -${_pendingLostValue}", 2.2f );
+				_localStatusText = GameLocalization.Format( "ui.casino.reset_money", "Reset -${0}", _pendingLostValue );
+				Notification.Error( GameLocalization.Format( "notify.casino.safe_reset", "Safe crack reset: -${0}", _pendingLostValue ), 2.2f );
 				break;
 		}
 	}

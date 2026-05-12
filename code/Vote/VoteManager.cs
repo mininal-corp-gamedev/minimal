@@ -37,7 +37,7 @@ public sealed class VoteManager : Component
 			return false;
 
 		return EnsureInstance()?.StartVote(
-			$"{GetPlayerName( requester )} wants to become {jobDefinition.Header}",
+			GameLocalization.Format( "vote.job.header", "{0} wants to become {1}", GetPlayerName( requester ), GameLocalization.JobHeader( jobDefinition ) ),
 			() =>
 			{
 				if ( !requester.IsValid() || !requester.Job.IsValid() )
@@ -47,7 +47,7 @@ public sealed class VoteManager : Component
 					return;
 
 				requester.Job.SetJob( jobDefinition.Id );
-				Notify( $"{GetPlayerName( requester )} became {jobDefinition.Header}.", true );
+				Notify( GameLocalization.Format( "notify.vote.became_job", "{0} became {1}.", GetPlayerName( requester ), GameLocalization.JobHeader( jobDefinition ) ), true );
 			} ) ?? false;
 	}
 
@@ -59,9 +59,9 @@ public sealed class VoteManager : Component
 		if ( !target.IsValid() || !target.Job.IsValid() || !CanDemoteTarget( target, out _ ) )
 			return false;
 
-		var oldJobName = target.Job.JobDefinition?.Header ?? "job";
+		var oldJobName = GameLocalization.JobHeader( target.Job.JobDefinition );
 		return EnsureInstance()?.StartVote(
-			$"Demote {GetPlayerName( target )} from {oldJobName}?",
+			GameLocalization.Format( "vote.demote.header", "Demote {0} from {1}?", GetPlayerName( target ), oldJobName ),
 			() =>
 			{
 				if ( !target.IsValid() || !target.Job.IsValid() )
@@ -75,7 +75,7 @@ public sealed class VoteManager : Component
 					return;
 
 				target.Job.SetJob( demoteJob.Id );
-				Notify( $"{GetPlayerName( target )} was demoted to {demoteJob.Header}.", true );
+				Notify( GameLocalization.Format( "notify.vote.demoted_to", "{0} was demoted to {1}.", GetPlayerName( target ), GameLocalization.JobHeader( demoteJob ) ), true );
 			} ) ?? false;
 	}
 
@@ -85,31 +85,31 @@ public sealed class VoteManager : Component
 
 		if ( !player.IsValid() || !player.Job.IsValid() )
 		{
-			reason = "Your player is not ready.";
+			reason = GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." );
 			return false;
 		}
 
 		if ( player.IsArrested )
 		{
-			reason = "You are arrested.";
+			reason = GameLocalization.Phrase( "notify.player.arrested", "You are arrested." );
 			return false;
 		}
 
 		if ( jobDefinition is null )
 		{
-			reason = "Job not found.";
+			reason = GameLocalization.Phrase( "notify.jobs.not_found", "Job not found." );
 			return false;
 		}
 
 		if ( string.Equals( player.Job.JobId, jobDefinition.Id, StringComparison.Ordinal ) )
 		{
-			reason = "You already have this job.";
+			reason = GameLocalization.Phrase( "notify.jobs.already_have", "You already have this job." );
 			return false;
 		}
 
 		if ( jobDefinition.MaxCount > 0 && GetJobPlayerCount( jobDefinition.Id ) >= jobDefinition.MaxCount )
 		{
-			reason = $"No free slots for {jobDefinition.Header}.";
+			reason = GameLocalization.Format( "notify.jobs.no_free_slots", "No free slots for {0}.", GameLocalization.JobHeader( jobDefinition ) );
 			return false;
 		}
 
@@ -122,32 +122,32 @@ public sealed class VoteManager : Component
 
 		if ( !target.IsValid() || !target.Job.IsValid() )
 		{
-			reason = "Player is not ready.";
+			reason = GameLocalization.Phrase( "notify.player.not_ready_other", "Player is not ready." );
 			return false;
 		}
 
 		if ( target.GameObject.Network.Owner is null || target.GameObject.Network.Owner.SteamId.Value <= 0 )
 		{
-			reason = "Player connection is not ready.";
+			reason = GameLocalization.Phrase( "notify.player.connection_not_ready", "Player connection is not ready." );
 			return false;
 		}
 
 		var job = target.Job.JobDefinition;
 		if ( job is null )
 		{
-			reason = "Player has no job.";
+			reason = GameLocalization.Phrase( "notify.player.no_job", "Player has no job." );
 			return false;
 		}
 
 		if ( string.Equals( job.Id, PlayerJob.DefaultJobId, StringComparison.OrdinalIgnoreCase ) )
 		{
-			reason = "Citizen cannot be demoted.";
+			reason = GameLocalization.Phrase( "notify.demote.citizen", "Citizen cannot be demoted." );
 			return false;
 		}
 
 		if ( !job.CanDemote )
 		{
-			reason = "This job cannot be demoted.";
+			reason = GameLocalization.Phrase( "notify.demote.job_denied", "This job cannot be demoted." );
 			return false;
 		}
 
@@ -232,7 +232,9 @@ public sealed class VoteManager : Component
 		var passed = yes > 0 && yes >= no;
 
 		RpcCloseVote( vote.Id );
-		Notify( passed ? $"Vote passed: {vote.Header}" : $"Vote failed: {vote.Header}", passed );
+		Notify( passed
+			? GameLocalization.Format( "notify.vote.passed", "Vote passed: {0}", vote.Header )
+			: GameLocalization.Format( "notify.vote.failed", "Vote failed: {0}", vote.Header ), passed );
 
 		if ( passed )
 			vote.OnPassed?.Invoke();
@@ -270,7 +272,7 @@ public sealed class VoteManager : Component
 
 	private static string GetPlayerName( Player player )
 	{
-		return player?.GameObject?.Network.Owner?.DisplayName ?? "Player";
+		return player?.GameObject?.Network.Owner?.DisplayName ?? GameLocalization.Phrase( "common.player", "Player" );
 	}
 
 	private static void Notify( string message, bool success )

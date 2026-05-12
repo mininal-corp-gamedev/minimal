@@ -29,7 +29,7 @@
 
 	float HealthValue => TargetPlayer?.Health ?? 0f;
 	float MaxHealthValue => TargetPlayer is { MaxHealth: > 0f } p ? p.MaxHealth : 1f;
-	string JobName => TargetPlayer?.Job?.JobDefinition?.Header ?? "";
+	string JobName => TargetPlayer?.Job?.JobDefinition is null ? "" : GameLocalization.JobHeader( TargetPlayer.Job.JobDefinition );
 
 	float HealthPercent => Math.Clamp( HealthValue / MaxHealthValue * 100f, 0f, 100f );
 
@@ -38,5 +38,5 @@
 
 	public void WorldHudRefresh() => StateHasChanged();
 
-	protected override int BuildHash() => System.HashCode.Combine( ShouldShow, Name, JobName, HealthValue, MaxHealthValue );
+	protected override int BuildHash() => System.HashCode.Combine( ShouldShow, Name, JobName, HealthValue, MaxHealthValue, GameLocalization.CurrentCode );
 }

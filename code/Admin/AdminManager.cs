@@ -1,6 +1,7 @@
 using Sandbox;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 public sealed class AdminManager : Component, Component.INetworkListener
 {
@@ -32,10 +33,10 @@ public sealed class AdminManager : Component, Component.INetworkListener
 
 	public static string GetRankName( int rank ) => rank switch
 	{
-		SuperAdministratorRank => "Super Administrator",
-		AdministratorRank => "Administrator",
-		ModeratorRank => "Moderator",
-		_ => "Player"
+		SuperAdministratorRank => GameLocalization.Phrase( "admin.rank.superadmin", "Super Administrator" ),
+		AdministratorRank => GameLocalization.Phrase( "admin.rank.admin", "Administrator" ),
+		ModeratorRank => GameLocalization.Phrase( "admin.rank.moderator", "Moderator" ),
+		_ => GameLocalization.Phrase( "admin.rank.player", "Player" )
 	};
 
 	[Rpc.Host]
@@ -79,7 +80,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var argsTail = JoinArgs( value, extra1, extra2, extra3, extra4, extra5, extra6, extra7, extra8 );
 		if ( !TryParseSteamId( steamIdText, out var steamId ) && !string.Equals( command, "selldoor", StringComparison.OrdinalIgnoreCase ) )
 		{
-			NotifyCaller( caller, "Invalid SteamId.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.invalid_steamid", "Invalid SteamId." ), AdminNotifyType.Error );
 			return;
 		}
 
@@ -99,11 +100,11 @@ public sealed class AdminManager : Component, Component.INetworkListener
 				break;
 			case "setmoney":
 				if ( int.TryParse( value, out var money ) ) SetMoney( caller, steamId, money );
-				else NotifyCaller( caller, "Invalid money value.", AdminNotifyType.Error );
+				else NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.invalid_money", "Invalid money value." ), AdminNotifyType.Error );
 				break;
 			case "sethp":
 				if ( float.TryParse( value, out var hp ) ) SetHp( caller, steamId, hp );
-				else NotifyCaller( caller, "Invalid hp value.", AdminNotifyType.Error );
+				else NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.invalid_hp", "Invalid hp value." ), AdminNotifyType.Error );
 				break;
 			case "kill":
 				Kill( caller, steamId );
@@ -125,10 +126,10 @@ public sealed class AdminManager : Component, Component.INetworkListener
 				break;
 			case "giverank":
 				if ( int.TryParse( value, out var rank ) ) GiveRank( caller, steamId, rank );
-				else NotifyCaller( caller, "Invalid rank value.", AdminNotifyType.Error );
+				else NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.invalid_rank", "Invalid rank value." ), AdminNotifyType.Error );
 				break;
 			default:
-				NotifyCaller( caller, "Usage: adm <kick|ban|unban|spawn|setmoney|sethp|kill|setjob|selldoor|goto|tp|return|giverank> ...", AdminNotifyType.Warn );
+				NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.usage", "Usage: adm <kick|ban|unban|spawn|setmoney|sethp|kill|setjob|selldoor|goto|tp|return|giverank> ..." ), AdminNotifyType.Warn );
 				break;
 		}
 	}
@@ -181,24 +182,24 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var targetConnection = FindConnectionBySteamId( steamId );
 		if ( targetConnection is null )
 		{
-			NotifyCaller( caller, "Player is not online.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_offline", "Player is not online." ), AdminNotifyType.Error );
 			return;
 		}
 
 		if ( targetConnection.IsHost )
 		{
-			NotifyCaller( caller, "Host connection cannot be kicked.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.host_cannot_kick", "Host connection cannot be kicked." ), AdminNotifyType.Error );
 			return;
 		}
 
-		var normalizedReason = NormalizeReason( reason, "Kicked by admin" );
+		var normalizedReason = NormalizeReason( reason, GameLocalization.Phrase( "notify.admin.reason.kicked_by_admin", "Kicked by admin" ) );
 		if ( !TryKickConnection( targetConnection, normalizedReason, out var kickError ) )
 		{
 			NotifyCaller( caller, kickError, AdminNotifyType.Error );
 			return;
 		}
 
-		NotifyCaller( caller, $"Kicked {targetConnection.DisplayName}: {normalizedReason}", AdminNotifyType.Info );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.kicked", "Kicked {0}: {1}", targetConnection.DisplayName, normalizedReason ), AdminNotifyType.Info );
 	}
 
 	private static void Ban( Connection caller, long steamId, string reason )
@@ -209,11 +210,11 @@ public sealed class AdminManager : Component, Component.INetworkListener
 			return;
 		}
 
-		var normalizedReason = NormalizeReason( reason, "Banned by admin" );
+		var normalizedReason = NormalizeReason( reason, GameLocalization.Phrase( "notify.admin.reason.banned_by_admin", "Banned by admin" ) );
 		var targetConnection = FindConnectionBySteamId( steamId );
 		if ( targetConnection is not null && targetConnection.IsHost )
 		{
-			NotifyCaller( caller, "Host connection cannot be banned.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.host_cannot_ban", "Host connection cannot be banned." ), AdminNotifyType.Error );
 			return;
 		}
 
@@ -224,14 +225,14 @@ public sealed class AdminManager : Component, Component.INetworkListener
 			Reason = normalizedReason,
 			BannedAt = DateTimeOffset.UtcNow,
 			BannedBySteamId = caller is null ? 0 : caller.SteamId.Value,
-			BannedByName = caller?.DisplayName ?? "Server",
+			BannedByName = caller?.DisplayName ?? GameLocalization.Phrase( "ui.chat.system", "System" ),
 			IsPermanent = true
 		} );
 
 		if ( targetConnection is not null )
 			CloseBannedClient( targetConnection, normalizedReason );
 
-		NotifyCaller( caller, $"Banned {steamId}: {normalizedReason}", AdminNotifyType.Info );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.banned", "Banned {0}: {1}", steamId, normalizedReason ), AdminNotifyType.Info );
 	}
 
 	private static void Unban( Connection caller, long steamId )
@@ -245,12 +246,12 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var path = GetBanPath( steamId );
 		if ( !FileSystem.Data.FileExists( path ) )
 		{
-			NotifyCaller( caller, "SteamId is not banned.", AdminNotifyType.Warn );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.steamid_not_banned", "SteamId is not banned." ), AdminNotifyType.Warn );
 			return;
 		}
 
 		FileSystem.Data.DeleteFile( path );
-		NotifyCaller( caller, $"Unbanned {steamId}.", AdminNotifyType.Info );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.unbanned", "Unbanned {0}.", steamId ), AdminNotifyType.Info );
 	}
 
 	private static void Respawn( Connection caller, long steamId )
@@ -264,12 +265,12 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var target = FindPlayerBySteamId( steamId );
 		if ( !target.IsValid() )
 		{
-			NotifyCaller( caller, "Player is not online.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_offline", "Player is not online." ), AdminNotifyType.Error );
 			return;
 		}
 
 		target.HostTriggerRespawn();
-		NotifyCaller( caller, $"Respawned {GetPlayerName( target )}.", AdminNotifyType.Info );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.respawned", "Respawned {0}.", GetPlayerName( target ) ), AdminNotifyType.Info );
 	}
 
 	private static void SetMoney( Connection caller, long steamId, int value )
@@ -283,12 +284,12 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var target = FindPlayerBySteamId( steamId );
 		if ( !target.IsValid() )
 		{
-			NotifyCaller( caller, "Player is not online.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_offline", "Player is not online." ), AdminNotifyType.Error );
 			return;
 		}
 
 		target.Money = Math.Max( 0, value );
-		NotifyCaller( caller, $"Set {GetPlayerName( target )} money to ${target.Money}.", AdminNotifyType.Info );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.set_money", "Set {0} money to ${1}.", GetPlayerName( target ), target.Money ), AdminNotifyType.Info );
 	}
 
 	private static void SetHp( Connection caller, long steamId, float value )
@@ -302,20 +303,20 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var target = FindPlayerBySteamId( steamId );
 		if ( !target.IsValid() )
 		{
-			NotifyCaller( caller, "Player is not online.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_offline", "Player is not online." ), AdminNotifyType.Error );
 			return;
 		}
 
 		target.Health = Math.Clamp( value, 0f, target.MaxHealth );
 		if ( target.Health <= 0f )
 		{
-			target.HostKill( "Вас убил администратор." );
-			NotifyCaller( caller, $"Killed {GetPlayerName( target )} by setting hp to 0.", AdminNotifyType.Info );
+			target.HostKill( GameLocalization.Phrase( "ui.hud.killed_by_admin", "You were killed by an administrator." ) );
+			NotifyCaller( caller, GameLocalization.Format( "notify.admin.killed_by_set_hp", "Killed {0} by setting hp to 0.", GetPlayerName( target ) ), AdminNotifyType.Info );
 			return;
 		}
 
 		target.WorldHud?.WorldHudRefresh();
-		NotifyCaller( caller, $"Set {GetPlayerName( target )} hp to {target.Health:0}.", AdminNotifyType.Info );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.set_hp", "Set {0} hp to {1}.", GetPlayerName( target ), target.Health.ToString( "0", CultureInfo.InvariantCulture ) ), AdminNotifyType.Info );
 	}
 
 	private static void Kill( Connection caller, long steamId )
@@ -329,18 +330,18 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var target = FindPlayerBySteamId( steamId );
 		if ( !target.IsValid() )
 		{
-			NotifyCaller( caller, "Player is not online.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_offline", "Player is not online." ), AdminNotifyType.Error );
 			return;
 		}
 
 		if ( target.IsDead )
 		{
-			NotifyCaller( caller, "Player is already dead.", AdminNotifyType.Warn );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_already_dead", "Player is already dead." ), AdminNotifyType.Warn );
 			return;
 		}
 
-		target.HostKill( "Вас убил администратор." );
-		NotifyCaller( caller, $"Killed {GetPlayerName( target )}.", AdminNotifyType.Info );
+		target.HostKill( GameLocalization.Phrase( "ui.hud.killed_by_admin", "You were killed by an administrator." ) );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.killed", "Killed {0}.", GetPlayerName( target ) ), AdminNotifyType.Info );
 	}
 
 	private static void SetJob( Connection caller, long steamId, string jobId )
@@ -354,19 +355,19 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var normalizedJobId = (jobId ?? "").Trim();
 		if ( string.IsNullOrEmpty( normalizedJobId ) || JobDatabase.Get( normalizedJobId ) is null )
 		{
-			NotifyCaller( caller, "Job not found.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.jobs.not_found", "Job not found." ), AdminNotifyType.Error );
 			return;
 		}
 
 		var target = FindPlayerBySteamId( steamId );
 		if ( !target.IsValid() )
 		{
-			NotifyCaller( caller, "Player is not online.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_offline", "Player is not online." ), AdminNotifyType.Error );
 			return;
 		}
 
 		target.Job?.SetJob( normalizedJobId );
-		NotifyCaller( caller, $"Set {GetPlayerName( target )} job to {normalizedJobId}.", AdminNotifyType.Info );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.set_job", "Set {0} job to {1}.", GetPlayerName( target ), normalizedJobId ), AdminNotifyType.Info );
 	}
 
 	private static void SellDoor( Connection caller )
@@ -384,21 +385,21 @@ public sealed class AdminManager : Component, Component.INetworkListener
 
 		if ( caller is null )
 		{
-			NotifyCaller( caller, "This command requires an in-game admin player.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.command_requires_player", "This command requires an in-game admin player." ), AdminNotifyType.Error );
 			return;
 		}
 
 		var admin = FindPlayerBySteamId( caller.SteamId.Value );
 		if ( !admin.IsValid() || !admin.Controller.IsValid() )
 		{
-			NotifyCaller( caller, "Admin player is not online.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.admin_player_offline", "Admin player is not online." ), AdminNotifyType.Error );
 			return;
 		}
 
 		var scene = Game.ActiveScene;
 		if ( scene is null )
 		{
-			NotifyCaller( caller, "Active scene not found.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.active_scene_not_found", "Active scene not found." ), AdminNotifyType.Error );
 			return;
 		}
 
@@ -410,7 +411,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 
 		if ( requestedEyePosition.HasValue && Vector3.DistanceBetween( admin.WorldPosition, traceOrigin ) > 200f )
 		{
-			NotifyCaller( caller, "Door trace origin is too far from you.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.door_trace_too_far", "Door trace origin is too far from you." ), AdminNotifyType.Error );
 			return;
 		}
 
@@ -422,18 +423,18 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var door = FindDoorFromTrace( trace );
 		if ( !door.IsValid() )
 		{
-			NotifyCaller( caller, "Look at a door first.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.look_at_door", "Look at a door first." ), AdminNotifyType.Error );
 			return;
 		}
 
 		if ( door.IsBlocked || door.HasOnlyJobs || door.LockState == Door.DoorLockState.Locked || !door.HasOwner )
 		{
-			NotifyCaller( caller, "This door cannot be force-sold.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.door_force_sell_denied", "This door cannot be force-sold." ), AdminNotifyType.Error );
 			return;
 		}
 
 		door.Sell();
-		NotifyCaller( caller, "Door was force-sold.", AdminNotifyType.Info );
+		NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.door_force_sold", "Door was force-sold." ), AdminNotifyType.Info );
 	}
 
 	private static void Goto( Connection caller, long steamId )
@@ -446,7 +447,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 
 		if ( caller is null )
 		{
-			NotifyCaller( caller, "This command requires an in-game admin player.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.command_requires_player", "This command requires an in-game admin player." ), AdminNotifyType.Error );
 			return;
 		}
 
@@ -454,7 +455,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var target = FindPlayerBySteamId( steamId );
 		if ( !admin.IsValid() || !target.IsValid() )
 		{
-			NotifyCaller( caller, "Player is not online.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_offline", "Player is not online." ), AdminNotifyType.Error );
 			return;
 		}
 
@@ -462,7 +463,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var gotoPos = target.WorldPosition + target.WorldRotation.Backward * 64f;
 		var gotoRot = Rotation.LookAt( target.WorldPosition - gotoPos );
 		admin.HostTeleport( gotoPos, gotoRot );
-		NotifyCaller( caller, $"Teleported to {GetPlayerName( target )}.", AdminNotifyType.Info );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.teleported_to", "Teleported to {0}.", GetPlayerName( target ) ), AdminNotifyType.Info );
 	}
 
 	private static void TeleportToCaller( Connection caller, long steamId )
@@ -475,7 +476,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 
 		if ( caller is null )
 		{
-			NotifyCaller( caller, "This command requires an in-game admin player.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.command_requires_player", "This command requires an in-game admin player." ), AdminNotifyType.Error );
 			return;
 		}
 
@@ -483,7 +484,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var target = FindPlayerBySteamId( steamId );
 		if ( !admin.IsValid() || !target.IsValid() )
 		{
-			NotifyCaller( caller, "Player is not online.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_offline", "Player is not online." ), AdminNotifyType.Error );
 			return;
 		}
 
@@ -491,7 +492,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var tpPos = admin.WorldPosition + admin.WorldRotation.Forward * 64f;
 		var tpRot = Rotation.LookAt( admin.WorldPosition - tpPos );
 		target.HostTeleport( tpPos, tpRot );
-		NotifyCaller( caller, $"Teleported {GetPlayerName( target )} to you.", AdminNotifyType.Info );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.teleported_to_you", "Teleported {0} to you.", GetPlayerName( target ) ), AdminNotifyType.Info );
 	}
 
 	private static void Return( Connection caller, long steamId )
@@ -505,19 +506,19 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var target = FindPlayerBySteamId( steamId );
 		if ( !target.IsValid() )
 		{
-			NotifyCaller( caller, "Player is not online.", AdminNotifyType.Error );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_offline", "Player is not online." ), AdminNotifyType.Error );
 			return;
 		}
 
 		if ( !ReturnTransforms.TryGetValue( steamId, out var transform ) )
 		{
-			NotifyCaller( caller, "No saved return position for this player.", AdminNotifyType.Warn );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.no_return_position", "No saved return position for this player." ), AdminNotifyType.Warn );
 			return;
 		}
 
 		target.HostTeleport( transform.Position, transform.Rotation );
 		ReturnTransforms.Remove( steamId );
-		NotifyCaller( caller, $"Returned {GetPlayerName( target )}.", AdminNotifyType.Info );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.returned", "Returned {0}.", GetPlayerName( target ) ), AdminNotifyType.Info );
 	}
 
 	private static void GiveRank( Connection caller, long steamId, int rank )
@@ -541,7 +542,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		if ( target.IsValid() )
 			target.AdminRank = clampedRank;
 
-		NotifyCaller( caller, $"Set {steamId} rank to {GetRankName( clampedRank )}.", AdminNotifyType.Info );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.set_rank", "Set {0} rank to {1}.", steamId, GetRankName( clampedRank ) ), AdminNotifyType.Info );
 	}
 
 	private static bool HasAccess( Connection caller, int requiredRank, out string error )
@@ -553,7 +554,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 
 		if ( IsBanned( caller.SteamId.Value, out var ban ) )
 		{
-			error = $"You are banned: {ban.Reason}";
+			error = GameLocalization.Format( "notify.admin.banned_reason", "You are banned: {0}", ban.Reason );
 			return false;
 		}
 
@@ -562,7 +563,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		if ( rank >= requiredRank )
 			return true;
 
-		error = $"Access denied. Required rank: {GetRankName( requiredRank )}.";
+		error = GameLocalization.Format( "notify.admin.access_denied_required_rank", "Access denied. Required rank: {0}.", GetRankName( requiredRank ) );
 		return false;
 	}
 
@@ -625,7 +626,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 
 	private static string GetPlayerName( Player player )
 	{
-		return player.GameObject.Network.Owner?.DisplayName ?? "Player";
+		return player.GameObject.Network.Owner?.DisplayName ?? GameLocalization.Phrase( "common.player", "Player" );
 	}
 
 	private static bool TryParseSteamId( string text, out long steamId )
@@ -720,10 +721,10 @@ public sealed class AdminManager : Component, Component.INetworkListener
 
 		using ( Rpc.FilterInclude( c => c.SteamId.Value == connection.SteamId.Value ) )
 		{
-			RpcCloseGame( NormalizeReason( reason, "Banned from server" ) );
+			RpcCloseGame( NormalizeReason( reason, GameLocalization.Phrase( "notify.admin.reason.banned_from_server", "Banned from server" ) ) );
 		}
 
-		TryKickConnection( connection, NormalizeReason( reason, "Banned from server" ), out _ );
+		TryKickConnection( connection, NormalizeReason( reason, GameLocalization.Phrase( "notify.admin.reason.banned_from_server", "Banned from server" ) ), out _ );
 	}
 
 	private static bool TryKickConnection( Connection connection, string reason, out string error )
@@ -732,13 +733,13 @@ public sealed class AdminManager : Component, Component.INetworkListener
 
 		if ( connection is null )
 		{
-			error = "Player connection is not available.";
+			error = GameLocalization.Phrase( "notify.admin.player_connection_unavailable", "Player connection is not available." );
 			return false;
 		}
 
 		if ( connection.IsHost )
 		{
-			error = "Host connection cannot be kicked.";
+			error = GameLocalization.Phrase( "notify.admin.host_cannot_kick", "Host connection cannot be kicked." );
 			return false;
 		}
 
@@ -749,7 +750,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		}
 		catch ( Exception ex )
 		{
-			error = $"Failed to kick connection: {ex.Message}";
+			error = GameLocalization.Format( "notify.admin.failed_kick_connection", "Failed to kick connection: {0}", ex.Message );
 			return false;
 		}
 	}
@@ -792,7 +793,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 	[Rpc.Broadcast]
 	private static void RpcCloseGame( string reason )
 	{
-		Notification.Error( $"Banned: {reason}", 5f );
+		Notification.Error( GameLocalization.Format( "notify.admin.banned_screen", "Banned: {0}", reason ), 5f );
 		Game.Close();
 	}
 }

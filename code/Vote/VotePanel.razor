@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
 @inherits PanelComponent
@@ -13,8 +13,8 @@
 			@if ( !HasAnswered )
 			{
 				<div class="vote-actions">
-					<button class="yes" onclick=@(() => Submit( true ))>Yes</button>
-					<button class="no" onclick=@(() => Submit( false ))>No</button>
+					<button class="yes" onclick=@(() => Submit( true ))>@GameLocalization.Phrase( "ui.common.yes" )</button>
+					<button class="no" onclick=@(() => Submit( false ))>@GameLocalization.Phrase( "ui.common.no" )</button>
 				</div>
 			}
 		</div>
@@ -81,7 +81,7 @@
 	private void OpenInternal( int voteId, string header )
 	{
 		VoteId = voteId;
-		Header = string.IsNullOrWhiteSpace( header ) ? "Vote" : header;
+		Header = string.IsNullOrWhiteSpace( header ) ? GameLocalization.Phrase( "ui.context.vote", "Vote" ) : header;
 		HasAnswered = false;
 		IsOpen = true;
 	}
@@ -121,5 +121,5 @@
 			Instance = null;
 	}
 
-	protected override int BuildHash() => HashCode.Combine( IsOpen, HasAnswered, VoteId, Header );
+	protected override int BuildHash() => HashCode.Combine( IsOpen, HasAnswered, VoteId, Header, GameLocalization.CurrentCode );
 }

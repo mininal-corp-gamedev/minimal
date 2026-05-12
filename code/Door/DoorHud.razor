@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
 @using System.Collections.Generic;
@@ -16,7 +16,7 @@
 		<div class="overlay">
 			<div class="panel-wrap">
 				<div class="close-row">
-					<div class="close-btn" onclick=@OnClose>✕</div>
+					<div class="close-btn" onclick=@OnClose>X</div>
 				</div>
 				<div class="panel">
 					@if ( Door.IsBlocked )
@@ -35,13 +35,13 @@
 								@if ( Door.LockState == Door.DoorLockState.Locked )
 								{
 									<button class="btn unlock" onclick=@OnUnlock>
-										<div class="btn-label">Unlock</div>
+										<div class="btn-label">@GameLocalization.Phrase( "ui.door.unlock" )</div>
 									</button>
 								}
 								else
 								{
 									<button class="btn lock" onclick=@OnLock>
-										<div class="btn-label">Lock</div>
+										<div class="btn-label">@GameLocalization.Phrase( "ui.door.lock" )</div>
 									</button>
 								}
 							</div>
@@ -52,7 +52,7 @@
 						<div class="title">@Door.Header</div>
 						<div class="actions">
 							<button class="btn buy" onclick=@OnBuy>
-								<div class="btn-label">Buy</div>
+								<div class="btn-label">@GameLocalization.Phrase( "ui.door.buy" )</div>
 								<div class="btn-price">$@Door.BuyPrice</div>
 							</button>
 						</div>
@@ -66,23 +66,23 @@
 								@if ( Door.LockState == Door.DoorLockState.Locked )
 								{
 									<button class="btn unlock" onclick=@OnUnlock>
-										<div class="btn-label">Unlock</div>
+										<div class="btn-label">@GameLocalization.Phrase( "ui.door.unlock" )</div>
 									</button>
 								}
 								else
 								{
 									<button class="btn lock" onclick=@OnLock>
-										<div class="btn-label">Lock</div>
+										<div class="btn-label">@GameLocalization.Phrase( "ui.door.lock" )</div>
 									</button>
 								}
 								<button class="btn sell" onclick=@OnSell>
-									<div class="btn-label">Sell</div>
+									<div class="btn-label">@GameLocalization.Phrase( "ui.door.sell" )</div>
 									<div class="btn-price">$@Door.SellPrice</div>
 								</button>
 								@if ( Door.CanHaveRoommates )
 								{
 									<button class="btn roommate" onclick=@OnRoommate>
-										<div class="btn-label">Сожитель</div>
+										<div class="btn-label">@GameLocalization.Phrase( "ui.door.roommate" )</div>
 									</button>
 								}
 							</div>
@@ -91,7 +91,7 @@
 					@if ( ShowRoommateList && Door.IsLocalPlayerOwner && Door.CanHaveRoommates )
 					{
 						<div class="roommate-list">
-							<div class="roommate-header">Сожители</div>
+							<div class="roommate-header">@GameLocalization.Phrase( "ui.door.roommates" )</div>
 							@foreach ( var conn in AvailablePlayers )
 							{
 								var sid = conn.SteamId.Value;
@@ -105,11 +105,11 @@
 										<div class="roommate-job">
 											@if ( isOwner )
 											{
-												<span>Владелец</span>
+												<span>@GameLocalization.Phrase( "ui.door.owner" )</span>
 											}
 											else if ( isRoommate )
 											{
-												<span>Сожитель · @jobName</span>
+												<span>@GameLocalization.Format( "ui.door.roommate_with_job", "Roommate - {0}", jobName )</span>
 											}
 											else
 											{
@@ -122,11 +122,11 @@
 									}
 									else if ( isRoommate )
 									{
-										<button class="roommate-del-btn" onclick=@(() => OnRemoveRoommate( conn ))>Delete</button>
+										<button class="roommate-del-btn" onclick=@(() => OnRemoveRoommate( conn ))>@GameLocalization.Phrase( "ui.common.delete" )</button>
 									}
 									else
 									{
-										<button class="roommate-add-btn" onclick=@(() => OnAddRoommate( conn ))>Add</button>
+										<button class="roommate-add-btn" onclick=@(() => OnAddRoommate( conn ))>@GameLocalization.Phrase( "ui.common.add" )</button>
 									}
 								</div>
 							}
@@ -240,9 +240,9 @@
 	string GetPlayerJobName( Connection connection )
 	{
 		if ( connection is null )
-			return "No Job";
+			return GameLocalization.Phrase( "common.no_job", "No Job" );
 
-		return FindPlayerBySteamId( connection.SteamId.Value )?.Job?.JobDefinition?.Header ?? "No Job";
+		return GameLocalization.JobHeader( FindPlayerBySteamId( connection.SteamId.Value )?.Job?.JobDefinition );
 	}
 
 	private static Player FindPlayerBySteamId( long steamId )
@@ -306,6 +306,7 @@
 	{
 		var h = new HashCode();
 		h.Add( UiModalManager.Version );
+		h.Add( GameLocalization.CurrentCode );
 		h.Add( Door );
 		h.Add( Door?.Header );
 		h.Add( Door?.IsBlocked );

@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
 @using System.Collections.Generic;
@@ -13,13 +13,13 @@
 			<div class="demote-panel">
 				<button class="close-btn" onclick=@(() => Close())>X</button>
 
-				<div class="panel-title">Demote</div>
-				<div class="panel-subtitle">Choose a player to start a demote vote.</div>
+				<div class="panel-title">@GameLocalization.Phrase( "ui.demote.title" )</div>
+				<div class="panel-subtitle">@GameLocalization.Phrase( "ui.demote.subtitle" )</div>
 
 				<div class="demote-table">
 					@if ( EligiblePlayers.Count == 0 )
 					{
-						<div class="empty-row">No players can be demoted.</div>
+						<div class="empty-row">@GameLocalization.Phrase( "ui.demote.empty" )</div>
 					}
 					else
 					{
@@ -27,8 +27,8 @@
 						{
 							var owner = player.GameObject.Network.Owner;
 							var steamId = owner?.SteamId.Value ?? 0;
-							var name = owner?.DisplayName ?? "Player";
-							var jobName = player.Job?.JobDefinition?.Header ?? "No Job";
+							var name = owner?.DisplayName ?? GameLocalization.Phrase( "common.player", "Player" );
+							var jobName = GameLocalization.JobHeader( player.Job?.JobDefinition );
 
 							<div class="player-row">
 								<div class="player-avatar" style="background-image: url( avatar:@steamId )"></div>
@@ -36,7 +36,7 @@
 									<div class="player-name">@name</div>
 									<div class="player-job">@jobName</div>
 								</div>
-								<button class="demote-btn" onclick=@(() => RequestDemote( steamId ))>Demote</button>
+								<button class="demote-btn" onclick=@(() => RequestDemote( steamId ))>@GameLocalization.Phrase( "ui.demote.action" )</button>
 							</div>
 						}
 					}
@@ -145,14 +145,14 @@
 
 		if ( caller.SteamId.Value == targetSteamId )
 		{
-			NotifyCaller( caller, "You cannot demote yourself.", false );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.demote.self", "You cannot demote yourself." ), false );
 			return;
 		}
 
 		var target = Player.FindPlayerBySteamId( targetSteamId );
 		if ( !target.IsValid() )
 		{
-			NotifyCaller( caller, "Player not found.", false );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.player.not_found", "Player not found." ), false );
 			return;
 		}
 
@@ -163,9 +163,9 @@
 		}
 
 		if ( VoteManager.TryStartDemoteVote( target ) )
-			NotifyCaller( caller, "Demote vote started.", true );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.demote.started", "Demote vote started." ), true );
 		else
-			NotifyCaller( caller, "Could not start vote.", false );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.vote.could_not_start", "Could not start vote." ), false );
 	}
 
 	private static void NotifyCaller( Connection caller, string text, bool success )
@@ -233,6 +233,7 @@
 		hash.Add( IsOpen );
 		hash.Add( UiModalManager.Version );
 		hash.Add( EligiblePlayers.Count );
+		hash.Add( GameLocalization.CurrentCode );
 
 		foreach ( var player in EligiblePlayers )
 		{

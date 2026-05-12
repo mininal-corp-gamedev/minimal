@@ -90,7 +90,7 @@ public sealed class Weed : Component, Component.IPressable
         if ( !IsGrown )
         {
             int secondsLeft = (int)Math.Ceiling( (1f - GrowProgress) * GrowTime );
-            Notification.Error( $"Растение ещё не созрело! Подождите ещё {secondsLeft} сек.", 3f );
+            Notification.Error( GameLocalization.Format( "notify.weed.not_grown", "The plant is not mature yet. Wait {0} sec.", secondsLeft ), 3f );
             return false;
         }
 

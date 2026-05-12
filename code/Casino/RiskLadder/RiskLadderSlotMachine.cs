@@ -36,7 +36,7 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 
 	private int _localStep;
 	private int _localBank;
-	private string _localStatusText = "Ready";
+	private string _localStatusText = GameLocalization.Phrase( "ui.common.ready", "Ready" );
 	private string _localVisualState = "idle";
 
 	private bool _pendingReveal;
@@ -116,39 +116,39 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 		var steamId = connection.SteamId.Value;
 		if ( !CanPlayerUseMachine( player ) )
 		{
-			SendRejectedToOwner( connection, "Too far" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "notify.casino.too_far", "Too far" ) );
 			return;
 		}
 
 		if ( IsOnCooldown( steamId ) )
 		{
-			SendRejectedToOwner( connection, "Wait" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "notify.casino.wait", "Wait" ) );
 			return;
 		}
 
 		if ( BetCost <= 0 )
 		{
-			SendRejectedToOwner( connection, "Invalid bet" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "notify.casino.invalid_bet", "Invalid bet" ) );
 			return;
 		}
 
 		var session = GetSession( steamId );
 		if ( session.IsSpinning )
 		{
-			SendRejectedToOwner( connection, "Spinning" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "ui.casino.spinning_short", "Spinning" ) );
 			return;
 		}
 
 		var startedRound = !session.HasBank;
 		if ( startedRound && player.Money < BetCost )
 		{
-			SendRejectedToOwner( connection, "Not enough money" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "ui.shop.not_enough_money", "Not enough money" ) );
 			return;
 		}
 
 		if ( !startedRound && session.Step >= GetSafeMaxStep() )
 		{
-			SendRejectedToOwner( connection, "Cashout" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "ui.casino.cashout", "Cashout" ) );
 			return;
 		}
 
@@ -198,25 +198,25 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 		var steamId = connection.SteamId.Value;
 		if ( !CanPlayerUseMachine( player ) )
 		{
-			SendRejectedToOwner( connection, "Too far" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "notify.casino.too_far", "Too far" ) );
 			return;
 		}
 
 		if ( IsOnCooldown( steamId ) )
 		{
-			SendRejectedToOwner( connection, "Wait" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "notify.casino.wait", "Wait" ) );
 			return;
 		}
 
 		if ( !_sessionsBySteamId.TryGetValue( steamId, out var session ) || !session.HasBank )
 		{
-			SendRejectedToOwner( connection, "No bank" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "notify.casino.no_bank", "No bank" ) );
 			return;
 		}
 
 		if ( session.IsSpinning )
 		{
-			SendRejectedToOwner( connection, "Spinning" );
+			SendRejectedToOwner( connection, GameLocalization.Phrase( "ui.casino.spinning_short", "Spinning" ) );
 			return;
 		}
 
@@ -237,7 +237,7 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 	private void RpcOwnerStartRiskSpin( bool didWin, bool startedRound, int step, int bank, int lostValue, float winChance, float revealDelay )
 	{
 		_localVisualState = "spinning";
-		_localStatusText = startedRound ? "Rolling..." : "Risking...";
+		_localStatusText = startedRound ? GameLocalization.Phrase( "ui.casino.rolling", "Rolling..." ) : GameLocalization.Phrase( "ui.casino.risking", "Risking..." );
 
 		_pendingWin = didWin;
 		_pendingStartedRound = startedRound;
@@ -256,10 +256,10 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 		_pendingReveal = false;
 		_localStep = 0;
 		_localBank = 0;
-		_localStatusText = $"Cashout +${Math.Max( 0, payout )}";
+		_localStatusText = GameLocalization.Format( "ui.casino.cashout_money", "Cashout +${0}", Math.Max( 0, payout ) );
 		_localVisualState = "cashout";
 
-		Notification.Info( $"Risk ladder cashout: +${Math.Max( 0, payout )}", 2.4f );
+		Notification.Info( GameLocalization.Format( "notify.casino.risk_cashout", "Risk ladder cashout: +${0}", Math.Max( 0, payout ) ), 2.4f );
 	}
 
 	[Rpc.Broadcast]
@@ -357,7 +357,7 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 	{
 		_localStep = 0;
 		_localBank = 0;
-		_localStatusText = "Ready";
+		_localStatusText = GameLocalization.Phrase( "ui.common.ready", "Ready" );
 		_localVisualState = "idle";
 	}
 
@@ -378,8 +378,8 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 			_localStep = _pendingStep;
 			_localBank = _pendingBank;
 			_localVisualState = "win";
-			_localStatusText = $"Bank ${_localBank}";
-			Notification.Info( $"Risk ladder win: bank ${_localBank} ({_pendingWinChance:P0})", 2.2f );
+			_localStatusText = GameLocalization.Format( "ui.casino.bank_money", "Bank ${0}", _localBank );
+			Notification.Info( GameLocalization.Format( "notify.casino.risk_win", "Risk ladder win: bank ${0} ({1:P0})", _localBank, _pendingWinChance ), 2.2f );
 			return;
 		}
 
@@ -387,12 +387,12 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 		_localBank = 0;
 		_localVisualState = "lose";
 		_localStatusText = _pendingStartedRound
-			? $"Lose -${BetCost}"
-			: $"Bust -${_pendingLostValue}";
+			? GameLocalization.Format( "ui.casino.lose_money", "Lose -${0}", BetCost )
+			: GameLocalization.Format( "ui.casino.bust_money", "Bust -${0}", _pendingLostValue );
 
 		Notification.Error( _pendingStartedRound
-			? $"Risk ladder lose: -${BetCost}"
-			: $"Risk ladder bust: -${_pendingLostValue}", 2.2f );
+			? GameLocalization.Format( "notify.casino.risk_lose", "Risk ladder lose: -${0}", BetCost )
+			: GameLocalization.Format( "notify.casino.risk_bust", "Risk ladder bust: -${0}", _pendingLostValue ), 2.2f );
 	}
 
 	private void HandleLocalCashoutInput()

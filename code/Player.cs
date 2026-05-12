@@ -553,7 +553,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         IsDead = true;
         Health = 0f;
         DeathTimeUntilRespawn = MathF.Max(0.1f, RespawnDelaySeconds);
-        DeathMessage = string.IsNullOrWhiteSpace(deathMessage) ? "Вы умерли." : deathMessage;
+        DeathMessage = string.IsNullOrWhiteSpace(deathMessage) ? GameLocalization.Phrase( "ui.hud.default_death_message", "You died." ) : deathMessage;
         HostSetEquippedWeaponItemId(null);
         WorldHud?.WorldHudRefresh();
 
@@ -576,7 +576,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         IsDead = true;
         Health = 0f;
         DeathTimeUntilRespawn = MathF.Max(0.1f, respawnDelay);
-        DeathMessage = string.IsNullOrWhiteSpace(deathMessage) ? "Вы умерли." : deathMessage;
+        DeathMessage = string.IsNullOrWhiteSpace(deathMessage) ? GameLocalization.Phrase( "ui.hud.default_death_message", "You died." ) : deathMessage;
 
         if (CurrentWeapon.IsValid())
             CurrentWeapon.GameObject.Enabled = false;
@@ -680,9 +680,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         var attackerName = GetAttackerDisplayName(attacker);
         if (!string.IsNullOrWhiteSpace(attackerName))
-            return $"Вас убил - \"{attackerName}\"";
+            return GameLocalization.Format( "ui.hud.killed_by", "You were killed by \"{0}\"", attackerName );
 
-        return "Вы умерли.";
+        return GameLocalization.Phrase( "ui.hud.default_death_message", "You died." );
     }
 
     private static string GetAttackerDisplayName(GameObject attacker)
@@ -838,7 +838,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (damage <= 0f) return;
 
         _nextFallDamageAllowed = 0.2f;
-        HostApplyDamage(damage, null, "Вы умерли от падения с высоты.");
+        HostApplyDamage(damage, null, GameLocalization.Phrase( "ui.hud.fall_death", "You died from a fall." ) );
     }
 
     private float CalculateFallDamage(float distance)
@@ -1251,7 +1251,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (slot.Item.Count < count) return false;
         if (!slot.Item.CanDrop)
         {
-            NotifyInventoryResult(GameObject.Network.Owner, "Этот предмет нельзя выбросить.", false);
+            NotifyInventoryResult(GameObject.Network.Owner, GameLocalization.Phrase( "notify.inventory.cannot_drop", "This item cannot be dropped." ), false);
             return false;
         }
         if (!ItemDropPrefab.IsValid()) return false;
@@ -1287,7 +1287,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         Inventory.RemoveItem(slot, count);
         ValidateCurrentWeaponInventoryState();
 
-        NotifyInventoryResult(GameObject.Network.Owner, $"You dropped: {item.Definition.Header}", true);
+        NotifyInventoryResult(GameObject.Network.Owner, GameLocalization.Format( "notify.inventory.dropped", "You dropped: {0}", GameLocalization.ItemHeader( item.Definition ) ), true);
         return true;
     }
 
@@ -1356,7 +1356,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         var itemName = string.IsNullOrWhiteSpace(droppedItem.ItemDefinition.Header)
             ? droppedItem.ItemDefinition.Id
-            : droppedItem.ItemDefinition.Header;
+            : GameLocalization.ItemHeader( droppedItem.ItemDefinition );
 
         var taken = droppedItem.TryPickup(Inventory);
         if (taken <= 0)
@@ -1365,7 +1365,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return 0;
         }
 
-        NotifyInventoryResult(GameObject.Network.Owner, $"Picked up {itemName} x{taken}", true);
+        NotifyInventoryResult(GameObject.Network.Owner, GameLocalization.Format( "notify.inventory.picked_up", "Picked up {0} x{1}", itemName, taken ), true);
         return taken;
     }
 
@@ -2662,7 +2662,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Owner]
     private void RpcNotifyTakeBox( int amount )
     {
-        Notification.Info( $"Ты лутанул ${amount}", 3.5f );
+        Notification.Info( GameLocalization.Format( "notify.money.looted", "You looted ${0}", amount ), 3.5f );
     }
 
     public void RequestDropMoney( int amount )
@@ -2688,37 +2688,37 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var player = FindPlayerBySteamId( caller.SteamId.Value );
         if ( !player.IsValid() )
         {
-            NotifyMoneyResult( caller, "Твой игрок ещё не готов.", false );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), false );
             return;
         }
 
         if ( amount <= 0 )
         {
-            NotifyMoneyResult( caller, "Некорректная сумма.", false );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.money.invalid_amount", "Enter a valid amount." ), false );
             return;
         }
 
         if ( player.Money < amount )
         {
-            NotifyMoneyResult( caller, "Недостаточно денег.", false );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "ui.shop.not_enough_money", "Not enough money" ), false );
             return;
         }
 
         if ( !player.MoneyDropPrefab.IsValid() )
         {
-            NotifyMoneyResult( caller, "Префаб денег не настроен.", false );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.money.prefab_missing", "Money prefab is not configured." ), false );
             return;
         }
 
         if ( !TrySpawnDroppedMoney( player, caller, amount ) )
         {
-            NotifyMoneyResult( caller, "Не удалось выкинуть деньги.", false );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.money.drop_failed", "Could not drop money." ), false );
             return;
         }
 
         player.Money -= amount;
         Log.Info( $"[RpcRequestDropMoney] {caller.DisplayName} ({caller.SteamId}) dropped ${amount}" );
-        NotifyMoneyResult( caller, $"Ты выкинул ${amount}.", true );
+        NotifyMoneyResult( caller, GameLocalization.Format( "notify.money.dropped", "You dropped ${0}.", amount ), true );
     }
 
     [Rpc.Host]
@@ -2732,38 +2732,38 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var player = FindPlayerBySteamId( caller.SteamId.Value );
         if ( !player.IsValid() )
         {
-            NotifyMoneyResult( caller, "Твой игрок ещё не готов.", false );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), false );
             return;
         }
 
         if ( amount <= 0 )
         {
-            NotifyMoneyResult( caller, "Некорректная сумма.", false );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.money.invalid_amount", "Enter a valid amount." ), false );
             return;
         }
 
         if ( player.Money < amount )
         {
-            NotifyMoneyResult( caller, "Недостаточно денег.", false );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "ui.shop.not_enough_money", "Not enough money" ), false );
             return;
         }
 
         if ( targetSteamId == caller.SteamId.Value )
         {
-            NotifyMoneyResult( caller, "Нельзя передать деньги себе.", false );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.money.cannot_transfer_self", "You cannot transfer money to yourself." ), false );
             return;
         }
 
         var target = FindPlayerBySteamId( targetSteamId );
         if ( !target.IsValid() )
         {
-            NotifyMoneyResult( caller, "Игрок для передачи не найден.", false );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.money.transfer_target_not_found", "Transfer target not found." ), false );
             return;
         }
 
         if ( !CanTransferToTarget( player, target ) )
         {
-            NotifyMoneyResult( caller, "Игрок слишком далеко или не перед тобой.", false );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.money.target_too_far", "Player is too far away or not in front of you." ), false );
             return;
         }
 
@@ -2772,10 +2772,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         var targetConnection = target.GameObject.Network.Owner;
         Log.Info( $"[RpcRequestTransferMoney] {caller.DisplayName} ({caller.SteamId}) transferred ${amount} to {GetConnectionName( targetConnection )} ({targetConnection?.SteamId})" );
-        NotifyMoneyResult( caller, $"Ты передал ${amount} игроку {GetConnectionName( targetConnection )}.", true );
+        NotifyMoneyResult( caller, GameLocalization.Format( "notify.money.transferred", "You transferred ${0} to {1}.", amount, GetConnectionName( targetConnection ) ), true );
 
         if ( targetConnection is not null )
-            NotifyMoneyResult( targetConnection, $"{caller.DisplayName} передал тебе ${amount}.", true );
+            NotifyMoneyResult( targetConnection, GameLocalization.Format( "notify.money.received", "{0} transferred ${1} to you.", caller.DisplayName, amount ), true );
     }
 
     private static bool TrySpawnDroppedMoney( Player player, Connection owner, int amount )
@@ -2898,14 +2898,14 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var prop = GetLastOwnedProp();
         if ( !prop.IsValid() )
         {
-            NotifyInventoryResult( connection, "У тебя нет заспавненных пропов.", false );
+            NotifyInventoryResult( connection, GameLocalization.Phrase( "notify.props.none_spawned", "You have no spawned props." ), false );
             return;
         }
 
         var propObject = prop.GameObject;
         var propName = !propObject.IsValid() || string.IsNullOrWhiteSpace( propObject.Name ) ? "Prop" : propObject.Name;
         propObject?.Destroy();
-        NotifyInventoryResult( connection, $"Удален проп: {propName}", true );
+        NotifyInventoryResult( connection, GameLocalization.Format( "notify.props.removed", "Removed prop: {0}", propName ), true );
     }
 
     private PropCustom GetLastOwnedProp()
@@ -2929,7 +2929,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private static string GetConnectionName( Connection connection )
     {
-        return string.IsNullOrWhiteSpace( connection?.DisplayName ) ? "игроку" : connection.DisplayName;
+        return string.IsNullOrWhiteSpace( connection?.DisplayName ) ? GameLocalization.Phrase( "common.player_dative", "player" ) : connection.DisplayName;
     }
 
     private static void NotifyInventoryResult(Connection connection, string message, bool success)

@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
 @inherits PanelComponent
@@ -24,11 +24,11 @@
 				<div class="status">
 					@if ( Door.LockState == Door.DoorLockState.Locked )
 					{
-						<div class="status-locked">Locked</div>
+						<div class="status-locked">@GameLocalization.Phrase( "ui.door.locked" )</div>
 					}
 					else
 					{
-						<div class="status-unlocked">Unlocked</div>
+						<div class="status-unlocked">@GameLocalization.Phrase( "ui.door.unlocked" )</div>
 					}
 				</div>
 			}
@@ -50,16 +50,16 @@
 				<div class="status">
 					@if ( Door.LockState == Door.DoorLockState.Locked )
 					{
-						<div class="status-locked">Locked</div>
+						<div class="status-locked">@GameLocalization.Phrase( "ui.door.locked" )</div>
 					}
 					else
 					{
-						<div class="status-unlocked">Unlocked</div>
+						<div class="status-unlocked">@GameLocalization.Phrase( "ui.door.unlocked" )</div>
 					}
 				</div>
 				@if ( Door.IsLocalPlayerRoommate && !Door.IsLocalPlayerOwner )
 				{
-					<div class="status-roommate">Вы добавлены!</div>
+					<div class="status-roommate">@GameLocalization.Phrase( "ui.door.you_are_roommate" )</div>
 				}
 			}
 		</div>
@@ -76,6 +76,7 @@
 	{
 		var h = new HashCode();
 		h.Add( Door );
+		h.Add( GameLocalization.CurrentCode );
 		h.Add( Door?.Header );
 		h.Add( Door?.IsBlocked );
 		h.Add( Door?.HasOnlyJobs );

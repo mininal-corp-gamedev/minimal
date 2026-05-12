@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
 @using System.Collections.Generic;
@@ -8,7 +8,7 @@
 <root>
 	<div class="elevator-panel @PanelStateClass">
 		<div class="display">
-			<div class="label">Elevator</div>
+			<div class="label">@GameLocalization.Phrase( "ui.elevator.title" )</div>
 			<div class="floor">@FloorText</div>
 			<div class="state">@StateText</div>
 		</div>
@@ -63,9 +63,9 @@
 		get
 		{
 			if ( Lift is null )
-				return "Offline";
+				return GameLocalization.Phrase( "ui.elevator.offline", "Offline" );
 
-			return Lift.IsMoving ? "Moving" : "Ready";
+			return Lift.IsMoving ? GameLocalization.Phrase( "ui.elevator.moving", "Moving" ) : GameLocalization.Phrase( "ui.common.ready", "Ready" );
 		}
 	}
 
@@ -108,6 +108,7 @@
 	{
 		var h = new HashCode();
 		h.Add( Lift );
+		h.Add( GameLocalization.CurrentCode );
 		h.Add( Lift?.SafeFloorCount ?? 0 );
 		h.Add( Lift?.CurrentFloor ?? 0 );
 		h.Add( Lift?.TargetFloor ?? 0 );

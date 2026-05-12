@@ -17,33 +17,33 @@ public sealed class ShopManager : Component
 		var normalized = (shopId ?? string.Empty).Trim();
 		if ( string.IsNullOrEmpty( normalized ) )
 		{
-			NotifyBuyer( caller, false, "Shop id is empty.", null );
+			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.shop.empty_id", "Shop id is empty." ), null );
 			return;
 		}
 
 		var shop = ShopDatabase.Get( normalized );
 		if ( shop is null )
 		{
-			NotifyBuyer( caller, false, "Shop item not found.", null );
+			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.shop.not_found", "Shop item not found." ), null );
 			return;
 		}
 
 		var buyer = FindPlayerBySteamId( caller.SteamId.Value );
 		if ( !buyer.IsValid() )
 		{
-			NotifyBuyer( caller, false, "Your player is not ready.", null );
+			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), null );
 			return;
 		}
 
 		if ( !CanBuyByJob( buyer, shop ) )
 		{
-			NotifyBuyer( caller, false, "Your job cannot buy this.", null );
+			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.shop.job_cannot_buy", "Your job cannot buy this." ), null );
 			return;
 		}
 
 		if ( shop.ItemDefinition is null && !shop.HasPostPurchased )
 		{
-			NotifyBuyer( caller, false, "Shop item has no purchase action.", null );
+			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.shop.no_action", "Shop item has no purchase action." ), null );
 			return;
 		}
 
@@ -52,7 +52,7 @@ public sealed class ShopManager : Component
 			var owned = CountOwnedShopObjects( buyer, shop.Id );
 			if ( owned >= shop.Max )
 			{
-				NotifyBuyer( caller, false, $"Limit reached ({owned}/{shop.Max}).", null );
+				NotifyBuyer( caller, false, GameLocalization.Format( "notify.shop.limit_reached", "Limit reached ({0}/{1}).", owned, shop.Max ), null );
 				return;
 			}
 		}
@@ -60,14 +60,14 @@ public sealed class ShopManager : Component
 		var price = Math.Max( 0, shop.Price );
 		if ( buyer.Money < price )
 		{
-			NotifyBuyer( caller, false, $"Need ${price}.", null );
+			NotifyBuyer( caller, false, GameLocalization.Format( "notify.shop.need_money", "Need ${0}.", price ), null );
 			return;
 		}
 
 		var item = shop.ItemDefinition is null ? null : Item.Create( shop.ItemDefinition.Id, 1 );
 		if ( item is not null && !buyer.Inventory.CanAddItem( item ) )
 		{
-			NotifyBuyer( caller, false, "Inventory is full.", null );
+			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.inventory.full", "Inventory is full." ), null );
 			return;
 		}
 
@@ -83,18 +83,18 @@ public sealed class ShopManager : Component
 		if ( !ShopHandlerRegistry.FirePostPurchased( context ) )
 		{
 			buyer.Money += price;
-			NotifyBuyer( caller, false, "Purchase failed.", null );
+			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.shop.purchase_failed", "Purchase failed." ), null );
 			return;
 		}
 
 		if ( item is not null && !buyer.HostAddItem( item ) )
 		{
 			buyer.Money += price;
-			NotifyBuyer( caller, false, "Inventory is full.", null );
+			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.inventory.full", "Inventory is full." ), null );
 			return;
 		}
 
-		NotifyBuyer( caller, true, $"Purchased: {shop.Header}.", null );
+		NotifyBuyer( caller, true, GameLocalization.Format( "notify.shop.purchased", "Purchased: {0}.", GameLocalization.ShopHeader( shop ) ), null );
 	}
 
 	public static int CountOwnedShopObjects( Player buyer, string shopId )

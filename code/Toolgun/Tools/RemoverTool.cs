@@ -4,7 +4,7 @@ public sealed class RemoverTool : ToolMode
 {
 	public override string Id => "remover";
 	public override string Title => "Remover";
-	public override string Description => "Удаляет prop, который принадлежит тебе.";
+	public override string Description => "Removes a prop that belongs to you.";
 
 	public override ToolUseResult Use(ToolUseContext context)
 	{
@@ -15,6 +15,6 @@ public sealed class RemoverTool : ToolMode
 		context.Player.UnregisterSpawnedProp(prop);
 		propObject.Destroy();
 
-		return ToolUseResult.Ok($"Удален prop: {propName}.");
+		return ToolUseResult.Ok(GameLocalization.Format( "notify.toolgun.prop_removed", "Removed prop: {0}.", propName ));
 	}
 }

@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
 @inherits PanelComponent
@@ -11,8 +11,8 @@
 			<div class="atm-dialog">
 
 				<div class="atm-titlebar">
-					<div class="atm-title">БАНКОМАТ</div>
-					<button class="close-btn" onclick=@Close>✕</button>
+					<div class="atm-title">@GameLocalization.Phrase( "ui.atm.title" )</div>
+					<button class="close-btn" onclick=@Close>X</button>
 				</div>
 
 				<div class="atm-content">
@@ -21,11 +21,11 @@
 
 						<div class="balances">
 							<div class="balance-card">
-								<div class="balance-label">НАЛИЧНЫЕ</div>
+								<div class="balance-label">@GameLocalization.Phrase( "ui.atm.cash" )</div>
 								<div class="balance-value">$@CashMoney</div>
 							</div>
 							<div class="balance-card accent">
-								<div class="balance-label">СЧЁТ</div>
+								<div class="balance-label">@GameLocalization.Phrase( "ui.atm.account" )</div>
 								<div class="balance-value">$@AtmMoney</div>
 							</div>
 						</div>
@@ -44,8 +44,8 @@
 						</div>
 
 						<div class="action-col">
-							<button class="action-btn deposit-btn" onclick=@OnDeposit>ВНЕСТИ</button>
-							<button class="action-btn withdraw-btn" onclick=@OnWithdraw>СНЯТЬ</button>
+							<button class="action-btn deposit-btn" onclick=@OnDeposit>@GameLocalization.Phrase( "ui.atm.deposit" )</button>
+							<button class="action-btn withdraw-btn" onclick=@OnWithdraw>@GameLocalization.Phrase( "ui.atm.withdraw" )</button>
 						</div>
 					</div>
 
@@ -85,7 +85,7 @@
 	private bool IsOpen { get; set; }
 	private string _inputStr = "";
 
-	string PlayerName => Player.Local?.GameObject.Network.Owner?.DisplayName ?? "—";
+	string PlayerName => Player.Local?.GameObject.Network.Owner?.DisplayName ?? "-";
 	int CashMoney => Player.Local?.Money ?? 0;
 	int AtmMoney => Player.Local?.MoneyAtm ?? 0;
 
@@ -210,5 +210,5 @@
 		StateHasChanged();
 	}
 
-	protected override int BuildHash() => HashCode.Combine( IsOpen, UiModalManager.Version, _inputStr, CashMoney, AtmMoney );
+	protected override int BuildHash() => HashCode.Combine( IsOpen, UiModalManager.Version, _inputStr, CashMoney, AtmMoney, GameLocalization.CurrentCode );
 }

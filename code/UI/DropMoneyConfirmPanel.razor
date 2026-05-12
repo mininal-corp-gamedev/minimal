@@ -1,4 +1,4 @@
-@using Sandbox
+﻿@using Sandbox
 @using Sandbox.UI
 @using System
 @inherits PanelComponent
@@ -9,15 +9,15 @@
 	{
 		<div class="money-confirm-overlay">
 			<div class="money-confirm-panel" @ref="FocusSinkRef">
-				<div class="panel-title">Выкинуть деньги</div>
-				<div class="panel-subtitle">Сумма будет создана перед тобой.</div>
+				<div class="panel-title">@GameLocalization.Phrase( "ui.money.drop_title" )</div>
+				<div class="panel-subtitle">@GameLocalization.Phrase( "ui.money.drop_subtitle" )</div>
 
-				<div class="field-label">Сумма</div>
-				<TextEntry class="money-input" Value:bind="@AmountInput" Placeholder="Например: 250" onsubmit="@Submit"></TextEntry>
+				<div class="field-label">@GameLocalization.Phrase( "ui.money.amount" )</div>
+				<TextEntry class="money-input" Value:bind="@AmountInput" Placeholder="@GameLocalization.Phrase( "ui.money.placeholder", "Example: 250" )" onsubmit="@Submit"></TextEntry>
 
 				<div class="actions">
-					<button class="secondary" onclick=@Close>Закрыть</button>
-					<button class="primary" onclick=@Submit>Выкинуть</button>
+					<button class="secondary" onclick=@Close>@GameLocalization.Phrase( "ui.common.close" )</button>
+					<button class="primary" onclick=@Submit>@GameLocalization.Phrase( "ui.money.drop" )</button>
 				</div>
 			</div>
 		</div>
@@ -89,13 +89,13 @@
 
 		if ( !_nextDropAllowed )
 		{
-			Notification.Error( $"Подожди ещё {_nextDropAllowed:F1} сек.", 3.5f );
+			Notification.Error( GameLocalization.Format( "notify.money.wait", "Wait {0:F1}s.", (float)_nextDropAllowed ), 3.5f );
 			return;
 		}
 
 		if ( !TryParseAmount( AmountInput, out var amount ) )
 		{
-			Notification.Error( "Укажи корректную сумму.", 3.5f );
+			Notification.Error( GameLocalization.Phrase( "notify.money.invalid_amount", "Enter a valid amount." ), 3.5f );
 			return;
 		}
 
@@ -152,5 +152,5 @@
 		StateHasChanged();
 	}
 
-	protected override int BuildHash() => HashCode.Combine( IsOpen, UiModalManager.Version, AmountInput );
+	protected override int BuildHash() => HashCode.Combine( IsOpen, UiModalManager.Version, AmountInput, GameLocalization.CurrentCode );
 }

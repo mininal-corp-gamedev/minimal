@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
 @inherits PanelComponent
@@ -14,17 +14,17 @@
 				{
 					<button class="context-action @action.PositionClass @(ActiveAction == action.Id ? "active" : "")" onmouseover=@(() => ActiveAction = action.Id) onclick=@(() => RunAction( action.Id ))>
 						<div class="action-icon @action.IconClass"></div>
-						<div class="action-title">@action.Title</div>
-						<div class="action-subtitle">@action.Subtitle</div>
+						<div class="action-title">@GameLocalization.Phrase( action.TitleKey, action.TitleFallback )</div>
+						<div class="action-subtitle">@GameLocalization.Phrase( action.SubtitleKey, action.SubtitleFallback )</div>
 					</button>
 				}
 
 				<div class="center-info">
-					<div class="center-label">Действие</div>
+					<div class="center-label">@GameLocalization.Phrase( "ui.context.action" )</div>
 				</div>
 			</div>
 
-			<div class="context-hint">Нажми действие или C, чтобы закрыть.</div>
+			<div class="context-hint">@GameLocalization.Phrase( "ui.context.hint" )</div>
 		</div>
 
 		@if ( VotePanel.HasOpenVote )
@@ -35,8 +35,8 @@
 				@if ( VotePanel.CanAnswer )
 				{
 					<div class="context-vote-actions">
-						<button class="vote-yes" onclick=@(() => VotePanel.SubmitCurrent( true ))>Yes</button>
-						<button class="vote-no" onclick=@(() => VotePanel.SubmitCurrent( false ))>No</button>
+						<button class="vote-yes" onclick=@(() => VotePanel.SubmitCurrent( true ))>@GameLocalization.Phrase( "ui.common.yes" )</button>
+						<button class="vote-no" onclick=@(() => VotePanel.SubmitCurrent( false ))>@GameLocalization.Phrase( "ui.common.no" )</button>
 					</div>
 				}
 			</div>
@@ -52,9 +52,9 @@
 
 	static readonly ContextAction[] Actions =
 	{
-		new( "drop_money", "Выкинуть деньги", "Наличные", "pos-left", "money" ),
-		new( "transfer_money", "Передать деньги", "Игрок напротив", "pos-right", "money" ),
-		new( "demote", "Уволить", "Голосование", "pos-bottom", "job" )
+		new( "drop_money", "ui.context.drop_money", "Drop Money", "ui.context.cash", "Cash", "pos-left", "money" ),
+		new( "transfer_money", "ui.context.transfer_money", "Transfer Money", "ui.context.player_ahead", "Player ahead", "pos-right", "money" ),
+		new( "demote", "ui.context.demote", "Demote", "ui.context.vote", "Vote", "pos-bottom", "job" )
 	};
 
 	void RunAction( string id )
@@ -149,6 +149,7 @@
 		hash.Add( ActiveAction );
 		hash.Add( Player.Local?.Money ?? 0 );
 		hash.Add( Player.Local?.Job?.JobDefinition?.Header );
+		hash.Add( GameLocalization.CurrentCode );
 		hash.Add( Player.Local?.Health ?? 0f );
 		hash.Add( VotePanel.HasOpenVote );
 		hash.Add( VotePanel.CanAnswer );
@@ -159,16 +160,20 @@
 	sealed class ContextAction
 	{
 		public string Id { get; }
-		public string Title { get; }
-		public string Subtitle { get; }
+		public string TitleKey { get; }
+		public string TitleFallback { get; }
+		public string SubtitleKey { get; }
+		public string SubtitleFallback { get; }
 		public string PositionClass { get; }
 		public string IconClass { get; }
 
-		public ContextAction( string id, string title, string subtitle, string positionClass, string iconClass )
+		public ContextAction( string id, string titleKey, string titleFallback, string subtitleKey, string subtitleFallback, string positionClass, string iconClass )
 		{
 			Id = id;
-			Title = title;
-			Subtitle = subtitle;
+			TitleKey = titleKey;
+			TitleFallback = titleFallback;
+			SubtitleKey = subtitleKey;
+			SubtitleFallback = subtitleFallback;
 			PositionClass = positionClass;
 			IconClass = iconClass;
 		}

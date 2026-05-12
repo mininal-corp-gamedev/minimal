@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
 @using System.Collections.Generic;
@@ -16,21 +16,25 @@
 
 				<div class="sidebar">
 					<div class="sidebar-profile">
-						<div class="sb-name">@(Connection.Local?.DisplayName ?? "—")</div>
-						<div class="sb-job">@(Player.Local?.Job?.JobDefinition?.Header ?? "No Job")</div>
+						<div class="sb-name">@(Connection.Local?.DisplayName ?? "-")</div>
+						<div class="sb-job">@GetLocalJobName()</div>
 						<div class="sb-money">$@(Player.Local?.Money ?? 0)</div>
 					</div>
 					<div class="sidebar-nav">
-						<button class="tab-btn @(ActiveTab == 0 ? "active" : "")" onclick=@(() => ActiveTab = 0)>Jobs</button>
-						<button class="tab-btn @(ActiveTab == 1 ? "active" : "")" onclick=@(() => ActiveTab = 1)>Shop</button>
-						<button class="tab-btn @(ActiveTab == 2 ? "active" : "")" onclick=@(() => SelectPlayersTab())>Players</button>
-						<button class="tab-btn @(ActiveTab == 3 ? "active" : "")" onclick=@(() => ActiveTab = 3)>Help</button>
+						<button class="tab-btn @(ActiveTab == 0 ? "active" : "")" onclick=@(() => ActiveTab = 0)>@GameLocalization.Phrase( "ui.tab.jobs" )</button>
+						<button class="tab-btn @(ActiveTab == 1 ? "active" : "")" onclick=@(() => ActiveTab = 1)>@GameLocalization.Phrase( "ui.tab.shop" )</button>
+						<button class="tab-btn @(ActiveTab == 2 ? "active" : "")" onclick=@(() => SelectPlayersTab())>@GameLocalization.Phrase( "ui.tab.players" )</button>
+						<button class="tab-btn @(ActiveTab == 3 ? "active" : "")" onclick=@(() => ActiveTab = 3)>@GameLocalization.Phrase( "ui.tab.help" )</button>
 					</div>
 					<div class="sidebar-spacer"></div>
 					<div class="sidebar-bottom">
-						<button class="bottom-btn">Rules</button>
-						<button class="bottom-btn">Donate</button>
+						<button class="bottom-btn">@GameLocalization.Phrase( "ui.sidebar.rules" )</button>
+						<button class="bottom-btn">@GameLocalization.Phrase( "ui.sidebar.donate" )</button>
 						<button class="bottom-btn">Discord</button>
+						<div class="language-switcher">
+							<button class="language-btn @(IsLanguage( GameLocalization.EnglishCode ) ? "active" : "")" onmousedown=@(() => SetLanguage( GameLocalization.EnglishCode )) onclick=@(() => SetLanguage( GameLocalization.EnglishCode ))>EN</button>
+							<button class="language-btn @(IsLanguage( GameLocalization.RussianCode ) ? "active" : "")" onmousedown=@(() => SetLanguage( GameLocalization.RussianCode )) onclick=@(() => SetLanguage( GameLocalization.RussianCode ))>RU</button>
+						</div>
 					</div>
 				</div>
 
@@ -39,7 +43,7 @@
 					@if ( ActiveTab == 0 )
 					{
 						<div class="page">
-							<div class="page-title">Jobs</div>
+							<div class="page-title">@GameLocalization.Phrase( "ui.tab.jobs" )</div>
 							<div class="jobs-grid">
 								@foreach ( var job in AvailableJobs )
 								{
@@ -48,19 +52,20 @@
 									var atLimit = isLimited && count >= job.MaxCount;
 									var isCurrent = string.Equals( Player.Local?.Job?.JobId, job.Id, StringComparison.Ordinal );
 									var isArrested = Player.Local?.IsArrested == true;
-									var shortDescription = GetShortDescription( job.Description );
+									var jobHeader = GameLocalization.JobHeader( job );
+									var shortDescription = GetShortDescription( GameLocalization.JobDescription( job ) );
 
 									<div class="job-card @(isCurrent ? "current" : "")">
 										<div class="job-head">
-											<div class="job-title">@job.Header</div>
-											<div class="job-limit">@(isLimited ? $"{count}/{job.MaxCount}" : "No limit")</div>
+											<div class="job-title">@jobHeader</div>
+											<div class="job-limit">@(isLimited ? $"{count}/{job.MaxCount}" : GameLocalization.Phrase( "ui.jobs.no_limit", "No limit" ))</div>
 										</div>
 										<div class="job-description">@shortDescription</div>
 										<button
 											class="job-take-btn"
 											disabled=@(isCurrent || atLimit || isArrested)
 											onclick=@(() => RequestJoinJob( job.Id ))>
-											@(isCurrent ? "Current" : (isArrested ? "Arrested" : "Take"))
+											@(isCurrent ? GameLocalization.Phrase( "ui.jobs.current", "Current" ) : (isArrested ? GameLocalization.Phrase( "ui.jobs.arrested", "Arrested" ) : GameLocalization.Phrase( "ui.jobs.take", "Take" )))
 										</button>
 									</div>
 								}
@@ -70,7 +75,7 @@
 					else if ( ActiveTab == 1 )
 					{
 						<div class="page">
-							<div class="page-title">Shop</div>
+							<div class="page-title">@GameLocalization.Phrase( "ui.tab.shop" )</div>
 							<div class="shop-grid">
 								@foreach ( var shop in VisibleShopItems )
 								{
@@ -78,7 +83,9 @@
 									var canFitItem = CanFitShopItem( shop );
 									var hasPurchaseAction = HasShopPurchaseAction( shop );
 									var disabled = !canAfford || !canFitItem || !hasPurchaseAction;
-									var shortDescription = GetShortDescription( shop.Description );
+									var shopHeader = GameLocalization.ShopHeader( shop );
+									var shopCategory = GameLocalization.Category( shop.Category );
+									var shortDescription = GetShortDescription( GameLocalization.ShopDescription( shop ) );
 									var status = GetShopStatus( shop, canAfford, canFitItem, hasPurchaseAction );
 
 									<div class="shop-card @(disabled ? "locked" : "")">
@@ -86,10 +93,10 @@
 											<div class="shop-icon" style="@(GetShopIconStyle( shop ))"></div>
 											<div class="shop-info">
 												<div class="shop-head">
-													<div class="shop-title">@shop.Header</div>
+													<div class="shop-title">@shopHeader</div>
 													<div class="shop-price">$@shop.Price</div>
 												</div>
-												<div class="shop-category">@shop.Category</div>
+												<div class="shop-category">@shopCategory</div>
 												<div class="shop-description">@shortDescription</div>
 											</div>
 										</div>
@@ -99,7 +106,7 @@
 												class="shop-buy-btn"
 												disabled=@disabled
 												onclick=@(() => RequestPurchase( shop ))>
-												Buy
+												@GameLocalization.Phrase( "ui.shop.buy" )
 											</button>
 										</div>
 									</div>
@@ -110,8 +117,8 @@
 					else if ( ActiveTab == 2 )
 					{
 						<div class="page">
-							<div class="page-title">Players</div>
-							<div class="players-count">Online: @CachedPlayers.Count</div>
+							<div class="page-title">@GameLocalization.Phrase( "ui.tab.players" )</div>
+							<div class="players-count">@GameLocalization.Format( "ui.players.online", "Online: {0}", CachedPlayers.Count )</div>
 							<div class="player-list">
 								@foreach ( var conn in CachedPlayers )
 								{
@@ -132,14 +139,14 @@
 					else if ( ActiveTab == 3 )
 					{
 						<div class="page">
-							<div class="page-title">Help</div>
+							<div class="page-title">@GameLocalization.Phrase( "ui.tab.help" )</div>
 							<div class="help-list">
-								<div class="help-row"><div class="help-key">Tab</div><div class="help-desc">Open / Close this menu</div></div>
-								<div class="help-row"><div class="help-key">WASD</div><div class="help-desc">Movement</div></div>
-								<div class="help-row"><div class="help-key">Space</div><div class="help-desc">Jump</div></div>
-								<div class="help-row"><div class="help-key">F</div><div class="help-desc">Interact</div></div>
-								<div class="help-row"><div class="help-key">1 – 9</div><div class="help-desc">Use hotbar item</div></div>
-								<div class="help-row"><div class="help-key">Enter</div><div class="help-desc">Open chat</div></div>
+								<div class="help-row"><div class="help-key">Tab</div><div class="help-desc">@GameLocalization.Phrase( "ui.help.menu" )</div></div>
+								<div class="help-row"><div class="help-key">WASD</div><div class="help-desc">@GameLocalization.Phrase( "ui.help.movement" )</div></div>
+								<div class="help-row"><div class="help-key">Space</div><div class="help-desc">@GameLocalization.Phrase( "ui.help.jump" )</div></div>
+								<div class="help-row"><div class="help-key">F</div><div class="help-desc">@GameLocalization.Phrase( "ui.help.interact" )</div></div>
+								<div class="help-row"><div class="help-key">1-9</div><div class="help-desc">@GameLocalization.Phrase( "ui.help.hotbar" )</div></div>
+								<div class="help-row"><div class="help-key">Enter</div><div class="help-desc">@GameLocalization.Phrase( "ui.help.chat" )</div></div>
 							</div>
 						</div>
 					}
@@ -163,6 +170,26 @@
 	int JobsVersion { get; set; } = 0;
 	int ShopVersion { get; set; } = 0;
 
+	private bool IsLanguage( string code ) => string.Equals( GameLocalization.CurrentCode, code, StringComparison.OrdinalIgnoreCase );
+
+	private void SetLanguage( string code )
+	{
+		GameLocalization.SetLanguage( code );
+		RpcSetLanguage( code );
+		StateHasChanged();
+	}
+
+	[Rpc.Host]
+	private static void RpcSetLanguage( string code )
+	{
+		GameLocalization.SetLanguage( code );
+	}
+
+	private string GetLocalJobName()
+	{
+		return GameLocalization.JobHeader( Player.Local?.Job?.JobDefinition );
+	}
+
 	void SelectPlayersTab()
 	{
 		ActiveTab = 2;
@@ -174,8 +201,8 @@
 	{
 		AvailableJobs = ResourceLibrary
 			.GetAll<JobDefinition>()
-			.OrderBy( x => x.Category )
-			.ThenBy( x => x.Header )
+			.OrderBy( x => GameLocalization.Category( x.Category ) )
+			.ThenBy( GameLocalization.JobHeader )
 			.ToList();
 
 		JobsVersion++;
@@ -185,8 +212,8 @@
 	{
 		AvailableShopItems = ResourceLibrary
 			.GetAll<ShopDefinition>()
-			.OrderBy( x => x.Category )
-			.ThenBy( x => x.Header )
+			.OrderBy( x => GameLocalization.Category( x.Category ) )
+			.ThenBy( GameLocalization.ShopHeader )
 			.ToList();
 
 		ShopVersion++;
@@ -196,7 +223,7 @@
 	{
 		var text = (description ?? string.Empty).Trim();
 		if ( text.Length <= 0 )
-			return "No description";
+			return GameLocalization.Phrase( "common.no_description", "No description" );
 
 		const int maxLen = 110;
 		return text.Length <= maxLen ? text : $"{text[..maxLen]}...";
@@ -232,9 +259,9 @@
 	private string GetPlayerJobName( Connection connection )
 	{
 		if ( connection is null )
-			return "No Job";
+			return GameLocalization.Phrase( "common.no_job", "No Job" );
 
-		return FindPlayerBySteamId( connection.SteamId.Value )?.Job?.JobDefinition?.Header ?? "No Job";
+		return GameLocalization.JobHeader( FindPlayerBySteamId( connection.SteamId.Value )?.Job?.JobDefinition );
 	}
 
 	private int GetPlayersJobHash()
@@ -289,18 +316,18 @@
 	private string GetShopStatus( ShopDefinition shop, bool canAfford, bool canFitItem, bool hasPurchaseAction )
 	{
 		if ( !canAfford )
-			return "Not enough money";
+			return GameLocalization.Phrase( "ui.shop.not_enough_money", "Not enough money" );
 
 		if ( !canFitItem )
-			return "Inventory full";
+			return GameLocalization.Phrase( "ui.shop.inventory_full", "Inventory full" );
 
 		if ( !hasPurchaseAction )
-			return "Unavailable";
+			return GameLocalization.Phrase( "ui.shop.unavailable", "Unavailable" );
 
 		if ( shop?.HasPostPurchased == true && shop.ItemDefinition is null )
-			return "Spawns in world";
+			return GameLocalization.Phrase( "ui.shop.spawns_in_world", "Spawns in world" );
 
-		return "Available";
+		return GameLocalization.Phrase( "ui.shop.available", "Available" );
 	}
 
 	private string GetShopIconStyle( ShopDefinition shop )
@@ -332,25 +359,25 @@
 
 		if ( !IsShopAllowed( shop ) )
 		{
-			Notification.Error( "Your job cannot buy this.", 3.5f );
+			Notification.Error( GameLocalization.Phrase( "notify.shop.job_cannot_buy", "Your job cannot buy this." ), 3.5f );
 			return;
 		}
 
 		if ( (Player.Local?.Money ?? 0) < shop.Price )
 		{
-			Notification.Error( $"Need ${shop.Price}.", 3.5f );
+			Notification.Error( GameLocalization.Format( "notify.shop.need_money", "Need ${0}.", shop.Price ), 3.5f );
 			return;
 		}
 
 		if ( !CanFitShopItem( shop ) )
 		{
-			Notification.Error( "Inventory is full.", 3.5f );
+			Notification.Error( GameLocalization.Phrase( "notify.inventory.full", "Inventory is full." ), 3.5f );
 			return;
 		}
 
 		if ( !HasShopPurchaseAction( shop ) )
 		{
-			Notification.Error( "Shop item is unavailable.", 3.5f );
+			Notification.Error( GameLocalization.Phrase( "notify.shop.unavailable", "Shop item is unavailable." ), 3.5f );
 			return;
 		}
 
@@ -367,33 +394,33 @@
 		var normalized = (jobId ?? string.Empty).Trim();
 		if ( string.IsNullOrEmpty( normalized ) )
 		{
-			NotifyCaller( caller, "Job id is empty.", false );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.jobs.empty_id", "Job id is empty." ), false );
 			return;
 		}
 
 		var jobDefinition = JobDatabase.Get( normalized );
 		if ( jobDefinition is null )
 		{
-			NotifyCaller( caller, "Job not found.", false );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.jobs.not_found", "Job not found." ), false );
 			return;
 		}
 
 		var callerPlayer = FindPlayerBySteamId( caller.SteamId.Value );
 		if ( !callerPlayer.IsValid() || !callerPlayer.Job.IsValid() )
 		{
-			NotifyCaller( caller, "Your player is not ready.", false );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), false );
 			return;
 		}
 
 		if ( callerPlayer.IsArrested )
 		{
-			NotifyCaller( caller, "You are arrested.", false );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.player.arrested", "You are arrested." ), false );
 			return;
 		}
 
 		if ( string.Equals( callerPlayer.Job.JobId, normalized, StringComparison.Ordinal ) )
 		{
-			NotifyCaller( caller, "You already have this job.", true );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.jobs.already_have", "You already have this job." ), true );
 			return;
 		}
 
@@ -406,15 +433,15 @@
 		if ( jobDefinition.Vote && Connection.All.Count > 2 )
 		{
 			if ( VoteManager.TryStartJobVote( callerPlayer, jobDefinition ) )
-				NotifyCaller( caller, $"Vote started for {jobDefinition.Header}.", true );
+				NotifyCaller( caller, GameLocalization.Format( "notify.vote.started_for", "Vote started for {0}.", GameLocalization.JobHeader( jobDefinition ) ), true );
 			else
-				NotifyCaller( caller, "Could not start vote.", false );
+				NotifyCaller( caller, GameLocalization.Phrase( "notify.vote.could_not_start", "Could not start vote." ), false );
 
 			return;
 		}
 
 		callerPlayer.Job.SetJob( normalized );
-		NotifyCaller( caller, $"You joined: {jobDefinition.Header}.", true );
+		NotifyCaller( caller, GameLocalization.Format( "notify.jobs.joined", "You joined: {0}.", GameLocalization.JobHeader( jobDefinition ) ), true );
 	}
 
 	private static Player FindPlayerBySteamId( long steamId )
@@ -512,6 +539,7 @@
 		hash.Add( IsOpen );
 		hash.Add( UiModalManager.Version );
 		hash.Add( ActiveTab );
+		hash.Add( GameLocalization.CurrentCode );
 		hash.Add( Player.Local?.Money ?? 0 );
 		hash.Add( Player.Local?.Job?.JobId );
 		hash.Add( Player.Local?.Job?.JobDefinition?.Header );

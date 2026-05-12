@@ -4,7 +4,7 @@ public sealed class FadingDoorTool : ToolMode
 {
 	public override string Id => "fadingdoor";
 	public override string Title => "Fading Door";
-	public override string Description => "Добавляет или удаляет Fading Door на твоём prop.";
+	public override string Description => "Adds or removes Fading Door on your prop.";
 
 	public override ToolUseResult Use(ToolUseContext context)
 	{
@@ -14,11 +14,11 @@ public sealed class FadingDoorTool : ToolMode
 			door = gameObject.Components.Create<global::FadingDoor>();
 			door.SetOwner(context.Player);
 			door.Close();
-			return ToolUseResult.Ok("Fading Door добавлен.");
+			return ToolUseResult.Ok(GameLocalization.Phrase( "notify.toolgun.fading_door_added", "Fading Door added." ));
 		}
 
 		door.Close();
 		door.Destroy();
-		return ToolUseResult.Ok("Fading Door удален.");
+		return ToolUseResult.Ok(GameLocalization.Phrase( "notify.toolgun.fading_door_removed", "Fading Door removed." ));
 	}
 }

@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @inherits PanelComponent
 @namespace Sandbox
@@ -9,38 +9,38 @@
 		<div class="keybinds-panel">
 			<div class="keybind-row">
 				<div class="key-badge">TAB</div>
-				<div class="separator">—</div>
-				<div class="key-label">MENU</div>
+				<div class="separator">-</div>
+				<div class="key-label">@GameLocalization.Phrase( "ui.keybind.menu" )</div>
 			</div>
 			<div class="keybind-row">
 				<div class="key-badge">ENTER</div>
-				<div class="separator">—</div>
-				<div class="key-label">CHAT</div>
+				<div class="separator">-</div>
+				<div class="key-label">@GameLocalization.Phrase( "ui.keybind.chat" )</div>
 			</div>
 			<div class="keybind-row">
 				<div class="key-badge">V</div>
-				<div class="separator">—</div>
-				<div class="key-label">VOICE</div>
+				<div class="separator">-</div>
+				<div class="key-label">@GameLocalization.Phrase( "ui.keybind.voice" )</div>
 			</div>
 			<div class="keybind-row">
 				<div class="key-badge">Q</div>
-				<div class="separator">—</div>
-				<div class="key-label">PROPS</div>
+				<div class="separator">-</div>
+				<div class="key-label">@GameLocalization.Phrase( "ui.keybind.props" )</div>
 			</div>
 			<div class="keybind-row">
 				<div class="key-badge">I</div>
-				<div class="separator">—</div>
-				<div class="key-label">INVENTORY</div>
+				<div class="separator">-</div>
+				<div class="key-label">@GameLocalization.Phrase( "ui.keybind.inventory" )</div>
 			</div>
 			<div class="keybind-row">
 				<div class="key-badge">C</div>
-				<div class="separator">—</div>
-				<div class="key-label">CONTEXT</div>
+				<div class="separator">-</div>
+				<div class="key-label">@GameLocalization.Phrase( "ui.keybind.context" )</div>
 			</div>
 			<div class="keybind-row">
 				<div class="key-badge">X</div>
-				<div class="separator">—</div>
-				<div class="key-label">HIDE KEYBINDS</div>
+				<div class="separator">-</div>
+				<div class="key-label">@GameLocalization.Phrase( "ui.keybind.hide" )</div>
 			</div>
 		</div>
 	}
@@ -56,5 +56,5 @@
 			IsOpen = !IsOpen;
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine( IsOpen );
+	protected override int BuildHash() => System.HashCode.Combine( IsOpen, GameLocalization.CurrentCode );
 }

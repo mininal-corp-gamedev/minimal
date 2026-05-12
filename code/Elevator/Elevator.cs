@@ -129,7 +129,7 @@ public sealed class Elevator : Component
 
 		if ( !CanCallerUseElevator( caller ) )
 		{
-			NotifyCaller( caller, "Too far from elevator.", NotificationType.Warn );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.elevator.too_far", "Too far from elevator." ), NotificationType.Warn );
 			return;
 		}
 

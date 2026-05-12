@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
 @inherits PanelComponent
@@ -10,7 +10,7 @@
 			<div class="multiplier">x(@Multiplier)</div>
 		</div>
 		<div class="slot-core payout">
-			<div class="label">Payout</div>
+			<div class="label">@GameLocalization.Phrase( "ui.casino.payout" )</div>
 			<div class="price">$@PotentialPayout</div>
 		</div>
 		<div class="status">@StatusText</div>
@@ -24,8 +24,8 @@
 
 	int Multiplier => Math.Max( 1, Machine?.LocalMultiplier ?? 1 );
 	int PotentialPayout => Math.Max( 0, Machine?.LocalPotentialPayout ?? 0 );
-	string StatusText => string.IsNullOrWhiteSpace( Machine?.LocalStatusText ) ? "Ready" : Machine.LocalStatusText;
+	string StatusText => string.IsNullOrWhiteSpace( Machine?.LocalStatusText ) ? GameLocalization.Phrase( "ui.common.ready", "Ready" ) : Machine.LocalStatusText;
 	string VisualState => Machine?.LocalVisualState ?? "idle";
 
-	protected override int BuildHash() => HashCode.Combine( Multiplier, PotentialPayout, StatusText, VisualState );
+	protected override int BuildHash() => HashCode.Combine( Multiplier, PotentialPayout, StatusText, VisualState, GameLocalization.CurrentCode );
 }

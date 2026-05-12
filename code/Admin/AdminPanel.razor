@@ -1,4 +1,4 @@
-@using Sandbox
+﻿@using Sandbox
 @using Sandbox.UI
 @using System
 @using System.Collections.Generic
@@ -11,17 +11,17 @@
 	{
 		<div class="overlay">
 			<div class="admin-panel" @ref="FocusSinkRef">
-				<button class="close-btn" onclick=@(() => SetOpen( false ))>✕</button>
+				<button class="close-btn" onclick=@(() => SetOpen( false ))>X</button>
 				<div class="sidebar">
 					<div class="sidebar-profile">
 						<div class="sb-name">@(Connection.Local?.DisplayName ?? "-")</div>
-						<div class="sb-rank">Rank @(CurrentRank): @AdminManager.GetRankName( CurrentRank )</div>
+						<div class="sb-rank">@GameLocalization.Format( "ui.admin.rank", "Rank {0}: {1}", CurrentRank, AdminManager.GetRankName( CurrentRank ) )</div>
 					</div>
 
 					<div class="sidebar-nav">
 						@foreach ( var ability in VisibleAbilities )
 						{
-							<button class="tab-btn @(ActiveAbility == ability.Id ? "active" : "")" onclick=@(() => SelectAbility( ability.Id ))>@ability.Title</button>
+							<button class="tab-btn @(ActiveAbility == ability.Id ? "active" : "")" onclick=@(() => SelectAbility( ability.Id ))>@GetAbilityTitle( ability )</button>
 						}
 					</div>
 				</div>
@@ -30,19 +30,19 @@
 					@if ( ActiveDefinition is null )
 					{
 						<div class="page">
-							<div class="page-title">Admin</div>
-							<div class="page-placeholder">No abilities available for your rank.</div>
+							<div class="page-title">@GameLocalization.Phrase( "ui.admin.title" )</div>
+							<div class="page-placeholder">@GameLocalization.Phrase( "ui.admin.no_abilities" )</div>
 						</div>
 					}
 					else
 					{
 						<div class="page">
-							<div class="page-title">@ActiveDefinition.Title</div>
-							<div class="page-subtitle">@ActiveDefinition.Description</div>
+							<div class="page-title">@GetAbilityTitle( ActiveDefinition )</div>
+							<div class="page-subtitle">@GetAbilityDescription( ActiveDefinition )</div>
 
 							@if ( ActiveDefinition.NeedsOnlinePlayer )
 							{
-								<div class="field-label">Online player</div>
+								<div class="field-label">@GameLocalization.Phrase( "ui.admin.online_player" )</div>
 								<div class="player-list-area">
 									<div class="player-list">
 										@foreach ( var conn in CachedPlayers )
@@ -55,7 +55,7 @@
 												</div>
 												@if ( SelectedSteamId == conn.SteamId.Value )
 												{
-													<div class="player-selected">SELECTED</div>
+													<div class="player-selected">@GameLocalization.Phrase( "ui.admin.selected" )</div>
 												}
 												<div class="player-ping">@conn.Ping ms</div>
 											</button>
@@ -73,17 +73,17 @@
 
 							@if ( ActiveDefinition.NeedsValue )
 							{
-								<div class="field-label">@ActiveDefinition.ValueLabel</div>
-								<TextEntry @ref="ValueEntryRef" class="admin-input" Value:bind="@ValueInput" Placeholder="@ActiveDefinition.ValuePlaceholder" onsubmit="@SubmitActiveAbility"></TextEntry>
+								<div class="field-label">@GetAbilityValueLabel( ActiveDefinition )</div>
+								<TextEntry @ref="ValueEntryRef" class="admin-input" Value:bind="@ValueInput" Placeholder="@GetAbilityValuePlaceholder( ActiveDefinition )" onsubmit="@SubmitActiveAbility"></TextEntry>
 							}
 
 							@if ( ActiveDefinition.NeedsReason )
 							{
-								<div class="field-label">Reason</div>
-								<TextEntry @ref="ReasonEntryRef" class="admin-input" Value:bind="@ReasonInput" Placeholder="Reason" onsubmit="@SubmitActiveAbility"></TextEntry>
+								<div class="field-label">@GameLocalization.Phrase( "ui.admin.reason" )</div>
+								<TextEntry @ref="ReasonEntryRef" class="admin-input" Value:bind="@ReasonInput" Placeholder="@GameLocalization.Phrase( "ui.admin.reason", "Reason" )" onsubmit="@SubmitActiveAbility"></TextEntry>
 							}
 
-							<button class="execute-btn" onclick=@(() => SubmitActiveAbility())>Execute</button>
+							<button class="execute-btn" onclick=@(() => SubmitActiveAbility())>@GameLocalization.Phrase( "ui.admin.execute" )</button>
 						</div>
 					}
 				</div>
@@ -128,6 +128,26 @@
 	private int CurrentRank => Player.Local?.AdminRank ?? 0;
 	private IEnumerable<AdminAbilityDefinition> VisibleAbilities => Abilities.Where( x => CurrentRank >= x.RequiredRank );
 	private AdminAbilityDefinition ActiveDefinition => Abilities.FirstOrDefault( x => x.Id == ActiveAbility && CurrentRank >= x.RequiredRank );
+
+	private static string GetAbilityTitle( AdminAbilityDefinition ability )
+	{
+		return ability is null ? string.Empty : GameLocalization.Phrase( $"admin.ability.{ability.Id}.title", ability.Title );
+	}
+
+	private static string GetAbilityDescription( AdminAbilityDefinition ability )
+	{
+		return ability is null ? string.Empty : GameLocalization.Phrase( $"admin.ability.{ability.Id}.description", ability.Description );
+	}
+
+	private static string GetAbilityValueLabel( AdminAbilityDefinition ability )
+	{
+		return ability is null ? string.Empty : GameLocalization.Phrase( $"admin.ability.{ability.Id}.value_label", ability.ValueLabel );
+	}
+
+	private static string GetAbilityValuePlaceholder( AdminAbilityDefinition ability )
+	{
+		return ability is null ? string.Empty : GameLocalization.Phrase( $"admin.ability.{ability.Id}.value_placeholder", ability.ValuePlaceholder );
+	}
 
 	private void SetOpen( bool open )
 	{
@@ -211,14 +231,14 @@
 
 		if ( CurrentRank < ability.RequiredRank )
 		{
-			Notification.Error( "Access denied.", 3f );
+			Notification.Error( GameLocalization.Phrase( "notify.admin.access_denied", "Access denied." ), 3f );
 			return;
 		}
 
 		var steamId = GetTargetSteamId();
 		if ( (ability.NeedsOnlinePlayer || ability.NeedsSteamIdInput) && steamId == 0 )
 		{
-			Notification.Error( "Invalid SteamId.", 3f );
+			Notification.Error( GameLocalization.Phrase( "notify.admin.invalid_steamid", "Invalid SteamId." ), 3f );
 			return;
 		}
 
@@ -238,11 +258,11 @@
 				break;
 			case "setmoney":
 				if ( int.TryParse( ValueInput, out var money ) ) AdminManager.RpcRequestSetMoney( steamId, money );
-				else Notification.Error( "Invalid money value.", 3f );
+				else Notification.Error( GameLocalization.Phrase( "notify.admin.invalid_money", "Invalid money value." ), 3f );
 				break;
 			case "sethp":
 				if ( float.TryParse( ValueInput, out var hp ) ) AdminManager.RpcRequestSetHp( steamId, hp );
-				else Notification.Error( "Invalid hp value.", 3f );
+				else Notification.Error( GameLocalization.Phrase( "notify.admin.invalid_hp", "Invalid hp value." ), 3f );
 				break;
 			case "kill":
 				AdminManager.RpcRequestKill( steamId );
@@ -264,7 +284,7 @@
 				break;
 			case "giverank":
 				if ( int.TryParse( ValueInput, out var rank ) ) AdminManager.RpcRequestGiveRank( steamId, rank );
-				else Notification.Error( "Invalid rank value.", 3f );
+				else Notification.Error( GameLocalization.Phrase( "notify.admin.invalid_rank", "Invalid rank value." ), 3f );
 				break;
 		}
 	}
@@ -347,6 +367,7 @@
 			UiModalManager.Version,
 			ActiveAbility,
 			CurrentRank,
+			GameLocalization.CurrentCode,
 			SelectedSteamId,
 			fieldsHash );
 	}

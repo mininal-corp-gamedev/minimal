@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using Ambi.Storage;
 @using System;
@@ -12,11 +12,11 @@
 			<div class="inv-bg-close" onclick=@Close></div>
 			<div class="inv-panel" onclick=@OnPanelClick>
 				<div class="inv-header">
-					<div class="inv-title">Inventory</div>
-					<button class="inv-close" onclick=@Close>✕</button>
+					<div class="inv-title">@GameLocalization.Phrase( "ui.inventory.title" )</div>
+					<button class="inv-close" onclick=@Close>X</button>
 				</div>
 
-				<div class="inv-section-label">Hotbar</div>
+				<div class="inv-section-label">@GameLocalization.Phrase( "ui.inventory.hotbar" )</div>
 				<div class="inv-row">
 					@for ( int i = 0; i < HotbarCount; i++ )
 					{
@@ -38,7 +38,7 @@
 					}
 				</div>
 
-				<div class="inv-section-label">Backpack</div>
+				<div class="inv-section-label">@GameLocalization.Phrase( "ui.inventory.backpack" )</div>
 				@{
 					int backpackCount = SlotCount - HotbarCount;
 					if ( backpackCount < 0 ) backpackCount = 0;
@@ -82,16 +82,16 @@
 			@if ( TooltipSlot is not null )
 			{
 				<div class="inv-tooltip" style="left: @(TipX)px; top: @(TipY)px;">
-					<div class="tip-name">@TooltipSlot.Item.Definition.Header</div>
+					<div class="tip-name">@GameLocalization.ItemHeader( TooltipSlot.Item.Definition )</div>
 					<div class="tip-count">x@(TooltipSlot.Item.Count)</div>
 				</div>
 			}
 			@if ( CtxVisible )
 			{
 				<div class="ctx-menu" style="left: @(CtxX)px; top: @(CtxY)px;">
-					<button class="ctx-btn" onclick=@OnUse>Use</button>
-					<button class="ctx-btn" onclick=@OnDrop>Drop</button>
-					<button class="ctx-btn" onclick=@OnDropAll>Drop All</button>
+					<button class="ctx-btn" onclick=@OnUse>@GameLocalization.Phrase( "ui.inventory.use" )</button>
+					<button class="ctx-btn" onclick=@OnDrop>@GameLocalization.Phrase( "ui.inventory.drop" )</button>
+					<button class="ctx-btn" onclick=@OnDropAll>@GameLocalization.Phrase( "ui.inventory.drop_all" )</button>
 				</div>
 			}
 		</div>
@@ -294,6 +294,7 @@
 		hashBuilder.Add( HoverSlotIndex );
 		hashBuilder.Add( TipX );
 		hashBuilder.Add( TipY );
+		hashBuilder.Add( GameLocalization.CurrentCode );
 
 		var hash = hashBuilder.ToHashCode();
 		if ( Inv is not null )

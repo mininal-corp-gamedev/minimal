@@ -204,7 +204,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	private bool _hasPendingPrediction;
 	private double _predictionCorrectionAt;
 
-	private const string JobDeniedInteractionMessage = "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0432\u0437\u0430\u0438\u043c\u043e\u0434\u0435\u0439\u0441\u0442\u0432\u043e\u0432\u0430\u0442\u044c \u0441 \u044d\u0442\u043e\u0439 \u0434\u0432\u0435\u0440\u044c\u044e.";
+	private static string JobDeniedInteractionMessage => GameLocalization.Phrase( "notify.door.job_denied", "You cannot interact with this door." );
 	private const double PredictionCorrectionDelaySeconds = 0.35;
 
 	/// <summary>True while the post-break cooldown prevents closing or locking.</summary>
@@ -739,7 +739,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		NotifyDoorFeedback(
 			caller,
-			$"Door bought for ${BuyPrice}. Doors: {buyer.OwnedDoorsCount}/{buyer.MaxDoors}.",
+			GameLocalization.Format( "notify.door.bought", "Door bought for ${0}. Doors: {1}/{2}.", BuyPrice, buyer.OwnedDoorsCount, buyer.MaxDoors ),
 			NotificationType.Info,
 			2.5f,
 			BuySound );
@@ -789,7 +789,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		NotifyDoorFeedback(
 			caller,
-			$"Door sold for ${SellPrice}. Doors: {seller.OwnedDoorsCount}/{seller.MaxDoors}.",
+			GameLocalization.Format( "notify.door.sold", "Door sold for ${0}. Doors: {1}/{2}.", SellPrice, seller.OwnedDoorsCount, seller.MaxDoors ),
 			NotificationType.Info,
 			2.5f,
 			SellSound );
@@ -1086,20 +1086,20 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		if ( !CanBeLockpicked() )
 		{
-			NotifyLockpicker( caller, "Эту дверь нельзя взломать.", NotificationType.Warn, 3.0f );
+			NotifyLockpicker( caller, GameLocalization.Phrase( "notify.lockpick.cannot_lockpick", "This door cannot be lockpicked." ), NotificationType.Warn, 3.0f );
 			return;
 		}
 
 		if ( picker.LockpickCooldown > 0f )
 		{
 			var secondsLeft = (float)picker.LockpickCooldown;
-			NotifyLockpicker( caller, $"Подожди {secondsLeft:0}с перед следующей попыткой.", NotificationType.Warn, 2.5f );
+			NotifyLockpicker( caller, GameLocalization.Format( "notify.lockpick.wait", "Wait {0:0}s before the next attempt.", secondsLeft ), NotificationType.Warn, 2.5f );
 			return;
 		}
 
 		if ( Vector3.DistanceBetween( picker.WorldPosition, WorldPosition ) > LockpickInteractRange )
 		{
-			NotifyLockpicker( caller, "Слишком далеко от двери.", NotificationType.Warn, 2.5f );
+			NotifyLockpicker( caller, GameLocalization.Phrase( "notify.lockpick.too_far", "Too far from the door." ), NotificationType.Warn, 2.5f );
 			return;
 		}
 
@@ -1120,11 +1120,11 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 				DoorSecond.LockState = DoorLockState.Unlocked;
 			Open( picker );
 
-			NotifyLockpicker( caller, $"Взлом удался! Дверь открыта. Следующая попытка через {cooldown:0}с.", NotificationType.Info, 3.5f );
+			NotifyLockpicker( caller, GameLocalization.Format( "notify.lockpick.success", "Lockpick succeeded! Door opened. Next attempt in {0:0}s.", cooldown ), NotificationType.Info, 3.5f );
 		}
 		else
 		{
-			NotifyLockpicker( caller, $"Взлом не удался. Следующая попытка через {cooldown:0}с.", NotificationType.Error, 3.5f );
+			NotifyLockpicker( caller, GameLocalization.Format( "notify.lockpick.failed", "Lockpick failed. Next attempt in {0:0}s.", cooldown ), NotificationType.Error, 3.5f );
 		}
 	}
 

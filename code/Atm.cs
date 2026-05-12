@@ -14,7 +14,6 @@ public sealed class Atm : Component, Component.IPressable
 		return true;
 	}
 
-
 	public void RequestDeposit( int amount )
 	{
 		var local = Player.Local;
@@ -22,13 +21,13 @@ public sealed class Atm : Component, Component.IPressable
 
 		if ( amount <= 0 )
 		{
-			Notification.Make( "Некорректная сумма для внесения.", 3f );
+			Notification.Make( GameLocalization.Phrase( "notify.atm.invalid_deposit", "Invalid deposit amount." ), 3f );
 			return;
 		}
 
 		if ( local.Money < amount )
 		{
-			Notification.Make( "Недостаточно наличных.", 3f );
+			Notification.Make( GameLocalization.Phrase( "notify.atm.not_enough_cash", "Not enough cash." ), 3f );
 			return;
 		}
 
@@ -48,13 +47,13 @@ public sealed class Atm : Component, Component.IPressable
 
 		if ( amount <= 0 )
 		{
-			Notification.Make( "Некорректная сумма для снятия.", 3f );
+			Notification.Make( GameLocalization.Phrase( "notify.atm.invalid_withdraw", "Invalid withdraw amount." ), 3f );
 			return;
 		}
 
 		if ( local.MoneyAtm < amount )
 		{
-			Notification.Make( "Недостаточно средств на счёте.", 3f );
+			Notification.Make( GameLocalization.Phrase( "notify.atm.not_enough_account", "Not enough funds in account." ), 3f );
 			return;
 		}
 
@@ -78,25 +77,25 @@ public sealed class Atm : Component, Component.IPressable
 		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
 		if ( !player.IsValid() )
 		{
-			NotifyAtmResult( caller, "Твой игрок ещё не готов.", false );
+			NotifyAtmResult( caller, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), false );
 			return;
 		}
 
 		if ( player.GameObject.Network.Owner != caller )
 		{
-			NotifyAtmResult( caller, "Ошибка авторизации.", false );
+			NotifyAtmResult( caller, GameLocalization.Phrase( "notify.atm.auth_error", "Authorization error." ), false );
 			return;
 		}
 
 		if ( amount <= 0 )
 		{
-			NotifyAtmResult( caller, "Некорректная сумма для внесения.", false );
+			NotifyAtmResult( caller, GameLocalization.Phrase( "notify.atm.invalid_deposit", "Invalid deposit amount." ), false );
 			return;
 		}
 
 		if ( player.Money < amount )
 		{
-			NotifyAtmResult( caller, "Недостаточно наличных.", false );
+			NotifyAtmResult( caller, GameLocalization.Phrase( "notify.atm.not_enough_cash", "Not enough cash." ), false );
 			return;
 		}
 
@@ -114,25 +113,25 @@ public sealed class Atm : Component, Component.IPressable
 		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
 		if ( !player.IsValid() )
 		{
-			NotifyAtmResult( caller, "Твой игрок ещё не готов.", false );
+			NotifyAtmResult( caller, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), false );
 			return;
 		}
 
 		if ( player.GameObject.Network.Owner != caller )
 		{
-			NotifyAtmResult( caller, "Ошибка авторизации.", false );
+			NotifyAtmResult( caller, GameLocalization.Phrase( "notify.atm.auth_error", "Authorization error." ), false );
 			return;
 		}
 
 		if ( amount <= 0 )
 		{
-			NotifyAtmResult( caller, "Некорректная сумма для снятия.", false );
+			NotifyAtmResult( caller, GameLocalization.Phrase( "notify.atm.invalid_withdraw", "Invalid withdraw amount." ), false );
 			return;
 		}
 
 		if ( player.MoneyAtm < amount )
 		{
-			NotifyAtmResult( caller, "Недостаточно средств на счёте.", false );
+			NotifyAtmResult( caller, GameLocalization.Phrase( "notify.atm.not_enough_account", "Not enough funds in account." ), false );
 			return;
 		}
 
@@ -148,7 +147,7 @@ public sealed class Atm : Component, Component.IPressable
 
 		var conn = player.GameObject.Network.Owner;
 		Log.Info( $"[ATM] {conn?.DisplayName} deposited ${amount}. ATM balance: ${player.MoneyAtm}" );
-		NotifyAtmResult( conn, $"Внесено ${amount}. Счёт: ${player.MoneyAtm}", true );
+		NotifyAtmResult( conn, GameLocalization.Format( "notify.atm.deposited", "Deposited ${0}. Account: ${1}", amount, player.MoneyAtm ), true );
 	}
 
 	private void HostWithdraw( Player player, int amount )
@@ -160,7 +159,7 @@ public sealed class Atm : Component, Component.IPressable
 
 		var conn = player.GameObject.Network.Owner;
 		Log.Info( $"[ATM] {conn?.DisplayName} withdrew ${amount}. ATM balance: ${player.MoneyAtm}" );
-		NotifyAtmResult( conn, $"Снято ${amount}. Счёт: ${player.MoneyAtm}", true );
+		NotifyAtmResult( conn, GameLocalization.Format( "notify.atm.withdrew", "Withdrew ${0}. Account: ${1}", amount, player.MoneyAtm ), true );
 	}
 
 	private static void NotifyAtmResult( Connection connection, string message, bool success )

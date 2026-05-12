@@ -23,14 +23,21 @@
 	/// <summary>Запас патронов вне магазина (поле <see cref="Weapon.TotalReserveAmmo"/>).</summary>
 	int TotalAmmo => CurrentWeapon?.TotalReserveAmmo ?? 0;
 	string AmmoDisplayText => IsToolgun
-		? ToolgunClientState.SelectedToolTitle ?? "None"
+		? GetSelectedToolTitle()
 		: $"{CurrentAmmo}/{TotalAmmo}";
+
+	string GetSelectedToolTitle()
+	{
+		var tool = ToolgunClientState.SelectedTool;
+		return tool is null ? GameLocalization.Phrase( "ui.common.none", "None" ) : GameLocalization.Phrase( $"tool.{tool.Id}.title", tool.Title );
+	}
 
 	protected override int BuildHash() => System.HashCode.Combine(
 		Player.Local?.CurrentWeapon?.GetHashCode() ?? 0,
 		CurrentWeapon?.Ammo ?? 0,
 		CurrentWeapon?.TotalReserveAmmo ?? 0,
 		ToolgunClientState.SelectedToolId,
-		ToolgunClientState.Version
+		ToolgunClientState.Version,
+		GameLocalization.CurrentCode
 	);
 }

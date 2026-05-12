@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
 @using System.Globalization;
@@ -10,24 +10,24 @@
 		<div class="header">@PrinterName</div>
 
 		<div class="body">
-			<div class="rate-label">Rate</div>
+			<div class="rate-label">@GameLocalization.Phrase( "ui.printer.rate" )</div>
 			<div class="rate-value">@RateText</div>
 
 			<div class="money-card">
-				<div class="money-label">Stored</div>
+				<div class="money-label">@GameLocalization.Phrase( "ui.printer.stored" )</div>
 				<div class="money">@MoneyText</div>
 			</div>
 
-			<div class="rate-label">Health</div>
+			<div class="rate-label">@GameLocalization.Phrase( "ui.printer.health" )</div>
 			<div class="rate-value">@HealthText</div>
 
 			@if ( IsFull )
 			{
-				<div class="status full">FULL</div>
+				<div class="status full">@GameLocalization.Phrase( "ui.printer.full" )</div>
 			}
 		</div>
 
-		<div class="footer">Press "E"</div>
+		<div class="footer">@GameLocalization.Phrase( "ui.common.press_e" )</div>
 	</div>
 </root>
 
@@ -35,7 +35,7 @@
 {
 	MoneyPrinterBase Printer => Components.Get<MoneyPrinterBase>( FindMode.EverythingInSelfAndAncestors );
 
-	string PrinterName => string.IsNullOrWhiteSpace( Printer?.PrinterName ) ? "Money Printer" : Printer.PrinterName;
+	string PrinterName => string.IsNullOrWhiteSpace( Printer?.PrinterName ) ? GameLocalization.Phrase( "shop.money_printer1.header", "Money Printer" ) : Printer.PrinterName;
 
 	int StoredMoney => Math.Max( 0, Printer?.StoredMoney ?? 0 );
 	int MaxMoney => Math.Max( 1, Printer?.MaxMoney ?? 1 );
@@ -50,7 +50,7 @@
 		: 0f;
 
 	string RateText => IsFull
-		? "Stopped"
+		? GameLocalization.Phrase( "ui.common.stopped", "Stopped" )
 		: $"${RatePerMinute.ToString( "0", CultureInfo.InvariantCulture )}/min.";
 
 	string MoneyText => $"${StoredMoney} / ${MaxMoney}";
@@ -60,16 +60,16 @@
 		get
 		{
 			if ( Printer is null )
-				return "No Signal";
+				return GameLocalization.Phrase( "ui.printer.no_signal", "No Signal" );
 
 			if ( IsFull )
-				return "Limit reached";
+				return GameLocalization.Phrase( "ui.printer.limit_reached", "Limit reached" );
 
 			if ( !Printer.IsWorking )
-				return "Stopped";
+				return GameLocalization.Phrase( "ui.common.stopped", "Stopped" );
 
 			if ( Printer.Lifetime <= 0f )
-				return "Unlimited";
+				return GameLocalization.Phrase( "ui.printer.unlimited", "Unlimited" );
 
 			return $"{MathF.Ceiling( Printer.TimeLeft )}s left";
 		}
@@ -82,5 +82,6 @@
 		IsFull,
 		RatePerMinute,
 		FooterText,
-		HealthText );
+		HealthText,
+		GameLocalization.CurrentCode );
 }

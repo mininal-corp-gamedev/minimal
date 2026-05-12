@@ -101,19 +101,19 @@ public abstract class ToolMode
 	public virtual ToolUseResult Validate(ToolUseContext context)
 	{
 		if (!context.Player.IsValid())
-			return ToolUseResult.Fail("Твой игрок ещё не готов.");
+			return ToolUseResult.Fail(GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ));
 
 		if (context.Player.IsArrested || !context.Player.IsAlive)
-			return ToolUseResult.Fail("Сейчас нельзя использовать Toolgun.");
+			return ToolUseResult.Fail(GameLocalization.Phrase( "notify.toolgun.cannot_use_now", "You cannot use the Toolgun right now." ));
 
 		if (!RequiresOwnedProp)
 			return ToolUseResult.Ok(null);
 
 		if (!context.TargetProp.IsValid() || !context.TargetProp.GameObject.IsValid())
-			return ToolUseResult.Fail("Наведи Toolgun на свой prop.");
+			return ToolUseResult.Fail(GameLocalization.Phrase( "notify.toolgun.aim_own_prop", "Aim the Toolgun at your prop." ));
 
 		if (context.TargetProp.PlayerOwner != context.Player)
-			return ToolUseResult.Fail("Можно работать только со своими prop.");
+			return ToolUseResult.Fail(GameLocalization.Phrase( "notify.toolgun.only_own_props", "You can only work with your own props." ));
 
 		return ToolUseResult.Ok(null);
 	}

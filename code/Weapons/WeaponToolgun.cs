@@ -88,20 +88,20 @@ public sealed class WeaponToolgun : Weapon
 		var player = Player.FindPlayerBySteamId(caller.SteamId.Value);
 		if (!player.IsValid() || !player.Controller.IsValid())
 		{
-			NotifyCaller(caller, "Твой игрок ещё не готов.", false);
+			NotifyCaller(caller, GameLocalization.Phrase("notify.player.not_ready", "Your player is not ready."), false);
 			return;
 		}
 
 		if (!string.Equals(player.EquippedWeaponItemId, "toolgun", StringComparison.OrdinalIgnoreCase))
 		{
-			NotifyCaller(caller, "Возьми Toolgun в руки.", false);
+			NotifyCaller(caller, GameLocalization.Phrase("notify.toolgun.equip_first", "Equip the Toolgun first."), false);
 			return;
 		}
 
 		var tool = ToolMode.Get(toolId);
 		if (tool is null)
 		{
-			NotifyCaller(caller, "Tool не выбран.", false);
+			NotifyCaller(caller, GameLocalization.Phrase("notify.toolgun.no_tool_selected", "No tool selected."), false);
 			return;
 		}
 		if (isSecondary && !tool.SupportsSecondary)

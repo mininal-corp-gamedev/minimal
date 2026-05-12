@@ -56,7 +56,7 @@ public sealed class MoneyDropped : Component, Component.IPressable
     [Rpc.Broadcast]
     private void RpcNotifyTakeDroppedMoney( int amount )
     {
-        Notification.Info( $"Ты поднял ${amount}.", 3.5f );
+        Notification.Info( GameLocalization.Format( "notify.money.looted", "You looted ${0}", amount ), 3.5f );
     }
 
     private static Player FindPlayerBySteamId( long steamId )

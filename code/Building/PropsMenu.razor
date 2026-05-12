@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
 @using System.Collections.Generic;
@@ -14,7 +14,7 @@
 	{
 		<div class="prop-look-hud">
 			<div class="prop-look-title">@LookedPropName</div>
-			<div class="prop-look-owner">Owner: @LookedPropOwnerName</div>
+			<div class="prop-look-owner">@GameLocalization.Format( "ui.props.owner", "Owner: {0}", LookedPropOwnerName )</div>
 		</div>
 	}
 
@@ -25,17 +25,17 @@
 				<div class="props-area">
 					<div class="page-head">
 						<div onmouseup=@ClearTextFocus>
-							<div class="page-title">Props</div>
+							<div class="page-title">@GameLocalization.Phrase( "ui.props.title" )</div>
 						</div>
 						<div class="head-actions">
-							<TextEntry @ref="SearchInputRef" class="search-input" Value:bind="@SearchText" Placeholder="Поиск пропов..." OnTextEdited=@OnSearchTextEdited onfocus=@OnSearchFocus onblur=@OnSearchBlur />
-							<button class="refresh-btn" onclick=@(() => RefreshProps())>Refresh</button>
+							<TextEntry @ref="SearchInputRef" class="search-input" Value:bind="@SearchText" Placeholder="@GameLocalization.Phrase( "ui.props.search", "Search props..." )" OnTextEdited=@OnSearchTextEdited onfocus=@OnSearchFocus onblur=@OnSearchBlur />
+							<button class="refresh-btn" onclick=@(() => RefreshProps())>@GameLocalization.Phrase( "ui.props.refresh" )</button>
 						</div>
 					</div>
 
 					@if ( AvailableProps.Count == 0 )
 					{
-						<div class="empty-state">No props found in assets/props.</div>
+						<div class="empty-state">@GameLocalization.Phrase( "ui.props.empty_assets" )</div>
 					}
 					else
 					{
@@ -43,12 +43,12 @@
 
 						<div class="catalog-bar" @ref="CatalogBarRef" onmouseup=@ClearTextFocus>
 							<button class="catalog-btn @(!SelectedFavoritesOnly && string.IsNullOrWhiteSpace( SelectedCategory ) ? "active" : "")" onclick=@(() => SelectCategory( null ))>
-								<div class="catalog-label">Все пропы</div>
+								<div class="catalog-label">@GameLocalization.Phrase( "ui.props.all" )</div>
 								<div class="catalog-count">@AvailableProps.Count</div>
 							</button>
 
 							<button class="catalog-btn favorite-catalog @(SelectedFavoritesOnly ? "active" : "")" onclick=@(() => SelectFavorites())>
-								<div class="catalog-label">Избранное</div>
+								<div class="catalog-label">@GameLocalization.Phrase( "ui.props.favorites" )</div>
 								<div class="catalog-count">@GetFavoritesCount()</div>
 							</button>
 
@@ -62,13 +62,13 @@
 						</div>
 
 						<div class="props-meta" onmouseup=@ClearTextFocus>
-							<div class="props-limit">@( $"Props limit: {GetOwnedPropsCount()} / {GetMaxProps()}" )</div>
-							<div class="props-count">@( $"Показано {visibleProps.Count} / {AvailableProps.Count}" )</div>
+							<div class="props-limit">@GameLocalization.Format( "ui.props.limit", "Props limit: {0} / {1}", GetOwnedPropsCount(), GetMaxProps() )</div>
+							<div class="props-count">@GameLocalization.Format( "ui.props.shown", "Shown {0} / {1}", visibleProps.Count, AvailableProps.Count )</div>
 						</div>
 
 						@if ( visibleProps.Count == 0 )
 						{
-							<div class="empty-state">Ничего не найдено.</div>
+							<div class="empty-state">@GameLocalization.Phrase( "ui.props.empty_search" )</div>
 						}
 						else
 						{
@@ -114,21 +114,21 @@
 				<div class="tool-strip">
 					@foreach ( var tool in ToolMode.All )
 					{
-						<button class="tool-btn @(IsActiveTool( tool ) ? "active" : "")" onclick=@(() => SelectTool( tool.Id ))>@tool.Title</button>
+						<button class="tool-btn @(IsActiveTool( tool ) ? "active" : "")" onclick=@(() => SelectTool( tool.Id ))>@GetToolTitle( tool )</button>
 					}
 				</div>
 
 				<div class="tool-content" onmouseup=@ClearTextFocus>
 					@if ( GetActiveTool() is null )
 					{
-						<div class="tool-title">Tool</div>
-						<div class="tool-text">Выбери инструмент справа.</div>
+						<div class="tool-title">@GameLocalization.Phrase( "ui.props.tool" )</div>
+						<div class="tool-text">@GameLocalization.Phrase( "ui.props.select_tool" )</div>
 					}
 					else
 					{
 						var activeTool = GetActiveTool();
-						<div class="tool-title">@activeTool.Title</div>
-						<div class="tool-text">@activeTool.Description</div>
+						<div class="tool-title">@GetToolTitle( activeTool )</div>
+						<div class="tool-text">@GetToolDescription( activeTool )</div>
 
 						@if ( activeTool.ConfigFields.Count > 0 )
 						{
@@ -136,7 +136,7 @@
 								@foreach ( var field in activeTool.ConfigFields )
 								{
 									<div class="tool-config-field">
-										<div class="tool-config-label">@field.Label</div>
+										<div class="tool-config-label">@GetToolFieldLabel( activeTool, field )</div>
 
 										@if ( field.Type == ToolConfigType.Button )
 										{
@@ -148,7 +148,7 @@
 														{
 															<div class="tool-color-swatch" style=@($"background-color: {option.Swatch};")></div>
 														}
-														<div class="tool-config-btn-label">@option.Label</div>
+														<div class="tool-config-btn-label">@GetToolOptionLabel( activeTool, option )</div>
 													</button>
 												}
 											</div>
@@ -156,12 +156,12 @@
 										else if ( field.Type == ToolConfigType.Bool )
 										{
 											<button class="tool-toggle @(IsConfigValue( field.Id, "true" ) ? "active" : "")" onclick=@(() => ToggleToolBool( field.Id ))>
-												@(IsConfigValue( field.Id, "true" ) ? "Enabled" : "Disabled")
+												@(IsConfigValue( field.Id, "true" ) ? GameLocalization.Phrase( "ui.common.enabled", "Enabled" ) : GameLocalization.Phrase( "ui.common.disabled", "Disabled" ))
 											</button>
 										}
 										else
 										{
-											<TextEntry class="tool-input" Value="@GetToolConfigValue( field.Id )" Placeholder="@field.Label" OnTextEdited=@( (string text) => SetToolConfigValue( field.Id, text ) ) />
+											<TextEntry class="tool-input" Value="@GetToolConfigValue( field.Id )" Placeholder="@GetToolFieldLabel( activeTool, field )" OnTextEdited=@( (string text) => SetToolConfigValue( field.Id, text ) ) />
 										}
 									</div>
 								}
@@ -282,6 +282,32 @@
 	private ToolMode GetActiveTool()
 	{
 		return ToolgunClientState.SelectedTool;
+	}
+
+	private static string GetToolTitle( ToolMode tool )
+	{
+		return tool is null ? string.Empty : GameLocalization.Phrase( $"tool.{tool.Id}.title", tool.Title );
+	}
+
+	private static string GetToolDescription( ToolMode tool )
+	{
+		return tool is null ? string.Empty : GameLocalization.Phrase( $"tool.{tool.Id}.description", tool.Description );
+	}
+
+	private static string GetToolFieldLabel( ToolMode tool, ToolConfigField field )
+	{
+		if ( tool is null || field is null )
+			return string.Empty;
+
+		return GameLocalization.Phrase( $"tool.{tool.Id}.field.{field.Id}", field.Label );
+	}
+
+	private static string GetToolOptionLabel( ToolMode tool, ToolConfigButton option )
+	{
+		if ( tool is null || option is null )
+			return string.Empty;
+
+		return GameLocalization.Phrase( $"tool.{tool.Id}.option.{option.Value}", option.Label );
 	}
 
 	private bool IsActiveTool( ToolMode tool )
@@ -506,18 +532,18 @@
 	private static string GetPropHeader( PropDefinition prop )
 	{
 		if ( prop is null )
-			return "Unknown";
+			return GameLocalization.Phrase( "common.unknown", "Unknown" );
 
 		if ( !string.IsNullOrWhiteSpace( prop.Header ) )
 			return prop.Header;
 
-		return string.IsNullOrWhiteSpace( prop.Id ) ? "Unknown" : prop.Id;
+		return string.IsNullOrWhiteSpace( prop.Id ) ? GameLocalization.Phrase( "common.unknown", "Unknown" ) : prop.Id;
 	}
 
 	private static string GetPropCategory( PropDefinition prop )
 	{
 		var category = (prop?.Category ?? string.Empty).Trim();
-		return string.IsNullOrWhiteSpace( category ) ? "Other" : category;
+		return string.IsNullOrWhiteSpace( category ) ? GameLocalization.Phrase( "category.other", "Other" ) : GameLocalization.Category( category );
 	}
 
 	private static string GetFavoriteId( PropDefinition prop )
@@ -660,13 +686,13 @@
 		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
 		if ( !player.IsValid() || !player.Controller.IsValid() )
 		{
-			NotifyCaller( caller, "Your player is not ready.", false );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), false );
 			return;
 		}
 
 		if ( player.OwnedPropsCount >= player.MaxProps )
 		{
-			NotifyCaller( caller, $"Prop limit reached ({player.MaxProps}).", false );
+			NotifyCaller( caller, GameLocalization.Format( "notify.props.limit_reached", "Prop limit reached ({0}).", player.MaxProps ), false );
 			return;
 		}
 
@@ -677,13 +703,13 @@
 
 		if ( prop is null )
 		{
-			NotifyCaller( caller, "Prop not found.", false );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.props.not_found", "Prop not found." ), false );
 			return;
 		}
 
 		if ( string.IsNullOrWhiteSpace( prop.Ident ) )
 		{
-			NotifyCaller( caller, "Prop has no cloud ident.", false );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.props.no_cloud_ident", "Prop has no cloud ident." ), false );
 			return;
 		}
 
@@ -719,7 +745,7 @@
 			var package = await Package.Fetch( prop.Ident, false );
 			if ( package is null || package.Revision is null )
 			{
-				NotifyCaller( caller, "Cloud package not found.", false );
+				NotifyCaller( caller, GameLocalization.Phrase( "notify.props.cloud_package_not_found", "Cloud package not found." ), false );
 				return;
 			}
 
@@ -728,14 +754,14 @@
 			var primaryAsset = package.GetMeta<string>( "PrimaryAsset" );
 			if ( string.IsNullOrWhiteSpace( primaryAsset ) )
 			{
-				NotifyCaller( caller, "Package has no primary asset.", false );
+				NotifyCaller( caller, GameLocalization.Phrase( "notify.props.no_primary_asset", "Package has no primary asset." ), false );
 				return;
 			}
 
 			var model = Model.Load( primaryAsset );
 			if ( model is null || model.IsError )
 			{
-				NotifyCaller( caller, "Failed to load model.", false );
+				NotifyCaller( caller, GameLocalization.Phrase( "notify.props.failed_model", "Failed to load model." ), false );
 				return;
 			}
 
@@ -744,7 +770,7 @@
 
 			if ( player.OwnedPropsCount >= player.MaxProps )
 			{
-				NotifyCaller( caller, $"Prop limit reached ({player.MaxProps}).", false );
+				NotifyCaller( caller, GameLocalization.Format( "notify.props.limit_reached", "Prop limit reached ({0}).", player.MaxProps ), false );
 				return;
 			}
 
@@ -764,12 +790,12 @@
 			gameObj.NetworkSpawn();
 
 			Log.Info( $"[PropsMenu] {caller.DisplayName} spawned cloud prop '{GetPropHeader( prop )}' (ident: {prop.Ident})." );
-			NotifyCaller( caller, $"Spawned: {GetPropHeader( prop )}.", true );
+			NotifyCaller( caller, GameLocalization.Format( "notify.props.spawned", "Spawned: {0}.", GetPropHeader( prop ) ), true );
 		}
 		catch ( Exception e )
 		{
 			Log.Warning( $"[PropsMenu] Cloud spawn failed for '{prop?.Ident}': {e.Message}" );
-			NotifyCaller( caller, "Cloud spawn failed.", false );
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.props.cloud_spawn_failed", "Cloud spawn failed." ), false );
 		}
 	}
 
@@ -914,20 +940,20 @@
 		if ( !prop.IsValid() )
 			return;
 
-		LookedPropName = string.IsNullOrWhiteSpace( trace.GameObject.Name ) ? "Prop" : trace.GameObject.Name;
+		LookedPropName = string.IsNullOrWhiteSpace( trace.GameObject.Name ) ? GameLocalization.Phrase( "ui.props.prop", "Prop" ) : trace.GameObject.Name;
 		LookedPropOwnerName = GetOwnerName( prop.PlayerOwner );
 	}
 
 	private static string GetOwnerName( Player owner )
 	{
 		if ( !owner.IsValid() )
-			return "Unknown";
+			return GameLocalization.Phrase( "common.unknown", "Unknown" );
 
 		var displayName = owner.GameObject.Network.Owner?.DisplayName;
 		if ( !string.IsNullOrWhiteSpace( displayName ) )
 			return displayName;
 
-		return string.IsNullOrWhiteSpace( owner.GameObject.Name ) ? "Unknown" : owner.GameObject.Name;
+		return string.IsNullOrWhiteSpace( owner.GameObject.Name ) ? GameLocalization.Phrase( "common.unknown", "Unknown" ) : owner.GameObject.Name;
 	}
 
 	protected override int BuildHash()
@@ -935,6 +961,7 @@
 		var hash = new HashCode();
 		hash.Add( IsOpen );
 		hash.Add( UiModalManager.Version );
+		hash.Add( GameLocalization.CurrentCode );
 		hash.Add( ToolgunClientState.SelectedToolId );
 		hash.Add( ToolgunClientState.Version );
 		hash.Add( AvailableProps.Count );

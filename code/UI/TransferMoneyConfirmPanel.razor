@@ -1,4 +1,4 @@
-@using Sandbox
+﻿@using Sandbox
 @using Sandbox.UI
 @using System
 @inherits PanelComponent
@@ -9,15 +9,15 @@
 	{
 		<div class="money-confirm-overlay">
 			<div class="money-confirm-panel" @ref="FocusSinkRef">
-				<div class="panel-title">Передать деньги</div>
-				<div class="panel-subtitle">Получатель: @TargetName</div>
+				<div class="panel-title">@GameLocalization.Phrase( "ui.money.transfer_title" )</div>
+				<div class="panel-subtitle">@GameLocalization.Format( "ui.money.receiver", "Receiver: {0}", TargetName )</div>
 
-				<div class="field-label">Сумма</div>
-				<TextEntry class="money-input" Value:bind="@AmountInput" Placeholder="Например: 250" onsubmit="@Submit"></TextEntry>
+				<div class="field-label">@GameLocalization.Phrase( "ui.money.amount" )</div>
+				<TextEntry class="money-input" Value:bind="@AmountInput" Placeholder="@GameLocalization.Phrase( "ui.money.placeholder", "Example: 250" )" onsubmit="@Submit"></TextEntry>
 
 				<div class="actions">
-					<button class="secondary" onclick=@Close>Закрыть</button>
-					<button class="primary" onclick=@Submit>Передать</button>
+					<button class="secondary" onclick=@Close>@GameLocalization.Phrase( "ui.common.close" )</button>
+					<button class="primary" onclick=@Submit>@GameLocalization.Phrase( "ui.money.transfer" )</button>
 				</div>
 			</div>
 		</div>
@@ -41,14 +41,14 @@
 	{
 		if ( !TryFindLookTarget( out var target ) )
 		{
-			Notification.Error( "Перед тобой нет игрока.", 3.5f );
+			Notification.Error( GameLocalization.Phrase( "notify.money.no_player_ahead", "There is no player in front of you." ), 3.5f );
 			return;
 		}
 
 		var connection = target.GameObject.Network.Owner;
 		if ( connection is null || connection.SteamId.Value <= 0 )
 		{
-			Notification.Error( "Не удалось определить игрока.", 3.5f );
+			Notification.Error( GameLocalization.Phrase( "notify.money.cannot_identify_player", "Could not identify the player." ), 3.5f );
 			return;
 		}
 
@@ -115,7 +115,7 @@
 	private void OpenInternal( long targetSteamId, string targetName )
 	{
 		TargetSteamId = targetSteamId;
-		TargetName = string.IsNullOrWhiteSpace( targetName ) ? "Игрок" : targetName;
+		TargetName = string.IsNullOrWhiteSpace( targetName ) ? GameLocalization.Phrase( "common.player", "Player" ) : targetName;
 		AmountInput = "";
 		SetOpen(true);
 
@@ -134,13 +134,13 @@
 
 		if ( TargetSteamId <= 0 )
 		{
-			Notification.Error( "Игрок не выбран.", 3.5f );
+			Notification.Error( GameLocalization.Phrase( "notify.money.player_not_selected", "Player is not selected." ), 3.5f );
 			return;
 		}
 
 		if ( !TryParseAmount( AmountInput, out var amount ) )
 		{
-			Notification.Error( "Укажи корректную сумму.", 3.5f );
+			Notification.Error( GameLocalization.Phrase( "notify.money.invalid_amount", "Enter a valid amount." ), 3.5f );
 			return;
 		}
 
@@ -198,5 +198,5 @@
 		StateHasChanged();
 	}
 
-	protected override int BuildHash() => HashCode.Combine( IsOpen, UiModalManager.Version, AmountInput, TargetSteamId, TargetName );
+	protected override int BuildHash() => HashCode.Combine( IsOpen, UiModalManager.Version, AmountInput, TargetSteamId, TargetName, GameLocalization.CurrentCode );
 }

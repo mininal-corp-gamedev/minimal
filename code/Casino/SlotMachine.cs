@@ -21,7 +21,7 @@ public sealed class SlotMachine : Component, Component.IPressable
     private readonly Dictionary<long, float> _nextPressTimeBySteamId = new();
 
     private int _localMultiplier = 1;
-    private string _localStatusText = "Ready";
+    private string _localStatusText = GameLocalization.Phrase( "ui.common.ready", "Ready" );
     private string _localVisualState = "idle";
 
     private bool _pendingReveal;
@@ -76,26 +76,26 @@ public sealed class SlotMachine : Component, Component.IPressable
 
         if ( !CanPlayerUseMachine( player ) )
         {
-            SendRejectedToOwner( connection, "Too far" );
+            SendRejectedToOwner( connection, GameLocalization.Phrase( "notify.casino.too_far", "Too far" ) );
             return;
         }
 
         var steamId = connection.SteamId.Value;
         if ( IsOnCooldown( steamId ) )
         {
-            SendRejectedToOwner( connection, $"Wait {PressCooldownSeconds:0.##}s" );
+            SendRejectedToOwner( connection, GameLocalization.Format( "notify.casino.wait_seconds", "Wait {0:0.##}s", PressCooldownSeconds ) );
             return;
         }
 
         if ( BetCost <= 0 )
         {
-            SendRejectedToOwner( connection, "Invalid bet" );
+            SendRejectedToOwner( connection, GameLocalization.Phrase( "notify.casino.invalid_bet", "Invalid bet" ) );
             return;
         }
 
         if ( player.Money < BetCost )
         {
-            SendRejectedToOwner( connection, "Not enough money" );
+            SendRejectedToOwner( connection, GameLocalization.Phrase( "ui.shop.not_enough_money", "Not enough money" ) );
             return;
         }
 
@@ -129,7 +129,7 @@ public sealed class SlotMachine : Component, Component.IPressable
     private void RpcOwnerStartSpin( bool didWin, int newMultiplier, int payout, float revealDelay )
     {
         _localVisualState = "spinning";
-        _localStatusText = "Spinning...";
+        _localStatusText = GameLocalization.Phrase( "ui.casino.spinning", "Spinning..." );
 
         _pendingWin = didWin;
         _pendingMultiplier = Math.Max( 1, newMultiplier );
@@ -212,7 +212,7 @@ public sealed class SlotMachine : Component, Component.IPressable
     protected override void OnStart()
     {
         _localMultiplier = 1;
-        _localStatusText = "Ready";
+        _localStatusText = GameLocalization.Phrase( "ui.common.ready", "Ready" );
         _localVisualState = "idle";
     }
 
@@ -229,8 +229,8 @@ public sealed class SlotMachine : Component, Component.IPressable
         _localMultiplier = _pendingMultiplier;
         _localVisualState = _pendingWin ? "win" : "lose";
         _localStatusText = _pendingWin
-            ? $"Win +${_pendingPayout}"
-            : $"Lose -${BetCost}";
+            ? GameLocalization.Format( "ui.casino.win_money", "Win +${0}", _pendingPayout )
+            : GameLocalization.Format( "ui.casino.lose_money", "Lose -${0}", BetCost );
 
         if ( _pendingWin )
             Notification.SlotWin( _pendingPayout, _localMultiplier );

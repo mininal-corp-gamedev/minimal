@@ -6,7 +6,7 @@ public sealed class NoCollideTool : ToolMode
 
 	public override string Id => "nocollide";
 	public override string Title => "No Collide";
-	public override string Description => "ЛКМ отключает collision с игроками, ПКМ возвращает collision.";
+	public override string Description => "Primary fire disables player collision, secondary fire restores it.";
 	public override bool SupportsSecondary => true;
 
 	public override ToolUseResult Use(ToolUseContext context)
@@ -15,7 +15,7 @@ public sealed class NoCollideTool : ToolMode
 		if (!propObject.Tags.Has(NoCollidePlayerTag))
 			propObject.Tags.Add(NoCollidePlayerTag);
 
-		return ToolUseResult.Ok("No Collide включен для prop.");
+		return ToolUseResult.Ok(GameLocalization.Phrase( "notify.toolgun.nocollide_enabled", "No Collide enabled for prop." ));
 	}
 
 	public override ToolUseResult UseSecondary(ToolUseContext context)
@@ -24,6 +24,6 @@ public sealed class NoCollideTool : ToolMode
 		if (propObject.Tags.Has(NoCollidePlayerTag))
 			propObject.Tags.Remove(NoCollidePlayerTag);
 
-		return ToolUseResult.Ok("No Collide выключен для prop.");
+		return ToolUseResult.Ok(GameLocalization.Phrase( "notify.toolgun.nocollide_disabled", "No Collide disabled for prop." ));
 	}
 }

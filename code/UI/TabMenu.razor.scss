@@ -143,6 +143,40 @@ TabMenu {
 			border-radius: 0 0 0 14px;
 		}
 	}
+
+	.language-switcher {
+		width: 172px;
+		height: 34px;
+		margin: 4px 24px 14px;
+		flex-direction: row;
+		flex-shrink: 0;
+		background-color: rgba(255, 255, 255, 0.06);
+		border: 1px solid rgba(255, 255, 255, 0.10);
+		border-radius: 8px;
+		padding: 3px;
+	}
+
+	.language-btn {
+		flex-grow: 1;
+		height: 26px;
+		background-color: transparent;
+		border-radius: 6px;
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.50);
+		justify-content: center;
+		align-items: center;
+
+		&:hover {
+			color: rgba(255, 255, 255, 0.85);
+		}
+
+		&.active {
+			background-color: rgba(255, 67, 108, 0.32);
+			color: #ffd7e2;
+		}
+	}
 	/* ── Content area ── */
 
 	.content-area {

@@ -45936,7 +45936,7 @@
                   "OnTriggerEnter": null,
                   "OnTriggerExit": null,
                   "RollingResistance": null,
-                  "Static": false,
+                  "Static": true,
                   "Surface": null,
                   "SurfaceVelocity": "0,0,0"
                 }
@@ -47920,14 +47920,14 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "29ebb506-0343-4143-9bfa-fda5d5e26de8"
-        }
-      },
       "Sandbox.SelectionSetsSystem": {
         "Data": {
           "SelectionSets": []
+        }
+      },
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "29ebb506-0343-4143-9bfa-fda5d5e26de8"
         }
       },
       "Sandbox.MovieMaker.MovieRecorderSystem": {

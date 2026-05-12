@@ -1,4 +1,4 @@
-@using Sandbox;
+﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
 @inherits PanelComponent
@@ -7,22 +7,22 @@
 <root>
 	<div class="risk-ladder-panel @VisualState">
 		<div class="topline">
-			<div class="title">Risk Ladder</div>
-			<div class="step">STEP @Step</div>
+			<div class="title">@GameLocalization.Phrase( "ui.casino.risk_ladder" )</div>
+			<div class="step">@GameLocalization.Format( "ui.casino.step", "STEP {0}", Step )</div>
 		</div>
 
 		<div class="bank-block">
-			<div class="label">Bank</div>
+			<div class="label">@GameLocalization.Phrase( "ui.casino.bank" )</div>
 			<div class="bank">$@Bank</div>
 		</div>
 
 		<div class="next-row">
 			<div class="next-card">
-				<div class="label">Next</div>
+				<div class="label">@GameLocalization.Phrase( "ui.casino.next" )</div>
 				<div class="value">@NextText</div>
 			</div>
 			<div class="next-card">
-				<div class="label">Chance</div>
+				<div class="label">@GameLocalization.Phrase( "ui.casino.chance" )</div>
 				<div class="value">@ChanceText</div>
 			</div>
 		</div>
@@ -30,8 +30,8 @@
 		<div class="status">@StatusText</div>
 
 		<div class="actions">
-			<div class="action risk">E Risk</div>
-			<div class="action cashout">Cashout Button</div>
+			<div class="action risk">@GameLocalization.Phrase( "ui.casino.e_risk" )</div>
+			<div class="action cashout">@GameLocalization.Phrase( "ui.casino.cashout_button" )</div>
 		</div>
 	</div>
 </root>
@@ -44,10 +44,10 @@
 	int Bank => Math.Max( 0, Machine?.LocalBank ?? 0 );
 	int NextPayout => Math.Max( 0, Machine?.LocalNextPayout ?? 0 );
 	bool AtMaxStep => Machine?.LocalAtMaxStep ?? false;
-	string NextText => AtMaxStep ? "MAX" : $"${NextPayout}";
-	string ChanceText => AtMaxStep ? "Cashout" : Math.Clamp( Machine?.LocalNextWinChance ?? 0f, 0f, 1f ).ToString( "P0" );
-	string StatusText => string.IsNullOrWhiteSpace( Machine?.LocalStatusText ) ? "Ready" : Machine.LocalStatusText;
+	string NextText => AtMaxStep ? GameLocalization.Phrase( "ui.common.max", "MAX" ) : $"${NextPayout}";
+	string ChanceText => AtMaxStep ? GameLocalization.Phrase( "ui.casino.cashout", "Cashout" ) : Math.Clamp( Machine?.LocalNextWinChance ?? 0f, 0f, 1f ).ToString( "P0" );
+	string StatusText => string.IsNullOrWhiteSpace( Machine?.LocalStatusText ) ? GameLocalization.Phrase( "ui.common.ready", "Ready" ) : Machine.LocalStatusText;
 	string VisualState => Machine?.LocalVisualState ?? "idle";
 
-	protected override int BuildHash() => HashCode.Combine( Step, Bank, NextPayout, AtMaxStep, ChanceText, StatusText, VisualState );
+	protected override int BuildHash() => HashCode.Combine( Step, Bank, NextPayout, AtMaxStep, ChanceText, StatusText, VisualState, GameLocalization.CurrentCode );
 }

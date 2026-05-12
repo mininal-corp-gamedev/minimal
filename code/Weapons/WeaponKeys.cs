@@ -77,33 +77,8 @@ public sealed class WeaponKeys : Weapon
 
     private Door GetDoorInFront()
     {
-        if (Player.Local?.Controller is null) return null;
-
-        var eyePos = Player.Local.Controller.EyePosition;
-        var eyeDir = Player.Local.Controller.EyeTransform.Forward;
-        var range = 200f;
-
-        var tr = Scene.Trace
-            .Ray(eyePos, eyePos + eyeDir * range)
-            .IgnoreGameObjectHierarchy(Player.Local.GameObject)
-            .Run();
-
-        if (!tr.Hit) return null;
-
-        // Find Door component
-        Door targetDoor = null;
-        var go = tr.GameObject;
-        while (go.IsValid())
-        {
-            if (go.Components.TryGet<Door>(out var door, FindMode.EverythingInSelfAndParent))
-            {
-                targetDoor = door;
-                break;
-            }
-            go = go.Parent;
-        }
-
-        return targetDoor;
+        if (Player.Local is null) return null;
+        return Door.FindLookedAtDoor(Player.Local, Door.MenuLookRayLength, Door.InteractOpenMenuMaxEyeDistance);
     }
 
     private void TryOpenDoorMenu()

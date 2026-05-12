@@ -98,6 +98,7 @@
     "ui.door.owner":  "Owner",
     "ui.door.roommate_with_job":  "Roommate - {0}",
     "ui.door.you_are_roommate":  "You were added!",
+    "ui.door.open_menu_hint":  "Press F or Keys + Reload (R) to open the menu.",
     "ui.hud.arrested":  "ARRESTED",
     "ui.hud.dead_title":  "You died",
     "ui.hud.default_death_message":  "You died.",

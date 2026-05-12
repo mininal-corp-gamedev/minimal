@@ -13,6 +13,27 @@ DoorWorldHud {
 	font-family: Poppins;
 	pointer-events: all;
 
+	.stack {
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+	}
+
+	.menu-hint {
+		margin-top: 4px;
+		padding: 0;
+		background-color: transparent;
+		border: 0;
+		border-radius: 0;
+		font-size: 10px;
+		font-weight: 600;
+		color: $accent-pink;
+		text-align: center;
+		white-space: normal;
+		max-width: 280px;
+	}
+
 	.header-only {
 		padding: 10px 20px;
 		background-color: $panel-bg;

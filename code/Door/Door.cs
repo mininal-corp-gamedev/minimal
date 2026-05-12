@@ -156,6 +156,54 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	/// <summary>Maximum distance between a caller and the door for the host to accept direct door actions.</summary>
 	[Property] public float InteractRange { get; set; } = 220f;
 
+	/// <summary>Length of the view ray when resolving which door the player is looking at (HUD menu, keys).</summary>
+	public const float MenuLookRayLength = 200f;
+
+	/// <summary>Max distance from the player's eye to the door's world position to open the door HUD with Interact (F).</summary>
+	public const float InteractOpenMenuMaxEyeDistance = 130f;
+
+	/// <summary>
+	/// Finds a door along the player's view ray. Optionally requires the eye-to-door distance to be within <paramref name="maxEyeToDoorDistance"/>.
+	/// </summary>
+	public static Door FindLookedAtDoor( Player player, float rayLength, float? maxEyeToDoorDistance = null )
+	{
+		if ( !player.IsValid() || !player.Controller.IsValid() ) return null;
+
+		var eyePos = player.Controller.EyePosition;
+		var eyeDir = player.Controller.EyeTransform.Forward;
+		var len = MathF.Max( 1f, rayLength );
+
+		var tr = player.Scene.Trace
+			.Ray( eyePos, eyePos + eyeDir * len )
+			.IgnoreGameObjectHierarchy( player.GameObject )
+			.Run();
+
+		if ( !tr.Hit ) return null;
+
+		Door targetDoor = null;
+		var go = tr.GameObject;
+		while ( go.IsValid() )
+		{
+			if ( go.Components.TryGet<Door>( out var door, FindMode.EverythingInSelfAndParent ) )
+			{
+				targetDoor = door;
+				break;
+			}
+			go = go.Parent;
+		}
+
+		if ( targetDoor is null ) return null;
+
+		if ( maxEyeToDoorDistance.HasValue )
+		{
+			var maxD = MathF.Max( 1f, maxEyeToDoorDistance.Value );
+			if ( Vector3.DistanceBetween( eyePos, targetDoor.WorldPosition ) > maxD )
+				return null;
+		}
+
+		return targetDoor;
+	}
+
 	/// <summary>Sound played (broadcast to all clients at the door position) when this door opens.</summary>
 	[Property, Category( "Sounds" )] public SoundEvent OpenSound { get; set; }
 

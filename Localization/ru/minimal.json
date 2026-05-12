@@ -98,6 +98,7 @@
     "ui.door.owner":  "Владелец",
     "ui.door.roommate_with_job":  "Сожитель - {0}",
     "ui.door.you_are_roommate":  "Вы добавлены!",
+    "ui.door.open_menu_hint":  "Меню: F или ключи + перезарядка (R).",
     "ui.hud.arrested":  "АРЕСТОВАН",
     "ui.hud.dead_title":  "Вы погибли",
     "ui.hud.default_death_message":  "Вы умерли.",

@@ -8,60 +8,66 @@
 	@if ( Door is null )
 	{
 	}
-	else if ( Door.IsBlocked )
-	{
-		@if ( !string.IsNullOrWhiteSpace( Door.Header ) )
-		{
-			<div class="header-only">@Door.Header</div>
-		}
-	}
-	else if ( Door.HasOnlyJobs )
-	{
-		<div class="panel">
-			<div class="title">@Door.Header</div>
-			@if ( Door.IsLocalPlayerJobAllowed )
-			{
-				<div class="status">
-					@if ( Door.LockState == Door.DoorLockState.Locked )
-					{
-						<div class="status-locked">@GameLocalization.Phrase( "ui.door.locked" )</div>
-					}
-					else
-					{
-						<div class="status-unlocked">@GameLocalization.Phrase( "ui.door.unlocked" )</div>
-					}
-				</div>
-			}
-		</div>
-	}
-	else if ( !Door.HasOwner )
-	{
-		<div class="panel">
-			<div class="title">@Door.Header</div>
-			<div class="price">$@Door.BuyPrice</div>
-		</div>
-	}
 	else
 	{
-		<div class="panel">
-			<div class="title">@Door.OwnerDisplayName</div>
-			@if ( Door.IsLocalPlayerOwner || Door.IsLocalPlayerRoommate )
+		<div class="stack">
+			@if ( Door.IsBlocked )
 			{
-				<div class="status">
-					@if ( Door.LockState == Door.DoorLockState.Locked )
-					{
-						<div class="status-locked">@GameLocalization.Phrase( "ui.door.locked" )</div>
-					}
-					else
-					{
-						<div class="status-unlocked">@GameLocalization.Phrase( "ui.door.unlocked" )</div>
-					}
-				</div>
-				@if ( Door.IsLocalPlayerRoommate && !Door.IsLocalPlayerOwner )
+				@if ( !string.IsNullOrWhiteSpace( Door.Header ) )
 				{
-					<div class="status-roommate">@GameLocalization.Phrase( "ui.door.you_are_roommate" )</div>
+					<div class="header-only">@Door.Header</div>
 				}
 			}
+			else if ( Door.HasOnlyJobs )
+			{
+				<div class="panel">
+					<div class="title">@Door.Header</div>
+					@if ( Door.IsLocalPlayerJobAllowed )
+					{
+						<div class="status">
+							@if ( Door.LockState == Door.DoorLockState.Locked )
+							{
+								<div class="status-locked">@GameLocalization.Phrase( "ui.door.locked" )</div>
+							}
+							else
+							{
+								<div class="status-unlocked">@GameLocalization.Phrase( "ui.door.unlocked" )</div>
+							}
+						</div>
+					}
+				</div>
+			}
+			else if ( !Door.HasOwner )
+			{
+				<div class="panel">
+					<div class="title">@Door.Header</div>
+					<div class="price">$@Door.BuyPrice</div>
+				</div>
+			}
+			else
+			{
+				<div class="panel">
+					<div class="title">@Door.OwnerDisplayName</div>
+					@if ( Door.IsLocalPlayerOwner || Door.IsLocalPlayerRoommate )
+					{
+						<div class="status">
+							@if ( Door.LockState == Door.DoorLockState.Locked )
+							{
+								<div class="status-locked">@GameLocalization.Phrase( "ui.door.locked" )</div>
+							}
+							else
+							{
+								<div class="status-unlocked">@GameLocalization.Phrase( "ui.door.unlocked" )</div>
+							}
+						</div>
+						@if ( Door.IsLocalPlayerRoommate && !Door.IsLocalPlayerOwner )
+						{
+							<div class="status-roommate">@GameLocalization.Phrase( "ui.door.you_are_roommate" )</div>
+						}
+					}
+				</div>
+			}
+			<div class="menu-hint">@GameLocalization.Phrase( "ui.door.open_menu_hint", "Press F or Keys + Reload (R) to open the menu." )</div>
 		</div>
 	}
 </root>

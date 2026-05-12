@@ -2323,6 +2323,27 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         UpdateArrestEffects();
         CheckUseHotbarSlots();
         TryUndoLastOwnedProp();
+        TryOpenDoorHudFromInteract();
+    }
+
+    /// <summary>
+    /// Local client: opens <see cref="DoorHud"/> when Interact (F) is pressed while looking at a door within <see cref="Door.InteractOpenMenuMaxEyeDistance"/>.
+    /// </summary>
+    public void TryOpenDoorHudFromInteract()
+    {
+        if (IsProxy) return;
+        if (IsArrested) return;
+        if (!Input.Pressed("Interact")) return;
+
+        var door = Door.FindLookedAtDoor(this, Door.MenuLookRayLength, Door.InteractOpenMenuMaxEyeDistance);
+        if (door is null) return;
+
+        foreach (var doorHud in Scene.GetAllComponents<DoorHud>())
+        {
+            if (!doorHud.CanOpen) return;
+            doorHud.Door = door;
+            return;
+        }
     }
 
     protected override void OnUpdate()

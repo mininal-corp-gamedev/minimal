@@ -77,7 +77,7 @@
 						else
 						{
 							<div class="props-scroll-area" onmouseup=@ClearTextFocus>
-								<div class="props-list" @ref="PropsListRef" onmouseup=@ClearTextFocus>
+								<div class="props-list" @ref="PropsListRef" onmouseup=@ClearTextFocus onwheel=@OnPropsListWheel>
 									<div class="props-grid">
 										@foreach ( var prop in visibleProps )
 										{

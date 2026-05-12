@@ -21,7 +21,7 @@
 						<div class="sb-money">$@(Player.Local?.Money ?? 0)</div>
 					</div>
 					<div class="sidebar-nav">
-						<button class="tab-btn @(ActiveTab == 0 ? "active" : "")" onclick=@(() => ActiveTab = 0)>@GameLocalization.Phrase( "ui.tab.jobs" )</button>
+						<button class="tab-btn @(ActiveTab == 0 ? "active" : "")" onclick=@(() => SelectJobsTab())>@GameLocalization.Phrase( "ui.tab.jobs" )</button>
 						<button class="tab-btn @(ActiveTab == 1 ? "active" : "")" onclick=@(() => ActiveTab = 1)>@GameLocalization.Phrase( "ui.tab.shop" )</button>
 						<button class="tab-btn @(ActiveTab == 2 ? "active" : "")" onclick=@(() => SelectPlayersTab())>@GameLocalization.Phrase( "ui.tab.players" )</button>
 						<button class="tab-btn @(ActiveTab == 3 ? "active" : "")" onclick=@(() => ActiveTab = 3)>@GameLocalization.Phrase( "ui.tab.help" )</button>
@@ -45,7 +45,7 @@
 						<div class="page">
 							<div class="page-title">@GameLocalization.Phrase( "ui.tab.jobs" )</div>
 							<div class="jobs-grid">
-								@foreach ( var job in AvailableJobs )
+								@foreach ( var job in VisibleJobs )
 								{
 									var count = GetJobPlayersCount( job.Id );
 									var isLimited = job.MaxCount > 0;
@@ -165,6 +165,7 @@
 	List<Connection> CachedPlayers { get; set; } = new();
 	List<JobDefinition> AvailableJobs { get; set; } = new();
 	List<ShopDefinition> AvailableShopItems { get; set; } = new();
+	IEnumerable<JobDefinition> VisibleJobs => AvailableJobs.Where( CanLocalSeeJob );
 	IEnumerable<ShopDefinition> VisibleShopItems => AvailableShopItems.Where( IsShopAllowed );
 	int PlayersVersion { get; set; } = 0;
 	int JobsVersion { get; set; } = 0;
@@ -195,6 +196,12 @@
 		ActiveTab = 2;
 		CachedPlayers = Connection.All.ToList();
 		PlayersVersion++;
+	}
+
+	void SelectJobsTab()
+	{
+		ActiveTab = 0;
+		LoadJobs();
 	}
 
 	private void LoadJobs()
@@ -248,12 +255,27 @@
 	private int GetJobsPopulationHash()
 	{
 		var hash = 17;
-		foreach ( var job in AvailableJobs )
+		foreach ( var job in VisibleJobs )
 		{
 			hash = HashCode.Combine( hash, job.Id, GetJobPlayersCount( job.Id ) );
 		}
 
 		return hash;
+	}
+
+	private bool CanLocalSeeJob( JobDefinition job )
+	{
+		if ( job is null )
+			return false;
+
+		if ( job.FromJobs is null || job.FromJobs.Count <= 0 )
+			return true;
+
+		var localJobId = Player.Local?.Job?.JobId;
+		if ( string.IsNullOrWhiteSpace( localJobId ) )
+			return false;
+
+		return job.FromJobs.Any( allowedJob => allowedJob is not null && string.Equals( allowedJob.Id, localJobId, StringComparison.Ordinal ) );
 	}
 
 	private string GetPlayerJobName( Connection connection )
@@ -280,6 +302,13 @@
 		var normalized = (jobId ?? string.Empty).Trim();
 		if ( normalized.Length <= 0 )
 			return;
+
+		var job = AvailableJobs.FirstOrDefault( x => x is not null && string.Equals( x.Id, normalized, StringComparison.Ordinal ) );
+		if ( job is not null && !CanLocalSeeJob( job ) )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.jobs.not_allowed_from_job", "This job is not available to you." ), 3.5f );
+			return;
+		}
 
 		RpcRequestJoinJob( normalized );
 	}
@@ -504,9 +533,14 @@
 	private void SetOpen( bool open )
 	{
 		if ( open )
+		{
+			LoadJobs();
 			UiModalManager.Open( ModalId );
+		}
 		else
+		{
 			UiModalManager.Close( ModalId );
+		}
 
 		IsOpen = open;
 
@@ -549,6 +583,7 @@
 		hash.Add( GetJobsPopulationHash() );
 		hash.Add( GetPlayersJobHash() );
 		hash.Add( AvailableJobs.Count );
+		hash.Add( VisibleJobs.Count() );
 		hash.Add( AvailableShopItems.Count );
 		hash.Add( VisibleShopItems.Count() );
 		hash.Add( JobsVersion );

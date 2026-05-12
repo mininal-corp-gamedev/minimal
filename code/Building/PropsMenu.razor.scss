@@ -30,7 +30,7 @@ PropsMenu {
 	.prop-look-hud {
 		position: absolute;
 		left: 50%;
-		bottom: 120px;
+		bottom: 170px;
 		transform: translateX(-50%);
 		min-width: 280px;
 		max-width: 560px;
@@ -60,6 +60,14 @@ PropsMenu {
 		font-size: 12px;
 		font-weight: 600;
 		color: rgba(255, 255, 255, 0.72);
+	}
+
+	.prop-look-fading-door {
+		margin-top: 4px;
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 800;
+		color: #ff9f1c;
 	}
 
 	.pm-panel {
@@ -240,18 +248,37 @@ PropsMenu {
 		}
 	}
 
+	.props-scroll-area {
+		width: 100%;
+		flex-basis: 0px;
+		flex-grow: 1;
+		flex-shrink: 1;
+		min-height: 0;
+		flex-direction: row;
+		align-items: stretch;
+	}
+
 	.props-list {
 		width: 100%;
 		flex-basis: 0px;
 		flex-grow: 1;
 		flex-shrink: 1;
 		min-height: 0;
-		overflow: hidden;
+		min-width: 0;
+		overflow-y: scroll;
+		overflow-x: hidden;
 		padding-top: 2px;
 		padding-left: 2px;
 		padding-right: 8px;
 		padding-bottom: 0px;
 		pointer-events: all;
+	}
+
+	.scrollbar-placeholder {
+		width: 0;
+		opacity: 0;
+		flex-shrink: 0;
+		pointer-events: none;
 	}
 
 	.props-grid {

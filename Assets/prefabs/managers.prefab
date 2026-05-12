@@ -487,7 +487,7 @@
           {
             "__type": "Sandbox.LabelBeta",
             "__guid": "d058df98-b3c9-4f32-bc47-1bab3d94ae4b",
-            "__enabled": true,
+            "__enabled": false,
             "Flags": 0,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -587,7 +587,6 @@
             "__guid": "a8a62c56-48f9-47cc-83f2-76a57f9ae300",
             "__enabled": true,
             "Flags": 0,
-            "MyStringValue": "Hello World!",
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,

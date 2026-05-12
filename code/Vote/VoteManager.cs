@@ -107,6 +107,19 @@ public sealed class VoteManager : Component
 			return false;
 		}
 
+		if ( jobDefinition.FromJobs is { Count: > 0 } )
+		{
+			var currentJobId = player.Job.JobId;
+			var allowedFromCurrentJob = jobDefinition.FromJobs.Any( allowedJob =>
+				allowedJob is not null && string.Equals( allowedJob.Id, currentJobId, StringComparison.Ordinal ) );
+
+			if ( !allowedFromCurrentJob )
+			{
+				reason = GameLocalization.Phrase( "notify.jobs.not_allowed_from_job", "This job is not available to you." );
+				return false;
+			}
+		}
+
 		if ( jobDefinition.MaxCount > 0 && GetJobPlayerCount( jobDefinition.Id ) >= jobDefinition.MaxCount )
 		{
 			reason = GameLocalization.Format( "notify.jobs.no_free_slots", "No free slots for {0}.", GameLocalization.JobHeader( jobDefinition ) );

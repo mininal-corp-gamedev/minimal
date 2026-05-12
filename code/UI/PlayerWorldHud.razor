@@ -10,7 +10,7 @@
 		<div class="title">@Name</div>
 		@if ( !string.IsNullOrWhiteSpace( JobName ) )
 		{
-			<div class="job">@JobName</div>
+			<div class="job" style="@JobColorStyle">@JobName</div>
 		}
 		<div class="health-bar">
 			<div class="health-fill" style="width: @(HealthPercent)%;"></div>
@@ -30,6 +30,7 @@
 	float HealthValue => TargetPlayer?.Health ?? 0f;
 	float MaxHealthValue => TargetPlayer is { MaxHealth: > 0f } p ? p.MaxHealth : 1f;
 	string JobName => TargetPlayer?.Job?.JobDefinition is null ? "" : GameLocalization.JobHeader( TargetPlayer.Job.JobDefinition );
+	string JobColorStyle => $"color: {ColorToCss( TargetPlayer?.Job?.JobDefinition?.Color ?? Color.White )};";
 
 	float HealthPercent => Math.Clamp( HealthValue / MaxHealthValue * 100f, 0f, 100f );
 
@@ -38,5 +39,14 @@
 
 	public void WorldHudRefresh() => StateHasChanged();
 
-	protected override int BuildHash() => System.HashCode.Combine( ShouldShow, Name, JobName, HealthValue, MaxHealthValue, GameLocalization.CurrentCode );
+	private static string ColorToCss( Color color )
+	{
+		var r = (int)MathF.Round( Math.Clamp( color.r, 0f, 1f ) * 255f );
+		var g = (int)MathF.Round( Math.Clamp( color.g, 0f, 1f ) * 255f );
+		var b = (int)MathF.Round( Math.Clamp( color.b, 0f, 1f ) * 255f );
+
+		return $"rgb({r}, {g}, {b})";
+	}
+
+	protected override int BuildHash() => System.HashCode.Combine( ShouldShow, Name, JobName, JobColorStyle, HealthValue, MaxHealthValue, GameLocalization.CurrentCode );
 }

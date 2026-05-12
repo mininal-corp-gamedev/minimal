@@ -15,6 +15,10 @@
 		<div class="prop-look-hud">
 			<div class="prop-look-title">@LookedPropName</div>
 			<div class="prop-look-owner">@GameLocalization.Format( "ui.props.owner", "Owner: {0}", LookedPropOwnerName )</div>
+			@if ( LookedPropIsFadingDoor )
+			{
+				<div class="prop-look-fading-door">Fading Door</div>
+			}
 		</div>
 	}
 
@@ -72,40 +76,43 @@
 						}
 						else
 						{
-							<div class="props-list" @ref="PropsListRef" onmouseup=@ClearTextFocus>
-								<div class="props-grid">
-									@foreach ( var prop in visibleProps )
-									{
-										var thumbUrl = GetThumbUrl( prop );
-										var canSpawn = CanRequestSpawn( prop );
-										var isFavorite = IsFavorite( prop );
+							<div class="props-scroll-area" onmouseup=@ClearTextFocus>
+								<div class="props-list" @ref="PropsListRef" onmouseup=@ClearTextFocus>
+									<div class="props-grid">
+										@foreach ( var prop in visibleProps )
+										{
+											var thumbUrl = GetThumbUrl( prop );
+											var canSpawn = CanRequestSpawn( prop );
+											var isFavorite = IsFavorite( prop );
 
-										<div class="prop-card @(canSpawn ? "" : "disabled") @(isFavorite ? "favorite" : "")">
-											<button
-												class="prop-hitbox"
-												disabled=@(!canSpawn)
-												onclick=@(() => RequestSpawn( prop ))>
-												<div class="prop-thumb @(string.IsNullOrEmpty( thumbUrl ) ? "loading" : "")">
-													@if ( !string.IsNullOrEmpty( thumbUrl ) )
-													{
-														<img src="@thumbUrl" />
-													}
-												</div>
-												<div class="prop-info">
-													<div class="prop-title">@GetPropHeader( prop )</div>
-													<div class="prop-category">@GetPropCategory( prop )</div>
-												</div>
-											</button>
+											<div class="prop-card @(canSpawn ? "" : "disabled") @(isFavorite ? "favorite" : "")">
+												<button
+													class="prop-hitbox"
+													disabled=@(!canSpawn)
+													onclick=@(() => RequestSpawn( prop ))>
+													<div class="prop-thumb @(string.IsNullOrEmpty( thumbUrl ) ? "loading" : "")">
+														@if ( !string.IsNullOrEmpty( thumbUrl ) )
+														{
+															<img src="@thumbUrl" />
+														}
+													</div>
+													<div class="prop-info">
+														<div class="prop-title">@GetPropHeader( prop )</div>
+														<div class="prop-category">@GetPropCategory( prop )</div>
+													</div>
+												</button>
 
-											<button
-												class="favorite-btn @(isFavorite ? "active" : "")"
-												onclick=@(() => ToggleFavorite( prop ))>
-												@(isFavorite ? "♥" : "♡")
-											</button>
-										</div>
+												<button
+													class="favorite-btn @(isFavorite ? "active" : "")"
+													onclick=@(() => ToggleFavorite( prop ))>
+													@(isFavorite ? "♥" : "♡")
+												</button>
+											</div>
 										}
-								<div class="props-grid-spacer"></div>
+										<div class="props-grid-spacer"></div>
+									</div>
 								</div>
+								<div class="scrollbar-placeholder"></div>
 							</div>
 						}
 					}
@@ -210,6 +217,7 @@
 
 	string LookedPropName { get; set; }
 	string LookedPropOwnerName { get; set; }
+	bool LookedPropIsFadingDoor { get; set; }
 
 	public sealed class PropFavoritesSaveData
 	{
@@ -921,6 +929,7 @@
 	{
 		LookedPropName = null;
 		LookedPropOwnerName = null;
+		LookedPropIsFadingDoor = false;
 
 		var local = Player.Local;
 		if ( !local.IsValid() || !local.Controller.IsValid() )
@@ -942,6 +951,7 @@
 
 		LookedPropName = string.IsNullOrWhiteSpace( trace.GameObject.Name ) ? GameLocalization.Phrase( "ui.props.prop", "Prop" ) : trace.GameObject.Name;
 		LookedPropOwnerName = GetOwnerName( prop.PlayerOwner );
+		LookedPropIsFadingDoor = trace.GameObject.Components.Get<global::FadingDoor>( FindMode.EverythingInSelfAndAncestors ).IsValid();
 	}
 
 	private static string GetOwnerName( Player owner )
@@ -975,6 +985,7 @@
 		hash.Add( Player.Local?.MaxProps ?? 0 );
 		hash.Add( LookedPropName );
 		hash.Add( LookedPropOwnerName );
+		hash.Add( LookedPropIsFadingDoor );
 
 		foreach ( var favoriteId in FavoritePropIds.OrderBy( id => id, StringComparer.Ordinal ) )
 		{

@@ -7,6 +7,8 @@
   "Salary": 5,
   "Vote": false,
   "CanDemote": false,
+  "Color": "0.46066,0.84651,0.47352,1",
+  "FromJobs": [],
   "HasPostSpawned": true,
   "HasPostDemote": true,
   "HasPostJoined": true,

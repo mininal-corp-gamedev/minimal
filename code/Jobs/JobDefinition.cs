@@ -18,6 +18,6 @@ public sealed class JobDefinition : GameResource
 
     protected override Bitmap CreateAssetTypeIcon(int width, int height)
     {
-        return CreateSimpleAssetTypeIcon("plus", width, height, "#ffffff", "black");
+        return CreateSimpleAssetTypeIcon("person", width, height, "#db2175", "#212121");
     }
 }

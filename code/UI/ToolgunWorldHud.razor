@@ -1,0 +1,27 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using Minimal.Toolgun;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="title">@GetSelectedToolTitle()</div>
+</root>
+
+@code
+{
+	string GetSelectedToolTitle()
+	{
+		var tool = ToolgunClientState.SelectedTool;
+		return tool is null ? GameLocalization.Phrase( "ui.common.none", "None" ) : GameLocalization.Phrase( $"tool.{tool.Id}.title", tool.Title );
+	}
+
+	/// <summary>
+	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+	/// </summary>
+	protected override int BuildHash() => System.HashCode.Combine(
+		ToolgunClientState.SelectedToolId,
+		ToolgunClientState.Version,
+		GameLocalization.CurrentCode
+	);
+}

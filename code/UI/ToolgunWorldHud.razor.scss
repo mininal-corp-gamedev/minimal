@@ -1,0 +1,20 @@
+$ammo-pink: #ff436c;
+
+ToolgunWorldHud {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(20, 10, 20, 0.9);
+	justify-content: center;
+	align-items: center;
+	font-weight: bold;
+	border-radius: 20px;
+
+	.title {
+		font-size: 34px;
+		font-family: Montserrat;
+		color: $ammo-pink;
+	}
+}

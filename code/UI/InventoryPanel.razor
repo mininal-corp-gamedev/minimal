@@ -8,7 +8,7 @@
 <root>
 	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
 	{
-		<div class="inv-overlay">
+		<div class="inv-overlay" onmouseup=@((PanelEvent e) => OnOverlayMouseUp( e ))>
 			<div class="inv-bg-close" onclick=@Close></div>
 			<div class="inv-panel" onclick=@OnPanelClick>
 				<div class="inv-header">
@@ -22,8 +22,10 @@
 					{
 						var idx = i;
 						var slot = GetSlot( idx );
-						<div class="inv-slot @(slot is not null && !slot.IsEmpty ? "has-item" : "")"
+						<div class="inv-slot @(slot is not null && !slot.IsEmpty ? "has-item" : "") @(IsDragging && DragSourceIndex == idx ? "dragging-source" : "") @(IsDragging && HoverSlotIndex == idx && idx != DragSourceIndex ? "drag-over" : "")"
 							 onrightclick=@(() => OnSlotRightClick( idx ))
+							 onmousedown=@((PanelEvent e) => OnSlotMouseDown( idx, e ))
+							 onmouseup=@((PanelEvent e) => OnSlotMouseUp( e ))
 							 onmouseover=@(() => HoverSlotIndex = idx)
 							 onmouseout=@(() => { if ( HoverSlotIndex == idx ) HoverSlotIndex = -1; })>
 							@if ( slot is not null && !slot.IsEmpty )
@@ -56,8 +58,10 @@
 
 							@if ( exists )
 							{
-								<div class="inv-slot @(slot is not null && !slot.IsEmpty ? "has-item" : "")"
+								<div class="inv-slot @(slot is not null && !slot.IsEmpty ? "has-item" : "") @(IsDragging && DragSourceIndex == globalIndex ? "dragging-source" : "") @(IsDragging && HoverSlotIndex == globalIndex && globalIndex != DragSourceIndex ? "drag-over" : "")"
 									 onrightclick=@(() => OnSlotRightClick( globalIndex ))
+									 onmousedown=@((PanelEvent e) => OnSlotMouseDown( globalIndex, e ))
+									 onmouseup=@((PanelEvent e) => OnSlotMouseUp( e ))
 									 onmouseover=@(() => HoverSlotIndex = globalIndex)
 									 onmouseout=@(() => { if ( HoverSlotIndex == globalIndex ) HoverSlotIndex = -1; })>
 									@if ( slot is not null && !slot.IsEmpty )
@@ -79,19 +83,29 @@
 				}
 			</div>
 
-			@if ( TooltipSlot is not null )
+			@if ( TooltipSlot is not null && !IsDragging )
 			{
 				<div class="inv-tooltip" style="left: @(TipX)px; top: @(TipY)px;">
 					<div class="tip-name">@GameLocalization.ItemHeader( TooltipSlot.Item.Definition )</div>
 					<div class="tip-count">x@(TooltipSlot.Item.Count)</div>
 				</div>
 			}
-			@if ( CtxVisible )
+			@if ( CtxVisible && !IsDragging )
 			{
 				<div class="ctx-menu" style="left: @(CtxX)px; top: @(CtxY)px;">
 					<button class="ctx-btn" onclick=@OnUse>@GameLocalization.Phrase( "ui.inventory.use" )</button>
 					<button class="ctx-btn" onclick=@OnDrop>@GameLocalization.Phrase( "ui.inventory.drop" )</button>
 					<button class="ctx-btn" onclick=@OnDropAll>@GameLocalization.Phrase( "ui.inventory.drop_all" )</button>
+				</div>
+			}
+			@if ( IsDragging && !string.IsNullOrEmpty( DragIconPath ) )
+			{
+				<div class="inv-drag-ghost" style="left: @(DragX)px; top: @(DragY)px;">
+					<div class="slot-icon" style="background-image: url(@DragIconPath);"></div>
+					@if ( DragCount > 1 )
+					{
+						<div class="slot-count">@DragCount</div>
+					}
 				</div>
 			}
 		</div>
@@ -110,6 +124,15 @@
 	int HoverSlotIndex { get; set; } = -1;
 	float TipX { get; set; }
 	float TipY { get; set; }
+
+	bool IsDragging { get; set; }
+	int DragSourceIndex { get; set; } = -1;
+	string DragIconPath { get; set; }
+	int DragCount { get; set; }
+	float DragX { get; set; }
+	float DragY { get; set; }
+
+	const float SlotSizePx = 64f;
 
 	Slot TooltipSlot
 	{
@@ -148,6 +171,7 @@
 		SetOpen( false );
 
 		CtxVisible = false;
+		ResetDragState();
 
 		UiModalManager.UpdateMouseVisibility();
 	}
@@ -161,6 +185,9 @@
 	{
 		var slot = GetSlot( index );
 		if ( slot is null || slot.IsEmpty ) return;
+
+		if ( IsDragging )
+			ResetDragState();
 
 		CtxSlotIndex = index;
 		CtxX = GetMousePanelX();
@@ -227,6 +254,7 @@
 		IsOpen = false;
 		CtxVisible = false;
 		HoverSlotIndex = -1;
+		ResetDragState();
 		Crosshair.SetBlocked( ModalId, false );
 		StateHasChanged();
 	}
@@ -248,7 +276,90 @@
 				TipX = GetMousePanelX() + 16f;
 				TipY = GetMousePanelY() + 16f;
 			}
+
+			if ( IsDragging )
+				UpdateDragGhostPosition();
 		}
+		else if ( IsDragging )
+		{
+			CancelDrag();
+		}
+	}
+
+	static bool IsLeftMouse( PanelEvent e )
+	{
+		if ( e is MousePanelEvent mpe )
+			return mpe.MouseButton == MouseButtons.Left;
+
+		return string.Equals( e?.Button, "mouseleft", StringComparison.OrdinalIgnoreCase );
+	}
+
+	void OnSlotMouseDown( int index, PanelEvent e )
+	{
+		if ( !IsLeftMouse( e ) ) return;
+		if ( !IsOpen ) return;
+		if ( IsDragging ) return;
+		if ( CtxVisible ) return;
+
+		var slot = GetSlot( index );
+		if ( slot is null || slot.IsEmpty ) return;
+
+		DragSourceIndex = index;
+		DragIconPath = slot.Item.Definition?.IconPath;
+		DragCount = slot.Item.Count;
+		IsDragging = true;
+		HoverSlotIndex = index;
+		UpdateDragGhostPosition();
+	}
+
+	void OnSlotMouseUp( PanelEvent e )
+	{
+		if ( !IsLeftMouse( e ) ) return;
+		if ( !IsDragging ) return;
+
+		FinishDrag( HoverSlotIndex );
+	}
+
+	void OnOverlayMouseUp( PanelEvent e )
+	{
+		if ( !IsLeftMouse( e ) ) return;
+		if ( !IsDragging ) return;
+
+		FinishDrag( HoverSlotIndex );
+	}
+
+	void UpdateDragGhostPosition()
+	{
+		DragX = GetMousePanelX() - SlotSizePx * 0.5f;
+		DragY = GetMousePanelY() - SlotSizePx * 0.5f;
+	}
+
+	void FinishDrag( int targetIndex )
+	{
+		var from = DragSourceIndex;
+		var to = targetIndex;
+
+		ResetDragState();
+
+		if ( from < 0 ) return;
+		if ( to < 0 ) return;
+		if ( from == to ) return;
+		if ( to >= SlotCount ) return;
+
+		Player.Local?.MoveOrSwapInventorySlots( from, to );
+	}
+
+	void CancelDrag()
+	{
+		ResetDragState();
+	}
+
+	void ResetDragState()
+	{
+		IsDragging = false;
+		DragSourceIndex = -1;
+		DragIconPath = null;
+		DragCount = 0;
 	}
 
 	protected override void OnDisabled()
@@ -271,6 +382,7 @@
 	{
 		IsOpen = false;
 		CtxVisible = false;
+		ResetDragState();
 		Crosshair.SetBlocked( ModalId, false );
 		UiModalManager.Close( ModalId );
 	}
@@ -294,6 +406,10 @@
 		hashBuilder.Add( HoverSlotIndex );
 		hashBuilder.Add( TipX );
 		hashBuilder.Add( TipY );
+		hashBuilder.Add( IsDragging );
+		hashBuilder.Add( DragSourceIndex );
+		hashBuilder.Add( DragX );
+		hashBuilder.Add( DragY );
 		hashBuilder.Add( GameLocalization.CurrentCode );
 
 		var hash = hashBuilder.ToHashCode();

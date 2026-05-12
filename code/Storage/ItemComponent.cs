@@ -104,7 +104,6 @@ public sealed class ItemComponent : Component, Component.ICollisionListener, Com
         if (totalTaken > 0)
         {
             var itemName = string.IsNullOrWhiteSpace(ItemDefinition.Header) ? ItemDefinition.Id : ItemDefinition.Header;
-           // Notification.Make($"Picked up {itemName} x{totalTaken}");
 
             // Если всё отдали — уничтожаем объект
             if (Count <= 0)

@@ -10,7 +10,6 @@ public static partial class GameLocalization
 	public const string EnglishCode = "en";
 	public const string RussianCode = "ru";
 	private static string _selectedCode = EnglishCode;
-	private static readonly Dictionary<string, Dictionary<string, string>> PhrasesByLanguage = new( StringComparer.OrdinalIgnoreCase );
 	public static int Version { get; private set; }
 
 	public static string CurrentCode => string.IsNullOrWhiteSpace( _selectedCode ) ? EnglishCode : _selectedCode;
@@ -40,33 +39,27 @@ public static partial class GameLocalization
 			&& !string.Equals( text, $"#{normalizedKey}", StringComparison.Ordinal ) )
 			return text;
 
-		return fallback ?? normalizedKey;
+		return fallback ?? HumanizeMissingKey( normalizedKey );
 	}
 
 	private static string GetCustomPhrase( string key )
 	{
 		var language = CurrentCode;
-		if ( TryGetLanguagePhrases( language, out var phrases ) && phrases.TryGetValue( key, out var text ) )
+		var phrases = GetLanguagePhrases( language );
+		if ( phrases.TryGetValue( key, out var text ) )
 			return text;
 
 		if ( !string.Equals( language, EnglishCode, StringComparison.OrdinalIgnoreCase )
-			&& TryGetLanguagePhrases( EnglishCode, out phrases )
-			&& phrases.TryGetValue( key, out text ) )
+			&& GetLanguagePhrases( EnglishCode ).TryGetValue( key, out text ) )
 			return text;
 
 		return null;
 	}
 
-	private static bool TryGetLanguagePhrases( string code, out Dictionary<string, string> phrases )
+	private static Dictionary<string, string> GetLanguagePhrases( string code )
 	{
 		var normalized = NormalizeLanguageCode( code );
-		if ( PhrasesByLanguage.TryGetValue( normalized, out phrases ) )
-			return true;
-
-		phrases = normalized == RussianCode ? BuiltInRussian() : BuiltInEnglish();
-
-		PhrasesByLanguage[normalized] = phrases;
-		return phrases.Count > 0;
+		return normalized == RussianCode ? BuiltInRussian() : BuiltInEnglish();
 	}
 
 	private static Dictionary<string, string> BuiltInEnglish() => BuiltInEnglishGenerated();
@@ -140,6 +133,23 @@ public static partial class GameLocalization
 		return string.Equals( code, RussianCode, StringComparison.OrdinalIgnoreCase )
 			? RussianCode
 			: EnglishCode;
+	}
+
+	private static string HumanizeMissingKey( string key )
+	{
+		var text = (key ?? string.Empty).Trim();
+		if ( string.IsNullOrWhiteSpace( text ) )
+			return string.Empty;
+
+		var lastDot = text.LastIndexOf( '.' );
+		if ( lastDot >= 0 && lastDot < text.Length - 1 )
+			text = text[(lastDot + 1)..];
+
+		text = text.Replace( '_', ' ' ).Replace( '-', ' ' ).Trim();
+		if ( text.Length <= 0 )
+			return string.Empty;
+
+		return CultureInfo.InvariantCulture.TextInfo.ToTitleCase( text.ToLowerInvariant() );
 	}
 
 	private static string NormalizeId( string id )

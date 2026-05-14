@@ -1,8 +1,11 @@
-$hud-panel-width: 340px;
-$hud-panel-bg: rgba(12, 14, 18, 0.72);
-$hud-panel-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+$hud-panel-width: 330px;
+$hud-panel-bg: rgba(11, 13, 18, 0.94);
+$hud-panel-border: rgba(255, 255, 255, 0.035);
+$hud-panel-shadow: 0 8px 28px rgba(0, 0, 0, 0.42);
 $hud-gap: 6px;
-$health-pink: #ff436c;
+$money-card-width: 162px;
+$health-pink: #ff3f73;
+$armor-gray: #a9aaae;
 
 Hud {
 	position: absolute;
@@ -26,77 +29,36 @@ Hud {
 	}
 
 	.hud-panel {
-		width: 100%;
 		flex-shrink: 0;
 		background-color: $hud-panel-bg;
-		border-radius: 10px;
+		border: 1px solid $hud-panel-border;
+		border-radius: 8px;
 		box-shadow: $hud-panel-shadow;
 	}
 
-	.top-panel {
+	.profile-panel {
+		width: 100%;
 		flex-direction: row;
 		align-items: center;
-		padding: 10px 14px;
+		min-height: 100px;
+		padding: 12px 14px;
 		margin-bottom: $hud-gap;
 	}
 
-	.job-icon {
-		width: 28px;
-		height: 28px;
-		flex-shrink: 0;
-		margin-right: 10px;
-		background-image: url("icons/job.vtex");
-		background-repeat: no-repeat;
-		background-size: contain;
-		background-position: center;
-	}
-
-	.job-name {
-		flex-grow: 1;
-		font-size: 16px;
-		font-family: Montserrat;
-		font-weight: 600;
-		color: rgba(255, 255, 255, 0.92);
-	}
-
-	.wallet-icon {
-		width: 26px;
-		height: 26px;
-		flex-shrink: 0;
-		margin-right: 8px;
-		background-image: url("icons/wallet.vtex");
-		background-repeat: no-repeat;
-		background-size: contain;
-		background-position: center;
-	}
-
-	.money-value {
-		font-size: 18px;
-		font-family: Montserrat;
-		font-weight: 700;
-		color: rgba(255, 255, 255, 0.95);
-		flex-shrink: 0;
-	}
-
-	.bottom-panel {
-		flex-direction: row;
-		align-items: center;
-		padding: 12px 14px;
-		min-height: 88px;
-	}
-
 	.player-avatar {
-		width: 64px;
-		height: 64px;
+		width: 58px;
+		height: 58px;
 		flex-shrink: 0;
-		margin-right: 14px;
+		margin-right: 12px;
 		border-radius: 999px;
+		background-color: rgba(18, 20, 25, 0.96);
 		background-repeat: no-repeat;
 		background-size: cover;
 		background-position: center;
+		overflow: hidden;
 	}
 
-	.bottom-main {
+	.profile-main {
 		flex-grow: 1;
 		flex-direction: column;
 		justify-content: center;
@@ -104,66 +66,173 @@ Hud {
 	}
 
 	.player-name {
-		font-size: 15px;
+		max-width: 100%;
+		font-size: 16px;
 		font-family: Montserrat;
-		font-weight: 600;
-		color: rgba(255, 255, 255, 0.95);
-		margin-bottom: 8px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.96);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
 
-	.health-row {
+	.job-line {
 		flex-direction: row;
 		align-items: center;
+		margin-top: 2px;
+		margin-bottom: 5px;
+		min-width: 0;
 	}
 
-	.health-icon {
-		width: 22px;
-		height: 22px;
+	.job-icon {
+		width: 14px;
+		height: 14px;
 		flex-shrink: 0;
-		margin-right: 8px;
-		background-image: url("icons/health.vtex");
+		margin-right: 6px;
+		background-image: url("icons/job.vtex");
 		background-repeat: no-repeat;
 		background-size: contain;
 		background-position: center;
 	}
 
-	.health-bar {
+	.job-name {
+		max-width: 100%;
+		font-size: 10px;
+		font-family: Montserrat;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.86);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.status-row {
+		flex-direction: row;
+		align-items: center;
+		margin-top: 3px;
+	}
+
+	.health-icon,
+	.armor-icon {
+		width: 17px;
+		height: 17px;
+		flex-shrink: 0;
+		margin-right: 9px;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+	}
+
+	.health-icon {
+		background-image: url("icons/health.vtex");
+	}
+
+	.armor-icon {
+		background-image: url("icons/armor.vtex");
+	}
+
+	.status-bar {
 		position: relative;
 		flex-grow: 1;
-		height: 22px;
-		background-color: rgba(0, 0, 0, 0.35);
-		border-radius: 11px;
+		height: 16px;
 		min-width: 0;
+		background-color: rgba(86, 88, 96, 0.56);
+		border-radius: 999px;
+		overflow: hidden;
+	}
+
+	.health-fill,
+	.armor-fill {
+		position: absolute;
+		left: 0;
+		top: 0;
+		bottom: 0;
+		border-radius: 999px;
+		z-index: 1;
 	}
 
 	.health-fill {
-		position: absolute;
-		left: 0;
-		top: 0;
-		bottom: 0;
 		background-color: $health-pink;
-		border-radius: 11px;
 	}
 
-	.health-text {
-		position: absolute;
-		left: 0;
-		right: 0;
-		top: 0;
-		bottom: 0;
-		font-size: 13px;
+	.armor-fill {
+		background-color: $armor-gray;
+	}
+
+	.status-value {
+		width: 27px;
+		flex-shrink: 0;
+		margin-left: 7px;
+		font-size: 11px;
 		font-family: Montserrat;
-		font-weight: 700;
-		color: rgba(255, 255, 255, 0.95);
-		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
-		justify-content: center;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.96);
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+		text-align: right;
+	}
+
+	.money-row {
+		width: 100%;
+		flex-direction: row;
+	}
+
+	.money-card {
+		width: $money-card-width;
+		min-height: 43px;
+		flex-direction: row;
 		align-items: center;
+		padding: 7px 12px;
+	}
+
+	.cash-card {
+		margin-right: $hud-gap;
+	}
+
+	.cash-icon,
+	.card-icon {
+		width: 20px;
+		height: 20px;
+		flex-shrink: 0;
+		margin-right: 9px;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+	}
+
+	.cash-icon {
+		background-image: url("icons/wallet.vtex");
+	}
+
+	.card-icon {
+		border: 2px solid rgba(255, 255, 255, 0.82);
+		border-radius: 3px;
+	}
+
+	.money-copy {
+		flex-direction: column;
+		min-width: 0;
+	}
+
+	.money-label {
+		font-size: 7px;
+		font-family: Montserrat;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.58);
+	}
+
+	.money-value {
+		max-width: 100%;
+		font-size: 14px;
+		font-family: Montserrat;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.96);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	.arrest-panel {
+		width: 100%;
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;

@@ -1,27 +1,49 @@
 ﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
+@using System.Globalization;
 @inherits PanelComponent
 @namespace Sandbox
 
 <root class="@RootClass">
 	<div class="hud-stack">
-		<div class="top-panel hud-panel">
-			<div class="job-icon"></div>
-			<div class="job-name">@GameLocalization.JobHeader( Player.Local?.Job?.JobDefinition )</div>
-			<div class="wallet-icon"></div>
-			<div class="money-value">$@(Player.Local?.Money ?? 0)</div>
-		</div>
-		<div class="bottom-panel hud-panel">
-			<div class="player-avatar" style="background-image: url(avatar:@Game.SteamId.Value);"></div>
-			<div class="bottom-main">
-				<div class="player-name">@(Connection.Local?.DisplayName ?? "—")</div>
-				<div class="health-row">
+		<div class="profile-panel hud-panel">
+			<div class="player-avatar" style="background-image: url( avatar:@LocalSteamId )"></div>
+			<div class="profile-main">
+				<div class="player-name">@PlayerName</div>
+				<div class="job-line">
+					<div class="job-icon"></div>
+					<div class="job-name">@GameLocalization.JobHeader( Player.Local?.Job?.JobDefinition )</div>
+				</div>
+				<div class="status-row">
 					<div class="health-icon"></div>
-					<div class="health-bar">
-						<div class="health-fill" style="width: @(HealthPercent)%;"></div>
-						<div class="health-text">@HealthValue</div>
+					<div class="status-bar">
+						<div class="health-fill" style="@HealthFillStyle"></div>
 					</div>
+					<div class="status-value">@HealthValue</div>
+				</div>
+				<div class="status-row">
+					<div class="armor-icon"></div>
+					<div class="status-bar">
+						<div class="armor-fill" style="@ArmorFillStyle"></div>
+					</div>
+					<div class="status-value">@ArmorValue</div>
+				</div>
+			</div>
+		</div>
+		<div class="money-row">
+			<div class="money-card cash-card hud-panel">
+				<div class="cash-icon"></div>
+				<div class="money-copy">
+					<div class="money-label">@CashLabel</div>
+					<div class="money-value">$@MoneyValue</div>
+				</div>
+			</div>
+			<div class="money-card card-card hud-panel">
+				<div class="card-icon"></div>
+				<div class="money-copy">
+					<div class="money-label">@CardLabel</div>
+					<div class="money-value">$@CardValue</div>
 				</div>
 			</div>
 		</div>
@@ -50,11 +72,29 @@
 	bool IsDead => Player.Local?.IsDead == true;
 	string RootClass => IsDead ? "dead" : "";
 
-	float HealthPercent => Player.Local != null
-		? Math.Clamp( Player.Local.Health / Player.Local.MaxHealth * 100f, 0f, 100f )
-		: 0f;
+	float HealthPercent => GetPercent( Player.Local?.Health ?? 0f, Player.Local?.MaxHealth ?? 0f );
+
+	string HealthFillStyle => $"width: {ToPercentStyle( HealthPercent )}; background-color: #ff3f73;";
 
 	int HealthValue => (int)(Player.Local?.Health ?? 0f);
+
+	float ArmorPercent => GetPercent( Player.Local?.Armor ?? 0f, Player.Local?.MaxArmor ?? 0f );
+
+	string ArmorFillStyle => $"width: {ToPercentStyle( ArmorPercent )}; background-color: #a9aaae;";
+
+	int ArmorValue => (int)(Player.Local?.Armor ?? 0f);
+
+	string PlayerName => (Connection.Local?.DisplayName ?? "—").ToUpperInvariant();
+
+	long LocalSteamId => Connection.Local?.SteamId.Value ?? 0L;
+
+	string CashLabel => GameLocalization.Phrase( "ui.hud.cash", "CASH" );
+
+	string CardLabel => GameLocalization.Phrase( "ui.hud.card", "CARD" );
+
+	string MoneyValue => (Player.Local?.Money ?? 0).ToString( "N0", CultureInfo.InvariantCulture );
+
+	string CardValue => (Player.Local?.MoneyAtm ?? 0).ToString( "N0", CultureInfo.InvariantCulture );
 
 	int ArrestSecondsLeft => Player.Local != null
 		? Math.Max( 0, (int)Math.Ceiling( (float)Player.Local.ArrestTimeUntilRelease ) )
@@ -68,15 +108,33 @@
 		? GameLocalization.Phrase( "ui.hud.default_death_message", "You died." )
 		: Player.Local.DeathMessage;
 
+	static float GetPercent( float value, float maxValue )
+	{
+		if ( maxValue <= 0f )
+			return 0f;
+
+		return Math.Clamp( value / maxValue * 100f, 0f, 100f );
+	}
+
+	static string ToPercentStyle( float percent )
+	{
+		return percent.ToString( "0.##", CultureInfo.InvariantCulture ) + "%";
+	}
+
 	protected override int BuildHash()
 	{
 		var hash = System.HashCode.Combine(
 			Player.Local?.Money ?? 0,
+			Player.Local?.MoneyAtm ?? 0,
 			Player.Local?.Health ?? 0f,
+			Player.Local?.Armor ?? 0f,
 			Player.Local?.Job?.JobDefinition?.Header,
 			GameLocalization.CurrentCode,
 			Connection.Local?.DisplayName,
-			Game.SteamId,
+			LocalSteamId );
+
+		hash = System.HashCode.Combine(
+			hash,
 			Player.Local?.IsArrested ?? false,
 			ArrestSecondsLeft );
 

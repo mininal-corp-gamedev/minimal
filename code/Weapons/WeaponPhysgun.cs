@@ -581,7 +581,9 @@ public sealed class WeaponPhysgun : Weapon
         var printer = rb.GameObject.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors);
         var ownsPrinter = printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player);
 
-        return ownsProp || ownsPrinter;
+        var ownsPrinterUpgrade = PlayerOwnsMoneyPrinterUpgrade(rb.GameObject, player);
+
+        return ownsProp || ownsPrinter || ownsPrinterUpgrade;
     }
 
     private void UpdateSpin()
@@ -1360,7 +1362,19 @@ public sealed class WeaponPhysgun : Weapon
         var printer = rb.GameObject.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors);
         var ownsPrinter = printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player);
 
-        return ownsProp || ownsPrinter;
+        var ownsPrinterUpgrade = PlayerOwnsMoneyPrinterUpgrade(rb.GameObject, player);
+
+        return ownsProp || ownsPrinter || ownsPrinterUpgrade;
+    }
+
+    private static bool PlayerOwnsMoneyPrinterUpgrade(GameObject target, Player player)
+    {
+        var upgrade = target.Components.Get<MoneyPrinterUpgrade>(FindMode.EverythingInSelfAndAncestors);
+        if (!upgrade.IsValid())
+            return false;
+
+        var shopObject = target.Components.Get<ShopObject>(FindMode.EverythingInSelfAndAncestors);
+        return shopObject.IsValid() && IsSamePlayer(shopObject.PlayerOwner, player);
     }
 
     private static bool HostCanMoveBody(Rigidbody body)

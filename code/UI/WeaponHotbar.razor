@@ -5,28 +5,32 @@
 @namespace Sandbox
 
 <root>
-	<div class="hotbar">
-		@for ( int i = 0; i < HotbarCount; i++ )
-		{
-			Slot slot = GetSlot( i );
-			<div class="slot @SlotClass( i ) @(slot is not null && !slot.IsEmpty ? "has-item" : "")">
-				<div class="slot-key">@(i + 1)</div>
-				@if ( slot is not null && !slot.IsEmpty )
-				{
-					<div class="slot-icon" style="background-image: url(@slot.Item.Definition.IconPath);"></div>
-					@if ( slot.Item.Count > 1 )
+	@if ( !IsDead )
+	{
+		<div class="hotbar">
+			@for ( int i = 0; i < HotbarCount; i++ )
+			{
+				Slot slot = GetSlot( i );
+				<div class="slot @SlotClass( i ) @(slot is not null && !slot.IsEmpty ? "has-item" : "")">
+					<div class="slot-key">@(i + 1)</div>
+					@if ( slot is not null && !slot.IsEmpty )
 					{
-						<div class="slot-count">@slot.Item.Count</div>
+						<div class="slot-icon" style="background-image: url(@slot.Item.Definition.IconPath);"></div>
+						@if ( slot.Item.Count > 1 )
+						{
+							<div class="slot-count">@slot.Item.Count</div>
+						}
 					}
-				}
-			</div>
-		}
-	</div>
+				</div>
+			}
+		</div>
+	}
 </root>
 
 @code
 {
 	const int HotbarCount = 9;
+	bool IsDead => Player.Local?.IsDead == true;
 
 	int ActiveSlot
 	{
@@ -52,6 +56,9 @@
 
 	protected override void OnUpdate()
 	{
+		if ( IsDead )
+			return;
+
 		// Physgun потребляет колёсико ТОЛЬКО когда зажата ЛКМ (режим Physgun-захвата) —
 		// в этот момент колёсико регулирует дистанцию удержания. В любое другое время
 		// (даже если physgun просто в руках) хотбар должен нормально прокручиваться.
@@ -81,7 +88,7 @@
 
 	protected override int BuildHash()
 	{
-		return System.HashCode.Combine(Time.Now);
+		return System.HashCode.Combine(Time.Now, IsDead);
 
 		// Раньше в hash шёл Time.Now — он меняется каждый кадр, и панель
 		// перестраивалась 60 раз в секунду без надобности. Это и создавало

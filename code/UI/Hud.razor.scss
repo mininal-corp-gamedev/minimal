@@ -20,7 +20,7 @@ Hud {
 	pointer-events: none;
 
 	&.dead {
-		background-color: #020817;
+		background-color: rgba(2, 8, 23, 0.18);
 	}
 
 	.hud-stack {
@@ -264,7 +264,16 @@ Hud {
 		bottom: 0;
 		align-items: center;
 		justify-content: center;
-		background-color: #020817;
+		background-color: rgba(2, 8, 23, 0.36);
+	}
+
+	.damage-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		pointer-events: none;
 	}
 
 	.death-window {

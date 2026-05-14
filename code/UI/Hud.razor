@@ -6,55 +6,58 @@
 @namespace Sandbox
 
 <root class="@RootClass">
-	<div class="hud-stack">
-		<div class="profile-panel hud-panel">
-			<div class="player-avatar" style="background-image: url( avatar:@LocalSteamId )"></div>
-			<div class="profile-main">
-				<div class="player-name">@PlayerName</div>
-				<div class="job-line">
-					<div class="job-icon"></div>
-					<div class="job-name">@GameLocalization.JobHeader( Player.Local?.Job?.JobDefinition )</div>
-				</div>
-				<div class="status-row">
-					<div class="health-icon"></div>
-					<div class="status-bar">
-						<div class="health-fill" style="@HealthFillStyle"></div>
+	@if ( !IsDead )
+	{
+		<div class="hud-stack">
+			<div class="profile-panel hud-panel">
+				<div class="player-avatar" style="background-image: url( avatar:@LocalSteamId )"></div>
+				<div class="profile-main">
+					<div class="player-name">@PlayerName</div>
+					<div class="job-line">
+						<div class="job-icon"></div>
+						<div class="job-name">@GameLocalization.JobHeader( Player.Local?.Job?.JobDefinition )</div>
 					</div>
-					<div class="status-value">@HealthValue</div>
-				</div>
-				<div class="status-row">
-					<div class="armor-icon"></div>
-					<div class="status-bar">
-						<div class="armor-fill" style="@ArmorFillStyle"></div>
+					<div class="status-row">
+						<div class="health-icon"></div>
+						<div class="status-bar">
+							<div class="health-fill" style="@HealthFillStyle"></div>
+						</div>
+						<div class="status-value">@HealthValue</div>
 					</div>
-					<div class="status-value">@ArmorValue</div>
+					<div class="status-row">
+						<div class="armor-icon"></div>
+						<div class="status-bar">
+							<div class="armor-fill" style="@ArmorFillStyle"></div>
+						</div>
+						<div class="status-value">@ArmorValue</div>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="money-row">
-			<div class="money-card cash-card hud-panel">
-				<div class="cash-icon"></div>
-				<div class="money-copy">
-					<div class="money-label">@CashLabel</div>
-					<div class="money-value">$@MoneyValue</div>
+			<div class="money-row">
+				<div class="money-card cash-card hud-panel">
+					<div class="cash-icon"></div>
+					<div class="money-copy">
+						<div class="money-label">@CashLabel</div>
+						<div class="money-value">$@MoneyValue</div>
+					</div>
+				</div>
+				<div class="money-card card-card hud-panel">
+					<div class="card-icon"></div>
+					<div class="money-copy">
+						<div class="money-label">@CardLabel</div>
+						<div class="money-value">$@CardValue</div>
+					</div>
 				</div>
 			</div>
-			<div class="money-card card-card hud-panel">
-				<div class="card-icon"></div>
-				<div class="money-copy">
-					<div class="money-label">@CardLabel</div>
-					<div class="money-value">$@CardValue</div>
+			@if ( Player.Local?.IsArrested == true )
+			{
+				<div class="arrest-panel hud-panel">
+					<div class="arrest-title">@GameLocalization.Phrase( "ui.hud.arrested" )</div>
+					<div class="arrest-timer">@ArrestSecondsLeft s</div>
 				</div>
+			}
 			</div>
-		</div>
-		@if ( Player.Local?.IsArrested == true )
-		{
-			<div class="arrest-panel hud-panel">
-				<div class="arrest-title">@GameLocalization.Phrase( "ui.hud.arrested" )</div>
-				<div class="arrest-timer">@ArrestSecondsLeft s</div>
-			</div>
-		}
-	</div>
+	}
 	@if ( IsDead )
 	{
 		<div class="death-screen">
@@ -65,12 +68,18 @@
 			</div>
 		</div>
 	}
+	@if ( DamageOverlayAlpha > 0.001f )
+	{
+		<div class="damage-overlay" style="@DamageOverlayStyle"></div>
+	}
 </root>
 
 @code
 {
 	bool IsDead => Player.Local?.IsDead == true;
 	string RootClass => IsDead ? "dead" : "";
+	float DamageOverlayAlpha => Player.Local?.DamageOverlayAlpha ?? 0f;
+	string DamageOverlayStyle => $"background-color: rgba(255, 0, 0, {DamageOverlayAlpha.ToString( "0.###", CultureInfo.InvariantCulture )});";
 
 	float HealthPercent => GetPercent( Player.Local?.Health ?? 0f, Player.Local?.MaxHealth ?? 0f );
 
@@ -142,6 +151,7 @@
 			hash,
 			IsDead,
 			DeathSecondsLeft,
-			Player.Local?.DeathMessage );
+			Player.Local?.DeathMessage,
+			(int)(DamageOverlayAlpha * 1000f) );
 	}
 }

@@ -4,12 +4,15 @@
 @namespace Sandbox
 
 <root>
-	<div class="logo" style="background-image: url('@LogoPath');"></div>
+	@if ( Player.Local?.IsDead != true )
+	{
+		<div class="logo" style="background-image: url('@LogoPath');"></div>
+	}
 </root>
 
 @code
 {
 	[Property] public string LogoPath { get; set; } = "textures/logo_1024_512.vtex";
 
-	protected override int BuildHash() => System.HashCode.Combine( LogoPath );
+	protected override int BuildHash() => System.HashCode.Combine( LogoPath, Player.Local?.IsDead ?? false );
 }

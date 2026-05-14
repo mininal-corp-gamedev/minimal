@@ -4,13 +4,16 @@
 @namespace Sandbox
 
 <root>
-    <div class="badge">
-        <div class="title">@GameLocalization.Phrase( "ui.beta.title" )</div>
-        <div class="sub">@GameLocalization.Phrase( "ui.beta.subtitle" )</div>
-    </div>
+    @if ( Player.Local?.IsDead != true )
+    {
+        <div class="badge">
+            <div class="title">@GameLocalization.Phrase( "ui.beta.title" )</div>
+            <div class="sub">@GameLocalization.Phrase( "ui.beta.subtitle" )</div>
+        </div>
+    }
 </root>
 
 @code
 {
-    protected override int BuildHash() => GameLocalization.CurrentCode.GetHashCode();
+    protected override int BuildHash() => System.HashCode.Combine( GameLocalization.CurrentCode, Player.Local?.IsDead ?? false );
 }

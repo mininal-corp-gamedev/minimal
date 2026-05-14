@@ -7,6 +7,7 @@ using Sandbox.Rendering;
 using Sandbox.Utility;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
@@ -147,6 +148,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private bool _deathPrevUseCameraControls;
     private bool _deathColliderApplied;
     private bool _deathPrevColliderEnabled;
+    private TimeSince _timeSinceDamageTaken = 999f;
+    private float _lastDamageOverlayStrength;
+    private GameObject _deathObserverObject;
     private Vector3 _queuedElevatorCarryDelta;
     private bool _ownerClothingApplyInProgress;
     private bool _ownerClothingApplied;
@@ -445,24 +449,24 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (IsArrested) return;
         if (IsSafezone) return;
 
-        TakeDamageFromWeapon(dmgInfo.Damage, dmgInfo.Attacker);
+        TakeDamageFromWeapon(dmgInfo.Damage, dmgInfo.Attacker, damagePosition: dmgInfo.Position, damageOrigin: dmgInfo.Origin, launchRagdoll: dmgInfo.Tags.Contains("explosion"));
     }
 
     /// <summary>
     /// Запрос на урон. Применять Health может только хост (он — Sync-владелец).
     /// На хосте применяем сразу, на клиенте отправляем <see cref="RpcRequestDamage"/>.
     /// </summary>
-    public void TakeDamageFromWeapon(float damage, GameObject attacker = null, string deathMessage = null)
+    public void TakeDamageFromWeapon(float damage, GameObject attacker = null, string deathMessage = null, Vector3 damagePosition = default, Vector3 damageOrigin = default, bool launchRagdoll = false)
     {
         if (damage <= 0f) return;
 
         if (Networking.IsHost)
         {
-            HostApplyDamage(damage, attacker, deathMessage);
+            HostApplyDamage(damage, attacker, deathMessage, damagePosition, damageOrigin, launchRagdoll);
             return;
         }
 
-        RpcRequestDamage(damage, attacker, deathMessage);
+        RpcRequestDamage(damage, attacker, deathMessage, damagePosition, damageOrigin, launchRagdoll);
     }
 
     [Rpc.Broadcast]
@@ -517,13 +521,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     /// (что и было причиной «клиент не дамажит клиента»).
     /// </summary>
     [Rpc.Host]
-    private void RpcRequestDamage(float damage, GameObject attacker, string deathMessage)
+    private void RpcRequestDamage(float damage, GameObject attacker, string deathMessage, Vector3 damagePosition, Vector3 damageOrigin, bool launchRagdoll)
     {
         if (!Networking.IsHost) return;
-        HostApplyDamage(damage, attacker, deathMessage);
+        HostApplyDamage(damage, attacker, deathMessage, damagePosition, damageOrigin, launchRagdoll);
     }
 
-    private void HostApplyDamage(float damage, GameObject attacker, string deathMessage = null)
+    private void HostApplyDamage(float damage, GameObject attacker, string deathMessage = null, Vector3 damagePosition = default, Vector3 damageOrigin = default, bool launchRagdoll = false)
     {
         if (!Networking.IsHost) return;
         if (IsArrested) return;
@@ -539,13 +543,14 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         WorldHud?.WorldHudRefresh();
 
         RpcOnPlayerHit(Renderer);
+        RpcOwnerDamageTaken(damage);
 
         if (Health <= 0f)
-            HostDie(BuildDeathMessage(attacker, deathMessage));
+            HostDie(BuildDeathMessage(attacker, deathMessage), launchRagdoll ? CreateDeathLaunchVelocity(damageOrigin) : Vector3.Zero, damageOrigin);
     }
 
     /// <summary>Смерть. Хост показывает владельцу экран смерти и откладывает респавн.</summary>
-    private void HostDie(string deathMessage = null)
+    private void HostDie(string deathMessage = null, Vector3 ragdollVelocity = default, Vector3 damageOrigin = default)
     {
         if (!Networking.IsHost) return;
         if (IsDead) return;
@@ -559,7 +564,11 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         WorldHud?.WorldHudRefresh();
 
         RpcOwnerDied(DeathMessage, (float)DeathTimeUntilRespawn);
-        RpcCreateDeathRagdoll();
+        RpcCreateDeathRagdoll(ragdollVelocity, damageOrigin);
+
+        if (!IsProxy)
+            CreateDeathObserver();
+
         HostSetLifePresentationEnabled(false);
     }
 
@@ -583,13 +592,14 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             CurrentWeapon.GameObject.Enabled = false;
 
         ApplyDeathControls();
+        CreateDeathObserver();
         RequestHostLifePresentationEnabled(false);
     }
 
     [Rpc.Broadcast]
-    private void RpcCreateDeathRagdoll()
+    private void RpcCreateDeathRagdoll(Vector3 velocity, Vector3 origin)
     {
-        CreateDeathRagdoll();
+        CreateDeathRagdoll(velocity, origin);
     }
 
     [Rpc.Broadcast]
@@ -707,7 +717,89 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         return null;
     }
 
-    private void CreateDeathRagdoll()
+    private Vector3 CreateDeathLaunchVelocity(Vector3 damageOrigin)
+    {
+        if (damageOrigin == Vector3.Zero)
+            return Vector3.Zero;
+
+        var dist = (WorldPosition - damageOrigin).Length;
+        var strength = MathX.Remap(dist, 0f, 512f, 1024f, 2048f, true);
+
+        var dir = (WorldPosition - damageOrigin).Normal;
+        dir += Vector3.Up;
+
+        return dir.Normal * strength;
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerDamageTaken(float damage)
+    {
+        _timeSinceDamageTaken = 0f;
+        _lastDamageOverlayStrength = Math.Clamp(damage / MathF.Max(MaxHealth, 1f), 0.18f, 0.55f);
+    }
+
+    public float DamageOverlayAlpha
+    {
+        get
+        {
+            var fade = 1f - Math.Clamp((float)_timeSinceDamageTaken / 0.9f, 0f, 1f);
+            return Math.Clamp(_lastDamageOverlayStrength * fade, 0f, 0.65f);
+        }
+    }
+
+    private void CopyBoneScalesToRagdoll(GameObject ragdoll)
+    {
+        if (!Renderer.IsValid() || Renderer.Model is null)
+            return;
+
+        var bones = Renderer.Model.Bones;
+        var ragdollRenderer = ragdoll.Components.Get<SkinnedModelRenderer>();
+        if (!ragdollRenderer.IsValid())
+            return;
+
+        ragdollRenderer.CreateBoneObjects = true;
+        var ragdollObjects = ragdoll.GetAllObjects(true).ToLookup(x => x.Name);
+
+        foreach (var bone in bones.AllBones)
+        {
+            var boneName = bone.Name;
+            if (!ragdollObjects.Contains(boneName))
+                continue;
+
+            var playerBone = Renderer.GetBoneObject(boneName);
+            if (!playerBone.IsValid())
+                continue;
+
+            var ragdollBone = ragdollObjects[boneName].FirstOrDefault();
+            if (!ragdollBone.IsValid() || playerBone.WorldScale == Vector3.One)
+                continue;
+
+            ragdollBone.Flags = ragdollBone.Flags.WithFlag(GameObjectFlags.ProceduralBone, true);
+            ragdollBone.WorldScale = playerBone.WorldScale;
+
+            if (ragdollBone.Parent.IsValid())
+            {
+                ragdollBone.Parent.Flags = ragdollBone.Parent.Flags.WithFlag(GameObjectFlags.ProceduralBone, true);
+                ragdollBone.Parent.WorldScale = playerBone.WorldScale;
+            }
+        }
+    }
+
+    private static void ApplyRagdollForce(ModelPhysics physics, Vector3 force, Vector3 origin)
+    {
+        if (!physics.IsValid()) return;
+        if (force.Length < 1f) return;
+
+        foreach (var body in physics.Bodies)
+        {
+            var rb = body.Component;
+            if (!rb.IsValid()) continue;
+
+            rb.ApplyImpulse(Vector3.Direction(origin, rb.WorldPosition) * force.Length * rb.Mass);
+        }
+    }
+
+    private void CreateDeathRagdoll(Vector3 velocity, Vector3 origin)
     {
         DestroyDeathRagdoll();
 
@@ -717,10 +809,48 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (!IsProxy)
             ApplyDeathControls();
 
-        if (!Controller.IsValid())
+        if (!Controller.IsValid() || !Renderer.IsValid())
             return;
 
-        _deathRagdollObject = Controller.CreateRagdoll($"{GameObject.Name}_ragdoll");
+        using (Scene.BatchGroup())
+        {
+            var ragdoll = new GameObject(true, $"{GameObject.Name}_ragdoll");
+            ragdoll.Tags.Add("ragdoll");
+            ragdoll.WorldTransform = WorldTransform;
+
+            var mainBody = ragdoll.Components.Create<SkinnedModelRenderer>();
+            mainBody.CopyFrom(Renderer);
+            mainBody.UseAnimGraph = false;
+
+            foreach (var clothing in Renderer.GameObject.Children
+                .Where(x => x.Tags.Has("clothing"))
+                .SelectMany(x => x.Components.GetAll<SkinnedModelRenderer>()))
+            {
+                if (!clothing.IsValid()) continue;
+
+                var clothingObject = new GameObject(true, clothing.GameObject.Name);
+                clothingObject.Parent = ragdoll;
+
+                var clothingRenderer = clothingObject.Components.Create<SkinnedModelRenderer>();
+                clothingRenderer.CopyFrom(clothing);
+                clothingRenderer.BoneMergeTarget = mainBody;
+            }
+
+            var physics = ragdoll.Components.Create<ModelPhysics>();
+            physics.Model = mainBody.Model;
+            physics.Renderer = mainBody;
+
+            var corpse = ragdoll.Components.Create<DeathCameraTarget>();
+            corpse.Player = this;
+            corpse.Connection = GameObject.Network.Owner;
+            corpse.Created = DateTime.Now;
+
+            _deathRagdollObject = ragdoll;
+            physics.CopyBonesFrom(Renderer, true);
+            CopyBoneScalesToRagdoll(ragdoll);
+            ApplyRagdollForce(physics, velocity, origin);
+        }
+
         ApplyDeathColliderState();
 
         if (Renderer.IsValid())
@@ -759,6 +889,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private void RestoreDeathState()
     {
+        DestroyDeathObserver();
         DestroyDeathRagdoll();
 
         if (Renderer.IsValid())
@@ -797,6 +928,27 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             _deathRagdollObject.Destroy();
 
         _deathRagdollObject = null;
+    }
+
+    private void CreateDeathObserver()
+    {
+        if (IsProxy)
+            return;
+
+        DestroyDeathObserver();
+
+        _deathObserverObject = new GameObject(false, $"{GameObject.Name}_death_observer");
+        var observer = _deathObserverObject.Components.Create<PlayerObserver>();
+        observer.Player = this;
+        _deathObserverObject.Enabled = true;
+    }
+
+    private void DestroyDeathObserver()
+    {
+        if (_deathObserverObject.IsValid())
+            _deathObserverObject.Destroy();
+
+        _deathObserverObject = null;
     }
 
     public void OnLanded(float distance, Vector3 impactVelocity)

@@ -4,7 +4,7 @@
 @namespace Sandbox
 
 <root>
-	@if ( IsOpen )
+	@if ( IsOpen && !IsDead )
 	{
 		<div class="keybinds-panel">
 			<div class="keybind-row">
@@ -49,6 +49,7 @@
 @code
 {
 	bool IsOpen { get; set; } = true;
+	bool IsDead => Player.Local?.IsDead == true;
 
 	protected override void OnUpdate()
 	{
@@ -56,5 +57,5 @@
 			IsOpen = !IsOpen;
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine( IsOpen, GameLocalization.CurrentCode );
+	protected override int BuildHash() => System.HashCode.Combine( IsOpen, IsDead, GameLocalization.CurrentCode );
 }

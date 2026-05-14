@@ -279,7 +279,7 @@ public class Weapon : Component
         {
             if (go.Components.TryGet<Player>(out var hitPlayer, FindMode.EverythingInSelfAndParent))
             {
-                hitPlayer.TakeDamageFromWeapon(damage, Player.Local.GameObject);
+                hitPlayer.TakeDamageFromWeapon(damage, Player.Local.GameObject, damagePosition: tr.HitPosition, damageOrigin: tr.StartPosition);
 
                 if (Player.Local.IsValid() && Player.Local.HitSound.IsValid())
                     Sound.Play(Player.Local.HitSound);
@@ -294,6 +294,7 @@ public class Weapon : Component
                     Attacker = Player.Local?.GameObject,
                     Weapon = GameObject,
                     Position = tr.HitPosition,
+                    Origin = tr.StartPosition,
                     Damage = damage
                 });
                 return;

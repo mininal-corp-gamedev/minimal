@@ -4,7 +4,7 @@
 @namespace Sandbox
 
 <root>
-	@if (ShowCrosshair)
+	@if (ShouldShowCrosshair)
 	{
 		<div class="crosshair"></div>
 	}
@@ -13,6 +13,7 @@
 @code
 {
 	[Property] public bool ShowCrosshair { get; set; } = true;
+	bool ShouldShowCrosshair => ShowCrosshair && Player.Local?.IsDead != true;
 	static readonly HashSet<string> VisibilityBlockers = new( StringComparer.Ordinal );
 	static Scene BlockerScene;
 
@@ -90,6 +91,6 @@
 
 	protected override int BuildHash()
 	{
-		return HashCode.Combine( ShowCrosshair, VisibilityBlockers.Count );
+		return HashCode.Combine( ShouldShowCrosshair, VisibilityBlockers.Count );
 	}
 }

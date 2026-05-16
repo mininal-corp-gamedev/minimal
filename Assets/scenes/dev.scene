@@ -99,10 +99,7 @@
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "PlayerPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/player.prefab"
-          },
+          "PlayerPrefab": null,
           "SpawnPoints": [
             {
               "_type": "gameobject",
@@ -135,50 +132,30 @@
           "__guid": "55b4b805-946f-4479-a553-9883085ba93f",
           "__enabled": true,
           "Flags": 0,
-          "BulletPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/bullets/bullet.prefab"
-          },
+          "BulletPrefab": null,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
+          "WeaponBurger": null,
           "WeaponHandcuff": null,
           "WeaponHands": null,
           "WeaponKeys": null,
-          "WeaponM4a1Prefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/m4a1.prefab"
-          },
-          "WeaponMp5Prefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/mp5.prefab"
-          },
-          "WeaponPhysgun": {
-            "_type": "gameobject",
-            "prefab": "weapons/physgun/physgun.prefab"
-          },
-          "WeaponPickaxe": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/pickaxe.prefab"
-          },
+          "WeaponM4a1Prefab": null,
+          "WeaponMp5Prefab": null,
+          "WeaponPhysgun": null,
+          "WeaponPickaxe": null,
           "WeaponPicklock": null,
           "WeaponToolgun": null,
-          "WeaponUspPrefab": {
-            "_type": "gameobject",
-            "prefab": "prefabs/weapons/usp.prefab"
-          },
+          "WeaponUspPrefab": null,
           "Wep": null,
           "WorldWeaponHandcuff": null,
           "WorldWeaponKeys": null,
           "WorldWeaponM4a1Prefab": null,
           "WorldWeaponMp5Prefab": null,
-          "WorldWeaponPhysgun": {
-            "_type": "gameobject",
-            "prefab": "weapons/physgun/physgun_wm.prefab"
-          },
+          "WorldWeaponPhysgun": null,
           "WorldWeaponPickaxe": null,
           "WorldWeaponPicklock": null,
           "WorldWeaponToolgun": null,
@@ -1833,7 +1810,9 @@
           "OnComponentStart": null,
           "OnComponentUpdate": null,
           "OverrideMassCenter": false,
+          "PreciseContacts": false,
           "RigidbodyFlags": 0,
+          "SleepThreshold": 2,
           "StartAsleep": false
         },
         {
@@ -2058,7 +2037,9 @@
           "OnComponentStart": null,
           "OnComponentUpdate": null,
           "OverrideMassCenter": false,
+          "PreciseContacts": false,
           "RigidbodyFlags": 0,
+          "SleepThreshold": 2,
           "StartAsleep": false
         }
       ],
@@ -2184,7 +2165,9 @@
           "OnComponentStart": null,
           "OnComponentUpdate": null,
           "OverrideMassCenter": false,
+          "PreciseContacts": false,
           "RigidbodyFlags": 0,
+          "SleepThreshold": 2,
           "StartAsleep": false
         }
       ],
@@ -2310,7 +2293,9 @@
           "OnComponentStart": null,
           "OnComponentUpdate": null,
           "OverrideMassCenter": false,
+          "PreciseContacts": false,
           "RigidbodyFlags": 0,
+          "SleepThreshold": 2,
           "StartAsleep": false
         }
       ],
@@ -2436,7 +2421,9 @@
           "OnComponentStart": null,
           "OnComponentUpdate": null,
           "OverrideMassCenter": false,
+          "PreciseContacts": false,
           "RigidbodyFlags": 0,
+          "SleepThreshold": 2,
           "StartAsleep": false
         }
       ],
@@ -2562,7 +2549,9 @@
           "OnComponentStart": null,
           "OnComponentUpdate": null,
           "OverrideMassCenter": false,
+          "PreciseContacts": false,
           "RigidbodyFlags": 0,
+          "SleepThreshold": 2,
           "StartAsleep": false
         },
         {
@@ -3053,9 +3042,7 @@
               "Header": "",
               "InteractRange": 220,
               "IsBlocked": false,
-              "LockpickCooldownSeconds": 60,
               "LockpickInteractRange": 120,
-              "LockpickSuccessChance": 0.5,
               "MovementMode": "Swing",
               "OnComponentDestroy": null,
               "OnComponentDisabled": null,
@@ -3653,6 +3640,76 @@
           }
         }
       ]
+    },
+    {
+      "__guid": "0f7d775f-32fe-4a26-82b8-2637612e9479",
+      "__version": 2,
+      "__Prefab": "prefabs/doors/glass1.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "cb3398c7-48fe-4be5-b547-fc9a86e0ab0e"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "c71617d4-b8f9-4e93-9687-2caa8cde5e56"
+            },
+            "PreviousElement": {
+              "Type": "Component",
+              "IdValue": "76e516e7-0450-4655-b86b-ac6fddc3edd5"
+            },
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Glass",
+              "__guid": "cb3398c7-48fe-4be5-b547-fc9a86e0ab0e",
+              "__enabled": true,
+              "Flags": 0,
+              "AutoGeneratePoints": true,
+              "Material": "materials/glass.vmat",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "PanelSize": "128,128",
+              "Points": [
+                "-64,-64",
+                "64,-64",
+                "64,64",
+                "-64,64"
+              ],
+              "ShardLifeTime": 1,
+              "Surface": "surfaces/glass.surface",
+              "TextureAxisU": "1,0,0",
+              "TextureAxisV": "0,-1,0",
+              "TextureOffset": "0,0",
+              "TextureScale": "1,1",
+              "TextureSize": "512,512",
+              "Thickness": 1
+            }
+          }
+        ],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "c71617d4-b8f9-4e93-9687-2caa8cde5e56"
+            },
+            "Property": "Position",
+            "Value": "1008.62274,347.023346,55.5326118"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "c71617d4-b8f9-4e93-9687-2caa8cde5e56": "0f7d775f-32fe-4a26-82b8-2637612e9479",
+        "76e516e7-0450-4655-b86b-ac6fddc3edd5": "26a90820-cea1-4caf-b90f-7dac90831276"
+      }
     }
   ],
   "SceneProperties": {
@@ -3677,6 +3734,9 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
+      },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "70aa36fc-0e79-45bf-8123-506fcd2c0311"
@@ -3686,9 +3746,6 @@
         "Data": {
           "SelectionSets": []
         }
-      },
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
       }
     }
   },

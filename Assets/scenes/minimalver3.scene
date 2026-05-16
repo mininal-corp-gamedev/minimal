@@ -43746,7 +43746,9 @@
                   "OnComponentStart": null,
                   "OnComponentUpdate": null,
                   "OverrideMassCenter": false,
+                  "PreciseContacts": false,
                   "RigidbodyFlags": 0,
+                  "SleepThreshold": 2,
                   "StartAsleep": false
                 }
               ],
@@ -46822,7 +46824,9 @@
               "OnComponentStart": null,
               "OnComponentUpdate": null,
               "OverrideMassCenter": false,
+              "PreciseContacts": false,
               "RigidbodyFlags": 0,
+              "SleepThreshold": 2,
               "StartAsleep": false
             }
           ],
@@ -48531,6 +48535,11 @@
     "GameObjectSystems": {
       "Sandbox.MovieMaker.MovieRecorderSystem": {
         "DisableClientRecording": false
+      },
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "28c40241-f1d9-49b8-9f38-5dad838d7011"
+        }
       },
       "Sandbox.SelectionSetsSystem": {
         "Data": {

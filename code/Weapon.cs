@@ -271,7 +271,6 @@ public class Weapon : Component
     {
         if (!tr.Hit || damage <= 0) return;
 
-        // Игрок в сейфзоне не может наносить урон
         if (Player.Local?.IsSafezone == true) return;
 
         var go = tr.GameObject;
@@ -279,10 +278,30 @@ public class Weapon : Component
         {
             if (go.Components.TryGet<Player>(out var hitPlayer, FindMode.EverythingInSelfAndParent))
             {
-                hitPlayer.TakeDamageFromWeapon(damage, Player.Local.GameObject, damagePosition: tr.HitPosition, damageOrigin: tr.StartPosition);
+                hitPlayer.TakeDamageFromWeapon(
+                    damage,
+                    Player.Local.GameObject,
+                    damagePosition: tr.HitPosition,
+                    damageOrigin: tr.StartPosition
+                );
 
                 if (Player.Local.IsValid() && Player.Local.HitSound.IsValid())
                     Sound.Play(Player.Local.HitSound);
+
+                return;
+            }
+
+            if (tr.Component is Component.IDamageable componentDamageable)
+            {
+                componentDamageable.OnDamage(new DamageInfo
+                {
+                    Attacker = Player.Local?.GameObject,
+                    Weapon = GameObject,
+                    Position = tr.HitPosition,
+                    Origin = tr.StartPosition,
+                    Shape = tr.Shape,
+                    Damage = damage
+                });
 
                 return;
             }
@@ -297,12 +316,14 @@ public class Weapon : Component
                     Origin = tr.StartPosition,
                     Damage = damage
                 });
+
                 return;
             }
 
             go = go.Parent;
         }
     }
+
 
     public virtual void Reload()
     {

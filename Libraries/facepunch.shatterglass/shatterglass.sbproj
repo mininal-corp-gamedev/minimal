@@ -1,0 +1,16 @@
+{
+  "Title": "Shatter Glass",
+  "Type": "library",
+  "Org": "facepunch",
+  "Ident": "shatterglass",
+  "Schema": 1,
+  "IncludeSourceFiles": false,
+  "Resources": null,
+  "PackageReferences": [],
+  "EditorReferences": null,
+  "Mounts": null,
+  "IsStandaloneOnly": false,
+  "Metadata": {
+    "CsProjName": ""
+  }
+}

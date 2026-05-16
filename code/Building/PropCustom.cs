@@ -4,6 +4,7 @@ public sealed class PropCustom : Component, Component.INetworkListener
 {
 	[Sync( SyncFlags.FromHost )] public Player PlayerOwner { get; private set; }
 	[Sync( SyncFlags.FromHost )] public Color PropTint { get; private set; } = Color.White;
+	public TriggerBuilding TriggerBuilding { get; private set; }
 	private bool _registeredLocally;
 	private bool _tintApplied;
 	private Color _lastAppliedTint;
@@ -23,6 +24,24 @@ public sealed class PropCustom : Component, Component.INetworkListener
 
 		PropTint = tint;
 		ApplyTint();
+	}
+
+	public void SetTriggerBuilding( TriggerBuilding building )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		TriggerBuilding = building;
+	}
+
+	public void ClearTriggerBuilding( TriggerBuilding building )
+	{
+		if ( !Networking.IsHost )
+			return;
+		if ( TriggerBuilding != building )
+			return;
+
+		TriggerBuilding = null;
 	}
 
 	protected override void OnUpdate()

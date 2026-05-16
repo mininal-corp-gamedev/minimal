@@ -162,6 +162,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private TimeUntil _nextOwnerClothingApplyAttempt = 0f;
     private TimeUntil _nextLocalUiEnsure = 0f;
     private static bool _jobInventoryEventsRegistered;
+    private static bool _jobPropBuildingEventsRegistered;
     private const float MovementSafePitchClamp = 89f;
     private const int OwnerClothingMaxApplyPasses = 3;
 
@@ -1806,6 +1807,16 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _jobInventoryEventsRegistered = true;
     }
 
+    private static void RegisterJobPropBuildingEvents()
+    {
+        if (_jobPropBuildingEventsRegistered)
+            return;
+
+        PlayerJob.OnJobChanged += HandleJobChangedValidatePropBuildings;
+        PlayerJob.OnJobDemote += HandleJobDemoteValidatePropBuildings;
+        _jobPropBuildingEventsRegistered = true;
+    }
+
     private static void HandleJobChangedRemoveJobItems(Player player, JobDefinition _)
     {
         player?.HostRemoveJobItems();
@@ -1814,6 +1825,16 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private static void HandleJobDemoteRemoveJobItems(Player player)
     {
         player?.HostRemoveJobItems();
+    }
+
+    private static void HandleJobChangedValidatePropBuildings(Player player, JobDefinition _)
+    {
+        player?.HostValidatePropsInTriggerBuildings();
+    }
+
+    private static void HandleJobDemoteValidatePropBuildings(Player player)
+    {
+        player?.HostValidatePropsInTriggerBuildings();
     }
 
     private void HostOnInventoryChanged()
@@ -2453,6 +2474,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         MakeLocalInstance();
         RegisterItemUseHandlers();
         RegisterJobInventoryEvents();
+        RegisterJobPropBuildingEvents();
         // HostInitSave/HostInitInventorySave НЕ зовём здесь:
         // на хосте OnStart для клиентского Player может выполняться до того,
         // как у GameObject уже проставлен Network.Owner, и тогда инициализация
@@ -3030,6 +3052,54 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         _ownedPropSpawnStack.RemoveAll( x => !x.IsValid() || x == prop );
+    }
+
+    public void HostValidatePropsInTriggerBuildings()
+    {
+        if ( !Networking.IsHost )
+            return;
+
+        foreach ( var prop in GetOwnedPropsSnapshot() )
+        {
+            var building = prop.TriggerBuilding;
+            if ( !building.IsValid() )
+                continue;
+
+            building.CheckProp( prop, true );
+        }
+    }
+
+    public void NotifyPropBuildingForbidden()
+    {
+        if ( !Networking.IsHost )
+            return;
+
+        NotifyInventoryResult(
+            GameObject.Network.Owner,
+            GameLocalization.Phrase( "notify.props.building_forbidden", "You cannot place props in this zone." ),
+            false );
+    }
+
+    private List<PropCustom> GetOwnedPropsSnapshot()
+    {
+        var props = new List<PropCustom>();
+
+        if ( Scene is null )
+            return props;
+
+        foreach ( var go in Scene.GetAllObjects( true ) )
+        {
+            if ( !go.Components.TryGet<PropCustom>( out var prop ) )
+                continue;
+            if ( !prop.IsValid() || !prop.GameObject.IsValid() )
+                continue;
+            if ( prop.PlayerOwner != this )
+                continue;
+
+            props.Add( prop );
+        }
+
+        return props;
     }
 
     private void TryUndoLastOwnedProp()

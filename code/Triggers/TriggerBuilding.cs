@@ -10,21 +10,35 @@ public sealed class TriggerBuilding : Component, Component.ITriggerListener
         if (!Networking.IsHost) return;
         if (!other.Components.TryGet<PropCustom>(out var prop, FindMode.EverythingInSelfAndParent)) return;
 
-        CheckProp(prop);
+        prop.SetTriggerBuilding(this);
+        CheckProp(prop, true);
     }
 
-    [Rpc.Host]
-    private void CheckProp(PropCustom prop)
+    void ITriggerListener.OnTriggerExit(GameObject other)
     {
         if (!Networking.IsHost) return;
-        if (Rpc.Caller != prop.PlayerOwner.Network.Owner) return;
+        if (!other.Components.TryGet<PropCustom>(out var prop, FindMode.EverythingInSelfAndParent)) return;
 
-        var owner = prop.PlayerOwner;
-        if (!IsJobAllowed(owner))
-            prop.GameObject.Destroy();
+        prop.ClearTriggerBuilding(this);
     }
 
-    private bool IsJobAllowed(Player player)
+    public bool CheckProp(PropCustom prop, bool notifyOwner)
+    {
+        if (!Networking.IsHost) return false;
+        if (!prop.IsValid() || !prop.GameObject.IsValid()) return false;
+
+        var owner = prop.PlayerOwner;
+        if (IsJobAllowed(owner))
+            return true;
+
+        if (notifyOwner)
+            owner?.NotifyPropBuildingForbidden();
+
+        prop.GameObject.Destroy();
+        return false;
+    }
+
+    public bool IsJobAllowed(Player player)
     {
         if (!player.IsValid()) return false;
         if (AllowedJobs is null || AllowedJobs.Count == 0) return false;

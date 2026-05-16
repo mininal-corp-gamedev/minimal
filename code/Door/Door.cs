@@ -444,6 +444,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		}
 
 		if ( IsBroken ) return;
+		if ( LockState == DoorLockState.Locked ) return;
 
 		StartPredictedMotion( DoorState.Closed, OpenYaw );
 
@@ -594,12 +595,13 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		Open( opener );
 	}
 
-	/// <summary>Closes the door. Has no effect if animating, already closed, or the broken lockout is active. Mirrors to <see cref="DoorSecond"/>.</summary>
+	/// <summary>Closes the door. Has no effect if animating, already closed, locked, or the broken lockout is active. Mirrors to <see cref="DoorSecond"/>.</summary>
 	public void Close()
 	{
 		if ( !Networking.IsHost ) return;
 		if ( State == DoorState.Closed ) return; // idempotent — prevents paired-door recursion
 		if ( IsPlayingAnimation ) return;
+		if ( LockState == DoorLockState.Locked ) return;
 		if ( IsBrokenLocked ) return;
 
 		State = DoorState.Closed;

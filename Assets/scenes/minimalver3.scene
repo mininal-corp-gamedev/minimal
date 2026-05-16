@@ -28166,7 +28166,7 @@
                         "Data": {
                           "__type": "Sandbox.ModelRenderer",
                           "__guid": "8630b8ea-bdb1-4d19-875b-b07ce48424f3",
-                          "__enabled": true,
+                          "__enabled": false,
                           "Flags": 0,
                           "BodyGroups": 18446744073709551615,
                           "CreateAttachments": false,
@@ -28271,6 +28271,14 @@
                           "go": "ec6386b1-8d23-46bb-beb7-43730a06e87c",
                           "component_type": "Door"
                         }
+                      },
+                      {
+                        "Target": {
+                          "Type": "Component",
+                          "IdValue": "0f6f372f-e30b-4f17-93f8-91419f96e5e2"
+                        },
+                        "Property": "__enabled",
+                        "Value": false
                       },
                       {
                         "Target": {
@@ -47576,7 +47584,7 @@
       "Scale": "1,1,1",
       "Tags": "world",
       "Enabled": true,
-      "NetworkMode": 2,
+      "NetworkMode": 1,
       "NetworkFlags": 0,
       "NetworkOrphaned": 0,
       "NetworkTransmit": true,
@@ -48535,11 +48543,6 @@
     "GameObjectSystems": {
       "Sandbox.MovieMaker.MovieRecorderSystem": {
         "DisableClientRecording": false
-      },
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "28c40241-f1d9-49b8-9f38-5dad838d7011"
-        }
       },
       "Sandbox.SelectionSetsSystem": {
         "Data": {

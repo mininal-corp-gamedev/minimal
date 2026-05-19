@@ -1,0 +1,18 @@
+{
+  "Id": "ammo_m4a1",
+  "Header": "M4A1 (Ammo)",
+  "Category": "Ammo",
+  "Description": "",
+  "ItemDefinition": "items/ammo_m4a1.item",
+  "Price": 200,
+  "IconPath": "icons/weapons/m4a1.vtex",
+  "Model": null,
+  "SpawnPrefab": null,
+  "IsAllowEveryone": false,
+  "JobsAllow": [
+    "jobs/gun_dealer.job"
+  ],
+  "HasPostPurchased": false,
+  "__references": [],
+  "__version": 0
+}

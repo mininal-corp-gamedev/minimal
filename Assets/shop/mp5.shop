@@ -1,0 +1,18 @@
+{
+  "Id": "mp5",
+  "Header": "MP5",
+  "Category": "Weapon",
+  "Description": "",
+  "ItemDefinition": "items/mp5.item",
+  "Price": 750,
+  "IconPath": "icons/weapons/mp5.vtex",
+  "Model": null,
+  "SpawnPrefab": null,
+  "IsAllowEveryone": false,
+  "JobsAllow": [
+    "jobs/gun_dealer.job"
+  ],
+  "HasPostPurchased": false,
+  "__references": [],
+  "__version": 0
+}

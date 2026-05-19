@@ -1,0 +1,18 @@
+{
+  "Id": "m4a1",
+  "Header": "M4A1",
+  "Category": "Weapon",
+  "Description": "",
+  "ItemDefinition": "items/m4a1.item",
+  "Price": 900,
+  "IconPath": "icons/weapons/m4a1.vtex",
+  "Model": null,
+  "SpawnPrefab": null,
+  "IsAllowEveryone": false,
+  "JobsAllow": [
+    "jobs/gun_dealer.job"
+  ],
+  "HasPostPurchased": false,
+  "__references": [],
+  "__version": 0
+}

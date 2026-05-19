@@ -15,6 +15,8 @@ public sealed class WeaponManager : Component
     [Property, Category("Weapon Prefabs")] public GameObject WeaponUspPrefab { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponMp5Prefab { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponM4a1Prefab { get; set; }
+    [Property, Category("Weapon Prefabs")] public GameObject WeaponRevolverPrefab { get; set; }
+    [Property, Category("Weapon Prefabs")] public GameObject WeaponShotgunPrefab { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponPhysgun { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponToolgun { get; set; }
     [Property, Category("Weapon Prefabs")] public GameObject WeaponHands { get; set; }
@@ -27,6 +29,8 @@ public sealed class WeaponManager : Component
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponUspPrefab { get; set; }
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponMp5Prefab { get; set; }
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponM4a1Prefab { get; set; }
+    [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponRevolverPrefab { get; set; }
+    [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponShotgunPrefab { get; set; }
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponPhysgun { get; set; }
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponToolgun { get; set; }
     [Property, Category("World Weapon Prefabs")] public GameObject WorldWeaponHandcuff { get; set; }
@@ -37,6 +41,8 @@ public sealed class WeaponManager : Component
     public Weapon Pickaxe { get; private set; }
     public Weapon Mp5 { get; private set; }
     public Weapon M4A1 { get; private set; }
+    public Weapon Revolver { get; private set; }
+    public Weapon Shotgun { get; private set; }
     public Weapon Usp { get; private set; }
     public Weapon Physgun { get; private set; }
     public Weapon Toolgun { get; private set; }
@@ -86,6 +92,8 @@ public sealed class WeaponManager : Component
 
         Mp5 = SpawnWeapon(WeaponMp5Prefab, camera, "MP5");
         M4A1 = SpawnWeapon(WeaponM4a1Prefab, camera, "M4A1");
+        Revolver = SpawnWeapon(WeaponRevolverPrefab, camera, "Revolver");
+        Shotgun = SpawnWeapon(WeaponShotgunPrefab, camera, "Shotgun");
         Usp = SpawnWeapon(WeaponUspPrefab, camera, "USP");
         Pickaxe = SpawnWeapon(WeaponPickaxe, camera, "Pickaxe");
         Physgun = SpawnWeapon(WeaponPhysgun, camera, "Physgun");

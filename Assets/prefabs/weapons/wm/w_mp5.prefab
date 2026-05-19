@@ -3,7 +3,7 @@
     "__guid": "4d0d08fd-d93f-46ff-a12a-3c797f876769",
     "__version": 2,
     "Flags": 0,
-    "Name": "mp5",
+    "Name": "w_mp5",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -283,75 +283,6 @@
             ]
           }
         ]
-      },
-      {
-        "__guid": "062e07aa-52fc-405d-a851-aa472f4fce3d",
-        "__version": 2,
-        "Flags": 0,
-        "Name": "arms",
-        "Position": "0,0,0",
-        "Rotation": "0,0,0,1",
-        "Scale": "1,1,1",
-        "Tags": "",
-        "Enabled": true,
-        "NetworkMode": 0,
-        "NetworkFlags": 0,
-        "NetworkOrphaned": 0,
-        "NetworkTransmit": true,
-        "OwnerTransfer": 1,
-        "Components": [
-          {
-            "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "31640b06-be37-4c11-9348-e44011f4c6a7",
-            "__enabled": true,
-            "Flags": 0,
-            "AnimationGraph": null,
-            "BodyGroups": 21,
-            "BoneMergeTarget": {
-              "_type": "component",
-              "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
-              "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
-              "component_type": "SkinnedModelRenderer"
-            },
-            "CreateAttachments": false,
-            "CreateBoneObjects": false,
-            "LodOverride": null,
-            "MaterialGroup": null,
-            "MaterialOverride": null,
-            "Materials": null,
-            "Model": "models/first_person/v_first_person_arms_human.vmdl",
-            "Morphs": {},
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "Parameters": {
-              "bools": {},
-              "ints": {},
-              "floats": {},
-              "vectors": {},
-              "rotations": {}
-            },
-            "PlaybackRate": 1,
-            "RenderOptions": {
-              "GameLayer": true,
-              "OverlayLayer": false,
-              "BloomLayer": false,
-              "AfterUILayer": false
-            },
-            "RenderType": "On",
-            "Sequence": {
-              "Name": null,
-              "Looping": true,
-              "Blending": false
-            },
-            "Tint": "1,1,1,1",
-            "UseAnimGraph": true
-          }
-        ],
-        "Children": []
       }
     ],
     "__properties": {
@@ -385,7 +316,6 @@
     "drakefruit.rifle_reload#91283",
     "facepunch.reddotrmr#145371",
     "facepunch.suppressor9mm#145361",
-    "facepunch.v_first_person_arms_human#205798",
     "facepunch.v_mp5#150540"
   ],
   "__version": 2

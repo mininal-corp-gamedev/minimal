@@ -1,0 +1,18 @@
+{
+  "Id": "shotgun",
+  "Header": "Shotgun",
+  "Category": "Weapon",
+  "Description": "",
+  "ItemDefinition": "items/shotgun.item",
+  "Price": 600,
+  "IconPath": "icons/items/default.vtex",
+  "Model": null,
+  "SpawnPrefab": null,
+  "IsAllowEveryone": false,
+  "JobsAllow": [
+    "jobs/gun_dealer.job"
+  ],
+  "HasPostPurchased": false,
+  "__references": [],
+  "__version": 0
+}

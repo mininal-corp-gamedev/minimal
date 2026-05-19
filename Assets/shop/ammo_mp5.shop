@@ -1,0 +1,18 @@
+{
+  "Id": "ammo_mp5",
+  "Header": "MP5 (Ammo)",
+  "Category": "Ammo",
+  "Description": "",
+  "ItemDefinition": "items/ammo_mp5.item",
+  "Price": 200,
+  "IconPath": "icons/weapons/mp5.vtex",
+  "Model": null,
+  "SpawnPrefab": null,
+  "IsAllowEveryone": false,
+  "JobsAllow": [
+    "jobs/gun_dealer.job"
+  ],
+  "HasPostPurchased": false,
+  "__references": [],
+  "__version": 0
+}

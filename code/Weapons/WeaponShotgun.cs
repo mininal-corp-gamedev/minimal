@@ -42,14 +42,12 @@ public sealed class WeaponShotgun : Weapon
         if (UsesAmmunition)
             Ammo -= 1;
 
-        if (FireSound.IsValid())
-            Sound.Play(FireSound, ShotPos?.WorldPosition ?? WorldPosition);
-
         if (UsesAmmunition && Ammo <= 0)
             State = WeaponState.None;
 
         var origin = ShotPos != null ? ShotPos.WorldPosition : WorldPosition;
         var baseDir = GetFireDirection();
+        GameObject firstBullet = null;
 
         // Один трейс строго по центру, остальные со спредом по бокам
         for (int i = 0; i < PelletCount; i++)
@@ -57,10 +55,14 @@ public sealed class WeaponShotgun : Weapon
             var direction = i == 0 ? baseDir : ApplySpread(baseDir, SpreadDegrees);
             var tr = DoTrace(origin, direction);
             ApplyDamageToTrace(tr, Damage);
-            SpawnBullet(origin, direction);
+            var bullet = SpawnBullet(origin, direction);
+            if (!firstBullet.IsValid() && bullet.IsValid())
+                firstBullet = bullet;
         }
 
-        SpawnSpriteFire();
+        var muzzlePrefab = (SpawnSpriteFireOnShot && SpriteFirePrefab.IsValid()) ? SpriteFirePrefab : null;
+        var muzzleRot = ShotPos != null ? ShotPos.WorldRotation : GameObject.WorldRotation;
+        Player.Local?.RpcOnWeaponFired(FireSound, origin, muzzlePrefab, origin, muzzleRot, firstBullet);
     }
 
     private static Vector3 ApplySpread(Vector3 direction, float spreadDegrees)

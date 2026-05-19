@@ -1,0 +1,15 @@
+{
+  "Id": "revolver",
+  "Category": "weapons",
+  "Header": "Revolver",
+  "Description": "",
+  "MaxCount": 1,
+  "IconPath": "icons/weapons/revolver.vtex",
+  "Model": null,
+  "CanUse": true,
+  "CanDrop": true,
+  "IsJobItem": false,
+  "CanSave": true,
+  "__references": [],
+  "__version": 0
+}

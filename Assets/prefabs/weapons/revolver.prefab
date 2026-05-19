@@ -16,14 +16,14 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Megashot.Weapons.WeaponRevolver",
+        "__type": "Minimal.Weapons.WeaponRevolver",
         "__guid": "03f29fa6-d7e1-43f2-b5da-10941266400c",
         "__enabled": true,
         "Flags": 0,
         "Ammo": 0,
         "BulletPrefab": {
           "_type": "gameobject",
-          "prefab": "prefabs/bullet.prefab"
+          "prefab": "prefabs/bullets/bullet.prefab"
         },
         "CanAttackWithoutAmmo": false,
         "ClipSize": 6,
@@ -32,6 +32,8 @@
         "FireSound": "sounds/m4a1 shot.sound",
         "HasHipFire": true,
         "HasReload": true,
+        "HoldType": "Pistol",
+        "HoldTypeHandedness": "RightHand",
         "IsIronSight": false,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -57,6 +59,10 @@
           "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
           "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
           "component_type": "SkinnedModelRenderer"
+        },
+        "WorldModelPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefabs/weapons/wm/w_revolver.prefab"
         }
       }
     ],

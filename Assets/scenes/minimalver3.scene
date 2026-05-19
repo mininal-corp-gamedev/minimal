@@ -47689,14 +47689,6 @@
           {
             "Target": {
               "Type": "Component",
-              "IdValue": "d3707d98-1a98-4e1e-899b-3fb4fbbffa03"
-            },
-            "Property": "WeaponBurger",
-            "Value": null
-          },
-          {
-            "Target": {
-              "Type": "Component",
               "IdValue": "0e51fb74-dbd4-4105-a215-507127aadb8a"
             },
             "Property": "ArrestSpawnPoint",
@@ -48749,17 +48741,17 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "135f3985-5141-4fc3-864d-216b95674cfd"
         }
       },
       "Sandbox.MovieMaker.MovieRecorderSystem": {
         "DisableClientRecording": false
       },
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "135f3985-5141-4fc3-864d-216b95674cfd"
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       }
     }

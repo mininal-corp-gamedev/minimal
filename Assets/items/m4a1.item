@@ -1,0 +1,15 @@
+{
+  "Id": "m4a1",
+  "Category": "weapons",
+  "Header": "M4A1",
+  "Description": "",
+  "MaxCount": 1,
+  "IconPath": "icons/weapons/m4a1.vtex",
+  "Model": null,
+  "CanUse": true,
+  "CanDrop": true,
+  "IsJobItem": false,
+  "CanSave": true,
+  "__references": [],
+  "__version": 0
+}

@@ -146,6 +146,14 @@
               "_type": "gameobject",
               "prefab": "prefabs/weapons/mp5.prefab"
             },
+            "WeaponRevolverPrefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/revolver.prefab"
+            },
+            "WeaponShotgunPrefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/shotgun.prefab"
+            },
             "WeaponPhysgun": {
               "_type": "gameobject",
               "prefab": "weapons/physgun/physgun.prefab"
@@ -177,11 +185,19 @@
             },
             "WorldWeaponM4a1Prefab": {
               "_type": "gameobject",
-              "prefab": "prefabs/weapons/m4a1.prefab"
+              "prefab": "prefabs/weapons/wm/w_m4a1.prefab"
             },
             "WorldWeaponMp5Prefab": {
               "_type": "gameobject",
-              "prefab": "prefabs/weapons/mp5.prefab"
+              "prefab": "prefabs/weapons/wm/w_mp5.prefab"
+            },
+            "WorldWeaponRevolverPrefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/wm/w_revolver.prefab"
+            },
+            "WorldWeaponShotgunPrefab": {
+              "_type": "gameobject",
+              "prefab": "prefabs/weapons/wm/w_shotgun.prefab"
             },
             "WorldWeaponPhysgun": {
               "_type": "gameobject",

@@ -1,0 +1,18 @@
+{
+  "Id": "ammo_revolver",
+  "Header": "Revolver (Ammo)",
+  "Category": "Ammo",
+  "Description": "",
+  "ItemDefinition": "items/ammo_revolver.item",
+  "Price": 200,
+  "IconPath": "icons/items/default.vtex",
+  "Model": null,
+  "SpawnPrefab": null,
+  "IsAllowEveryone": false,
+  "JobsAllow": [
+    "jobs/gun_dealer.job"
+  ],
+  "HasPostPurchased": false,
+  "__references": [],
+  "__version": 0
+}

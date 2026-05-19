@@ -3,7 +3,7 @@
     "__guid": "4d0d08fd-d93f-46ff-a12a-3c797f876769",
     "__version": 2,
     "Flags": 0,
-    "Name": "m4a1",
+    "Name": "w_revolver",
     "Position": "0,0,0",
     "Rotation": "0,0,0,1",
     "Scale": "1,1,1",
@@ -16,8 +16,8 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Minimal.Weapons.WeaponM4a1",
-        "__guid": "6fed01a7-8138-4934-8562-ede8039a41e2",
+        "__type": "Minimal.Weapons.WeaponRevolver",
+        "__guid": "03f29fa6-d7e1-43f2-b5da-10941266400c",
         "__enabled": true,
         "Flags": 0,
         "Ammo": 0,
@@ -27,14 +27,14 @@
           "prefab": "prefabs/bullets/bullet.prefab"
         },
         "CanAttackWithoutAmmo": false,
-        "ClipSize": 30,
-        "Damage": 10,
-        "FireDelay": 0.09,
+        "ClipSize": 6,
+        "Damage": 75,
+        "FireDelay": 0.75,
         "FireSound": "sounds/m4a1 shot.sound",
         "HasHipFire": true,
         "HasReload": true,
-        "HoldType": "Rifle",
-        "HoldTypeHandedness": "BothHands",
+        "HoldType": "Pistol",
+        "HoldTypeHandedness": "RightHand",
         "IsIronSight": false,
         "IsMelee": false,
         "OnComponentDestroy": null,
@@ -43,9 +43,9 @@
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "ReloadDurationSeconds": 2,
+        "ReloadDurationSeconds": 4,
         "ReloadSound": "sounds/m4 reload sequence.sound",
-        "SemiAuto": false,
+        "SemiAuto": true,
         "ShotPos": {
           "_type": "gameobject",
           "go": "36dbaa0a-2d9f-4782-8650-4c605e8dc2a9"
@@ -55,7 +55,7 @@
           "_type": "gameobject",
           "prefab": "prefabs/weapons/muzzleflash/pistol_muzzleflash.prefab"
         },
-        "TotalReserveAmmo": 60,
+        "TotalReserveAmmo": 12,
         "Viewmodel": {
           "_type": "component",
           "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
@@ -64,7 +64,7 @@
         },
         "WorldModelPrefab": {
           "_type": "gameobject",
-          "prefab": "prefabs/weapons/wm/w_m4a1.prefab"
+          "prefab": "prefabs/weapons/wm/w_revolver.prefab"
         }
       }
     ],
@@ -91,7 +91,7 @@
             "__enabled": true,
             "Flags": 0,
             "AnimationGraph": null,
-            "BodyGroups": 339,
+            "BodyGroups": 18446744073709551615,
             "BoneMergeTarget": null,
             "CreateAttachments": true,
             "CreateBoneObjects": false,
@@ -99,7 +99,7 @@
             "MaterialGroup": null,
             "MaterialOverride": null,
             "Materials": null,
-            "Model": "models/weapons/sbox_assault_m4a1/v_m4a1.vmdl",
+            "Model": "weapons/rust_python/w_python.vmdl",
             "Morphs": {},
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -109,7 +109,8 @@
             "OnComponentUpdate": null,
             "Parameters": {
               "bools": {
-                "b_deploy_skip": true
+                "b_attack": false,
+                "b_reload": false
               },
               "ints": {},
               "floats": {},
@@ -135,25 +136,7 @@
         ],
         "Children": [
           {
-            "__guid": "36dbaa0a-2d9f-4782-8650-4c605e8dc2a9",
-            "__version": 2,
-            "Flags": 0,
-            "Name": "ShotPos",
-            "Position": "31.5905399,-4.60058594,-3.17899489",
-            "Rotation": "0,0,0,1",
-            "Scale": "0.100000001,0.100000001,0.100000001",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 0,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [],
-            "Children": []
-          },
-          {
-            "__guid": "4320d2d9-03a6-431d-b501-9106f0494c90",
+            "__guid": "72595048-b9b2-4b0e-baea-d31f9a754736",
             "__version": 2,
             "Flags": 8,
             "Name": "muzzle",
@@ -171,16 +154,16 @@
             "Children": []
           },
           {
-            "__guid": "434e062e-0fca-4250-984a-bbc80855e0f7",
+            "__guid": "36dbaa0a-2d9f-4782-8650-4c605e8dc2a9",
             "__version": 2,
-            "Flags": 8,
-            "Name": "eject",
-            "Position": "0,0,0",
+            "Flags": 0,
+            "Name": "ShotPos",
+            "Position": "21.2195129,-2.22700047,0",
             "Rotation": "0,0,0,1",
             "Scale": "1,1,1",
             "Tags": "",
             "Enabled": true,
-            "NetworkMode": 2,
+            "NetworkMode": 0,
             "NetworkFlags": 0,
             "NetworkOrphaned": 0,
             "NetworkTransmit": true,
@@ -189,75 +172,6 @@
             "Children": []
           }
         ]
-      },
-      {
-        "__guid": "062e07aa-52fc-405d-a851-aa472f4fce3d",
-        "__version": 2,
-        "Flags": 0,
-        "Name": "arms",
-        "Position": "0,0,0",
-        "Rotation": "0,0,0,1",
-        "Scale": "1,1,1",
-        "Tags": "",
-        "Enabled": true,
-        "NetworkMode": 0,
-        "NetworkFlags": 0,
-        "NetworkOrphaned": 0,
-        "NetworkTransmit": true,
-        "OwnerTransfer": 1,
-        "Components": [
-          {
-            "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "31640b06-be37-4c11-9348-e44011f4c6a7",
-            "__enabled": true,
-            "Flags": 0,
-            "AnimationGraph": null,
-            "BodyGroups": 21,
-            "BoneMergeTarget": {
-              "_type": "component",
-              "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
-              "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
-              "component_type": "SkinnedModelRenderer"
-            },
-            "CreateAttachments": false,
-            "CreateBoneObjects": false,
-            "LodOverride": null,
-            "MaterialGroup": null,
-            "MaterialOverride": null,
-            "Materials": null,
-            "Model": "models/first_person/v_first_person_arms_human.vmdl",
-            "Morphs": {},
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "Parameters": {
-              "bools": {},
-              "ints": {},
-              "floats": {},
-              "vectors": {},
-              "rotations": {}
-            },
-            "PlaybackRate": 1,
-            "RenderOptions": {
-              "GameLayer": true,
-              "OverlayLayer": false,
-              "BloomLayer": false,
-              "AfterUILayer": false
-            },
-            "RenderType": "On",
-            "Sequence": {
-              "Name": null,
-              "Looping": true,
-              "Blending": false
-            },
-            "Tint": "1,1,1,1",
-            "UseAnimGraph": true
-          }
-        ],
-        "Children": []
       }
     ],
     "__properties": {
@@ -289,8 +203,7 @@
   "DontBreakAsTemplate": false,
   "__references": [
     "drakefruit.rifle_reload#91283",
-    "facepunch.v_first_person_arms_human#205798",
-    "facepunch.v_m4a1#152506"
+    "rust.wpython#76233"
   ],
   "__version": 2
 }

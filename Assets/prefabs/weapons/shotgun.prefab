@@ -16,14 +16,14 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Megashot.Weapons.WeaponShotgun",
+        "__type": "Minimal.Weapons.WeaponShotgun",
         "__guid": "e3b1229e-3c95-4884-be75-5f7c45736561",
         "__enabled": true,
         "Flags": 0,
         "Ammo": 0,
         "BulletPrefab": {
           "_type": "gameobject",
-          "prefab": "prefabs/bullet.prefab"
+          "prefab": "prefabs/bullets/bullet.prefab"
         },
         "CanAttackWithoutAmmo": false,
         "ClipSize": 8,
@@ -32,6 +32,8 @@
         "FireSound": "sounds/m4a1 shot.sound",
         "HasHipFire": true,
         "HasReload": true,
+        "HoldType": "Rifle",
+        "HoldTypeHandedness": "BothHands",
         "IsIronSight": false,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -60,6 +62,10 @@
           "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
           "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
           "component_type": "SkinnedModelRenderer"
+        },
+        "WorldModelPrefab": {
+          "_type": "gameobject",
+          "prefab": "prefabs/weapons/wm/w_shotgun.prefab"
         }
       }
     ],

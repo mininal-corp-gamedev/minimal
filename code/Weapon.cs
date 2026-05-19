@@ -2,6 +2,7 @@ using Ambi.Utils;
 using Sandbox;
 using Sandbox.Citizen;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 /// <summary>
@@ -44,6 +45,9 @@ public class Weapon : Component
     [Property, Category("Combat")] public virtual float FireDelay { get; set; } = 0.06f;
 
     [Property, Category("Combat")] public virtual float Damage { get; set; } = 8f;
+    [Property, Category("Combat")] public List<string> BulletPassThroughTags { get; set; } = BulletCollisionRules.CreateDefaultPassThroughTags();
+    [Property, Category("Combat")] public int BulletPassThroughLimit { get; set; } = 8;
+    [Property, Category("Combat")] public float BulletPenetrationStep { get; set; } = 1f;
 
     /// <summary>Максимальная дальность луча атаки (урон по попаданию; для снарядов — конец луча при промахе).</summary>
     [Property, Category("Combat")] public virtual float AttackRange { get; set; } = 2048f;
@@ -193,11 +197,10 @@ public class Weapon : Component
 
         var origin = ShotPos != null ? ShotPos.WorldPosition : WorldPosition;
         var direction = GetFireDirection();
-        var tr = DoTrace(origin, direction);
 
-        ApplyDamageToTrace(tr, Damage);
+        ApplyDamageAlongTrace(origin, direction, Damage);
 
-        var bullet = SpawnBullet(origin, tr.Direction);
+        var bullet = SpawnBullet(origin, direction);
 
         var muzzlePrefab = (SpawnSpriteFireOnShot && SpriteFirePrefab.IsValid()) ? SpriteFirePrefab : null;
         var muzzleRot = ShotPos != null ? ShotPos.WorldRotation : GameObject.WorldRotation;
@@ -223,6 +226,9 @@ public class Weapon : Component
         {
             bullet.Direction = direction;
             bullet.WorldRotation = Rotation.LookAt(direction);
+            bullet.PassThroughTags = BulletCollisionRules.CloneTags(BulletPassThroughTags);
+            bullet.MaxPassThroughHitsPerMove = BulletPassThroughLimit;
+            bullet.HitAdvanceDistance = BulletPenetrationStep;
             // Пробрасываем информацию об оружии и владельце в пулю,
             // чтобы при необходимости можно было собрать корректный DamageInfo.
             bullet.Owner = Player.Local?.GameObject;
@@ -257,13 +263,76 @@ public class Weapon : Component
         var dir = direction.Normal;
         var range = Math.Max(AttackRange, 1f);
 
-        var tr = Scene.Trace
-            .Ray(origin, origin + dir * range)
-            .IgnoreGameObjectHierarchy(Player.Local.GameObject)
-            .WithoutTags("bullet")
-            .Run();
+        return DoTraceSegment(origin, origin + dir * range, null);
+    }
 
-        return tr;
+    protected virtual void ApplyDamageAlongTrace(Vector3 origin, Vector3 direction, float damage)
+    {
+        if (damage <= 0) return;
+        if (direction.LengthSquared < 0.0001f) return;
+
+        var dir = direction.Normal;
+        var range = Math.Max(AttackRange, 1f);
+        var end = origin + dir * range;
+        var traceStart = origin;
+        var ignoredPassThroughObjects = new List<GameObject>();
+        var maxPassThroughHits = Math.Max(BulletPassThroughLimit, 0);
+        var passThroughHits = 0;
+
+        while (true)
+        {
+            var tr = DoTraceSegment(traceStart, end, ignoredPassThroughObjects);
+            if (!tr.Hit) return;
+
+            ApplyDamageToTrace(tr, damage);
+
+            if (!BulletCollisionRules.TryGetPassThroughRoot(BulletCollisionRules.GetHitObject(tr), BulletPassThroughTags, out var passThroughRoot))
+                return;
+
+            if (passThroughHits >= maxPassThroughHits)
+                return;
+
+            AddIgnoredPassThroughObject(ignoredPassThroughObjects, passThroughRoot);
+            passThroughHits++;
+
+            traceStart = tr.HitPosition + dir * MathF.Max(BulletPenetrationStep, 0.01f);
+            if ((end - traceStart).LengthSquared <= 0.01f)
+                return;
+        }
+    }
+
+    private SceneTraceResult DoTraceSegment(Vector3 start, Vector3 end, IReadOnlyList<GameObject> ignoredObjects)
+    {
+        var trace = Scene.Trace
+            .Ray(start, end)
+            .WithoutTags("bullet");
+
+        if (Player.Local?.GameObject.IsValid() == true)
+            trace = trace.IgnoreGameObjectHierarchy(Player.Local.GameObject);
+
+        if (ignoredObjects is not null)
+        {
+            foreach (var ignored in ignoredObjects)
+            {
+                if (ignored.IsValid())
+                    trace = trace.IgnoreGameObjectHierarchy(ignored);
+            }
+        }
+
+        return trace.Run();
+    }
+
+    private static void AddIgnoredPassThroughObject(List<GameObject> ignoredObjects, GameObject passThroughRoot)
+    {
+        if (!passThroughRoot.IsValid()) return;
+
+        foreach (var ignored in ignoredObjects)
+        {
+            if (ignored == passThroughRoot)
+                return;
+        }
+
+        ignoredObjects.Add(passThroughRoot);
     }
 
     /// <summary>Нанести урон по результату трассировки. Вызывается из PerformFire.</summary>

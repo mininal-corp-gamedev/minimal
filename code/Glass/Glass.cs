@@ -128,6 +128,7 @@ public sealed class Glass : Component, Component.ExecuteInEditor, Component.IDam
 	[Property, MakeDirty] public Vector2 PanelSize { get; set; } = new( 128, 128 );
 	[Property, MakeDirty] public List<Vector2> Points { get; set; }
 	[Property] public float ShardLifeTime { get; set; } = 1.0f;
+	[Property, Category( "Bullet Penetration" )] public bool AllowBulletPassThrough { get; set; } = true;
 	[Property, Category( "Sounds" )] public SoundEvent ImpactSound { get; set; }
 	[Property, Category( "Sounds" )] public SoundEvent ShatterSound { get; set; }
 	[Property, Category( "Sounds" )] public float ImpactSoundCooldown { get; set; } = 0.08f;

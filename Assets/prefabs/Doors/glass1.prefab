@@ -7,7 +7,7 @@
     "Position": "0,0,0",
     "Rotation": "0,0,0.707106471,-0.707106888",
     "Scale": "1,1,1",
-    "Tags": "world",
+    "Tags": "world,bullet_passthrough",
     "Enabled": true,
     "NetworkMode": 2,
     "NetworkFlags": 0,

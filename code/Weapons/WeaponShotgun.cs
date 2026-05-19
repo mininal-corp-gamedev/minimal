@@ -53,8 +53,7 @@ public sealed class WeaponShotgun : Weapon
         for (int i = 0; i < PelletCount; i++)
         {
             var direction = i == 0 ? baseDir : ApplySpread(baseDir, SpreadDegrees);
-            var tr = DoTrace(origin, direction);
-            ApplyDamageToTrace(tr, Damage);
+            ApplyDamageAlongTrace(origin, direction, Damage);
             var bullet = SpawnBullet(origin, direction);
             if (!firstBullet.IsValid() && bullet.IsValid())
                 firstBullet = bullet;

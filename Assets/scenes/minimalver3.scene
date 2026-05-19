@@ -43754,7 +43754,6 @@
                   "OnComponentStart": null,
                   "OnComponentUpdate": null,
                   "OverrideMassCenter": false,
-                  "PreciseContacts": false,
                   "RigidbodyFlags": 0,
                   "SleepThreshold": 2,
                   "StartAsleep": false
@@ -46832,7 +46831,6 @@
               "OnComponentStart": null,
               "OnComponentUpdate": null,
               "OverrideMassCenter": false,
-              "PreciseContacts": false,
               "RigidbodyFlags": 0,
               "SleepThreshold": 2,
               "StartAsleep": false
@@ -47192,6 +47190,187 @@
       ]
     },
     {
+      "__guid": "17dfb6b3-e027-4e73-b135-4e94e74f9386",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Arrest Spawn",
+      "Position": "-1086.18311,-2219.12012,84.5503845",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [],
+      "Children": [
+        {
+          "__guid": "7fc1861b-eca8-4d42-882d-9da278939973",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Point",
+          "Position": "-194.209106,348.107422,-68.5517731",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": []
+        },
+        {
+          "__guid": "0ab0ff6b-a393-4cd9-88f3-68a09001eb9a",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Point (1)",
+          "Position": "-193.861694,41.6123047,-68.5498505",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": []
+        },
+        {
+          "__guid": "7f045305-c22f-42c5-845f-7c9c37285c33",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Point (2)",
+          "Position": "-396.269043,-237.048828,-68.5481491",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": []
+        },
+        {
+          "__guid": "95a85d84-34c9-4b4a-8ad1-baa5a72b8946",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Point (3)",
+          "Position": "-698.185303,-236.933594,-68.5497894",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": []
+        },
+        {
+          "__guid": "7cd5f077-9f67-45a4-a187-5d58056112a0",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Point (4)",
+          "Position": "-193.613037,651.128418,-244.550766",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": []
+        },
+        {
+          "__guid": "ede7dc99-35cc-4ddc-8065-d73774eb7038",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Point (5)",
+          "Position": "-192.762695,336.658081,-244.550873",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": []
+        },
+        {
+          "__guid": "3d0d0777-408e-427c-9837-e55dbaa4fb48",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Point (6)",
+          "Position": "-194.714111,42.4677734,-244.546021",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": []
+        },
+        {
+          "__guid": "5b1053cb-87d4-4514-9723-3d9969f72d49",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Point (7)",
+          "Position": "-396.005371,-236.865234,-244.549881",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": []
+        },
+        {
+          "__guid": "258b1a87-5ab8-4236-bfac-e31891750508",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Point (8)",
+          "Position": "-699.610107,-237.281494,-244.550964",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": []
+        }
+      ]
+    },
+    {
       "__guid": "0fa66e8a-af63-4d05-bf57-c030d0b6aa87",
       "__version": 2,
       "Flags": 0,
@@ -47514,6 +47693,17 @@
             },
             "Property": "WeaponBurger",
             "Value": null
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "0e51fb74-dbd4-4105-a215-507127aadb8a"
+            },
+            "Property": "ArrestSpawnPoint",
+            "Value": {
+              "_type": "gameobject",
+              "go": "17dfb6b3-e027-4e73-b135-4e94e74f9386"
+            }
           }
         ],
         "MovedObjects": [
@@ -48517,6 +48707,24 @@
         }
       ],
       "Children": []
+    },
+    {
+      "__guid": "72125d0e-f3a6-47fb-aef4-0f7686374848",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Point",
+      "Position": "-1318.14648,-2207.92749,15.9997711",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [],
+      "Children": []
     }
   ],
   "SceneProperties": {
@@ -48541,12 +48749,17 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.MovieMaker.MovieRecorderSystem": {
-        "DisableClientRecording": false
-      },
       "Sandbox.SelectionSetsSystem": {
         "Data": {
           "SelectionSets": []
+        }
+      },
+      "Sandbox.MovieMaker.MovieRecorderSystem": {
+        "DisableClientRecording": false
+      },
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "135f3985-5141-4fc3-864d-216b95674cfd"
         }
       }
     }

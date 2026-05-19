@@ -3350,14 +3350,18 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (!Networking.IsHost) return;
         if (IsArrested) return;
 
+        var jobManager = JobManager.Instance;
+
         IsArrested = true;
-        ArrestTimeUntilRelease = JobManager.Instance.ArrestDurationSeconds;
+        ArrestTimeUntilRelease = jobManager?.ArrestDurationSeconds ?? 120f;
         HostSetEquippedWeaponItemId(null);
 
-        var randomSpawn = Random.Shared.FromList(JobManager.Instance.ArrestSpawnPoint.Children);
+        var arrestSpawn = jobManager?.GetRandomArrestSpawn();
+        if (!arrestSpawn.IsValid())
+            Log.Warning($"[Player] Arresting {GameObject.Network.Owner?.DisplayName ?? GameObject.Name} without a valid arrest spawn point.");
 
-        var pos = randomSpawn.IsValid() ? randomSpawn.WorldPosition : WorldPosition;
-        var rot = randomSpawn.IsValid() ? randomSpawn.WorldRotation : WorldRotation;
+        var pos = arrestSpawn.IsValid() ? arrestSpawn.WorldPosition : WorldPosition;
+        var rot = arrestSpawn.IsValid() ? arrestSpawn.WorldRotation : WorldRotation;
         RpcApplyArrest(pos, rot);
     }
 

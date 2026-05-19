@@ -5,6 +5,7 @@ public sealed class JobManager : Component
     public static JobManager Instance { get; private set; }
 
     [Property, Category("Arrest")] public GameObject ArrestSpawnPoint { get; set; }
+    [Property, Category("Arrest")] public string ArrestSpawnPointName { get; set; } = "Arrest Spawn";
     [Property, Category("Arrest")] public float ArrestDurationSeconds { get; set; } = 120f;
     [Property, Category("Arrest")] public float ArrestInteractRange { get; set; } = 110f; //todo transfer to WeaponHandcuff
 
@@ -48,5 +49,42 @@ public sealed class JobManager : Component
                 //todo notify player about salary
             }
         }
+    }
+
+    public GameObject GetRandomArrestSpawn()
+    {
+        var arrestSpawns = ResolveArrestSpawnPoint();
+        if (!arrestSpawns.IsValid())
+            return null;
+
+        var children = arrestSpawns.Children
+            .Where(child => child.IsValid())
+            .ToList();
+
+        if (children.Count == 0)
+            return arrestSpawns;
+
+        var randomIndex = Game.Random.Int(0, children.Count - 1);
+        return children[randomIndex];
+    }
+
+    private GameObject ResolveArrestSpawnPoint()
+    {
+        if (ArrestSpawnPoint.IsValid())
+            return ArrestSpawnPoint;
+
+        if (string.IsNullOrWhiteSpace(ArrestSpawnPointName))
+            return null;
+
+        ArrestSpawnPoint = Scene.GetAllObjects(true)
+            .FirstOrDefault(obj => obj.IsValid() && string.Equals(obj.Name, ArrestSpawnPointName, StringComparison.OrdinalIgnoreCase));
+
+        if (ArrestSpawnPoint.IsValid())
+            return ArrestSpawnPoint;
+
+        ArrestSpawnPoint = Scene.GetAllObjects(true)
+            .FirstOrDefault(obj => obj.IsValid() && obj.Name?.StartsWith(ArrestSpawnPointName, StringComparison.OrdinalIgnoreCase) == true);
+
+        return ArrestSpawnPoint;
     }
 }

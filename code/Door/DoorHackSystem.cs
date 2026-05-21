@@ -127,7 +127,7 @@ public sealed class DoorHackSystem : Component
 		await System.Threading.Tasks.Task.Delay( TimeSpan.FromSeconds( MathF.Max( 0.1f, seconds ) ) );
 
 		if ( !Networking.IsHost )
-			return;
+			return; //todo server
 
 		if ( !ActiveAttemptsBySteamId.TryGetValue( steamId, out var attempt ) || attempt.Id != attemptId )
 			return;

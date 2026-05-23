@@ -1,0 +1,24 @@
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if (IsOpen)
+	{
+		<div class="menu">
+			<h1>Escape Menu</h1>
+		</div>
+	}
+</root>
+
+@code
+{
+	public bool IsOpen { get; set; } = true;
+
+    protected override int BuildHash() {
+		if (!IsOpen) return 0;
+
+		return System.HashCode.Combine( Time.Now );
+	}
+}

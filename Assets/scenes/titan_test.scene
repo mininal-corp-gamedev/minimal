@@ -194,14 +194,6 @@
           },
           {
             "Target": {
-              "Type": "GameObject",
-              "IdValue": "bfa99d0c-d2e8-43e1-b19b-faa0754a35dc"
-            },
-            "Property": "Flags",
-            "Value": 0
-          },
-          {
-            "Target": {
               "Type": "Component",
               "IdValue": "d3707d98-1a98-4e1e-899b-3fb4fbbffa03"
             },
@@ -307,7 +299,8 @@
         "f8fdb7de-52f0-45c7-afcf-c4aa9055dae5": "eaf8f839-0cd1-4a14-b6bf-c96af7519544",
         "38a38e67-23cb-4b18-aaf1-3b16a4c5ed93": "87350aff-4216-4983-b686-aa47a8db1952",
         "a8a62c56-48f9-47cc-83f2-76a57f9ae300": "12572aa3-268d-417e-a8ba-f42ceacd47a7",
-        "90e0b204-7e91-4fa0-95d8-af5422fab591": "fba6b7d6-57c9-4837-807a-7798b596442a"
+        "90e0b204-7e91-4fa0-95d8-af5422fab591": "fba6b7d6-57c9-4837-807a-7798b596442a",
+        "fac48538-215f-46d8-ba88-33eb457b7aee": "3ef2a61c-57c9-4a54-9494-f76ad14ab1cf"
       }
     },
     {
@@ -1788,7 +1781,7 @@
         "cac5b277-2370-4b92-aae4-740f0b9bbc5e": "85a54c30-cd07-45c3-985b-2412584e24d4",
         "b6148c88-eb95-4f48-832e-ce6a4783a68c": "7794f9b5-3805-4b71-b1a8-65beb6241cf3",
         "f65a94c5-8917-4a8b-a3a0-919ac7f45b6d": "3fba74d5-8c5f-4ddd-abba-8518c974a1f9",
-        "6a0c0de9-8215-45c0-bd32-15b2a43ccc4a": "e8c91a8c-8b84-4a4f-ab23-fc8d7839f040"
+        "2e6730a0-d55c-43a1-930e-1e0109d37da9": "55e90534-87c5-4d95-8945-65c1f0c43268"
       }
     }
   ],

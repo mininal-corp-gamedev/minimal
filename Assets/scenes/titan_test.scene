@@ -194,6 +194,14 @@
           },
           {
             "Target": {
+              "Type": "GameObject",
+              "IdValue": "bfa99d0c-d2e8-43e1-b19b-faa0754a35dc"
+            },
+            "Property": "Flags",
+            "Value": 0
+          },
+          {
+            "Target": {
               "Type": "Component",
               "IdValue": "d3707d98-1a98-4e1e-899b-3fb4fbbffa03"
             },
@@ -1781,7 +1789,7 @@
         "cac5b277-2370-4b92-aae4-740f0b9bbc5e": "85a54c30-cd07-45c3-985b-2412584e24d4",
         "b6148c88-eb95-4f48-832e-ce6a4783a68c": "7794f9b5-3805-4b71-b1a8-65beb6241cf3",
         "f65a94c5-8917-4a8b-a3a0-919ac7f45b6d": "3fba74d5-8c5f-4ddd-abba-8518c974a1f9",
-        "2e6730a0-d55c-43a1-930e-1e0109d37da9": "55e90534-87c5-4d95-8945-65c1f0c43268"
+        "9921927e-6a9e-497e-aa22-1b9266f74287": "0e6e03de-ff0b-4756-b0d3-10e5e39057f3"
       }
     }
   ],
@@ -1807,14 +1815,14 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
-        }
-      },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "4c8d8be3-9b2a-45ca-a21b-eaa302af4bec"
+        }
+      },
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       }
     }

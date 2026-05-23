@@ -2,6 +2,7 @@
 @using Sandbox.UI;
 @using System;
 @using System.Collections.Generic;
+@using System.Globalization;
 @using System.Linq;
 @using System.Text.Json;
 @using System.Threading.Tasks;
@@ -18,6 +19,10 @@
 			@if ( LookedPropIsFadingDoor )
 			{
 				<div class="prop-look-fading-door">Fading Door</div>
+			}
+			@if ( LookedPropIsTextscreen )
+			{
+				<div class="prop-look-fading-door">Textscreen</div>
 			}
 		</div>
 	}
@@ -137,7 +142,42 @@
 						<div class="tool-title">@GetToolTitle( activeTool )</div>
 						<div class="tool-text">@GetToolDescription( activeTool )</div>
 
-						@if ( activeTool.ConfigFields.Count > 0 )
+						@if ( activeTool is TextscreenTool )
+						{
+							<div class="textscreen-config">
+								<div class="textscreen-background-row">
+									<div class="tool-config-label">@GameLocalization.Phrase( "tool.textscreen.background", "Background" )</div>
+									<button class="tool-toggle @(IsConfigValue( TextscreenTool.BackgroundConfigKey, "true" ) ? "active" : "")" onclick=@(() => ToggleToolBool( TextscreenTool.BackgroundConfigKey ))>
+										@(IsConfigValue( TextscreenTool.BackgroundConfigKey, "true" ) ? GameLocalization.Phrase( "ui.common.enabled", "Enabled" ) : GameLocalization.Phrase( "ui.common.disabled", "Disabled" ))
+									</button>
+								</div>
+								@for ( var i = 0; i < TextscreenTool.LineCount; i++ )
+								{
+									var lineIndex = i;
+									<div class="textscreen-line">
+										<div class="textscreen-line-head">
+											<div class="tool-config-label">@GameLocalization.Format( "tool.textscreen.line", "Line {0}", lineIndex + 1 )</div>
+											<button class="line-reset-btn" onclick=@(() => ResetTextscreenLine( lineIndex ))>@GameLocalization.Phrase( "ui.common.reset", "Reset" )</button>
+										</div>
+										<TextEntry class="tool-input textscreen-text-input" Value="@GetToolConfigValue( TextscreenTool.TextKey( lineIndex ) )" Placeholder="@GameLocalization.Phrase( "tool.textscreen.placeholder", "Text..." )" OnTextEdited=@( (string text) => SetToolConfigValue( TextscreenTool.TextKey( lineIndex ), text ) ) />
+										<div class="textscreen-row">
+											<div class="textscreen-size-controls">
+												<button class="textscreen-size-step" onclick=@(() => StepTextscreenSize( lineIndex, -1 ))>-</button>
+												<div class="textscreen-size-value">@GetTextscreenSizeValue( lineIndex )</div>
+												<button class="textscreen-size-step" onclick=@(() => StepTextscreenSize( lineIndex, 1 ))>+</button>
+											</div>
+											<div class="textscreen-colors">
+												@foreach ( var option in TextscreenTool.ColorButtons )
+												{
+													<button class="textscreen-color-btn @(IsConfigValue( TextscreenTool.ColorKey( lineIndex ), option.Value ) ? "active" : "")" style=@($"background-color: {option.Swatch};") onclick=@(() => SetToolConfigValue( TextscreenTool.ColorKey( lineIndex ), option.Value ))></button>
+												}
+											</div>
+										</div>
+									</div>
+								}
+							</div>
+						}
+						else if ( activeTool.ConfigFields.Count > 0 )
 						{
 							<div class="tool-config">
 								@foreach ( var field in activeTool.ConfigFields )
@@ -165,6 +205,19 @@
 											<button class="tool-toggle @(IsConfigValue( field.Id, "true" ) ? "active" : "")" onclick=@(() => ToggleToolBool( field.Id ))>
 												@(IsConfigValue( field.Id, "true" ) ? GameLocalization.Phrase( "ui.common.enabled", "Enabled" ) : GameLocalization.Phrase( "ui.common.disabled", "Disabled" ))
 											</button>
+										}
+										else if ( field.Type == ToolConfigType.Slider )
+										{
+											<div class="tool-slider-value">@GetSliderValueText( field )</div>
+											<div class="tool-slider-row">
+												<button class="tool-slider-step" onclick=@(() => StepSlider( field, -1f ))>-</button>
+												<div class="SliderBody tool-slider-body" @ref="SliderBodyRef" onmousedown=@((PanelEvent e) => StartSliderDrag( field, e ))>
+													<div class="SliderTrack tool-slider-track">
+														<div class="tool-slider-fill" style=@($"width: {GetSliderPercent( field ):0.###}%;")></div>
+													</div>
+												</div>
+												<button class="tool-slider-step" onclick=@(() => StepSlider( field, 1f ))>+</button>
+											</div>
 										}
 										else
 										{
@@ -200,7 +253,11 @@
 	TextEntry SearchInputRef { get; set; }
 	Panel PropsListRef { get; set; }
 	Panel CatalogBarRef { get; set; }
+	Panel SliderBodyRef { get; set; }
 	bool IsSearchFocused { get; set; }
+	bool IsSliderDragging { get; set; }
+	ToolConfigField DragSliderField { get; set; }
+	float LastSliderMouseX { get; set; }
 	IEnumerable<PropDefinition> VisibleProps => GetVisibleProps();
 
 	private const float SpawnTraceDistance = 420f;
@@ -218,6 +275,7 @@
 	string LookedPropName { get; set; }
 	string LookedPropOwnerName { get; set; }
 	bool LookedPropIsFadingDoor { get; set; }
+	bool LookedPropIsTextscreen { get; set; }
 
 	public sealed class PropFavoritesSaveData
 	{
@@ -289,7 +347,9 @@
 
 	private ToolMode GetActiveTool()
 	{
-		return ToolgunClientState.SelectedTool;
+		var tool = ToolgunClientState.SelectedTool;
+		ToolgunClientState.EnsureDefaults( tool );
+		return tool;
 	}
 
 	private static string GetToolTitle( ToolMode tool )
@@ -342,6 +402,140 @@
 	{
 		ToolgunClientState.SetConfigValue( key, IsConfigValue( key, "true" ) ? "false" : "true" );
 	}
+
+	private float GetSliderValue( ToolConfigField field )
+	{
+		if ( field is null )
+			return 0f;
+
+		var raw = ToolgunClientState.GetConfigValue( field.Id ) ?? field.DefaultValue ?? "0";
+		if ( !float.TryParse( raw, NumberStyles.Float, CultureInfo.InvariantCulture, out var value ) )
+			value = 0f;
+
+		return ClampToSlider( field, value );
+	}
+
+	private string GetSliderValueText( ToolConfigField field )
+	{
+		return GetSliderValue( field ).ToString( "0.###", CultureInfo.InvariantCulture );
+	}
+
+	private float GetSliderPercent( ToolConfigField field )
+	{
+		if ( field is null || MathF.Abs( field.Max - field.Min ) <= 0.001f )
+			return 0f;
+
+		return Math.Clamp( (GetSliderValue( field ) - field.Min) / (field.Max - field.Min) * 100f, 0f, 100f );
+	}
+
+	private void StepSlider( ToolConfigField field, float direction )
+	{
+		var step = field.Step <= 0f ? 1f : field.Step;
+		SetSliderValue( field, GetSliderValue( field ) + direction * step );
+	}
+
+	private void StartSliderDrag( ToolConfigField field, PanelEvent e )
+	{
+		IsSliderDragging = true;
+		DragSliderField = field;
+		LastSliderMouseX = GetMousePanelX();
+	}
+
+	private void UpdateSliderDrag()
+	{
+		if ( !IsSliderDragging )
+			return;
+
+		if ( !Input.Down( "Attack1" ) )
+		{
+			IsSliderDragging = false;
+			DragSliderField = null;
+			return;
+		}
+
+		UpdateSliderFromMouseDelta( DragSliderField );
+	}
+
+	private void UpdateSliderFromMouseDelta( ToolConfigField field )
+	{
+		if ( field is null || !SliderBodyRef.IsValid() )
+			return;
+
+		var mouseX = GetMousePanelX();
+		var deltaX = mouseX - LastSliderMouseX;
+		LastSliderMouseX = mouseX;
+
+		if ( MathF.Abs( deltaX ) <= 0.001f )
+			return;
+
+		var width = MathF.Max( SliderBodyRef.Box.RectInner.Width, 1f );
+		var valueDelta = deltaX / width * (field.Max - field.Min);
+		SetSliderValue( field, GetSliderValue( field ) + valueDelta );
+	}
+
+	private void SetSliderValue( ToolConfigField field, float value )
+	{
+		if ( field is null )
+			return;
+
+		var clamped = ClampToSlider( field, value );
+		ToolgunClientState.SetConfigValue( field.Id, clamped.ToString( "0.###", CultureInfo.InvariantCulture ) );
+	}
+
+	private static float ClampToSlider( ToolConfigField field, float value )
+	{
+		var clamped = Math.Clamp( value, field.Min, field.Max );
+		var step = field.Step <= 0f ? 1f : field.Step;
+		if ( step > 0f )
+			clamped = MathF.Round( clamped / step ) * step;
+
+		return Math.Clamp( clamped, field.Min, field.Max );
+	}
+
+	private void ResetTextscreenLine( int lineIndex )
+	{
+		ToolgunClientState.SetConfigValue( TextscreenTool.TextKey( lineIndex ), string.Empty );
+		ToolgunClientState.SetConfigValue( TextscreenTool.SizeKey( lineIndex ), TextscreenTool.DefaultSize.ToString( CultureInfo.InvariantCulture ) );
+		ToolgunClientState.SetConfigValue( TextscreenTool.ColorKey( lineIndex ), TextscreenTool.DefaultColor );
+	}
+
+	private void StepTextscreenSize( int lineIndex, int direction )
+	{
+		if ( !IsValidTextscreenLineIndex( lineIndex ) )
+			return;
+
+		var size = GetTextscreenSize( lineIndex );
+		size = Math.Clamp( size + direction, 1, 40 );
+		ToolgunClientState.SetConfigValue( TextscreenTool.SizeKey( lineIndex ), size.ToString( CultureInfo.InvariantCulture ) );
+	}
+
+	private string GetTextscreenSizeValue( int lineIndex )
+	{
+		return GetTextscreenSize( lineIndex ).ToString( CultureInfo.InvariantCulture );
+	}
+
+	private int GetTextscreenSize( int lineIndex )
+	{
+		return IsValidTextscreenLineIndex( lineIndex )
+			? ClampTextscreenSize( GetToolConfigValue( TextscreenTool.SizeKey( lineIndex ) ) )
+			: TextscreenTool.DefaultSize;
+	}
+
+	private static int ClampTextscreenSize( string value )
+	{
+		var raw = (value ?? string.Empty).Trim();
+		if ( !int.TryParse( raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var size ) )
+			size = TextscreenTool.DefaultSize;
+
+		return Math.Clamp( size, 1, 40 );
+	}
+
+	private static bool IsValidTextscreenLineIndex( int lineIndex )
+	{
+		return lineIndex >= 0 && lineIndex < TextscreenTool.LineCount;
+	}
+
+	float GetMousePanelX() => Mouse.Position.x * Panel.ScaleFromScreen;
 
 	private void ClearTextFocus()
 	{
@@ -891,6 +1085,7 @@
 
 	protected override void OnUpdate()
 	{
+		UpdateSliderDrag();
 		UpdatePropsListWheelScroll();
 		UpdateLookedPropInfo();
 	}
@@ -930,6 +1125,7 @@
 		LookedPropName = null;
 		LookedPropOwnerName = null;
 		LookedPropIsFadingDoor = false;
+		LookedPropIsTextscreen = false;
 
 		var local = Player.Local;
 		if ( !local.IsValid() || !local.Controller.IsValid() )
@@ -952,6 +1148,7 @@
 		LookedPropName = string.IsNullOrWhiteSpace( trace.GameObject.Name ) ? GameLocalization.Phrase( "ui.props.prop", "Prop" ) : trace.GameObject.Name;
 		LookedPropOwnerName = GetOwnerName( prop.PlayerOwner );
 		LookedPropIsFadingDoor = trace.GameObject.Components.Get<global::FadingDoor>( FindMode.EverythingInSelfAndAncestors ).IsValid();
+		LookedPropIsTextscreen = trace.GameObject.Components.Get<global::Textscreen>( FindMode.EverythingInSelfAndAncestors ).IsValid();
 	}
 
 	private static string GetOwnerName( Player owner )
@@ -986,6 +1183,7 @@
 		hash.Add( LookedPropName );
 		hash.Add( LookedPropOwnerName );
 		hash.Add( LookedPropIsFadingDoor );
+		hash.Add( LookedPropIsTextscreen );
 
 		foreach ( var favoriteId in FavoritePropIds.OrderBy( id => id, StringComparer.Ordinal ) )
 		{

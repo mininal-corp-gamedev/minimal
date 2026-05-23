@@ -11,7 +11,8 @@ public enum ToolConfigType
 	Bool,
 	String,
 	Number,
-	Button
+	Button,
+	Slider
 }
 
 public sealed class ToolConfigButton
@@ -27,6 +28,10 @@ public sealed class ToolConfigField
 	public string Label { get; init; }
 	public ToolConfigType Type { get; init; }
 	public IReadOnlyList<ToolConfigButton> Buttons { get; init; } = Array.Empty<ToolConfigButton>();
+	public float Min { get; init; }
+	public float Max { get; init; }
+	public float Step { get; init; } = 1f;
+	public string DefaultValue { get; init; }
 }
 
 public sealed class ToolUseContext
@@ -56,15 +61,15 @@ public readonly struct ToolUseResult
 
 public abstract class ToolMode
 {
-	private static readonly Lazy<IReadOnlyList<ToolMode>> LazyTools = new(() => new ToolMode[]
+	public static IReadOnlyList<ToolMode> All => new ToolMode[]
 	{
 		new RemoverTool(),
 		new ColorTool(),
 		new FadingDoorTool(),
-		new NoCollideTool()
-	});
-
-	public static IReadOnlyList<ToolMode> All => LazyTools.Value;
+		new NoCollideTool(),
+		new PushTool(),
+		new TextscreenTool()
+	};
 
 	public static ToolMode Get(string id)
 	{
@@ -134,10 +139,55 @@ public static class ToolgunClientState
 	{
 		var normalized = (id ?? string.Empty).Trim();
 		if (string.Equals(SelectedToolId, normalized, StringComparison.Ordinal))
+		{
+			EnsureDefaults(SelectedTool);
 			return;
+		}
 
 		SelectedToolId = normalized;
+		EnsureDefaults(SelectedTool);
 		Version++;
+	}
+
+	public static void EnsureDefaults(ToolMode tool)
+	{
+		if (tool is null)
+			return;
+
+		var changed = false;
+		foreach (var field in tool.ConfigFields)
+		{
+			if (field is null || string.IsNullOrWhiteSpace(field.Id))
+				continue;
+			if (Config.TryGetValue(field.Id, out var existing))
+			{
+				if (TryNormalizeFieldValue(field, existing, out var normalized)
+					&& !string.Equals(existing, normalized, StringComparison.Ordinal))
+				{
+					Config[field.Id] = normalized;
+					changed = true;
+				}
+
+				continue;
+			}
+
+			var defaultValue = field.DefaultValue;
+			if (defaultValue is null && field.Type == ToolConfigType.Button)
+				defaultValue = field.Buttons.FirstOrDefault()?.Value;
+			if (defaultValue is null && (field.Type == ToolConfigType.Number || field.Type == ToolConfigType.Slider))
+				defaultValue = field.Min.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+			if (defaultValue is null)
+				continue;
+
+			if (TryNormalizeFieldValue(field, defaultValue, out var normalizedDefault))
+				defaultValue = normalizedDefault;
+
+			Config[field.Id] = defaultValue;
+			changed = true;
+		}
+
+		if (changed)
+			Version++;
 	}
 
 	public static string GetConfigValue(string key)
@@ -161,5 +211,32 @@ public static class ToolgunClientState
 	public static string GetConfigJson()
 	{
 		return JsonSerializer.Serialize(Config);
+	}
+
+	private static bool TryNormalizeFieldValue(ToolConfigField field, string value, out string normalized)
+	{
+		normalized = value ?? string.Empty;
+
+		if (field.Type != ToolConfigType.Number && field.Type != ToolConfigType.Slider)
+			return false;
+
+		if (!float.TryParse(normalized, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out var number))
+		{
+			if (field.DefaultValue is null
+				|| !float.TryParse(field.DefaultValue, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out number))
+			{
+				number = field.Min;
+			}
+		}
+
+		number = Math.Clamp(number, field.Min, field.Max);
+
+		var step = field.Step <= 0f ? 1f : field.Step;
+		if (field.Type == ToolConfigType.Slider)
+			number = MathF.Round(number / step) * step;
+
+		number = Math.Clamp(number, field.Min, field.Max);
+		normalized = number.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+		return true;
 	}
 }

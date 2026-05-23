@@ -1,0 +1,66 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Collections.Generic;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="textscreen-panel @(HasBackground() ? "with-background" : "")">
+		@foreach ( var line in GetLines() )
+		{
+			<div class="textscreen-line" style=@GetLineStyle( line )>@GetLineText( line )</div>
+		}
+	</div>
+</root>
+
+@code
+{
+	private IReadOnlyList<global::TextscreenLine> GetLines()
+	{
+		var textscreen = GameObject.Components.Get<global::Textscreen>( FindMode.EverythingInSelfAndAncestors );
+		return textscreen.IsValid()
+			? textscreen.GetLines()
+			: global::Textscreen.NormalizeLines( null );
+	}
+
+	private bool HasBackground()
+	{
+		var textscreen = GameObject.Components.Get<global::Textscreen>( FindMode.EverythingInSelfAndAncestors );
+		return textscreen.IsValid() && textscreen.HasBackground;
+	}
+
+	private static string GetLineText( global::TextscreenLine line )
+	{
+		return string.IsNullOrWhiteSpace( line?.Text ) ? " " : line.Text;
+	}
+
+	private static string GetLineStyle( global::TextscreenLine line )
+	{
+		var size = Math.Clamp( line?.Size ?? global::Textscreen.DefaultSize, 1, 40 );
+		var color = GetColorHex( line?.Color );
+		var opacity = string.IsNullOrWhiteSpace( line?.Text ) ? "0" : "1";
+		return $"font-size: {size}px; color: {color}; opacity: {opacity};";
+	}
+
+	private static string GetColorHex( string colorId )
+	{
+		return global::Textscreen.NormalizeColorId( colorId ) switch
+		{
+			"black" => "#050505",
+			"red" => "#ef4444",
+			"green" => "#22c55e",
+			"blue" => "#3b82f6",
+			"yellow" => "#facc15",
+			"cyan" => "#22d3ee",
+			"magenta" => "#d946ef",
+			_ => "#ffffff"
+		};
+	}
+
+	protected override int BuildHash()
+	{
+		var textscreen = GameObject.Components.Get<global::Textscreen>( FindMode.EverythingInSelfAndAncestors );
+		return HashCode.Combine( textscreen?.LinesJson ?? string.Empty, textscreen?.HasBackground ?? false );
+	}
+}

@@ -1,0 +1,93 @@
+using Sandbox;
+using System;
+using System.Collections.Generic;
+using System.Text.Json;
+
+public sealed class Textscreen : Component
+{
+	public const int LineCount = 6;
+	public const int DefaultSize = 14;
+	public const string DefaultColor = "white";
+
+	[Sync( SyncFlags.FromHost )] public Player PlayerOwner { get; private set; }
+	[Sync( SyncFlags.FromHost )] public string LinesJson { get; private set; } = "[]";
+	[Sync( SyncFlags.FromHost )] public bool HasBackground { get; private set; }
+
+	public void SetOwner( Player owner )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		PlayerOwner = owner;
+	}
+
+	public void SetLines( IReadOnlyList<TextscreenLine> lines )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		LinesJson = JsonSerializer.Serialize( NormalizeLines( lines ) );
+	}
+
+	public void SetBackground( bool hasBackground )
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		HasBackground = hasBackground;
+	}
+
+	public IReadOnlyList<TextscreenLine> GetLines()
+	{
+		try
+		{
+			return NormalizeLines( JsonSerializer.Deserialize<List<TextscreenLine>>( LinesJson ?? "[]" ) );
+		}
+		catch ( Exception e )
+		{
+			Log.Warning( $"[Textscreen] Failed to parse lines: {e.Message}" );
+			return NormalizeLines( null );
+		}
+	}
+
+	public static List<TextscreenLine> NormalizeLines( IReadOnlyList<TextscreenLine> lines )
+	{
+		var result = new List<TextscreenLine>( LineCount );
+
+		for ( var i = 0; i < LineCount; i++ )
+		{
+			var source = lines is not null && i < lines.Count ? lines[i] : null;
+			result.Add( new TextscreenLine
+			{
+				Text = source?.Text ?? string.Empty,
+				Size = Math.Clamp( source?.Size ?? DefaultSize, 1, 40 ),
+				Color = NormalizeColorId( source?.Color )
+			} );
+		}
+
+		return result;
+	}
+
+	public static string NormalizeColorId( string colorId )
+	{
+		var normalized = (colorId ?? string.Empty).Trim().ToLowerInvariant();
+		return normalized switch
+		{
+			"black" => "black",
+			"red" => "red",
+			"green" => "green",
+			"blue" => "blue",
+			"yellow" => "yellow",
+			"cyan" => "cyan",
+			"magenta" => "magenta",
+			_ => DefaultColor
+		};
+	}
+}
+
+public sealed class TextscreenLine
+{
+	public string Text { get; set; } = string.Empty;
+	public int Size { get; set; } = Textscreen.DefaultSize;
+	public string Color { get; set; } = Textscreen.DefaultColor;
+}

@@ -471,6 +471,13 @@ public static partial class GameLocalization
 		["notify.admin.set_money"] = "Set {0} money to ${1}.",
 		["notify.admin.no_return_position"] = "No saved return position for this player.",
 		["notify.admin.active_scene_not_found"] = "Active scene not found.",
+		["ui.escape.play"] = "Resume",
+		["ui.escape.settings"] = "Settings",
+		["ui.escape.sandbox_settings"] = "s&box settings",
+		["ui.escape.exit"] = "Exit",
+		["ui.escape.discord"] = "Discord",
+		["ui.escape.server"] = "Server",
+		["ui.escape.settings_empty"] = "Empty",
 	};
 
 	private static Dictionary<string, string> BuiltInRussianGenerated() => new( System.StringComparer.OrdinalIgnoreCase )
@@ -942,5 +949,12 @@ public static partial class GameLocalization
 		["notify.admin.set_money"] = "Деньги игрока {0} установлены на ${1}.",
 		["notify.admin.no_return_position"] = "Для этого игрока нет сохранённой позиции возврата.",
 		["notify.admin.active_scene_not_found"] = "Активная сцена не найдена.",
+		["ui.escape.play"] = "Играть",
+		["ui.escape.settings"] = "Настройки",
+		["ui.escape.sandbox_settings"] = "Настройки s&box",
+		["ui.escape.exit"] = "Выход",
+		["ui.escape.discord"] = "Discord",
+		["ui.escape.server"] = "Сервер",
+		["ui.escape.settings_empty"] = "Пусто",
 	};
 }

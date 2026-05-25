@@ -1,21 +1,246 @@
-EscapeMenu
-{
+$em-panel-bg:    rgba(5, 8, 20, 0.92);
+$em-sidebar-bg:  rgba(3, 5, 14, 0.98);
+$em-accent:      rgba(255, 67, 108, 0.80);
+$em-accent-soft: rgba(255, 67, 108, 0.14);
+$em-text:        rgba(255, 255, 255, 0.92);
+$em-text-dim:    rgba(255, 255, 255, 0.55);
+$em-divider:     rgba(255, 255, 255, 0.07);
+$em-shadow:      0 10px 48px rgba(0, 0, 0, 0.80);
+
+EscapeMenu {
 	position: absolute;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
-	justify-content: center;
-	align-items: center;
 
-	.menu {
-		color: red;
+	.discord-webpanel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 1px;
+		height: 1px;
+		opacity: 0;
+		pointer-events: none;
 	}
 
-	.title
-	{
-		font-size: 25px;
+	.overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.86);
+		backdrop-filter: blur(20px);
+		pointer-events: all;
+	}
+
+	.em-panel {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		flex-direction: row;
+	}
+
+	/* ── Sidebar ── */
+
+	.sidebar {
+		width: 320px;
+		flex-shrink: 0;
+		background-color: $em-sidebar-bg;
+		flex-direction: column;
+		box-shadow: $em-shadow;
+	}
+
+	.sidebar-logo {
+		width: 100%;
+		height: 240px;
+		flex-shrink: 0;
+		justify-content: center;
+		align-items: center;
+		padding: 28px;
+		border-bottom: 1px solid $em-divider;
+	}
+
+	.logo-image {
+		width: 180px;
+		height: 180px;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+	}
+
+	.sidebar-nav {
+		flex-direction: column;
+		flex-shrink: 0;
+		padding-top: 18px;
+	}
+
+	.tab-btn {
+		height: 54px;
+		width: 320px;
+		flex-shrink: 0;
+		background-color: transparent;
 		font-family: Poppins;
-		color: #fff;
+		font-size: 18px;
+		font-weight: 700;
+		color: #ff436c;
+		padding-left: 32px;
+		padding-right: 20px;
+		justify-content: flex-start;
+		align-items: center;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.05);
+		}
+
+		&.active {
+			background-color: $em-accent-soft;
+			color: #ff436c;
+		}
+
+		&.danger {
+			color: rgba(255, 110, 110, 0.85);
+
+			&:hover {
+				background-color: rgba(255, 70, 70, 0.10);
+				color: rgba(255, 150, 150, 0.95);
+			}
+		}
+	}
+
+	.sidebar-spacer {
+		flex-grow: 1;
+	}
+
+	.sidebar-bottom-row {
+		flex-direction: row;
+		flex-shrink: 0;
+		padding: 16px 24px 8px;
+		align-items: center;
+	}
+
+	.language-switcher {
+		width: auto;
+		height: 36px;
+		margin: 4px 24px 20px;
+		flex-direction: row;
+		flex-shrink: 0;
+		background-color: rgba(255, 255, 255, 0.06);
+		border: 1px solid rgba(255, 255, 255, 0.10);
+		border-radius: 8px;
+		padding: 3px;
+	}
+
+	.language-btn {
+		flex-grow: 1;
+		height: 28px;
+		background-color: transparent;
+		border-radius: 6px;
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.50);
+		justify-content: center;
+		align-items: center;
+
+		&:hover {
+			color: rgba(255, 255, 255, 0.85);
+		}
+
+		&.active {
+			background-color: rgba(255, 67, 108, 0.32);
+			color: #ffd7e2;
+		}
+	}
+
+	.discord-btn {
+		height: 36px;
+		flex-grow: 1;
+		flex-shrink: 0;
+		margin-right: 8px;
+		padding: 0 14px;
+		border-radius: 8px;
+		background-color: rgba(255, 67, 108, 0.20);
+		border: 1px solid rgba(255, 67, 108, 0.55);
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 700;
+		color: #ffd7e2;
+		justify-content: center;
+		align-items: center;
+
+		&:last-child {
+			margin-right: 0;
+		}
+
+		&:hover {
+			background-color: rgba(255, 67, 108, 0.32);
+		}
+
+		&.ghost {
+			background-color: rgba(255, 255, 255, 0.04);
+			border-color: rgba(255, 255, 255, 0.10);
+			color: rgba(255, 255, 255, 0.75);
+
+			&:hover {
+				background-color: rgba(255, 255, 255, 0.10);
+				color: rgba(255, 255, 255, 0.95);
+			}
+		}
+	}
+
+	/* ── Content ── */
+
+	.content-area {
+		flex-grow: 1;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding: 40px 60px;
+	}
+
+	.web-frame {
+		width: 1100px;
+		height: 680px;
+		background-color: rgba(1, 2, 8, 0.96);
+		border: 1px solid rgba(255, 255, 255, 0.05);
+		border-radius: 16px;
+		box-shadow: $em-shadow;
+		overflow: hidden;
+	}
+
+	.right-web {
+		width: 100%;
+		height: 100%;
+		border-radius: 16px;
+	}
+
+	.settings-page {
+		width: 1100px;
+		height: 680px;
+		flex-direction: column;
+		background-color: rgba(1, 2, 8, 0.96);
+		border: 1px solid rgba(255, 255, 255, 0.05);
+		border-radius: 16px;
+		box-shadow: $em-shadow;
+		padding: 44px 48px;
+	}
+
+	.page-title {
+		font-family: Poppins;
+		font-size: 28px;
+		font-weight: 700;
+		color: $em-text;
+		margin-bottom: 24px;
+	}
+
+	.page-placeholder {
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 400;
+		color: $em-text-dim;
 	}
 }

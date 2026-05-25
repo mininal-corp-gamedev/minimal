@@ -1,24 +1,229 @@
 @using Sandbox;
 @using Sandbox.UI;
+@using System;
 @inherits PanelComponent
 @namespace Sandbox
 
 <root>
-	@if (IsOpen)
+	@if ( IsDiscordOpening )
 	{
-		<div class="menu">
-			<h1>Escape Menu</h1>
+		<WebPanel class="discord-webpanel" Url="@DiscordInviteUrl" />
+	}
+	@if ( IsVisible && UiModalManager.IsActive( ModalId ) )
+	{
+		<div class="overlay" style="opacity: @OpacityCss">
+			<div class="em-panel">
+
+				<div class="sidebar">
+					<div class="sidebar-logo">
+						<div class="logo-image" style="background-image: url('@LogoPath');"></div>
+					</div>
+
+					<div class="sidebar-nav">
+						<button class="tab-btn" onclick=@OnPlayClicked>@GameLocalization.Phrase( "ui.escape.play", "Resume" )</button>
+						<button class="tab-btn @(ActiveSection == 1 ? "active" : "")" onclick=@OnSettingsClicked>@GameLocalization.Phrase( "ui.escape.settings", "Settings" )</button>
+						<button class="tab-btn" onclick=@OnSandboxSettingsClicked>@GameLocalization.Phrase( "ui.escape.sandbox_settings", "s&box settings" )</button>
+						<button class="tab-btn danger" onclick=@OnExitClicked>@GameLocalization.Phrase( "ui.escape.exit", "Exit" )</button>
+					</div>
+
+					<div class="sidebar-spacer"></div>
+
+					<div class="sidebar-bottom-row">
+						<button class="discord-btn" onclick=@OpenDiscord>@GameLocalization.Phrase( "ui.escape.discord", "Discord" )</button>
+						<button class="discord-btn ghost" onclick=@OpenDiscord>@GameLocalization.Phrase( "ui.escape.server", "Server" )</button>
+					</div>
+
+					<div class="language-switcher">
+						<button class="language-btn @(IsLanguage( GameLocalization.EnglishCode ) ? "active" : "")" onmousedown=@(() => SetLanguage( GameLocalization.EnglishCode )) onclick=@(() => SetLanguage( GameLocalization.EnglishCode ))>EN</button>
+						<button class="language-btn @(IsLanguage( GameLocalization.RussianCode ) ? "active" : "")" onmousedown=@(() => SetLanguage( GameLocalization.RussianCode )) onclick=@(() => SetLanguage( GameLocalization.RussianCode ))>RU</button>
+					</div>
+				</div>
+
+				<div class="content-area">
+					@if ( ActiveSection == 1 )
+					{
+						<div class="settings-page">
+							<div class="page-title">@GameLocalization.Phrase( "ui.escape.settings", "Settings" )</div>
+							<div class="page-placeholder">@GameLocalization.Phrase( "ui.escape.settings_empty", "Empty" )</div>
+						</div>
+					}
+					else
+					{
+						<div class="web-frame">
+							<WebPanel class="right-web" Url="https://google.com" />
+						</div>
+					}
+				</div>
+
+			</div>
 		</div>
 	}
 </root>
 
 @code
 {
-	public bool IsOpen { get; set; } = true;
+	const string ModalId = nameof( EscapeMenu );
+	const float AnimDuration = 0.25f;
+	const string DiscordInviteUrl = "https://discord.gg/minimalrp";
 
-    protected override int BuildHash() {
-		if (!IsOpen) return 0;
+	[Property] public string LogoPath { get; set; } = "icons/logos/logo_small_dark2.vtex";
 
-		return System.HashCode.Combine( Time.Now );
+	bool IsOpen { get; set; } = false;
+	bool IsVisible { get; set; } = false;
+	bool IsOpening { get; set; } = false;
+	TimeUntil AnimUntil { get; set; } = 0f;
+
+	int ActiveSection { get; set; } = 0;
+
+	bool IsDiscordOpening { get; set; } = false;
+	TimeUntil DiscordCloseAt { get; set; } = 0f;
+
+	float Progress
+	{
+		get
+		{
+			var remaining = MathF.Max( 0f, (float)AnimUntil );
+			var t = 1f - (remaining / AnimDuration);
+			return Math.Clamp( t, 0f, 1f );
+		}
+	}
+
+	float Opacity => IsOpening ? Progress : (1f - Progress);
+
+	string OpacityCss => Opacity.ToString( "0.###", System.Globalization.CultureInfo.InvariantCulture );
+
+	private void StartOpen()
+	{
+		IsOpen = true;
+		IsVisible = true;
+		IsOpening = true;
+		AnimUntil = AnimDuration;
+		ActiveSection = 0;
+		UiModalManager.Open( ModalId );
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void StartClose()
+	{
+		if ( !IsOpen )
+			return;
+
+		IsOpen = false;
+		IsOpening = false;
+		AnimUntil = AnimDuration;
+		UiModalManager.Close( ModalId );
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void Toggle()
+	{
+		if ( IsOpen )
+			StartClose();
+		else
+			StartOpen();
+	}
+
+	private void OnPlayClicked()
+	{
+		StartClose();
+	}
+
+	private void OnSettingsClicked()
+	{
+		ActiveSection = ActiveSection == 1 ? 0 : 1;
+		StateHasChanged();
+	}
+
+	private void OnSandboxSettingsClicked()
+	{
+		// Заглушка под открытие настроек s&box.
+		Notification.Info( "Sandbox settings (TODO)", 2f );
+	}
+
+	private void OnExitClicked()
+	{
+		Game.Close();
+	}
+
+	private void OpenDiscord()
+	{
+		IsDiscordOpening = true;
+		DiscordCloseAt = 5f;
+		StateHasChanged();
+	}
+
+	protected override void OnStart()
+	{
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
+	}
+
+	private bool IsLanguage( string code ) => string.Equals( GameLocalization.CurrentCode, code, StringComparison.OrdinalIgnoreCase );
+
+	private void SetLanguage( string code )
+	{
+		GameLocalization.SetLanguage( code );
+		StateHasChanged();
+	}
+
+	protected override void OnDestroy()
+	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
+		if ( UiModalManager.IsActive( ModalId ) )
+			UiModalManager.Close( ModalId );
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen )
+			return;
+
+		IsOpen = false;
+		IsOpening = false;
+		AnimUntil = AnimDuration;
+		StateHasChanged();
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( Input.EscapePressed )
+		{
+			Input.EscapePressed = false;
+			Toggle();
+		}
+
+		if ( IsVisible && !IsOpen && !IsOpening && AnimUntil <= 0f )
+		{
+			IsVisible = false;
+			StateHasChanged();
+		}
+
+		if ( IsDiscordOpening && DiscordCloseAt <= 0f )
+		{
+			IsDiscordOpening = false;
+			StateHasChanged();
+		}
+
+		UiModalManager.UpdateMouseVisibility();
+	}
+
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( IsVisible );
+		hash.Add( IsOpen );
+		hash.Add( IsOpening );
+		hash.Add( ActiveSection );
+		hash.Add( IsDiscordOpening );
+		hash.Add( UiModalManager.Version );
+		hash.Add( GameLocalization.CurrentCode );
+		hash.Add( GameLocalization.Version );
+
+		// Перерисовываем каждый кадр во время анимации, чтобы плавно менять opacity.
+		if ( IsVisible && AnimUntil > 0f )
+			hash.Add( Time.Now );
+
+		return hash.ToHashCode();
 	}
 }

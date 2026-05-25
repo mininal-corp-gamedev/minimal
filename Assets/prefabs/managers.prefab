@@ -633,8 +633,9 @@
           {
             "__type": "Sandbox.EscapeMenu",
             "__guid": "fac48538-215f-46d8-ba88-33eb457b7aee",
-            "__enabled": false,
+            "__enabled": true,
             "Flags": 0,
+            "LogoPath": "icons/logos/logo_full_light.vtex",
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,

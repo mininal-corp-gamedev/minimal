@@ -232,6 +232,39 @@
 		AddMessage( ChatMessage.CreatePlayer( senderName, safeSteamId, message, type ) );
 	}
 
+	public static void SendLocalSystemMessageFromHost( Player origin, string message )
+	{
+		if ( !Networking.IsHost || !origin.IsValid() )
+			return;
+
+		var normalized = NormalizeText( message );
+		if ( normalized.Length <= 0 )
+			return;
+
+		var maxLength = Math.Max( 1, Instance?.MaxMessageLength ?? 160 );
+		if ( normalized.Length > maxLength )
+			normalized = normalized[..maxLength];
+
+		var radius = MathF.Max( 1f, Instance?.MessageRadius ?? 400f );
+		var recipients = GetAllPlayers()
+			.Where( x => x.IsValid() && x.GameObject.Network.Owner is not null )
+			.Where( x => Vector3.DistanceBetween( origin.WorldPosition, x.WorldPosition ) <= radius )
+			.Select( x => x.GameObject.Network.Owner?.SteamId.Value ?? 0L )
+			.Where( x => x > 0L )
+			.ToHashSet();
+
+		using ( Rpc.FilterInclude( connection => recipients.Contains( connection.SteamId.Value ) ) )
+		{
+			RpcReceiveLocalSystemMessage( normalized );
+		}
+	}
+
+	[Rpc.Broadcast]
+	private static void RpcReceiveLocalSystemMessage( string message )
+	{
+		Instance?.AddLocalSystemMessage( message );
+	}
+
 	private void HandleHostCommand( Connection caller, Player sender, string message )
 	{
 		var commandLine = message[1..].TrimStart();

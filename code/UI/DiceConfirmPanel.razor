@@ -1,0 +1,422 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
+	{
+		<div class="dice-confirm-overlay">
+			<div class="dice-confirm-panel @(Mode == DicePanelMode.Incoming ? "incoming" : "offer")" @ref="FocusSinkRef">
+				<div class="dice-icon"></div>
+
+				@if ( Mode == DicePanelMode.Offer )
+				{
+					<div class="panel-title">@GameLocalization.Phrase( "ui.dice.offer_title", "Play Dice" )</div>
+					<div class="panel-subtitle">@GameLocalization.Format( "ui.dice.offer_to", "Offer dice to {0}", TargetName )</div>
+
+					<div class="field-label">@GameLocalization.Phrase( "ui.money.amount" )</div>
+					<TextEntry class="dice-input" Value:bind="@AmountInput" Placeholder="@GameLocalization.Phrase( "ui.money.placeholder", "Example: 250" )" onsubmit="@SubmitOffer"></TextEntry>
+
+					<div class="actions">
+						<button class="secondary" onclick=@Close>@GameLocalization.Phrase( "ui.common.close" )</button>
+						<button class="primary" onclick=@SubmitOffer>@GameLocalization.Phrase( "ui.dice.send_offer", "Send Offer" )</button>
+					</div>
+				}
+				else
+				{
+					<div class="panel-title">@GameLocalization.Phrase( "ui.dice.incoming_title", "Dice Offer" )</div>
+					<div class="panel-subtitle">@GameLocalization.Phrase( "ui.dice.incoming_subtitle", "Someone wants to roll dice with you." )</div>
+
+					<div class="incoming-card">
+						<div class="incoming-name">@InviterName</div>
+						<div class="incoming-amount">@GameLocalization.Format( "ui.dice.bet_amount", "Bet: ${0}", IncomingAmount )</div>
+					</div>
+
+					<div class="actions">
+						<button class="secondary danger" onclick=@(() => RespondIncoming( false ))>@GameLocalization.Phrase( "ui.common.no" )</button>
+						<button class="primary" onclick=@(() => RespondIncoming( true ))>@GameLocalization.Phrase( "ui.dice.accept", "Choose" )</button>
+					</div>
+				}
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	private const string ModalId = nameof( DiceConfirmPanel );
+	private const float TraceDistance = 160f;
+	private const int DefaultBetAmount = 1000;
+	private const float IncomingOfferLifetime = 10f;
+
+	public static DiceConfirmPanel Instance { get; private set; }
+
+	private bool IsOpen { get; set; }
+	private DicePanelMode Mode { get; set; } = DicePanelMode.Offer;
+	private string AmountInput { get; set; } = DefaultBetAmount.ToString();
+	private long TargetSteamId { get; set; }
+	private string TargetName { get; set; } = "";
+	private long InviterSteamId { get; set; }
+	private string InviterName { get; set; } = "";
+	private int IncomingAmount { get; set; }
+	private TimeUntil _incomingExpires;
+	private Panel FocusSinkRef { get; set; }
+
+	public static void TryOpenForLookTarget()
+	{
+		var local = Player.Local;
+		if ( !local.IsValid() )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), 3.5f );
+			return;
+		}
+
+		if ( !local.IsAlive )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.dice.dead", "You cannot play dice while dead." ), 3.5f );
+			return;
+		}
+
+		if ( !local.IsCasino )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.dice.must_be_in_casino", "You must be in the casino." ), 3.5f );
+			return;
+		}
+
+		if ( (float)local.DiceOfferSendCooldown > 0f )
+		{
+			Notification.Error( GameLocalization.Format( "notify.casino.wait_seconds", "Wait {0:0.##}s", (float)local.DiceOfferSendCooldown ), 3.5f );
+			return;
+		}
+
+		if ( !TryFindLookTarget( out var target ) )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.money.no_player_ahead", "There is no player in front of you." ), 3.5f );
+			return;
+		}
+
+		var connection = target.GameObject.Network.Owner;
+		if ( connection is null || connection.SteamId.Value <= 0 )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.money.cannot_identify_player", "Could not identify the player." ), 3.5f );
+			return;
+		}
+
+		if ( !target.IsAlive )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.dice.target_dead", "Target player is dead." ), 3.5f );
+			return;
+		}
+
+		if ( !target.IsCasino )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.dice.target_not_in_casino", "Target player is not in the casino." ), 3.5f );
+			return;
+		}
+
+		if ( (float)target.DiceOfferReceiveCooldown > 0f )
+		{
+			Notification.Error( GameLocalization.Format( "notify.dice.target_wait", "Target player can receive another dice offer in {0:0.##}s.", (float)target.DiceOfferReceiveCooldown ), 3.5f );
+			return;
+		}
+
+		EnsureInstance();
+		Instance?.OpenOfferInternal( connection.SteamId.Value, connection.DisplayName );
+	}
+
+	public static void OpenIncoming( long inviterSteamId, string inviterName, int amount )
+	{
+		if ( inviterSteamId <= 0 || amount <= 0 )
+			return;
+
+		EnsureInstance();
+		Instance?.OpenIncomingInternal( inviterSteamId, inviterName, amount );
+	}
+
+	public static void CloseIncoming( long inviterSteamId )
+	{
+		if ( !Instance.IsValid() )
+			return;
+
+		if ( !Instance.IsOpen || Instance.Mode != DicePanelMode.Incoming )
+			return;
+
+		if ( inviterSteamId > 0L && Instance.InviterSteamId != inviterSteamId )
+			return;
+
+		Instance.Close();
+	}
+
+	private static void EnsureInstance()
+	{
+		if ( Instance.IsValid() )
+			return;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return;
+
+		var panelObject = scene.CreateObject();
+		panelObject.Name = "DiceConfirmPanel";
+		Instance = panelObject.Components.Create<DiceConfirmPanel>();
+	}
+
+	private static bool TryFindLookTarget( out Player target )
+	{
+		target = null;
+
+		var local = Player.Local;
+		if ( !local.IsValid() || !local.Controller.IsValid() || local.Scene is null )
+			return false;
+
+		var eye = local.Controller.EyeTransform;
+		var trace = local.Scene.Trace
+			.Ray( eye.Position, eye.Position + eye.Forward * TraceDistance )
+			.IgnoreGameObjectHierarchy( local.GameObject )
+			.Run();
+
+		if ( !trace.Hit || !trace.GameObject.IsValid() )
+			return false;
+
+		if ( !trace.GameObject.Components.TryGet<Player>( out var ply, FindMode.EverythingInSelfAndParent ) )
+			return false;
+
+		if ( ply == local )
+			return false;
+
+		target = ply;
+		return true;
+	}
+
+	private void OpenOfferInternal( long targetSteamId, string targetName )
+	{
+		Mode = DicePanelMode.Offer;
+		TargetSteamId = targetSteamId;
+		TargetName = string.IsNullOrWhiteSpace( targetName ) ? GameLocalization.Phrase( "common.player", "Player" ) : targetName;
+		AmountInput = DefaultBetAmount.ToString();
+		SetOpen( true );
+	}
+
+	private void OpenIncomingInternal( long inviterSteamId, string inviterName, int amount )
+	{
+		Mode = DicePanelMode.Incoming;
+		InviterSteamId = inviterSteamId;
+		InviterName = string.IsNullOrWhiteSpace( inviterName ) ? GameLocalization.Phrase( "common.player", "Player" ) : inviterName;
+		IncomingAmount = amount;
+		_incomingExpires = IncomingOfferLifetime;
+		SetOpen( true );
+	}
+
+	private void SubmitOffer()
+	{
+		FocusSinkRef?.Focus();
+
+		var local = Player.Local;
+		if ( !local.IsValid() )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), 3.5f );
+			return;
+		}
+
+		if ( TargetSteamId <= 0 )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.money.player_not_selected", "Player is not selected." ), 3.5f );
+			return;
+		}
+
+		if ( !TryParseAmount( AmountInput, out var amount ) )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.money.invalid_amount", "Enter a valid amount." ), 3.5f );
+			return;
+		}
+
+		if ( !PassLocalOfferValidation( local, TargetSteamId, amount ) )
+			return;
+
+		var targetSteamId = TargetSteamId;
+		Close();
+		local.RequestDiceOffer( targetSteamId, amount );
+	}
+
+	private static bool PassLocalOfferValidation( Player local, long targetSteamId, int amount )
+	{
+		if ( !local.IsAlive )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.dice.dead", "You cannot play dice while dead." ), 3.5f );
+			return false;
+		}
+
+		if ( !local.IsCasino )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.dice.must_be_in_casino", "You must be in the casino." ), 3.5f );
+			return false;
+		}
+
+		if ( (float)local.DiceOfferSendCooldown > 0f )
+		{
+			Notification.Error( GameLocalization.Format( "notify.casino.wait_seconds", "Wait {0:0.##}s", (float)local.DiceOfferSendCooldown ), 3.5f );
+			return false;
+		}
+
+		if ( local.Money < amount )
+		{
+			Notification.Error( GameLocalization.Phrase( "ui.shop.not_enough_money", "Not enough money" ), 3.5f );
+			return false;
+		}
+
+		var target = Player.FindPlayerBySteamId( targetSteamId );
+		if ( !target.IsValid() || target.GameObject.Network.Owner is null )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.money.transfer_target_not_found", "Transfer target not found." ), 3.5f );
+			return false;
+		}
+
+		if ( !target.IsAlive )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.dice.target_dead", "Target player is dead." ), 3.5f );
+			return false;
+		}
+
+		if ( !target.IsCasino )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.dice.target_not_in_casino", "Target player is not in the casino." ), 3.5f );
+			return false;
+		}
+
+		if ( target.Money < amount )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.dice.target_not_enough_money", "Target player does not have enough money." ), 3.5f );
+			return false;
+		}
+
+		if ( (float)target.DiceOfferReceiveCooldown > 0f )
+		{
+			Notification.Error( GameLocalization.Format( "notify.dice.target_wait", "Target player can receive another dice offer in {0:0.##}s.", (float)target.DiceOfferReceiveCooldown ), 3.5f );
+			return false;
+		}
+
+		return true;
+	}
+
+	private void RespondIncoming( bool accepted )
+	{
+		FocusSinkRef?.Focus();
+		Close();
+		Player.Local?.RespondDiceOffer( accepted );
+	}
+
+	private static bool TryParseAmount( string text, out int amount )
+	{
+		amount = 0;
+		return int.TryParse( (text ?? "").Trim(), out amount ) && amount > 0;
+	}
+
+	private void SetOpen( bool open )
+	{
+		if ( open )
+			UiModalManager.Open( ModalId );
+		else
+			UiModalManager.Close( ModalId );
+
+		IsOpen = open;
+		Crosshair.SetBlocked( ModalId, open );
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void Close()
+	{
+		SetOpen( false );
+		ClearState();
+		FocusSinkRef?.Focus();
+	}
+
+	private void ClearState()
+	{
+		AmountInput = DefaultBetAmount.ToString();
+		TargetSteamId = 0;
+		TargetName = "";
+		InviterSteamId = 0;
+		InviterName = "";
+		IncomingAmount = 0;
+		_incomingExpires = 0f;
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen )
+			return;
+
+		IsOpen = false;
+		ClearState();
+		FocusSinkRef?.Focus();
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
+	}
+
+	protected override void OnStart()
+	{
+		if ( Instance.IsValid() && Instance != this )
+			return;
+
+		Instance = this;
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( IsOpen )
+			UiModalManager.UpdateMouseVisibility();
+
+		if ( IsOpen && Mode == DicePanelMode.Incoming && _incomingExpires )
+			Close();
+	}
+
+	protected override void OnDisabled()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	protected override void OnDestroy()
+	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
+		ReleaseCrosshairBlock();
+
+		if ( Instance == this )
+			Instance = null;
+	}
+
+	private void ReleaseCrosshairBlock()
+	{
+		IsOpen = false;
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
+	}
+
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( IsOpen );
+		hash.Add( UiModalManager.Version );
+		hash.Add( Mode );
+		hash.Add( AmountInput );
+		hash.Add( TargetSteamId );
+		hash.Add( TargetName );
+		hash.Add( InviterSteamId );
+		hash.Add( InviterName );
+		hash.Add( IncomingAmount );
+		hash.Add( (float)_incomingExpires );
+		hash.Add( Player.Local?.Money ?? 0 );
+		hash.Add( Player.Local?.IsCasino ?? false );
+		hash.Add( GameLocalization.CurrentCode );
+		return hash.ToHashCode();
+	}
+
+	private enum DicePanelMode
+	{
+		Offer,
+		Incoming
+	}
+}

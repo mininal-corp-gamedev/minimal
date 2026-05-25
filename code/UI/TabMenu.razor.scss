@@ -547,6 +547,11 @@ TabMenu {
 		background-size: cover;
 		background-position: center;
 		background-color: rgba(255, 255, 255, 0.08);
+		cursor: pointer;
+
+		&:hover {
+			box-shadow: 0 0 0 2px rgba(255, 67, 108, 0.55);
+		}
 	}
 
 	.player-info {

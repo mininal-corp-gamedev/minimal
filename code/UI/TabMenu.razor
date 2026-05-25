@@ -129,7 +129,7 @@
 									var jobName = GetPlayerJobName( conn );
 
 									<div class="player-row">
-										<div class="player-avatar" style="background-image: url( avatar:@conn.SteamId.Value )"></div>
+										<div class="player-avatar" style="background-image: url( avatar:@conn.SteamId.Value )" onclick=@(() => Game.Overlay.ShowPlayer( conn.SteamId.Value, "" ))></div>
 										<div class="player-info">
 											<div class="player-name">@conn.DisplayName</div>
 											<div class="player-job">@jobName</div>

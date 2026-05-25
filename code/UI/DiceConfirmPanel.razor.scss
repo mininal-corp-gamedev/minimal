@@ -1,0 +1,156 @@
+DiceConfirmPanel {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 140;
+	pointer-events: none;
+
+	.dice-confirm-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba(0, 0, 0, 0.68);
+		backdrop-filter: blur(12px) saturate(75%);
+		pointer-events: all;
+	}
+
+	.dice-confirm-panel {
+		width: 430px;
+		flex-direction: column;
+		align-items: stretch;
+		padding: 26px;
+		background-color: rgba(5, 8, 20, 0.96);
+		border: 1px solid rgba(255, 67, 108, 0.40);
+		border-radius: 14px;
+		box-shadow: 0 10px 48px rgba(0, 0, 0, 0.80);
+	}
+
+	.dice-icon {
+		width: 70px;
+		height: 70px;
+		align-self: center;
+		margin-bottom: 16px;
+		background-image: url("icons/dice.vtex");
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+		background-image-tint: rgba(255, 255, 255, 0.92);
+	}
+
+	.panel-title {
+		font-family: Poppins;
+		font-size: 25px;
+		font-weight: 900;
+		color: rgba(255, 255, 255, 0.96);
+		text-align: center;
+	}
+
+	.panel-subtitle {
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.62);
+		text-align: center;
+		margin-top: 6px;
+		margin-bottom: 20px;
+	}
+
+	.field-label {
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 800;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.66);
+		margin-bottom: 6px;
+	}
+
+	.dice-input {
+		height: 44px;
+		padding: 0 12px;
+		background-color: rgba(255, 255, 255, 0.08);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: 8px;
+		color: white;
+		font-family: Poppins;
+		font-size: 17px;
+		font-weight: 800;
+	}
+
+	.incoming-card {
+		flex-direction: column;
+		align-items: center;
+		padding: 16px;
+		margin-bottom: 20px;
+		background-color: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.10);
+		border-radius: 10px;
+	}
+
+	.incoming-name {
+		max-width: 100%;
+		font-family: Montserrat;
+		font-size: 18px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.94);
+		text-align: center;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.incoming-amount {
+		font-family: Poppins;
+		font-size: 15px;
+		font-weight: 800;
+		color: #ffd7e2;
+		margin-top: 8px;
+	}
+
+	.actions {
+		flex-direction: row;
+		justify-content: flex-end;
+		gap: 10px;
+	}
+
+	button {
+		height: 40px;
+		min-width: 118px;
+		padding: 0 16px;
+		border-radius: 8px;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 900;
+		color: white;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.secondary {
+		background-color: rgba(255, 255, 255, 0.10);
+		border: 1px solid rgba(255, 255, 255, 0.10);
+	}
+
+	.secondary:hover {
+		background-color: rgba(255, 255, 255, 0.16);
+	}
+
+	.danger {
+		background-color: rgba(255, 67, 108, 0.22);
+		border-color: rgba(255, 67, 108, 0.40);
+	}
+
+	.primary {
+		background-color: rgba(255, 67, 108, 0.86);
+		border: 1px solid rgba(255, 215, 226, 0.28);
+	}
+
+	.primary:hover {
+		background-color: rgba(255, 67, 108, 0.96);
+	}
+}

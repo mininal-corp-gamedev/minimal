@@ -642,6 +642,19 @@
             "OnComponentFixedUpdate": null,
             "OnComponentStart": null,
             "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.DiceConfirmPanel",
+            "__guid": "7d108d48-bf0d-42ac-8332-3fe25805e639",
+            "__enabled": true,
+            "Flags": 0,
+            "MyStringValue": "Hello World!",
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
           }
         ],
         "Children": []

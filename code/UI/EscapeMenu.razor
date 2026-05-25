@@ -23,6 +23,8 @@
 						<button class="tab-btn" onclick=@OnPlayClicked>@GameLocalization.Phrase( "ui.escape.play", "Resume" )</button>
 						<button class="tab-btn @(ActiveSection == 1 ? "active" : "")" onclick=@OnSettingsClicked>@GameLocalization.Phrase( "ui.escape.settings", "Settings" )</button>
 						<button class="tab-btn" onclick=@OnSandboxSettingsClicked>@GameLocalization.Phrase( "ui.escape.sandbox_settings", "s&box settings" )</button>
+						<button class="tab-btn" onclick=@OnReviewClicked>@GameLocalization.Phrase( "ui.escape.review", "Review" )</button>
+						<button class="tab-btn" onclick=@OnPlayersClicked>@GameLocalization.Phrase( "ui.escape.players", "Players" )</button>
 						<button class="tab-btn danger" onclick=@OnExitClicked>@GameLocalization.Phrase( "ui.escape.exit", "Exit" )</button>
 					</div>
 
@@ -100,6 +102,7 @@
 		AnimUntil = AnimDuration;
 		ActiveSection = 0;
 		UiModalManager.Open( ModalId );
+		Crosshair.SetBlocked( ModalId, true );
 		UiModalManager.UpdateMouseVisibility();
 		StateHasChanged();
 	}
@@ -113,6 +116,7 @@
 		IsOpening = false;
 		AnimUntil = AnimDuration;
 		UiModalManager.Close( ModalId );
+		Crosshair.SetBlocked( ModalId, false );
 		UiModalManager.UpdateMouseVisibility();
 		StateHasChanged();
 	}
@@ -138,8 +142,17 @@
 
 	private void OnSandboxSettingsClicked()
 	{
-		// Заглушка под открытие настроек s&box.
-		Notification.Info( "Sandbox settings (TODO)", 2f );
+		Game.Overlay.ShowSettingsModal();
+	}
+
+	private void OnReviewClicked()
+	{
+		Game.Overlay.ShowReviewModal(Project.Current.Package);
+	}
+
+	private void OnPlayersClicked()
+	{
+		Game.Overlay.ShowPlayerList();
 	}
 
 	private void OnExitClicked()
@@ -172,6 +185,7 @@
 		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
 		if ( UiModalManager.IsActive( ModalId ) )
 			UiModalManager.Close( ModalId );
+		Crosshair.SetBlocked( ModalId, false );
 	}
 
 	private void OnActiveModalChanged( string activeModal )
@@ -182,6 +196,7 @@
 		IsOpen = false;
 		IsOpening = false;
 		AnimUntil = AnimDuration;
+		Crosshair.SetBlocked( ModalId, false );
 		StateHasChanged();
 	}
 

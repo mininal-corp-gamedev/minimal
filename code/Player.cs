@@ -124,10 +124,28 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         set => _lockpickCooldown = value;
     }
 
+    private TimeUntil _diceOfferSendCooldown;
+    [Sync(SyncFlags.FromHost)]
+    public TimeUntil DiceOfferSendCooldown
+    {
+        get => _diceOfferSendCooldown;
+        private set => _diceOfferSendCooldown = value;
+    }
+
+    private TimeUntil _diceOfferReceiveCooldown;
+    [Sync(SyncFlags.FromHost)]
+    public TimeUntil DiceOfferReceiveCooldown
+    {
+        get => _diceOfferReceiveCooldown;
+        private set => _diceOfferReceiveCooldown = value;
+    }
+
     private const string PlayerSaveFolder = "players";
     private const string InventorySaveFolder = "inv";
     private const int DefaultStartingMoney = 500;
     private const int InventorySlotCount = 20;
+    private const float DiceOfferSendCooldownSeconds = 1f;
+    private const float DiceOfferReceiveCooldownSeconds = 10f;
     private static readonly string[] DefaultInventoryItemIds = { "hands", "physgun", "toolgun", "keys" };
 
     // Host-only gate. Until the save is loaded on the host, Money writes
@@ -137,6 +155,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private bool _inventoryEventsHooked;
     private bool _deferInventorySync;
     private bool _inventoryChangedWhileDeferred;
+    private long _pendingDiceInviterSteamId;
+    private string _pendingDiceInviterName = "";
+    private int _pendingDiceAmount;
+    private TimeUntil _pendingDiceExpires;
     private readonly List<PropCustom> _ownedPropSpawnStack = new();
     private bool _ignoreNextFallDamage = true;
     private TimeUntil _fallDamageGraceUntil;
@@ -2882,6 +2904,19 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         RpcRequestTransferMoney( targetSteamId, amount );
     }
 
+    public void RequestDiceOffer( long targetSteamId, int amount )
+    {
+        if ( targetSteamId <= 0 || amount <= 0 )
+            return;
+
+        RpcRequestDiceOffer( targetSteamId, amount );
+    }
+
+    public void RespondDiceOffer( bool accepted )
+    {
+        RpcRespondDiceOffer( accepted );
+    }
+
     [Rpc.Host]
     private void RpcRequestDropMoney( int amount )
     {
@@ -2981,6 +3016,319 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if ( targetConnection is not null )
             NotifyMoneyResult( targetConnection, GameLocalization.Format( "notify.money.received", "{0} transferred ${1} to you.", caller.DisplayName, amount ), true );
+    }
+
+    [Rpc.Host]
+    private void RpcRequestDiceOffer( long targetSteamId, int amount )
+    {
+        if ( !Networking.IsHost ) return;
+
+        var caller = Rpc.Caller;
+        if ( caller is null )
+            return;
+
+        var inviter = FindPlayerBySteamId( caller.SteamId.Value );
+        if ( !inviter.IsValid() || inviter.GameObject.Network.Owner != caller )
+        {
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), false );
+            return;
+        }
+
+        if ( !ValidateDiceOfferOnHost( caller, inviter, targetSteamId, amount, out var target, out var targetConnection, out var reason ) )
+        {
+            NotifyMoneyResult( caller, reason, false );
+            return;
+        }
+
+        inviter.DiceOfferSendCooldown = DiceOfferSendCooldownSeconds;
+        target.DiceOfferReceiveCooldown = DiceOfferReceiveCooldownSeconds;
+        target.SetPendingDiceOffer( caller.SteamId.Value, caller.DisplayName, amount );
+
+        Log.Info( $"[Dice] Offer: {caller.DisplayName} -> {GetConnectionName( targetConnection )}, ${amount}." );
+        NotifyMoneyResult( caller, GameLocalization.Format( "notify.dice.offer_sent", "Dice offer sent to {0} for ${1}.", GetConnectionName( targetConnection ), amount ), true );
+        target.RpcOwnerReceiveDiceOffer( caller.SteamId.Value, caller.DisplayName, amount );
+    }
+
+    [Rpc.Host]
+    private void RpcRespondDiceOffer( bool accepted )
+    {
+        if ( !Networking.IsHost ) return;
+
+        var caller = Rpc.Caller;
+        if ( caller is null )
+            return;
+
+        var target = FindPlayerBySteamId( caller.SteamId.Value );
+        if ( !target.IsValid() || target.GameObject.Network.Owner != caller )
+        {
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), false );
+            return;
+        }
+
+        if ( !target.HasActivePendingDiceOffer() )
+        {
+            target.ClearPendingDiceOffer();
+            target.RpcOwnerCloseDiceOffer( 0L );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.dice.no_active_offer", "There is no active dice offer." ), false );
+            return;
+        }
+
+        var inviterSteamId = target._pendingDiceInviterSteamId;
+        var amount = target._pendingDiceAmount;
+        var inviterName = target._pendingDiceInviterName;
+        var inviter = FindPlayerBySteamId( inviterSteamId );
+        var inviterConnection = inviter.IsValid() ? inviter.GameObject.Network.Owner : null;
+
+        if ( !accepted )
+        {
+            target.ClearPendingDiceOffer();
+            target.RpcOwnerCloseDiceOffer( inviterSteamId );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.dice.declined", "Dice offer declined." ), true );
+
+            if ( inviterConnection is not null )
+                NotifyMoneyResult( inviterConnection, GameLocalization.Format( "notify.dice.declined_sender", "{0} declined your dice offer.", caller.DisplayName ), false );
+
+            return;
+        }
+
+        if ( !inviter.IsValid() || inviterConnection is null )
+        {
+            target.ClearPendingDiceOffer();
+            target.RpcOwnerCloseDiceOffer( inviterSteamId );
+            NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.dice.inviter_unavailable", "The inviter is no longer available." ), false );
+            return;
+        }
+
+        if ( !ValidateDiceRoundOnHost( inviter, target, amount, out var failureReason ) )
+        {
+            target.ClearPendingDiceOffer();
+            target.RpcOwnerCloseDiceOffer( inviterSteamId );
+            NotifyMoneyResult( caller, failureReason, false );
+            NotifyMoneyResult( inviterConnection, failureReason, false );
+            return;
+        }
+
+        if ( !CanTransferToTarget( inviter, target ) )
+        {
+            target.ClearPendingDiceOffer();
+            target.RpcOwnerCloseDiceOffer( inviterSteamId );
+            var tooFar = GameLocalization.Phrase( "notify.money.target_too_far", "Player is too far away or not in front of you." );
+            NotifyMoneyResult( caller, tooFar, false );
+            NotifyMoneyResult( inviterConnection, tooFar, false );
+            return;
+        }
+
+        target.ClearPendingDiceOffer();
+        target.RpcOwnerCloseDiceOffer( inviterSteamId );
+        ResolveDiceRoundOnHost( inviter, target, inviterConnection, caller, inviterName, amount );
+    }
+
+    private static bool ValidateDiceOfferOnHost( Connection caller, Player inviter, long targetSteamId, int amount, out Player target, out Connection targetConnection, out string reason )
+    {
+        target = null;
+        targetConnection = null;
+        reason = "";
+
+        if ( amount <= 0 )
+        {
+            reason = GameLocalization.Phrase( "notify.casino.invalid_bet", "Invalid bet" );
+            return false;
+        }
+
+        if ( !inviter.IsAlive )
+        {
+            reason = GameLocalization.Phrase( "notify.dice.dead", "You cannot play dice while dead." );
+            return false;
+        }
+
+        if ( !inviter.IsCasino )
+        {
+            reason = GameLocalization.Phrase( "notify.dice.must_be_in_casino", "You must be in the casino." );
+            return false;
+        }
+
+        if ( (float)inviter.DiceOfferSendCooldown > 0f )
+        {
+            reason = GameLocalization.Format( "notify.casino.wait_seconds", "Wait {0:0.##}s", (float)inviter.DiceOfferSendCooldown );
+            return false;
+        }
+
+        if ( targetSteamId == caller.SteamId.Value )
+        {
+            reason = GameLocalization.Phrase( "notify.dice.cannot_offer_self", "You cannot offer dice to yourself." );
+            return false;
+        }
+
+        target = FindPlayerBySteamId( targetSteamId );
+        targetConnection = target.IsValid() ? target.GameObject.Network.Owner : null;
+        if ( !target.IsValid() || targetConnection is null )
+        {
+            reason = GameLocalization.Phrase( "notify.money.transfer_target_not_found", "Transfer target not found." );
+            return false;
+        }
+
+        if ( !target.IsAlive )
+        {
+            reason = GameLocalization.Phrase( "notify.dice.target_dead", "Target player is dead." );
+            return false;
+        }
+
+        if ( !target.IsCasino )
+        {
+            reason = GameLocalization.Phrase( "notify.dice.target_not_in_casino", "Target player is not in the casino." );
+            return false;
+        }
+
+        if ( inviter.Money < amount )
+        {
+            reason = GameLocalization.Phrase( "ui.shop.not_enough_money", "Not enough money" );
+            return false;
+        }
+
+        if ( target.Money < amount )
+        {
+            reason = GameLocalization.Phrase( "notify.dice.target_not_enough_money", "Target player does not have enough money." );
+            return false;
+        }
+
+        if ( (float)target.DiceOfferReceiveCooldown > 0f )
+        {
+            reason = GameLocalization.Format( "notify.dice.target_wait", "Target player can receive another dice offer in {0:0.##}s.", (float)target.DiceOfferReceiveCooldown );
+            return false;
+        }
+
+        if ( !CanTransferToTarget( inviter, target ) )
+        {
+            reason = GameLocalization.Phrase( "notify.money.target_too_far", "Player is too far away or not in front of you." );
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool ValidateDiceRoundOnHost( Player inviter, Player target, int amount, out string reason )
+    {
+        reason = "";
+
+        if ( amount <= 0 )
+        {
+            reason = GameLocalization.Phrase( "notify.casino.invalid_bet", "Invalid bet" );
+            return false;
+        }
+
+        if ( !inviter.IsValid() || !target.IsValid() )
+        {
+            reason = GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." );
+            return false;
+        }
+
+        if ( !inviter.IsAlive || !target.IsAlive )
+        {
+            reason = GameLocalization.Phrase( "notify.dice.someone_dead", "Both players must be alive to play dice." );
+            return false;
+        }
+
+        if ( !inviter.IsCasino || !target.IsCasino )
+        {
+            reason = GameLocalization.Phrase( "notify.dice.both_in_casino", "Both players must be in the casino." );
+            return false;
+        }
+
+        if ( inviter.Money < amount )
+        {
+            reason = GameLocalization.Phrase( "notify.dice.inviter_not_enough_money", "Inviter no longer has enough money." );
+            return false;
+        }
+
+        if ( target.Money < amount )
+        {
+            reason = GameLocalization.Phrase( "notify.dice.target_not_enough_money", "Target player does not have enough money." );
+            return false;
+        }
+
+        return true;
+    }
+
+    private void SetPendingDiceOffer( long inviterSteamId, string inviterName, int amount )
+    {
+        _pendingDiceInviterSteamId = inviterSteamId;
+        _pendingDiceInviterName = string.IsNullOrWhiteSpace( inviterName ) ? GameLocalization.Phrase( "common.player", "Player" ) : inviterName;
+        _pendingDiceAmount = amount;
+        _pendingDiceExpires = DiceOfferReceiveCooldownSeconds;
+    }
+
+    private bool HasActivePendingDiceOffer()
+    {
+        return _pendingDiceInviterSteamId > 0L
+            && _pendingDiceAmount > 0
+            && (float)_pendingDiceExpires > 0f;
+    }
+
+    private void ClearPendingDiceOffer()
+    {
+        _pendingDiceInviterSteamId = 0L;
+        _pendingDiceInviterName = "";
+        _pendingDiceAmount = 0;
+        _pendingDiceExpires = 0f;
+    }
+
+    private static void ResolveDiceRoundOnHost( Player inviter, Player target, Connection inviterConnection, Connection targetConnection, string inviterName, int amount )
+    {
+        var targetName = GetConnectionName( targetConnection );
+        var safeInviterName = string.IsNullOrWhiteSpace( inviterName ) ? GetConnectionName( inviterConnection ) : inviterName;
+        var inviterRoll = Game.Random.Int( 1, 6 );
+        var targetRoll = Game.Random.Int( 1, 6 );
+
+        if ( inviterRoll == targetRoll )
+        {
+            Log.Info( $"[Dice] Draw: {safeInviterName}={inviterRoll}, {targetName}={targetRoll}, ${amount}." );
+            var drawMessage = GameLocalization.Format( "notify.dice.result_draw", "Dice draw: you rolled {0}, {1} rolled {2}. Bet returned.", inviterRoll, targetName, targetRoll );
+            NotifyMoneyResult( inviterConnection, drawMessage, true );
+            NotifyMoneyResult( targetConnection, GameLocalization.Format( "notify.dice.result_draw", "Dice draw: you rolled {0}, {1} rolled {2}. Bet returned.", targetRoll, safeInviterName, inviterRoll ), true );
+
+            Chat.SendLocalSystemMessageFromHost(
+                inviter,
+                GameLocalization.Format( "chat.dice.draw", "{0} challenged {1} for ${2}. Rolls: {0} {3}, {1} {4}. Draw.", safeInviterName, targetName, amount, inviterRoll, targetRoll ) );
+            return;
+        }
+
+        var inviterWon = inviterRoll > targetRoll;
+        var winner = inviterWon ? inviter : target;
+        var loser = inviterWon ? target : inviter;
+        var winnerConnection = inviterWon ? inviterConnection : targetConnection;
+        var loserConnection = inviterWon ? targetConnection : inviterConnection;
+        var winnerName = GetConnectionName( winnerConnection );
+
+        Log.Info( $"[Dice] Result: {safeInviterName}={inviterRoll}, {targetName}={targetRoll}, winner={winnerName}, ${amount}." );
+        loser.Money -= amount;
+        winner.Money += amount;
+
+        NotifyMoneyResult(
+            winnerConnection,
+            GameLocalization.Format( "notify.dice.result_win", "Dice win: you rolled {0}, opponent rolled {1}. You won ${2}.", inviterWon ? inviterRoll : targetRoll, inviterWon ? targetRoll : inviterRoll, amount ),
+            true );
+
+        NotifyMoneyResult(
+            loserConnection,
+            GameLocalization.Format( "notify.dice.result_lose", "Dice lose: you rolled {0}, opponent rolled {1}. You lost ${2}.", inviterWon ? targetRoll : inviterRoll, inviterWon ? inviterRoll : targetRoll, amount ),
+            false );
+
+        Chat.SendLocalSystemMessageFromHost(
+            inviter,
+            GameLocalization.Format( "chat.dice.win", "{0} challenged {1} for ${2}. Rolls: {0} {3}, {1} {4}. {5} won.", safeInviterName, targetName, amount, inviterRoll, targetRoll, winnerName ) );
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerReceiveDiceOffer( long inviterSteamId, string inviterName, int amount )
+    {
+        DiceConfirmPanel.OpenIncoming( inviterSteamId, inviterName, amount );
+        Notification.Info( GameLocalization.Format( "notify.dice.offer_received", "{0} offered to play dice for ${1}.", inviterName, amount ), 3.5f );
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerCloseDiceOffer( long inviterSteamId )
+    {
+        DiceConfirmPanel.CloseIncoming( inviterSteamId );
     }
 
     private static bool TrySpawnDroppedMoney( Player player, Connection owner, int amount )

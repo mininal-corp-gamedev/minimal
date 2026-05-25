@@ -308,7 +308,8 @@
         "38a38e67-23cb-4b18-aaf1-3b16a4c5ed93": "87350aff-4216-4983-b686-aa47a8db1952",
         "a8a62c56-48f9-47cc-83f2-76a57f9ae300": "12572aa3-268d-417e-a8ba-f42ceacd47a7",
         "90e0b204-7e91-4fa0-95d8-af5422fab591": "fba6b7d6-57c9-4837-807a-7798b596442a",
-        "fac48538-215f-46d8-ba88-33eb457b7aee": "3ef2a61c-57c9-4a54-9494-f76ad14ab1cf"
+        "fac48538-215f-46d8-ba88-33eb457b7aee": "3ef2a61c-57c9-4a54-9494-f76ad14ab1cf",
+        "7d108d48-bf0d-42ac-8332-3fe25805e639": "5ec7a183-1ba5-44f8-9458-e6c4e04258ca"
       }
     },
     {
@@ -1002,21 +1003,6 @@
           "__guid": "0e21473e-6f40-43f3-8d88-c778d679bffe",
           "__enabled": true,
           "Flags": 0,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null
-        },
-        {
-          "__type": "TriggerBuilding",
-          "__guid": "111ae990-c731-4ebf-9280-727076625021",
-          "__enabled": true,
-          "Flags": 0,
-          "AllowedJobs": [
-            "jobs/gun_dealer.job"
-          ],
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -1789,8 +1775,125 @@
         "cac5b277-2370-4b92-aae4-740f0b9bbc5e": "85a54c30-cd07-45c3-985b-2412584e24d4",
         "b6148c88-eb95-4f48-832e-ce6a4783a68c": "7794f9b5-3805-4b71-b1a8-65beb6241cf3",
         "f65a94c5-8917-4a8b-a3a0-919ac7f45b6d": "3fba74d5-8c5f-4ddd-abba-8518c974a1f9",
-        "4fdcbb1a-c70d-4b60-83f5-6505fb8d3712": "0db4308a-2c36-4ed3-acde-d4f7052918f2"
+        "60301cd6-31c2-4494-ab95-cca52e3cf200": "85000c02-8ab2-483a-96d7-0e7d1ab97a3a"
       }
+    },
+    {
+      "__guid": "02df4d11-1ee1-4b3d-aede-244587dcae0c",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "roulette",
+      "Position": "471.10141,218.273361,39.1423416",
+      "Rotation": "0,0,0,1",
+      "Scale": "0.0299999993,0.0299999993,0.0299999993",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "e23115fd-d242-4c5a-a909-778ef1aa1d82",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "library/map/roulette/roulette.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "c229e031-89f0-487a-9a13-58c7e6317a6d",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "library/map/roulette/roulette.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": false,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "8f16aa0e-07d9-4d2f-89c3-d21af4cc3b24",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "mesh",
+      "Position": "472.69458,217.277283,47.7002563",
+      "Rotation": "0,-0,-0.217802629,0.975992858",
+      "Scale": "25,25,25",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "e45e903b-d957-4697-85d9-0f5d0360af53",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "library/map/roulette2/mesh.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {
@@ -1815,14 +1918,14 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.Clutter.ClutterGridSystem": {
-        "Storage": {
-          "$blob": "4c8d8be3-9b2a-45ca-a21b-eaa302af4bec"
-        }
-      },
       "Sandbox.SelectionSetsSystem": {
         "Data": {
           "SelectionSets": []
+        }
+      },
+      "Sandbox.Clutter.ClutterGridSystem": {
+        "Storage": {
+          "$blob": "4c8d8be3-9b2a-45ca-a21b-eaa302af4bec"
         }
       }
     }
@@ -1830,6 +1933,9 @@
   "ResourceVersion": 3,
   "Title": "titan_test",
   "Description": null,
-  "__references": [],
+  "__references": [
+    "defqwop.roulettetable#206404",
+    "defqwop.roulettewheel#206396"
+  ],
   "__version": 3
 }

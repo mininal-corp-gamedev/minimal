@@ -1,0 +1,239 @@
+@using Sandbox
+@using Sandbox.UI
+@using System
+@using System.Globalization
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
+	{
+		<div class="ziplock-sell-overlay">
+			<div class="ziplock-sell-panel" @ref="FocusSinkRef">
+				<div class="panel-title">@GameLocalization.Phrase( "ui.ziplock_sell.title", "Sell ZipLock" )</div>
+				<div class="panel-subtitle">@GameLocalization.Phrase( "ui.ziplock_sell.subtitle", "Street buyer" )</div>
+
+				<div class="stats-row">
+					<div class="stat-box">
+						<div class="stat-label">@GameLocalization.Phrase( "ui.ziplock_sell.available", "You have" )</div>
+						<div class="stat-value">@FormatNumber( AvailableZipLocks )</div>
+					</div>
+					<div class="stat-box">
+						<div class="stat-label">@GameLocalization.Phrase( "ui.ziplock_sell.price", "Price" )</div>
+						<div class="stat-value">$@FormatNumber( UnitPrice )</div>
+					</div>
+				</div>
+
+				<div class="field-label">@GameLocalization.Phrase( "ui.ziplock_sell.amount", "Amount to sell" )</div>
+				<TextEntry class="ziplock-input" Value:bind="@AmountInput" Placeholder="@GameLocalization.Phrase( "ui.ziplock_sell.placeholder", "Example: 5" )" onsubmit="@Submit"></TextEntry>
+
+				<div class="summary-row">
+					<div class="summary-label">@GameLocalization.Phrase( "ui.ziplock_sell.total", "Total" )</div>
+					<div class="summary-value">$@FormatNumber( Payout )</div>
+				</div>
+
+				@if ( !CanSubmit && !string.IsNullOrWhiteSpace( ValidationMessage ) )
+				{
+					<div class="validation">@ValidationMessage</div>
+				}
+
+				<div class="actions">
+					<button class="secondary" onclick=@Close>@GameLocalization.Phrase( "ui.common.disagree", "Disagree" )</button>
+					<button class="primary" disabled=@(!CanSubmit) onclick=@Submit>@GameLocalization.Phrase( "ui.common.agree", "Agree" )</button>
+				</div>
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	private const string ModalId = nameof( ZipLockSellPanel );
+	public static ZipLockSellPanel Instance { get; private set; }
+
+	private bool IsOpen { get; set; }
+	private string AmountInput { get; set; } = "";
+	private GameObject TargetBuyerObject { get; set; }
+	private Panel FocusSinkRef { get; set; }
+
+	private NpcBuyerZipLock TargetBuyer => TargetBuyerObject.IsValid()
+		? TargetBuyerObject.Components.Get<NpcBuyerZipLock>()
+		: null;
+
+	private int AvailableZipLocks => Math.Max( 0, Player.Local?.Inventory?.GetTotalCount( NpcBuyerZipLock.ZipLockItemId ) ?? 0 );
+	private int UnitPrice => Math.Max( 0, TargetBuyer?.PricePerZipLock ?? NpcBuyerZipLock.DefaultPricePerZipLock );
+	private int DesiredAmount => TryParseAmount( AmountInput, out var amount ) ? amount : 0;
+	private int Payout => CanSubmit
+		? (int)Math.Clamp( (long)DesiredAmount * UnitPrice, 0L, int.MaxValue )
+		: 0;
+	private bool CanSubmit => TargetBuyer.IsValid() && DesiredAmount > 0 && DesiredAmount <= AvailableZipLocks;
+
+	private string ValidationMessage
+	{
+		get
+		{
+			if ( !TargetBuyer.IsValid() )
+				return GameLocalization.Phrase( "notify.ziplock_sell.buyer_missing", "Buyer is unavailable." );
+
+			if ( AvailableZipLocks <= 0 )
+				return GameLocalization.Phrase( "notify.ziplock_sell.no_items", "You have no ZipLock." );
+
+			if ( DesiredAmount <= 0 )
+				return GameLocalization.Phrase( "notify.money.invalid_amount", "Enter a valid amount." );
+
+			if ( DesiredAmount > AvailableZipLocks )
+				return GameLocalization.Format( "notify.ziplock_sell.not_enough", "You only have {0} ZipLock.", AvailableZipLocks );
+
+			return "";
+		}
+	}
+
+	public static void Open( NpcBuyerZipLock buyer )
+	{
+		EnsureInstance();
+		Instance?.OpenInternal( buyer );
+	}
+
+	private static void EnsureInstance()
+	{
+		if ( Instance.IsValid() )
+			return;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return;
+
+		foreach ( var panel in scene.GetAllComponents<ZipLockSellPanel>() )
+		{
+			Instance = panel;
+			return;
+		}
+
+		foreach ( var screenPanel in scene.GetAllComponents<ScreenPanel>() )
+		{
+			Instance = screenPanel.GameObject.Components.Create<ZipLockSellPanel>();
+			return;
+		}
+
+		var panelObject = scene.CreateObject();
+		panelObject.Name = "ZipLockSellPanel";
+		panelObject.Components.Create<ScreenPanel>();
+		panelObject.Components.Create<ZipLockSellPanel>();
+	}
+
+	private void OpenInternal( NpcBuyerZipLock buyer )
+	{
+		TargetBuyerObject = buyer.IsValid() ? buyer.GameObject : null;
+		AmountInput = AvailableZipLocks > 0 ? AvailableZipLocks.ToString( CultureInfo.InvariantCulture ) : "0";
+		SetOpen( true );
+	}
+
+	private void SetOpen( bool open )
+	{
+		if ( open )
+			UiModalManager.Open( ModalId );
+		else
+			UiModalManager.Close( ModalId );
+
+		IsOpen = open;
+		Crosshair.SetBlocked( ModalId, open );
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void Close()
+	{
+		SetOpen( false );
+		TargetBuyerObject = null;
+		AmountInput = "";
+		FocusSinkRef?.Focus();
+	}
+
+	private void Submit()
+	{
+		FocusSinkRef?.Focus();
+
+		if ( !CanSubmit )
+		{
+			if ( !string.IsNullOrWhiteSpace( ValidationMessage ) )
+				Notification.Error( ValidationMessage, 3.5f );
+
+			return;
+		}
+
+		var buyerObject = TargetBuyerObject;
+		var amount = DesiredAmount;
+
+		Close();
+		NpcBuyerZipLock.RpcSellZipLocks( buyerObject, amount );
+	}
+
+	private static bool TryParseAmount( string text, out int amount )
+	{
+		amount = 0;
+		return int.TryParse( (text ?? "").Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out amount ) && amount > 0;
+	}
+
+	private static string FormatNumber( int value )
+	{
+		return Math.Max( 0, value ).ToString( "N0", CultureInfo.InvariantCulture );
+	}
+
+	protected override void OnStart()
+	{
+		if ( Instance.IsValid() && Instance != this )
+			return;
+
+		Instance = this;
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
+	}
+
+	protected override void OnDestroy()
+	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
+		ReleaseModal();
+
+		if ( Instance == this )
+			Instance = null;
+	}
+
+	protected override void OnDisabled()
+	{
+		ReleaseModal();
+	}
+
+	private void ReleaseModal()
+	{
+		IsOpen = false;
+		TargetBuyerObject = null;
+		AmountInput = "";
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen )
+			return;
+
+		IsOpen = false;
+		TargetBuyerObject = null;
+		AmountInput = "";
+		FocusSinkRef?.Focus();
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
+	}
+
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( IsOpen );
+		hash.Add( UiModalManager.Version );
+		hash.Add( AmountInput );
+		hash.Add( AvailableZipLocks );
+		hash.Add( UnitPrice );
+		hash.Add( TargetBuyerObject.IsValid() );
+		hash.Add( GameLocalization.CurrentCode );
+		return hash.ToHashCode();
+	}
+}

@@ -616,6 +616,18 @@
             "OnComponentUpdate": null
           },
           {
+            "__type": "Sandbox.ZipLockSellPanel",
+            "__guid": "e2af179e-9f12-4c4b-a921-0f62bd16d754",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
             "__type": "Sandbox.DoorHackMinigame",
             "__guid": "90e0b204-7e91-4fa0-95d8-af5422fab591",
             "__enabled": true,

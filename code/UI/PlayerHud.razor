@@ -1,0 +1,116 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@using System.Globalization;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( ShouldShow )
+	{
+		<div class="hud-stack">
+			<div class="profile-panel">
+				<div class="avatar" style="background-image: url( avatar:@LocalSteamId )"></div>
+
+				<div class="profile-content">
+					<div class="player-name">@PlayerName</div>
+
+					<div class="job-row">
+						<div class="job-icon"></div>
+						<div class="job-name">@JobName</div>
+					</div>
+
+					<div class="stat-row health">
+						<div class="stat-icon"></div>
+						<div class="stat-track">
+							<div class="stat-fill" style="width: @(HealthPercent)%;"></div>
+						</div>
+						<div class="stat-value">@HealthValue</div>
+					</div>
+
+					<div class="stat-row armor">
+						<div class="stat-icon"></div>
+						<div class="stat-track">
+							<div class="stat-fill" style="width: @(ArmorPercent)%;"></div>
+						</div>
+						<div class="stat-value">@ArmorValue</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="money-row">
+				<div class="money-panel cash">
+					<div class="money-icon"></div>
+					<div class="money-text">
+						<div class="money-label">@GameLocalization.Phrase( "ui.hud.cash", "CASH" )</div>
+						<div class="money-value">@CashText</div>
+					</div>
+				</div>
+
+				<div class="money-panel card">
+					<div class="money-icon"></div>
+					<div class="money-text">
+						<div class="money-label">@GameLocalization.Phrase( "ui.hud.card", "CARD" )</div>
+						<div class="money-value">@CardText</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	Player LocalPlayer => Player.Local;
+	bool ShouldShow => LocalPlayer is not null && LocalPlayer.IsDead != true;
+
+	long LocalSteamId => Connection.Local?.SteamId.Value ?? 0L;
+	string PlayerName => string.IsNullOrWhiteSpace( Connection.Local?.DisplayName )
+		? GameLocalization.Phrase( "common.player", "Player" )
+		: Connection.Local.DisplayName;
+	string JobName => GameLocalization.JobHeader( LocalPlayer?.Job?.JobDefinition );
+
+	float HealthPercent => Percent( LocalPlayer?.Health ?? 0f, LocalPlayer?.MaxHealth ?? 1f );
+	float ArmorPercent => Percent( LocalPlayer?.Armor ?? 0f, LocalPlayer?.MaxArmor ?? 1f );
+
+	int HealthValue => Rounded( LocalPlayer?.Health ?? 0f );
+	int ArmorValue => Rounded( LocalPlayer?.Armor ?? 0f );
+
+	string CashText => FormatMoney( LocalPlayer?.Money ?? 0 );
+	string CardText => FormatMoney( LocalPlayer?.MoneyAtm ?? 0 );
+
+	private static float Percent( float value, float maxValue )
+	{
+		if ( maxValue <= 0f )
+			return 0f;
+
+		return Math.Clamp( value / maxValue * 100f, 0f, 100f );
+	}
+
+	private static int Rounded( float value )
+	{
+		return (int)MathF.Round( MathF.Max( value, 0f ) );
+	}
+
+	private static string FormatMoney( int value )
+	{
+		return $"${value.ToString( "N0", CultureInfo.InvariantCulture )}";
+	}
+
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( ShouldShow );
+		hash.Add( LocalSteamId );
+		hash.Add( PlayerName );
+		hash.Add( JobName );
+		hash.Add( LocalPlayer?.Health ?? 0f );
+		hash.Add( LocalPlayer?.MaxHealth ?? 0f );
+		hash.Add( LocalPlayer?.Armor ?? 0f );
+		hash.Add( LocalPlayer?.MaxArmor ?? 0f );
+		hash.Add( LocalPlayer?.Money ?? 0 );
+		hash.Add( LocalPlayer?.MoneyAtm ?? 0 );
+		hash.Add( GameLocalization.CurrentCode );
+		return hash.ToHashCode();
+	}
+}

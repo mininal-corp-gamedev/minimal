@@ -375,18 +375,6 @@
             "ZIndex": 100
           },
           {
-            "__type": "Sandbox.Hud",
-            "__guid": "aa223f33-b5ea-4951-a6a8-6c93b342a8d9",
-            "__enabled": true,
-            "Flags": 0,
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null
-          },
-          {
             "__type": "Sandbox.AmmoHud",
             "__guid": "ab799631-f346-4c43-b1ae-3eb53abd9b6f",
             "__enabled": true,
@@ -497,18 +485,6 @@
             "__type": "Sandbox.InventoryPanel",
             "__guid": "de7c5c75-6971-4c32-a249-de428a3d3be1",
             "__enabled": true,
-            "Flags": 0,
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null
-          },
-          {
-            "__type": "Sandbox.LabelBeta",
-            "__guid": "d058df98-b3c9-4f32-bc47-1bab3d94ae4b",
-            "__enabled": false,
             "Flags": 0,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
@@ -670,6 +646,18 @@
           {
             "__type": "Sandbox.RoulettePanel",
             "__guid": "b61c3c47-4fdb-4f89-9baa-69d1997d0b15",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.PlayerHud",
+            "__guid": "5ed77e1b-34fd-4c69-97c0-7e4bdd4b70eb",
             "__enabled": true,
             "Flags": 0,
             "OnComponentDestroy": null,

@@ -1,0 +1,140 @@
+@using Sandbox
+@using Sandbox.UI
+@using System
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="roulette-world @VisualState">
+		@if ( IsWaiting )
+		{
+			<div class="timer">@WaitingTimerText</div>
+			<div class="meta">@MetaText</div>
+			<div class="hint">@GameLocalization.Phrase( "ui.common.press_e", "Press \"E\"" )</div>
+		}
+		else
+		{
+			<div class="status">@StatusText</div>
+			<div class="number">@NumberText</div>
+			<div class="meta">@MetaText</div>
+		}
+	</div>
+</root>
+
+@code
+{
+	private Roulette TargetRoulette => Components.Get<Roulette>( FindMode.EverythingInSelfAndAncestors );
+
+	private bool IsWaiting
+	{
+		get
+		{
+			var roulette = TargetRoulette;
+			return roulette.IsValid() && roulette.IsBetting;
+		}
+	}
+
+	private string VisualState
+	{
+		get
+		{
+			var roulette = TargetRoulette;
+			if ( !roulette.IsValid() )
+				return "missing";
+
+			if ( roulette.IsSpinning )
+				return "spinning";
+
+			if ( roulette.IsShowingResult )
+				return "result";
+
+			return "betting";
+		}
+	}
+
+	private string StatusText
+	{
+		get
+		{
+			var roulette = TargetRoulette;
+			if ( !roulette.IsValid() )
+				return GameLocalization.Phrase( "ui.roulette.title", "Roulette" );
+
+			if ( roulette.IsSpinning )
+				return GameLocalization.Phrase( "ui.roulette.spinning", "Spinning" );
+
+			if ( roulette.IsShowingResult )
+				return GameLocalization.Phrase( "ui.roulette.result", "Result" );
+
+			return WaitingTimerText;
+		}
+	}
+
+	private string WaitingTimerText
+	{
+		get
+		{
+			var roulette = TargetRoulette;
+			if ( !roulette.IsValid() )
+				return "-";
+
+			return GameLocalization.Format( "ui.roulette.next_spin", "Next spin in {0}s", SecondsLeft( roulette.BettingTimeUntil ) );
+		}
+	}
+
+	private string NumberText
+	{
+		get
+		{
+			var roulette = TargetRoulette;
+			if ( !roulette.IsValid() )
+				return "-";
+
+			if ( roulette.IsSpinning )
+				return roulette.CurrentDisplayNumber.ToString();
+
+			if ( roulette.IsShowingResult )
+				return roulette.FinalNumber.ToString();
+
+			return "";
+		}
+	}
+
+	private string MetaText
+	{
+		get
+		{
+			var roulette = TargetRoulette;
+			if ( !roulette.IsValid() )
+				return "";
+
+			var min = Math.Max( 1, roulette.MinBet );
+			var max = Math.Max( min, roulette.MaxBet );
+			return GameLocalization.Format( "ui.roulette.min_max_value", "Min ${0} / Max ${1}", min, max );
+		}
+	}
+
+	private static int SecondsLeft( TimeUntil timer )
+	{
+		return Math.Max( 0, (int)Math.Ceiling( (float)timer ) );
+	}
+
+	protected override int BuildHash()
+	{
+		var roulette = TargetRoulette;
+		if ( !roulette.IsValid() )
+			return HashCode.Combine( GameLocalization.CurrentCode, "missing" );
+
+		var hash = new HashCode();
+		hash.Add( roulette.RoundState );
+		hash.Add( roulette.CurrentDisplayNumber );
+		hash.Add( roulette.FinalNumber );
+		hash.Add( SecondsLeft( roulette.BettingTimeUntil ) );
+		hash.Add( SecondsLeft( roulette.SpinTimeUntil ) );
+		hash.Add( SecondsLeft( roulette.ResultTimeUntil ) );
+		hash.Add( roulette.MinBet );
+		hash.Add( roulette.MaxBet );
+		hash.Add( GameLocalization.CurrentCode );
+		return hash.ToHashCode();
+	}
+}

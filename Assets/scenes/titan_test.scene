@@ -309,7 +309,8 @@
         "a8a62c56-48f9-47cc-83f2-76a57f9ae300": "12572aa3-268d-417e-a8ba-f42ceacd47a7",
         "90e0b204-7e91-4fa0-95d8-af5422fab591": "fba6b7d6-57c9-4837-807a-7798b596442a",
         "fac48538-215f-46d8-ba88-33eb457b7aee": "3ef2a61c-57c9-4a54-9494-f76ad14ab1cf",
-        "7d108d48-bf0d-42ac-8332-3fe25805e639": "5ec7a183-1ba5-44f8-9458-e6c4e04258ca"
+        "7d108d48-bf0d-42ac-8332-3fe25805e639": "5ec7a183-1ba5-44f8-9458-e6c4e04258ca",
+        "b61c3c47-4fdb-4f89-9baa-69d1997d0b15": "eb59cf46-5f06-4b7e-b75e-35f2b5f0973b"
       }
     },
     {
@@ -1775,17 +1776,17 @@
         "cac5b277-2370-4b92-aae4-740f0b9bbc5e": "85a54c30-cd07-45c3-985b-2412584e24d4",
         "b6148c88-eb95-4f48-832e-ce6a4783a68c": "7794f9b5-3805-4b71-b1a8-65beb6241cf3",
         "f65a94c5-8917-4a8b-a3a0-919ac7f45b6d": "3fba74d5-8c5f-4ddd-abba-8518c974a1f9",
-        "60301cd6-31c2-4494-ab95-cca52e3cf200": "85000c02-8ab2-483a-96d7-0e7d1ab97a3a"
+        "c3177e62-1560-48e4-bc22-df2cc9616854": "a67a8efa-c2d6-4813-8471-7208aa13d7e2"
       }
     },
     {
-      "__guid": "02df4d11-1ee1-4b3d-aede-244587dcae0c",
+      "__guid": "5128c058-70f5-450e-88dd-e8936f4d9ff6",
       "__version": 2,
       "Flags": 0,
       "Name": "roulette",
-      "Position": "471.10141,218.273361,39.1423416",
-      "Rotation": "0,0,0,1",
-      "Scale": "0.0299999993,0.0299999993,0.0299999993",
+      "Position": "550.786743,102.981934,39.0939713",
+      "Rotation": "0,0,-2.98023224E-08,1",
+      "Scale": "0.0274351686,0.0274351686,0.0274351686",
       "Tags": "",
       "Enabled": true,
       "NetworkMode": 2,
@@ -1796,7 +1797,7 @@
       "Components": [
         {
           "__type": "Sandbox.ModelRenderer",
-          "__guid": "e23115fd-d242-4c5a-a909-778ef1aa1d82",
+          "__guid": "186853c9-76b4-4214-a1ff-3425ae7f5974",
           "__enabled": true,
           "Flags": 0,
           "BodyGroups": 18446744073709551615,
@@ -1822,15 +1823,15 @@
           "Tint": "1,1,1,1"
         },
         {
-          "__type": "Sandbox.ModelCollider",
-          "__guid": "c229e031-89f0-487a-9a13-58c7e6317a6d",
+          "__type": "Sandbox.BoxCollider",
+          "__guid": "c8fb0cd9-5d2a-4c22-8c54-e734299e13f0",
           "__enabled": true,
           "Flags": 0,
+          "Center": "-376.425171,1209.62866,-324.242188",
           "ColliderFlags": 0,
           "Elasticity": null,
           "Friction": null,
           "IsTrigger": false,
-          "Model": "library/map/roulette/roulette.vmdl",
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -1842,58 +1843,149 @@
           "OnTriggerEnter": null,
           "OnTriggerExit": null,
           "RollingResistance": null,
-          "Static": false,
+          "Scale": "2479.59033,4135.14844,993.883911",
+          "Static": true,
           "Surface": null,
           "SurfaceVelocity": "0,0,0"
-        }
-      ],
-      "Children": []
-    },
-    {
-      "__guid": "8f16aa0e-07d9-4d2f-89c3-d21af4cc3b24",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "mesh",
-      "Position": "472.69458,217.277283,47.7002563",
-      "Rotation": "0,-0,-0.217802629,0.975992858",
-      "Scale": "25,25,25",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
+        },
         {
-          "__type": "Sandbox.ModelRenderer",
-          "__guid": "e45e903b-d957-4697-85d9-0f5d0360af53",
+          "__type": "Roulette",
+          "__guid": "d6103e77-2ef2-4f4c-8890-89154d855156",
           "__enabled": true,
           "Flags": 0,
-          "BodyGroups": 18446744073709551615,
-          "CreateAttachments": false,
-          "LodOverride": null,
-          "MaterialGroup": null,
-          "MaterialOverride": null,
-          "Materials": null,
-          "Model": "library/map/roulette2/mesh.vmdl",
+          "BettingIntervalSeconds": 30,
+          "Circle": {
+            "_type": "gameobject",
+            "go": "8f16aa0e-07d9-4d2f-89c3-d21af4cc3b24"
+          },
+          "CircleSpinYawSpeed": 720,
+          "ColorMultiplier": 2,
+          "ColumnMultiplier": 3,
+          "DozenMultiplier": 3,
+          "EvenOddMultiplier": 2,
+          "LowHighMultiplier": 2,
+          "MaxBet": 1000,
+          "MaxUseDistance": 120,
+          "MinBet": 10,
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
           "OnComponentFixedUpdate": null,
           "OnComponentStart": null,
           "OnComponentUpdate": null,
-          "RenderOptions": {
-            "GameLayer": true,
-            "OverlayLayer": false,
-            "BloomLayer": false,
-            "AfterUILayer": false
+          "ResultHoldSeconds": 1.5,
+          "RouletteWorldText": {
+            "_type": "gameobject",
+            "go": "29c2fa4b-794a-47d8-b287-947c58d40768"
           },
-          "RenderType": "On",
-          "Tint": "1,1,1,1"
+          "SpinDurationSeconds": 5,
+          "StraightMultiplier": 36,
+          "ZeroMultiplier": 36
         }
       ],
-      "Children": []
+      "Children": [
+        {
+          "__guid": "8f16aa0e-07d9-4d2f-89c3-d21af4cc3b24",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "circle",
+          "Position": "12.2892704,14.5317726,121.71347",
+          "Rotation": "0,0,0,1",
+          "Scale": "874.789612,874.789612,911.239136",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.ModelRenderer",
+              "__guid": "e45e903b-d957-4697-85d9-0f5d0360af53",
+              "__enabled": true,
+              "Flags": 0,
+              "BodyGroups": 18446744073709551615,
+              "CreateAttachments": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "library/map/roulette2/mesh.vmdl",
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Tint": "1,1,1,1"
+            }
+          ],
+          "Children": []
+        },
+        {
+          "__guid": "29c2fa4b-794a-47d8-b287-947c58d40768",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "3D World Text",
+          "Position": "0,0,1026.87964",
+          "Rotation": "0,0,0,1",
+          "Scale": "36.4495659,36.4495659,36.4495659",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [
+            {
+              "__type": "Sandbox.WorldPanel",
+              "__guid": "322d9a0b-8195-4b43-ace0-5afdf190e561",
+              "__enabled": true,
+              "Flags": 0,
+              "HorizontalAlign": "Center",
+              "InteractionRange": 1000,
+              "LookAtCamera": true,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "PanelSize": "512,512",
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderScale": 1,
+              "VerticalAlign": "Center"
+            },
+            {
+              "__type": "Sandbox.RouletteWorldText",
+              "__guid": "71587611-7424-4ccd-9acd-0d2561ad6b5e",
+              "__enabled": true,
+              "Flags": 0,
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null
+            }
+          ],
+          "Children": []
+        }
+      ]
     }
   ],
   "SceneProperties": {

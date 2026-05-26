@@ -38544,12 +38544,1210 @@
       "Children": []
     },
     {
-      "__guid": "1f4dc86c-f0c6-45c3-96f9-e775263ee7e5",
+      "__guid": "0956813e-649a-46d8-a626-b8896794d6b0",
       "__version": 2,
-      "__Prefab": "prefabs/groowerbuyer.prefab",
+      "__Prefab": "prefabs/groower/groowerbuyer.prefab",
       "__PrefabInstancePatch": {
-        "AddedObjects": [],
-        "RemovedObjects": [],
+        "AddedObjects": [
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "b6a12b59-c5cd-48cb-aa15-db96ab7eec0d"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b6bddeba-218a-4a43-a788-427143610533"
+            },
+            "PreviousElement": null,
+            "ContainerProperty": "Children",
+            "IsContainerArray": true,
+            "Data": {
+              "__guid": "b6a12b59-c5cd-48cb-aa15-db96ab7eec0d",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Clothing - braids_hair",
+              "Position": "0,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "clothing",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "27fc93f8-7e80-45ab-9083-d6ed49f81134"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b6a12b59-c5cd-48cb-aa15-db96ab7eec0d"
+            },
+            "PreviousElement": null,
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "27fc93f8-7e80-45ab-9083-d6ed49f81134",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 18446744073709551615,
+              "BoneMergeTarget": {
+                "_type": "component",
+                "component_id": "52c8931b-ab54-41fd-8158-931dd71aa3bd",
+                "go": "b6bddeba-218a-4a43-a788-427143610533",
+                "component_type": "SkinnedModelRenderer"
+              },
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "hair/models/human_hair.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "0.43747,0.29636,0.22182,1",
+              "UseAnimGraph": true
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "ac7d5afe-831a-4d4c-8b5f-31faa0730d12"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b6bddeba-218a-4a43-a788-427143610533"
+            },
+            "PreviousElement": {
+              "Type": "GameObject",
+              "IdValue": "b6a12b59-c5cd-48cb-aa15-db96ab7eec0d"
+            },
+            "ContainerProperty": "Children",
+            "IsContainerArray": true,
+            "Data": {
+              "__guid": "ac7d5afe-831a-4d4c-8b5f-31faa0730d12",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Clothing - gold earrings",
+              "Position": "0,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "clothing",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "8c37399c-acc5-46ef-8541-b74b977ce10b"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "ac7d5afe-831a-4d4c-8b5f-31faa0730d12"
+            },
+            "PreviousElement": null,
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "8c37399c-acc5-46ef-8541-b74b977ce10b",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 18446744073709551615,
+              "BoneMergeTarget": {
+                "_type": "component",
+                "component_id": "52c8931b-ab54-41fd-8158-931dd71aa3bd",
+                "go": "b6bddeba-218a-4a43-a788-427143610533",
+                "component_type": "SkinnedModelRenderer"
+              },
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "gold earrings/gold earrings male.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "1,1,1,1",
+              "UseAnimGraph": true
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "eb197a1a-0d0c-4e34-a520-6d4e042449cf"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b6bddeba-218a-4a43-a788-427143610533"
+            },
+            "PreviousElement": {
+              "Type": "GameObject",
+              "IdValue": "ac7d5afe-831a-4d4c-8b5f-31faa0730d12"
+            },
+            "ContainerProperty": "Children",
+            "IsContainerArray": true,
+            "Data": {
+              "__guid": "eb197a1a-0d0c-4e34-a520-6d4e042449cf",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Clothing - grillz",
+              "Position": "0,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "clothing",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "114e7313-e329-416e-9c22-2e4add52ddeb"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "eb197a1a-0d0c-4e34-a520-6d4e042449cf"
+            },
+            "PreviousElement": null,
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "114e7313-e329-416e-9c22-2e4add52ddeb",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 18446744073709551615,
+              "BoneMergeTarget": {
+                "_type": "component",
+                "component_id": "52c8931b-ab54-41fd-8158-931dd71aa3bd",
+                "go": "b6bddeba-218a-4a43-a788-427143610533",
+                "component_type": "SkinnedModelRenderer"
+              },
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "grillz/models/human_lod.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "1,1,1,1",
+              "UseAnimGraph": true
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "971bff46-8c88-4ba4-9298-af3e2681cf2e"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b6bddeba-218a-4a43-a788-427143610533"
+            },
+            "PreviousElement": {
+              "Type": "GameObject",
+              "IdValue": "eb197a1a-0d0c-4e34-a520-6d4e042449cf"
+            },
+            "ContainerProperty": "Children",
+            "IsContainerArray": true,
+            "Data": {
+              "__guid": "971bff46-8c88-4ba4-9298-af3e2681cf2e",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Clothing - cigar",
+              "Position": "0,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "clothing",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "542d5f71-3019-4bf7-b79f-962426d689b7"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "971bff46-8c88-4ba4-9298-af3e2681cf2e"
+            },
+            "PreviousElement": null,
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "542d5f71-3019-4bf7-b79f-962426d689b7",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 18446744073709551615,
+              "BoneMergeTarget": {
+                "_type": "component",
+                "component_id": "52c8931b-ab54-41fd-8158-931dd71aa3bd",
+                "go": "b6bddeba-218a-4a43-a788-427143610533",
+                "component_type": "SkinnedModelRenderer"
+              },
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "assets/april/cigar/cigar human.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "1,1,1,1",
+              "UseAnimGraph": true
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "a89491ec-e39a-4749-adc3-83c9c2bd585d"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b6bddeba-218a-4a43-a788-427143610533"
+            },
+            "PreviousElement": {
+              "Type": "GameObject",
+              "IdValue": "971bff46-8c88-4ba4-9298-af3e2681cf2e"
+            },
+            "ContainerProperty": "Children",
+            "IsContainerArray": true,
+            "Data": {
+              "__guid": "a89491ec-e39a-4749-adc3-83c9c2bd585d",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Clothing - boss_shades",
+              "Position": "0,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "clothing",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "cbad5cde-8d76-41da-94ba-7b3fae51e618"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "a89491ec-e39a-4749-adc3-83c9c2bd585d"
+            },
+            "PreviousElement": null,
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "cbad5cde-8d76-41da-94ba-7b3fae51e618",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 18446744073709551615,
+              "BoneMergeTarget": {
+                "_type": "component",
+                "component_id": "52c8931b-ab54-41fd-8158-931dd71aa3bd",
+                "go": "b6bddeba-218a-4a43-a788-427143610533",
+                "component_type": "SkinnedModelRenderer"
+              },
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "glases/boss_shades_alt.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "1,1,1,1",
+              "UseAnimGraph": true
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "b313c3d2-8bc2-465f-8959-8809068287ce"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b6bddeba-218a-4a43-a788-427143610533"
+            },
+            "PreviousElement": {
+              "Type": "GameObject",
+              "IdValue": "a89491ec-e39a-4749-adc3-83c9c2bd585d"
+            },
+            "ContainerProperty": "Children",
+            "IsContainerArray": true,
+            "Data": {
+              "__guid": "b313c3d2-8bc2-465f-8959-8809068287ce",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Clothing - tattoo_triabal",
+              "Position": "0,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "clothing",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "a22036a4-4e37-40cd-9301-58145e3e28f7"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b313c3d2-8bc2-465f-8959-8809068287ce"
+            },
+            "PreviousElement": null,
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "a22036a4-4e37-40cd-9301-58145e3e28f7",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 18446744073709551615,
+              "BoneMergeTarget": {
+                "_type": "component",
+                "component_id": "52c8931b-ab54-41fd-8158-931dd71aa3bd",
+                "go": "b6bddeba-218a-4a43-a788-427143610533",
+                "component_type": "SkinnedModelRenderer"
+              },
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "projects/tattoo/tattoo_tribal_male.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "1,1,1,1",
+              "UseAnimGraph": true
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "da6bb630-ea5e-47e4-8ec2-bca0a9739ad3"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b6bddeba-218a-4a43-a788-427143610533"
+            },
+            "PreviousElement": {
+              "Type": "GameObject",
+              "IdValue": "b313c3d2-8bc2-465f-8959-8809068287ce"
+            },
+            "ContainerProperty": "Children",
+            "IsContainerArray": true,
+            "Data": {
+              "__guid": "da6bb630-ea5e-47e4-8ec2-bca0a9739ad3",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Clothing - charm_bracelet_mat_clean.vmat",
+              "Position": "0,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "clothing",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "69092b46-1315-4a17-b7f1-31e61e3dd887"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "da6bb630-ea5e-47e4-8ec2-bca0a9739ad3"
+            },
+            "PreviousElement": null,
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "69092b46-1315-4a17-b7f1-31e61e3dd887",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 18446744073709551615,
+              "BoneMergeTarget": {
+                "_type": "component",
+                "component_id": "52c8931b-ab54-41fd-8158-931dd71aa3bd",
+                "go": "b6bddeba-218a-4a43-a788-427143610533",
+                "component_type": "SkinnedModelRenderer"
+              },
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "charm_bracelet/models/charm_bracelet_citizen_m_clean.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "1,1,1,1",
+              "UseAnimGraph": true
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "6981ae7a-7e3e-4e2e-b3d1-b4fa698aa6e8"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b6bddeba-218a-4a43-a788-427143610533"
+            },
+            "PreviousElement": {
+              "Type": "GameObject",
+              "IdValue": "da6bb630-ea5e-47e4-8ec2-bca0a9739ad3"
+            },
+            "ContainerProperty": "Children",
+            "IsContainerArray": true,
+            "Data": {
+              "__guid": "6981ae7a-7e3e-4e2e-b3d1-b4fa698aa6e8",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Clothing - sneakers gravity",
+              "Position": "0,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "clothing",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "e7f518bb-9d57-4a8e-8d94-f13ce5445bda"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "6981ae7a-7e3e-4e2e-b3d1-b4fa698aa6e8"
+            },
+            "PreviousElement": null,
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "e7f518bb-9d57-4a8e-8d94-f13ce5445bda",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 18446744073709551615,
+              "BoneMergeTarget": {
+                "_type": "component",
+                "component_id": "52c8931b-ab54-41fd-8158-931dd71aa3bd",
+                "go": "b6bddeba-218a-4a43-a788-427143610533",
+                "component_type": "SkinnedModelRenderer"
+              },
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/citizen_clothes/shoes/sneakers_led/models/human_sneakers.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "1,1,1,1",
+              "UseAnimGraph": true
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "fa9862ed-44d1-4a7a-b481-e1c96cbaba28"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b6bddeba-218a-4a43-a788-427143610533"
+            },
+            "PreviousElement": {
+              "Type": "GameObject",
+              "IdValue": "6981ae7a-7e3e-4e2e-b3d1-b4fa698aa6e8"
+            },
+            "ContainerProperty": "Children",
+            "IsContainerArray": true,
+            "Data": {
+              "__guid": "fa9862ed-44d1-4a7a-b481-e1c96cbaba28",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Clothing - baggy pants blue",
+              "Position": "0,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "clothing",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "5e70cd9e-ec69-431c-b980-6464487bc47f"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "fa9862ed-44d1-4a7a-b481-e1c96cbaba28"
+            },
+            "PreviousElement": null,
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "5e70cd9e-ec69-431c-b980-6464487bc47f",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 18446744073709551615,
+              "BoneMergeTarget": {
+                "_type": "component",
+                "component_id": "52c8931b-ab54-41fd-8158-931dd71aa3bd",
+                "go": "b6bddeba-218a-4a43-a788-427143610533",
+                "component_type": "SkinnedModelRenderer"
+              },
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "baggy pants cat/baggy cat pants.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "1,1,1,1",
+              "UseAnimGraph": true
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "87fee53c-b3c5-4760-b644-a222c4cb9a12"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b6bddeba-218a-4a43-a788-427143610533"
+            },
+            "PreviousElement": {
+              "Type": "GameObject",
+              "IdValue": "fa9862ed-44d1-4a7a-b481-e1c96cbaba28"
+            },
+            "ContainerProperty": "Children",
+            "IsContainerArray": true,
+            "Data": {
+              "__guid": "87fee53c-b3c5-4760-b644-a222c4cb9a12",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Clothing - og_tshirt",
+              "Position": "0,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "clothing",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "a079e564-af6a-409a-ab0e-19aff0281bf3"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "87fee53c-b3c5-4760-b644-a222c4cb9a12"
+            },
+            "PreviousElement": null,
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "a079e564-af6a-409a-ab0e-19aff0281bf3",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 18446744073709551615,
+              "BoneMergeTarget": {
+                "_type": "component",
+                "component_id": "52c8931b-ab54-41fd-8158-931dd71aa3bd",
+                "go": "b6bddeba-218a-4a43-a788-427143610533",
+                "component_type": "SkinnedModelRenderer"
+              },
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "og/tshirt/og_tshirt_m_human.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "1,1,1,1",
+              "UseAnimGraph": true
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "8bcefdc6-3b39-46d7-8ef1-9ef765b4a0f6"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "b6bddeba-218a-4a43-a788-427143610533"
+            },
+            "PreviousElement": {
+              "Type": "GameObject",
+              "IdValue": "87fee53c-b3c5-4760-b644-a222c4cb9a12"
+            },
+            "ContainerProperty": "Children",
+            "IsContainerArray": true,
+            "Data": {
+              "__guid": "8bcefdc6-3b39-46d7-8ef1-9ef765b4a0f6",
+              "__version": 2,
+              "Flags": 0,
+              "Name": "Clothing - swag_ring",
+              "Position": "0,0,0",
+              "Rotation": "0,0,0,1",
+              "Scale": "1,1,1",
+              "Tags": "clothing",
+              "Enabled": true,
+              "NetworkMode": 2,
+              "NetworkFlags": 0,
+              "NetworkOrphaned": 0,
+              "NetworkTransmit": true,
+              "OwnerTransfer": 1,
+              "Components": [],
+              "Children": []
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "423559fc-bf20-44cd-be82-9cd7c6c54109"
+            },
+            "Parent": {
+              "Type": "GameObject",
+              "IdValue": "8bcefdc6-3b39-46d7-8ef1-9ef765b4a0f6"
+            },
+            "PreviousElement": null,
+            "ContainerProperty": "Components",
+            "IsContainerArray": true,
+            "Data": {
+              "__type": "Sandbox.SkinnedModelRenderer",
+              "__guid": "423559fc-bf20-44cd-be82-9cd7c6c54109",
+              "__enabled": true,
+              "Flags": 0,
+              "AnimationGraph": null,
+              "BodyGroups": 18446744073709551615,
+              "BoneMergeTarget": {
+                "_type": "component",
+                "component_id": "52c8931b-ab54-41fd-8158-931dd71aa3bd",
+                "go": "b6bddeba-218a-4a43-a788-427143610533",
+                "component_type": "SkinnedModelRenderer"
+              },
+              "CreateAttachments": false,
+              "CreateBoneObjects": false,
+              "LodOverride": null,
+              "MaterialGroup": null,
+              "MaterialOverride": null,
+              "Materials": null,
+              "Model": "models/citizen_clothes/swag/models/citizenmale_lod0.vmdl",
+              "Morphs": {},
+              "OnComponentDestroy": null,
+              "OnComponentDisabled": null,
+              "OnComponentEnabled": null,
+              "OnComponentFixedUpdate": null,
+              "OnComponentStart": null,
+              "OnComponentUpdate": null,
+              "Parameters": {
+                "bools": {},
+                "ints": {},
+                "floats": {},
+                "vectors": {},
+                "rotations": {}
+              },
+              "PlaybackRate": 1,
+              "RenderOptions": {
+                "GameLayer": true,
+                "OverlayLayer": false,
+                "BloomLayer": false,
+                "AfterUILayer": false
+              },
+              "RenderType": "On",
+              "Sequence": {
+                "Name": null,
+                "Looping": true,
+                "Blending": false
+              },
+              "Tint": "1,1,1,1",
+              "UseAnimGraph": true
+            }
+          }
+        ],
+        "RemovedObjects": [
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "0a15eb43-296f-4f7d-8c4d-6fc818caed3a"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "6d935dcf-304c-4b04-9fbf-8510e4567f45"
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "8848874e-a8dc-411e-b1c3-8570919ffd58"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "438bc154-5a5b-429b-9d71-58441491974d"
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "9d7b1e29-f230-4afd-a1df-fb6c09bbf8f4"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "c09e6b0b-89a8-4ad7-b379-a30586efb006"
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "4a59ae54-d9ae-40ec-9cdf-7501bb4f56c8"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "d4c3f916-e77f-452d-a301-f47fa586bf05"
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "1307de01-f7bb-49da-aafa-23b7552d9da8"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "a350c7e0-d29a-4be0-8e09-878d81976982"
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "c876f8cb-c7b4-4153-9f1d-0e123b96a60f"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "61f449d5-32a5-45a9-995b-72cbf03f9728"
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "967e65ec-3363-49cb-a5bd-b0cae602e9ea"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "2593b259-6419-4210-be45-34740f831368"
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "fad142fd-ae45-4ada-8b41-ba1293131d8c"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "466f44d1-d0de-4e65-a7a5-1f66f343dc31"
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "3f0acb97-f6e5-43f8-b2cf-e4e90a4051bc"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "affd0822-a3ca-4b47-a061-c10cd72e1690"
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "60bc3628-d819-48b0-a1c2-196ace24726e"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "445eed71-8bd4-48b1-a9e6-4ddd32e028fb"
+            }
+          },
+          {
+            "Id": {
+              "Type": "GameObject",
+              "IdValue": "60032212-b693-4459-8d34-81accc13a898"
+            }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "b5504734-1612-4ba6-8a9e-bdde333fd002"
+            }
+          }
+        ],
         "PropertyOverrides": [
           {
             "Target": {
@@ -38563,33 +39761,33 @@
         "MovedObjects": []
       },
       "__PrefabIdToInstanceId": {
-        "b6bddeba-218a-4a43-a788-427143610533": "1f4dc86c-f0c6-45c3-96f9-e775263ee7e5",
-        "52c8931b-ab54-41fd-8158-931dd71aa3bd": "376e0104-8f73-4ec8-a8e4-59de7112fa66",
-        "035ea22d-faf8-47d3-a985-e34203d7d6ed": "7f32a0ec-bcaa-46af-a83b-06367faeef4a",
-        "f1edffdb-6224-483a-bdaf-d990338945dc": "51251d57-db6e-49af-a585-b159c7eefed6",
-        "64391713-0d79-440e-9c0c-244eab93e225": "67a69cc9-dd41-4409-b6ba-628bb10c890d",
-        "0a15eb43-296f-4f7d-8c4d-6fc818caed3a": "8460d24b-9cf4-4032-a6ea-2dc9598f73a0",
-        "6d935dcf-304c-4b04-9fbf-8510e4567f45": "b9f1056a-54d4-48ab-8119-25034952fa5c",
-        "8848874e-a8dc-411e-b1c3-8570919ffd58": "f162bb5f-cbc2-474b-8d8a-7ee82e9d3052",
-        "438bc154-5a5b-429b-9d71-58441491974d": "b3b3cbeb-db29-429a-b204-ad8eb4bd3742",
-        "9d7b1e29-f230-4afd-a1df-fb6c09bbf8f4": "735054c1-72e3-4457-bb3a-7a4a30a31608",
-        "c09e6b0b-89a8-4ad7-b379-a30586efb006": "a8887f25-09cf-4c31-8e22-7261e7e5c51e",
-        "4a59ae54-d9ae-40ec-9cdf-7501bb4f56c8": "75505123-1ac7-4a14-ae37-ba5007e47818",
-        "d4c3f916-e77f-452d-a301-f47fa586bf05": "51987915-bdcc-413a-92ef-348c65f94735",
-        "1307de01-f7bb-49da-aafa-23b7552d9da8": "2f44a5dc-6356-4e25-9ad4-d5029204da40",
-        "a350c7e0-d29a-4be0-8e09-878d81976982": "1987cedc-16ab-41c7-b3ca-0ddb680c311e",
-        "c876f8cb-c7b4-4153-9f1d-0e123b96a60f": "c2f6533e-ad10-4668-a82f-c3ed16e32b65",
-        "61f449d5-32a5-45a9-995b-72cbf03f9728": "58ea9c9b-aa9a-4225-9ecd-7c3eb80709c8",
-        "967e65ec-3363-49cb-a5bd-b0cae602e9ea": "27b6ddcd-8efe-46ad-bce5-6f70cadc26cc",
-        "2593b259-6419-4210-be45-34740f831368": "d09b4ebb-2485-42c8-b3c6-98052b420b7b",
-        "fad142fd-ae45-4ada-8b41-ba1293131d8c": "6d3a0dac-a256-4ddb-b99a-7b5097182882",
-        "466f44d1-d0de-4e65-a7a5-1f66f343dc31": "2c781d7b-3d04-4cfb-882d-e3d1d1f9c54d",
-        "3f0acb97-f6e5-43f8-b2cf-e4e90a4051bc": "f6a3e763-797b-4ad2-a28d-68c712948ecd",
-        "affd0822-a3ca-4b47-a061-c10cd72e1690": "87d58a5f-8b92-434a-932d-6b8958f74f14",
-        "60bc3628-d819-48b0-a1c2-196ace24726e": "a3036a18-3bbd-4d54-bed0-eafd8fd0a5b8",
-        "445eed71-8bd4-48b1-a9e6-4ddd32e028fb": "3432985d-0488-430d-a644-6c7e5abd4f0d",
-        "60032212-b693-4459-8d34-81accc13a898": "578e281b-0263-44fe-9409-84f8073142c4",
-        "b5504734-1612-4ba6-8a9e-bdde333fd002": "0fb6d646-5330-4c30-a223-1ca4e00549b3"
+        "b6bddeba-218a-4a43-a788-427143610533": "0956813e-649a-46d8-a626-b8896794d6b0",
+        "52c8931b-ab54-41fd-8158-931dd71aa3bd": "61607c53-e566-4aee-b8f3-d4106a54cdb5",
+        "035ea22d-faf8-47d3-a985-e34203d7d6ed": "48c965fd-3541-4b62-af20-64834356a31a",
+        "f1edffdb-6224-483a-bdaf-d990338945dc": "45e3e0c0-20d0-44e7-912f-da52fd4e31d9",
+        "64391713-0d79-440e-9c0c-244eab93e225": "ae6da5c8-32eb-4488-836f-d5848001d9b5",
+        "0a15eb43-296f-4f7d-8c4d-6fc818caed3a": "343cb39f-79b7-4abb-889f-b9d672a3dc32",
+        "6d935dcf-304c-4b04-9fbf-8510e4567f45": "142af6c1-bc88-4a96-89e8-a4c01fdf011f",
+        "8848874e-a8dc-411e-b1c3-8570919ffd58": "2c16c18e-527c-458f-bd0f-653f42cd4a6f",
+        "438bc154-5a5b-429b-9d71-58441491974d": "c282c16a-d828-41d1-864e-1a71b00b7a3d",
+        "9d7b1e29-f230-4afd-a1df-fb6c09bbf8f4": "18224057-abfd-430f-989e-873d4cc41fb9",
+        "c09e6b0b-89a8-4ad7-b379-a30586efb006": "5811a043-4042-4a11-9e73-471edc830ab5",
+        "4a59ae54-d9ae-40ec-9cdf-7501bb4f56c8": "57689d20-9151-47b1-aad3-5947f1ae581d",
+        "d4c3f916-e77f-452d-a301-f47fa586bf05": "09668de4-563d-4378-96f6-57c040b43a0b",
+        "1307de01-f7bb-49da-aafa-23b7552d9da8": "e760d84f-e79e-49ad-8406-051c77b8350d",
+        "a350c7e0-d29a-4be0-8e09-878d81976982": "c06ee6db-0c49-410b-9294-0d482d4f77d3",
+        "c876f8cb-c7b4-4153-9f1d-0e123b96a60f": "19643e0b-a993-4df0-b7f7-7d72b020636f",
+        "61f449d5-32a5-45a9-995b-72cbf03f9728": "ada71d49-9239-40c3-aa96-23d7589c9ad4",
+        "967e65ec-3363-49cb-a5bd-b0cae602e9ea": "da1933a8-4278-4b7c-8839-7e9a8f4f600e",
+        "2593b259-6419-4210-be45-34740f831368": "0c40c770-24d3-4494-9132-7286360e48be",
+        "fad142fd-ae45-4ada-8b41-ba1293131d8c": "ef652e58-751e-4aa0-922c-9c7fc3c8b017",
+        "466f44d1-d0de-4e65-a7a5-1f66f343dc31": "3ab8c4ae-61ca-4c8d-815d-4bf6f64d0ff4",
+        "3f0acb97-f6e5-43f8-b2cf-e4e90a4051bc": "7d4cda73-5853-4f31-a02d-1e993b1289aa",
+        "affd0822-a3ca-4b47-a061-c10cd72e1690": "d294c504-eca0-4860-ad27-7d2efff8ac32",
+        "60bc3628-d819-48b0-a1c2-196ace24726e": "6bf9585a-bfb5-4e2c-9ace-ba1bbd3241e7",
+        "445eed71-8bd4-48b1-a9e6-4ddd32e028fb": "59b839e4-fc72-4862-a70a-36a203770e60",
+        "60032212-b693-4459-8d34-81accc13a898": "f9eb4973-3568-4317-a3c5-dcd7745d2233",
+        "b5504734-1612-4ba6-8a9e-bdde333fd002": "c7656bda-9391-4398-9528-12df5f693637"
       }
     }
   ],
@@ -38633,6 +39831,7 @@
   "__references": [
     "apetavern.wlb_manhole_lid#45094",
     "baik.pokertable#79170",
+    "bdarts.grillz#204640",
     "bteam.bar_counter#10206",
     "constablezeehond.plantpotempty#164920",
     "constablezeehond.plantpotpotted#164919",
@@ -38671,14 +39870,24 @@
     "gkaf.door_2_window_a#26046",
     "gkaf.door_2_window_b#26047",
     "gkaf.door_2#26045",
+    "glitchworkshop.cigar#223797",
+    "glitchworkshop.goldearrings#164819",
     "gtavteam.gta5propcsbeerbot01#97061",
     "gunsightsoftware.model-deadpigeon#184155",
     "halfpeeps.garage_door#42972",
+    "huwie.baggypantsblue#207714",
+    "igorr.ogtshirt#139233",
+    "ilithsliph.charmbraceletmatcleanvmat#234951",
+    "lies.primebraidshair#197456",
     "limit.small_round_table#32903",
+    "littleranger.swagring#218929",
+    "lostick.sneakersgravity#198760",
     "luke.grand_piano_stool#22908",
     "luke.grand_piano#22909",
+    "ma1.tattoo_triabal#197383",
     "mingoelgato.c_bazaar_sniper#43437",
     "niclude.bench_4#30655",
+    "nightstudio.boss_shades#183071",
     "officialgaming.pooltable#185050",
     "polyhaven.green_chair_01#26449",
     "polyhaven.metaltrashcan#132116",

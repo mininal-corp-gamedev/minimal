@@ -20,8 +20,8 @@ RoulettePanel {
 	}
 
 	.roulette-panel {
-		width: 860px;
-		padding: 22px;
+		width: 920px;
+		padding: 20px;
 		flex-direction: column;
 		background-color: rgba(5, 8, 20, 0.98);
 		border: 1px solid rgba(255, 255, 255, 0.08);
@@ -34,12 +34,12 @@ RoulettePanel {
 	.panel-head {
 		flex-direction: row;
 		align-items: center;
-		margin-bottom: 14px;
+		margin-bottom: 12px;
 	}
 
 	.panel-title {
 		flex-grow: 1;
-		font-size: 28px;
+		font-size: 30px;
 		font-weight: 800;
 		color: rgba(255, 255, 255, 0.96);
 		white-space: nowrap;
@@ -63,12 +63,13 @@ RoulettePanel {
 
 	.panel-meta {
 		flex-direction: row;
-		gap: 10px;
-		margin-bottom: 12px;
+		gap: 12px;
+		margin-bottom: 10px;
 	}
 
 	.meta-item {
 		flex-grow: 1;
+		flex-basis: 0;
 		flex-direction: column;
 		padding: 10px 12px;
 		background-color: rgba(255, 255, 255, 0.04);
@@ -91,9 +92,13 @@ RoulettePanel {
 		color: #ffd7e2;
 	}
 
+	.timer-item .meta-value {
+		color: #8df57f;
+	}
+
 	.bet-list {
-		min-height: 44px;
-		margin-bottom: 12px;
+		min-height: 40px;
+		margin-bottom: 10px;
 		flex-direction: row;
 		flex-wrap: wrap;
 		gap: 8px;
@@ -124,7 +129,7 @@ RoulettePanel {
 	.stake-row {
 		flex-direction: row;
 		gap: 12px;
-		margin-bottom: 14px;
+		margin-bottom: 12px;
 	}
 
 	.field-block,
@@ -154,14 +159,20 @@ RoulettePanel {
 		background-color: rgba(9, 69, 35, 0.82);
 		border: 1px solid rgba(255, 255, 255, 0.12);
 		border-radius: 6px;
-		gap: 5px;
+		gap: 4px;
 	}
 
 	.numbers-grid {
 		width: 100%;
+		flex-direction: column;
+		gap: 4px;
+	}
+
+	.number-row {
+		width: 100%;
+		height: 34px;
 		flex-direction: row;
-		flex-wrap: wrap;
-		gap: 5px;
+		gap: 4px;
 	}
 
 	.column-row,
@@ -169,13 +180,16 @@ RoulettePanel {
 	.outside-row {
 		width: 100%;
 		flex-direction: row;
-		gap: 5px;
+		gap: 4px;
+	}
+
+	.column-row {
+		margin-top: 8px;
 	}
 
 	.cell {
-		height: 42px;
+		height: 36px;
 		flex-grow: 1;
-		flex-basis: 0;
 		border-radius: 4px;
 		border: 2px solid rgba(3, 5, 14, 0.82);
 		font-size: 18px;
@@ -194,14 +208,13 @@ RoulettePanel {
 
 	.zero {
 		width: 100%;
-		height: 46px;
+		height: 38px;
 		background-color: rgba(13, 130, 61, 0.96);
 	}
 
 	.number {
-		width: 32.4%;
-		flex-grow: 0;
-		flex-shrink: 0;
+		height: 34px;
+		font-size: 19px;
 	}
 
 	.red-number,
@@ -224,21 +237,22 @@ RoulettePanel {
 	}
 
 	.footer {
-		min-height: 46px;
-		margin-top: 14px;
+		min-height: 58px;
+		margin-top: 12px;
 		flex-direction: row;
 		align-items: center;
+		justify-content: center;
 		gap: 12px;
 	}
 
 	.place-btn {
-		width: 170px;
-		height: 42px;
+		width: 240px;
+		height: 50px;
 		border-radius: 6px;
 		background-color: rgba(255, 67, 108, 0.20);
 		border: 1px solid rgba(255, 67, 108, 0.55);
 		color: #ffd7e2;
-		font-size: 14px;
+		font-size: 16px;
 		font-weight: 900;
 		align-items: center;
 		justify-content: center;

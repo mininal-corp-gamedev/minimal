@@ -6,15 +6,33 @@
 
 <root>
 	<div class="roulette-world @VisualState">
-		<div class="status">@StatusText</div>
-		<div class="number">@NumberText</div>
-		<div class="meta">@MetaText</div>
+		@if ( IsWaiting )
+		{
+			<div class="timer">@WaitingTimerText</div>
+			<div class="meta">@MetaText</div>
+			<div class="hint">@GameLocalization.Phrase( "ui.common.press_e", "Press \"E\"" )</div>
+		}
+		else
+		{
+			<div class="status">@StatusText</div>
+			<div class="number">@NumberText</div>
+			<div class="meta">@MetaText</div>
+		}
 	</div>
 </root>
 
 @code
 {
 	private Roulette TargetRoulette => Components.Get<Roulette>( FindMode.EverythingInSelfAndAncestors );
+
+	private bool IsWaiting
+	{
+		get
+		{
+			var roulette = TargetRoulette;
+			return roulette.IsValid() && roulette.IsBetting;
+		}
+	}
 
 	private string VisualState
 	{
@@ -48,6 +66,18 @@
 			if ( roulette.IsShowingResult )
 				return GameLocalization.Phrase( "ui.roulette.result", "Result" );
 
+			return WaitingTimerText;
+		}
+	}
+
+	private string WaitingTimerText
+	{
+		get
+		{
+			var roulette = TargetRoulette;
+			if ( !roulette.IsValid() )
+				return "-";
+
 			return GameLocalization.Format( "ui.roulette.next_spin", "Next spin in {0}s", SecondsLeft( roulette.BettingTimeUntil ) );
 		}
 	}
@@ -66,7 +96,7 @@
 			if ( roulette.IsShowingResult )
 				return roulette.FinalNumber.ToString();
 
-			return "0-36";
+			return "";
 		}
 	}
 

@@ -10,8 +10,8 @@ RouletteWorldText {
 	color: rgba(255, 255, 255, 0.92);
 
 	.roulette-world {
-		width: 260px;
-		padding: 12px;
+		width: 300px;
+		padding: 14px;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
@@ -29,6 +29,18 @@ RouletteWorldText {
 		font-size: 14px;
 		font-weight: 800;
 		color: rgba(255, 255, 255, 0.72);
+	}
+
+	.timer {
+		width: 100%;
+		min-height: 62px;
+		align-items: center;
+		justify-content: center;
+		font-size: 30px;
+		font-weight: 900;
+		color: #ffd7e2;
+		text-align: center;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.65);
 	}
 
 	.number {
@@ -49,9 +61,23 @@ RouletteWorldText {
 		min-height: 22px;
 		align-items: center;
 		justify-content: center;
-		font-size: 12px;
-		font-weight: 700;
+		font-size: 14px;
+		font-weight: 800;
 		color: rgba(255, 255, 255, 0.58);
+	}
+
+	.hint {
+		width: 100%;
+		height: 32px;
+		margin-top: 2px;
+		align-items: center;
+		justify-content: center;
+		border-radius: 6px;
+		background-color: rgba(255, 67, 108, 0.20);
+		border: 1px solid rgba(255, 67, 108, 0.55);
+		font-size: 15px;
+		font-weight: 900;
+		color: #ffd7e2;
 	}
 
 	.roulette-world.spinning .number {

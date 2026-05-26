@@ -15,6 +15,10 @@
 				</div>
 
 				<div class="panel-meta">
+					<div class="meta-item timer-item">
+						<div class="meta-label">@GameLocalization.Phrase( "ui.roulette.timer", "Timer" )</div>
+						<div class="meta-value">@TimerText</div>
+					</div>
 					<div class="meta-item">
 						<div class="meta-label">@GameLocalization.Phrase( "ui.hud.cash", "CASH" )</div>
 						<div class="meta-value">$@(Player.Local?.Money ?? 0)</div>
@@ -40,8 +44,8 @@
 						{
 							<div class="bet-chip">
 								<span>@TargetRoulette.GetBetLabel( bet )</span>
-								<span>$@bet.Amount</span>
-								<span>x@bet.Multiplier</span>
+								<span>$@(bet.Amount)</span>
+								<span>x@(bet.Multiplier)</span>
 							</div>
 						}
 					}
@@ -64,11 +68,13 @@
 					<div class="numbers-grid">
 						@for ( var row = 0; row < 12; row++ )
 						{
-							@for ( var column = 1; column <= 3; column++ )
-							{
-								var number = row * 3 + column;
-								<button class="cell number @GetNumberColorClass( number ) @(IsSelected( RouletteBetKind.Straight, number ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.Straight, number ))>@number</button>
-							}
+							<div class="number-row">
+								@for ( var column = 1; column <= 3; column++ )
+								{
+									var number = row * 3 + column;
+									<button class="cell number @GetNumberColorClass( number ) @(IsSelected( RouletteBetKind.Straight, number ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.Straight, number ))>@number</button>
+								}
+							</div>
 						}
 					</div>
 
@@ -136,6 +142,9 @@
 	private string SelectedLabel => TargetRoulette.IsValid()
 		? TargetRoulette.GetBetLabel( (int)SelectedKind, SelectedTarget )
 		: GameLocalization.Phrase( "ui.roulette.selection", "Selection" );
+	private string TimerText => TargetRoulette.IsValid()
+		? GetTimerText( TargetRoulette )
+		: "-";
 
 	public static void Open( Roulette roulette )
 	{
@@ -333,6 +342,25 @@
 		return int.TryParse( (text ?? "").Trim(), out amount ) && amount > 0;
 	}
 
+	private static string GetTimerText( Roulette roulette )
+	{
+		if ( !roulette.IsValid() )
+			return "-";
+
+		if ( roulette.IsSpinning )
+			return GameLocalization.Format( "ui.roulette.spin_seconds", "Spin {0}s", SecondsLeft( roulette.SpinTimeUntil ) );
+
+		if ( roulette.IsShowingResult )
+			return GameLocalization.Format( "ui.roulette.result_seconds", "Result {0}s", SecondsLeft( roulette.ResultTimeUntil ) );
+
+		return GameLocalization.Format( "ui.roulette.next_spin", "Next spin in {0}s", SecondsLeft( roulette.BettingTimeUntil ) );
+	}
+
+	private static int SecondsLeft( TimeUntil timer )
+	{
+		return Math.Max( 0, (int)Math.Ceiling( (float)timer ) );
+	}
+
 	protected override void OnUpdate()
 	{
 		if ( IsOpen && ( !TargetRoulette.IsValid() || TargetRoulette.IsSpinning || TargetRoulette.IsShowingResult ) )
@@ -393,6 +421,9 @@
 		hash.Add( TargetRoulette?.RoundState ?? -1 );
 		hash.Add( TargetRoulette?.LocalBetCount ?? 0 );
 		hash.Add( TargetRoulette?.GetLocalBetTotal() ?? 0 );
+		hash.Add( TargetRoulette.IsValid() ? SecondsLeft( TargetRoulette.BettingTimeUntil ) : 0 );
+		hash.Add( TargetRoulette.IsValid() ? SecondsLeft( TargetRoulette.SpinTimeUntil ) : 0 );
+		hash.Add( TargetRoulette.IsValid() ? SecondsLeft( TargetRoulette.ResultTimeUntil ) : 0 );
 		hash.Add( Player.Local?.Money ?? 0 );
 		hash.Add( AmountInput );
 		hash.Add( SelectedKind );

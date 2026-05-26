@@ -36905,14 +36905,6 @@
         "PropertyOverrides": [
           {
             "Target": {
-              "Type": "GameObject",
-              "IdValue": "bfa99d0c-d2e8-43e1-b19b-faa0754a35dc"
-            },
-            "Property": "Flags",
-            "Value": 0
-          },
-          {
-            "Target": {
               "Type": "Component",
               "IdValue": "0e51fb74-dbd4-4105-a215-507127aadb8a"
             },
@@ -36996,7 +36988,8 @@
         "a8a62c56-48f9-47cc-83f2-76a57f9ae300": "4bc88c80-2f5f-47a5-b39a-21c1f6f80bb3",
         "90e0b204-7e91-4fa0-95d8-af5422fab591": "5f78ccc8-555b-4d8b-9ef8-f30829af303d",
         "fac48538-215f-46d8-ba88-33eb457b7aee": "a5a44f1e-daa5-40c2-a9ca-00f2b8519114",
-        "7d108d48-bf0d-42ac-8332-3fe25805e639": "87557910-f464-41b4-87d8-d5fe76f39ce9"
+        "7d108d48-bf0d-42ac-8332-3fe25805e639": "87557910-f464-41b4-87d8-d5fe76f39ce9",
+        "0a412916-a9df-40c9-adb8-3f174cf8b90f": "6aeba307-4939-4954-b562-39c8cbb3ff9e"
       }
     },
     {

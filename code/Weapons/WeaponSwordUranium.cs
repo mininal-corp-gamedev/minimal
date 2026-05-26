@@ -39,7 +39,7 @@ public sealed class WeaponSwordUranium : Weapon
         var splashCenter = tr.Hit ? tr.HitPosition : (origin + direction.Normal * AttackRange);
         ApplySplashDamage( splashCenter, tr.GameObject );
 
-        Player.Local?.RpcOnWeaponFired( FireSound, origin, null, origin, GameObject.WorldRotation, null );
+        Player.Local?.RpcOnWeaponFired( FireSound, origin, null, origin, GameObject.WorldRotation, null, GetHoldTypeAttack() );
     }
 
     /// <summary>

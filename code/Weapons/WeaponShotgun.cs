@@ -61,7 +61,7 @@ public sealed class WeaponShotgun : Weapon
 
         var muzzlePrefab = (SpawnSpriteFireOnShot && SpriteFirePrefab.IsValid()) ? SpriteFirePrefab : null;
         var muzzleRot = ShotPos != null ? ShotPos.WorldRotation : GameObject.WorldRotation;
-        Player.Local?.RpcOnWeaponFired(FireSound, origin, muzzlePrefab, origin, muzzleRot, firstBullet);
+        Player.Local?.RpcOnWeaponFired(FireSound, origin, muzzlePrefab, origin, muzzleRot, firstBullet, GetHoldTypeAttack());
     }
 
     private static Vector3 ApplySpread(Vector3 direction, float spreadDegrees)

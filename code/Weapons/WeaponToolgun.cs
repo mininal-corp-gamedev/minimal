@@ -61,7 +61,7 @@ public sealed class WeaponToolgun : Weapon
 
 		var origin = ShotPos != null ? ShotPos.WorldPosition : WorldPosition;
 		var muzzleRot = ShotPos != null ? ShotPos.WorldRotation : GameObject.WorldRotation;
-		Player.Local?.RpcOnWeaponFired(FireSound, origin, null, origin, muzzleRot, null);
+		Player.Local?.RpcOnWeaponFired(FireSound, origin, null, origin, muzzleRot, null, GetHoldTypeAttack());
 	}
 
 	private static Connection GetLocalPlayerConnection()

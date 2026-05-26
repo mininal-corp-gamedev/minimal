@@ -499,8 +499,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     }
 
     [Rpc.Broadcast]
-    public void RpcOnWeaponFired(SoundEvent fireSound, Vector3 soundPos, GameObject muzzlePrefab, Vector3 muzzlePos, Rotation muzzleRot, GameObject bullet)
+    public void RpcOnWeaponFired(SoundEvent fireSound, Vector3 soundPos, GameObject muzzlePrefab, Vector3 muzzlePos, Rotation muzzleRot, GameObject bullet, int holdTypeAttack)
     {
+        Renderer?.Set("holdtype_attack", holdTypeAttack);
         Renderer?.Set("b_attack", true);
         if (fireSound.IsValid())
             Sound.Play(fireSound, soundPos);

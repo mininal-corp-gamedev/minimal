@@ -97,9 +97,30 @@ public class Weapon : Component
     protected virtual void OnWeaponStart() { }
     protected virtual void OnWeaponFixedUpdate() { }
     protected virtual void OnWeaponUpdate() { }
+    protected virtual int GetHoldTypeAttack() => (int)WeaponHandedness.BothHands;
 
     /// <summary>Хук на ПКМ для ближнего боя (ironsights в этом случае не используются).</summary>
     protected virtual void OnSecondaryAttack() { }
+
+    protected virtual void HandleDefaultCombatInput()
+    {
+        if (!IsMelee && Input.Pressed("Reload") && _reloadWasReleased)
+            Reload();
+
+        bool wantFire = SemiAuto ? Input.Pressed("Attack1") : (Input.Down("Attack1") && _attack1WasReleased);
+        if (wantFire)
+            PerformFire();
+
+        if (IsMelee && Input.Pressed("Attack2"))
+            OnSecondaryAttack();
+
+        if (IsMelee)
+            IsIronSight = false;
+        else if (Input.Down("Attack2") && !Input.Down("Run") && _attack2WasReleased)
+            IsIronSight = true;
+        else
+            IsIronSight = false;
+    }
 
     private void ConfigureViewmodelRendering()
     {
@@ -152,6 +173,7 @@ public class Weapon : Component
         Viewmodel.Set("b_reload", false);
         Viewmodel.Set("b_reloading", false);
         Viewmodel.Set("b_attack", false);
+        Viewmodel.Set("holdtype_attack", GetHoldTypeAttack());
     }
 
     protected override void OnFixedUpdate()
@@ -204,7 +226,7 @@ public class Weapon : Component
 
         var muzzlePrefab = (SpawnSpriteFireOnShot && SpriteFirePrefab.IsValid()) ? SpriteFirePrefab : null;
         var muzzleRot = ShotPos != null ? ShotPos.WorldRotation : GameObject.WorldRotation;
-        Player.Local?.RpcOnWeaponFired(FireSound, origin, muzzlePrefab, origin, muzzleRot, bullet);
+        Player.Local?.RpcOnWeaponFired(FireSound, origin, muzzlePrefab, origin, muzzleRot, bullet, GetHoldTypeAttack());
     }
 
     /// <summary>Префаб пули: свой BulletPrefab или из WeaponManager.</summary>
@@ -470,22 +492,7 @@ public class Weapon : Component
 
         if (!UseDefaultCombatInput) return;
 
-        if (!IsMelee && Input.Pressed("Reload") && _reloadWasReleased)
-            Reload();
-
-        bool wantFire = SemiAuto ? Input.Pressed("Attack1") : (Input.Down("Attack1") && _attack1WasReleased);
-        if (wantFire)
-            PerformFire();
-
-        if (IsMelee && Input.Pressed("Attack2"))
-            OnSecondaryAttack();
-
-        if (IsMelee)
-            IsIronSight = false;
-        else if (Input.Down("Attack2") && !Input.Down("Run") && _attack2WasReleased)
-            IsIronSight = true;
-        else
-            IsIronSight = false;
+        HandleDefaultCombatInput();
     }
 
     private void ViewmodelFixedUpdate()
@@ -501,7 +508,11 @@ public class Weapon : Component
         else Viewmodel.Set("move_bob", 0f);
         if (isRunning) Viewmodel.Set("b_sprint", true);
         else Viewmodel.Set("b_sprint", false);
-        if (isShooting) Viewmodel.Set("b_attack", true);
+        if (isShooting)
+        {
+            Viewmodel.Set("holdtype_attack", GetHoldTypeAttack());
+            Viewmodel.Set("b_attack", true);
+        }
         Viewmodel.Set("ironsights", IsIronSight ? 1 : 0);
 
         _firedThisFrame = false;

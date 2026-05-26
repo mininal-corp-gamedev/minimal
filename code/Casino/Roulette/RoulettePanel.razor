@@ -1,0 +1,404 @@
+@using Sandbox
+@using Sandbox.UI
+@using System
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) && TargetRoulette.IsValid() )
+	{
+		<div class="roulette-overlay">
+			<div class="roulette-panel" @ref="FocusSinkRef">
+				<div class="panel-head">
+					<div class="panel-title">@RouletteName</div>
+					<button class="close-btn" onclick=@Close>@GameLocalization.Phrase( "ui.common.close", "Close" )</button>
+				</div>
+
+				<div class="panel-meta">
+					<div class="meta-item">
+						<div class="meta-label">@GameLocalization.Phrase( "ui.hud.cash", "CASH" )</div>
+						<div class="meta-value">$@(Player.Local?.Money ?? 0)</div>
+					</div>
+					<div class="meta-item">
+						<div class="meta-label">@GameLocalization.Phrase( "ui.roulette.min_max", "Min / Max" )</div>
+						<div class="meta-value">$@SafeMinBet - $@SafeMaxBet</div>
+					</div>
+					<div class="meta-item">
+						<div class="meta-label">@GameLocalization.Phrase( "ui.roulette.bets", "Bets" )</div>
+						<div class="meta-value">@CurrentBetCount / @Roulette.MaxBetsPerPlayer</div>
+					</div>
+				</div>
+
+				<div class="bet-list">
+					@if ( CurrentBetCount <= 0 )
+					{
+						<div class="empty-bets">@GameLocalization.Phrase( "ui.roulette.no_bets", "No active bets" )</div>
+					}
+					else
+					{
+						@foreach ( var bet in TargetRoulette.LocalBets )
+						{
+							<div class="bet-chip">
+								<span>@TargetRoulette.GetBetLabel( bet )</span>
+								<span>$@bet.Amount</span>
+								<span>x@bet.Multiplier</span>
+							</div>
+						}
+					}
+				</div>
+
+				<div class="stake-row">
+					<div class="field-block">
+						<div class="field-label">@GameLocalization.Phrase( "ui.money.amount", "Amount" )</div>
+						<TextEntry class="roulette-input" Value:bind="@AmountInput" Placeholder="@GameLocalization.Phrase( "ui.money.placeholder", "Example: 250" )" onsubmit="@Submit"></TextEntry>
+					</div>
+					<div class="selection-block">
+						<div class="field-label">@GameLocalization.Phrase( "ui.roulette.selection", "Selection" )</div>
+						<div class="selection-value">@SelectedLabel</div>
+					</div>
+				</div>
+
+				<div class="roulette-board">
+					<button class="cell zero @(IsSelected( RouletteBetKind.Zero, 0 ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.Zero, 0 ))>0</button>
+
+					<div class="numbers-grid">
+						@for ( var row = 0; row < 12; row++ )
+						{
+							@for ( var column = 1; column <= 3; column++ )
+							{
+								var number = row * 3 + column;
+								<button class="cell number @GetNumberColorClass( number ) @(IsSelected( RouletteBetKind.Straight, number ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.Straight, number ))>@number</button>
+							}
+						}
+					</div>
+
+					<div class="column-row">
+						@for ( var column = 1; column <= 3; column++ )
+						{
+							var columnTarget = column;
+							<button class="cell outside @(IsSelected( RouletteBetKind.Column, columnTarget ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.Column, columnTarget ))>@GameLocalization.Phrase( "ui.roulette.column", "2 to 1" )</button>
+						}
+					</div>
+
+					<div class="dozen-row">
+						<button class="cell outside @(IsSelected( RouletteBetKind.Dozen, 1 ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.Dozen, 1 ))>@GameLocalization.Phrase( "ui.roulette.first_12", "1st 12" )</button>
+						<button class="cell outside @(IsSelected( RouletteBetKind.Dozen, 2 ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.Dozen, 2 ))>@GameLocalization.Phrase( "ui.roulette.second_12", "2nd 12" )</button>
+						<button class="cell outside @(IsSelected( RouletteBetKind.Dozen, 3 ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.Dozen, 3 ))>@GameLocalization.Phrase( "ui.roulette.third_12", "3rd 12" )</button>
+					</div>
+
+					<div class="outside-row">
+						<button class="cell outside @(IsSelected( RouletteBetKind.LowHigh, 0 ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.LowHigh, 0 ))>@GameLocalization.Phrase( "ui.roulette.low", "1-18" )</button>
+						<button class="cell outside @(IsSelected( RouletteBetKind.OddEven, 0 ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.OddEven, 0 ))>@GameLocalization.Phrase( "ui.roulette.even", "Even" )</button>
+						<button class="cell outside red-field @(IsSelected( RouletteBetKind.Color, 1 ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.Color, 1 ))>@GameLocalization.Phrase( "ui.roulette.red", "Red" )</button>
+						<button class="cell outside black-field @(IsSelected( RouletteBetKind.Color, 0 ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.Color, 0 ))>@GameLocalization.Phrase( "ui.roulette.black", "Black" )</button>
+						<button class="cell outside @(IsSelected( RouletteBetKind.OddEven, 1 ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.OddEven, 1 ))>@GameLocalization.Phrase( "ui.roulette.odd", "Odd" )</button>
+						<button class="cell outside @(IsSelected( RouletteBetKind.LowHigh, 1 ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.LowHigh, 1 ))>@GameLocalization.Phrase( "ui.roulette.high", "19-36" )</button>
+					</div>
+				</div>
+
+				<div class="footer">
+					@if ( CurrentBetCount < Roulette.MaxBetsPerPlayer )
+					{
+						<button class="place-btn" onclick=@Submit>@GameLocalization.Phrase( "ui.roulette.place_bet", "Place Bet" )</button>
+					}
+					@if ( !string.IsNullOrWhiteSpace( ErrorText ) )
+					{
+						<div class="error-text">@ErrorText</div>
+					}
+				</div>
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	private const string ModalId = nameof( RoulettePanel );
+	private const int DefaultBetAmount = 100;
+
+	public static RoulettePanel Instance { get; private set; }
+
+	private bool IsOpen { get; set; }
+	private Roulette TargetRoulette { get; set; }
+	private string AmountInput { get; set; } = DefaultBetAmount.ToString();
+	private RouletteBetKind SelectedKind { get; set; } = RouletteBetKind.Color;
+	private int SelectedTarget { get; set; } = 1;
+	private string ErrorText { get; set; } = "";
+	private Panel FocusSinkRef { get; set; }
+
+	private string RouletteName => TargetRoulette.IsValid() && !string.IsNullOrWhiteSpace( TargetRoulette.GameObject.Name )
+		? TargetRoulette.GameObject.Name
+		: GameLocalization.Phrase( "ui.roulette.title", "Roulette" );
+
+	private int SafeMinBet => TargetRoulette.IsValid() ? Math.Max( 1, TargetRoulette.MinBet ) : 1;
+	private int SafeMaxBet => TargetRoulette.IsValid() ? Math.Max( SafeMinBet, TargetRoulette.MaxBet ) : 1;
+	private int CurrentBetCount => TargetRoulette.IsValid() ? TargetRoulette.LocalBetCount : 0;
+	private string SelectedLabel => TargetRoulette.IsValid()
+		? TargetRoulette.GetBetLabel( (int)SelectedKind, SelectedTarget )
+		: GameLocalization.Phrase( "ui.roulette.selection", "Selection" );
+
+	public static void Open( Roulette roulette )
+	{
+		if ( !ValidateOpen( roulette, out var reason ) )
+		{
+			if ( !string.IsNullOrWhiteSpace( reason ) )
+				Notification.Error( reason, 3.5f );
+
+			return;
+		}
+
+		EnsureInstance();
+		Instance?.OpenInternal( roulette );
+	}
+
+	public static void CloseForRoulette( Roulette roulette )
+	{
+		if ( !Instance.IsValid() || !Instance.IsOpen )
+			return;
+
+		if ( !roulette.IsValid() || Instance.TargetRoulette == roulette )
+			Instance.Close();
+	}
+
+	public static void NotifyBetAccepted( Roulette roulette )
+	{
+		if ( !Instance.IsValid() || Instance.TargetRoulette != roulette )
+			return;
+
+		Instance.ErrorText = "";
+		Instance.StateHasChanged();
+	}
+
+	public static void NotifyBetRejected( Roulette roulette, string reason )
+	{
+		if ( !Instance.IsValid() || Instance.TargetRoulette != roulette )
+			return;
+
+		Instance.ErrorText = reason;
+		Instance.StateHasChanged();
+	}
+
+	public static void NotifyRoundResolved( Roulette roulette )
+	{
+		if ( !Instance.IsValid() || Instance.TargetRoulette != roulette )
+			return;
+
+		Instance.Close();
+	}
+
+	private static void EnsureInstance()
+	{
+		if ( Instance.IsValid() )
+			return;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return;
+
+		var panelObject = scene.CreateObject();
+		panelObject.Name = "RoulettePanel";
+		Instance = panelObject.Components.Create<RoulettePanel>();
+	}
+
+	private static bool ValidateOpen( Roulette roulette, out string reason )
+	{
+		reason = "";
+
+		var local = Player.Local;
+		if ( !local.IsValid() )
+		{
+			reason = GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." );
+			return false;
+		}
+
+		if ( !roulette.IsValid() )
+			return false;
+
+		if ( roulette.IsSpinning || roulette.IsShowingResult )
+		{
+			reason = GameLocalization.Phrase( "notify.roulette.spinning", "Roulette is spinning." );
+			return false;
+		}
+
+		if ( Roulette.HasLocalActiveRouletteOtherThan( roulette ) )
+		{
+			reason = GameLocalization.Phrase( "notify.roulette.other_active", "You already have bets on another roulette." );
+			return false;
+		}
+
+		if ( roulette.LocalBetCount >= Roulette.MaxBetsPerPlayer )
+		{
+			reason = GameLocalization.Phrase( "notify.roulette.max_bets", "Maximum roulette bets reached." );
+			return false;
+		}
+
+		return true;
+	}
+
+	private void OpenInternal( Roulette roulette )
+	{
+		TargetRoulette = roulette;
+		AmountInput = DefaultBetAmount.ToString();
+		ErrorText = "";
+		SetOpen( true );
+	}
+
+	private void SetOpen( bool open )
+	{
+		if ( open )
+			UiModalManager.Open( ModalId );
+		else
+			UiModalManager.Close( ModalId );
+
+		IsOpen = open;
+		Crosshair.SetBlocked( ModalId, open );
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void Close()
+	{
+		SetOpen( false );
+		FocusSinkRef?.Focus();
+	}
+
+	private void SelectBet( RouletteBetKind kind, int target )
+	{
+		SelectedKind = kind;
+		SelectedTarget = target;
+		ErrorText = "";
+	}
+
+	private bool IsSelected( RouletteBetKind kind, int target )
+	{
+		return SelectedKind == kind && SelectedTarget == target;
+	}
+
+	private string GetNumberColorClass( int number )
+	{
+		return Roulette.IsRedNumber( number ) ? "red-number" : "black-number";
+	}
+
+	private void Submit()
+	{
+		FocusSinkRef?.Focus();
+
+		if ( !TargetRoulette.IsValid() )
+		{
+			Close();
+			return;
+		}
+
+		if ( !ValidateOpen( TargetRoulette, out var openReason ) )
+		{
+			SetError( openReason );
+			return;
+		}
+
+		if ( !TryParseAmount( AmountInput, out var amount ) )
+		{
+			SetError( GameLocalization.Phrase( "notify.money.invalid_amount", "Enter a valid amount." ) );
+			return;
+		}
+
+		if ( amount < SafeMinBet || amount > SafeMaxBet )
+		{
+			SetError( GameLocalization.Format( "notify.roulette.min_max", "Bet must be ${0}-${1}.", SafeMinBet, SafeMaxBet ) );
+			return;
+		}
+
+		var localMoney = Player.Local?.Money ?? 0;
+		if ( localMoney < amount )
+		{
+			SetError( GameLocalization.Phrase( "ui.shop.not_enough_money", "Not enough money" ) );
+			return;
+		}
+
+		TargetRoulette.RequestPlaceBet( (int)SelectedKind, SelectedTarget, amount );
+	}
+
+	private void SetError( string text )
+	{
+		ErrorText = string.IsNullOrWhiteSpace( text )
+			? GameLocalization.Phrase( "notify.casino.invalid_bet", "Invalid bet" )
+			: text;
+
+		Notification.Error( ErrorText, 3.5f );
+		StateHasChanged();
+	}
+
+	private static bool TryParseAmount( string text, out int amount )
+	{
+		amount = 0;
+		return int.TryParse( (text ?? "").Trim(), out amount ) && amount > 0;
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( IsOpen && ( !TargetRoulette.IsValid() || TargetRoulette.IsSpinning || TargetRoulette.IsShowingResult ) )
+			Close();
+
+		if ( IsOpen )
+			UiModalManager.UpdateMouseVisibility();
+	}
+
+	protected override void OnStart()
+	{
+		if ( Instance.IsValid() && Instance != this )
+			return;
+
+		Instance = this;
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
+	}
+
+	protected override void OnDisabled()
+	{
+		ReleaseCrosshairBlock();
+	}
+
+	protected override void OnDestroy()
+	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
+		ReleaseCrosshairBlock();
+
+		if ( Instance == this )
+			Instance = null;
+	}
+
+	private void ReleaseCrosshairBlock()
+	{
+		IsOpen = false;
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.Close( ModalId );
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen )
+			return;
+
+		IsOpen = false;
+		ErrorText = "";
+		FocusSinkRef?.Focus();
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
+	}
+
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( IsOpen );
+		hash.Add( UiModalManager.Version );
+		hash.Add( TargetRoulette );
+		hash.Add( TargetRoulette?.RoundState ?? -1 );
+		hash.Add( TargetRoulette?.LocalBetCount ?? 0 );
+		hash.Add( TargetRoulette?.GetLocalBetTotal() ?? 0 );
+		hash.Add( Player.Local?.Money ?? 0 );
+		hash.Add( AmountInput );
+		hash.Add( SelectedKind );
+		hash.Add( SelectedTarget );
+		hash.Add( ErrorText );
+		hash.Add( GameLocalization.CurrentCode );
+		return hash.ToHashCode();
+	}
+}

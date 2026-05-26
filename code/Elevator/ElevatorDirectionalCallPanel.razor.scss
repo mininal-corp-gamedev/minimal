@@ -1,0 +1,136 @@
+$panel-bg: rgba(7, 8, 10, 0.94);
+$panel-border: rgba(214, 183, 106, 0.36);
+$surface: rgba(255, 255, 255, 0.05);
+$text: rgba(255, 255, 255, 0.95);
+$muted: rgba(255, 255, 255, 0.56);
+$gold: #d6b76a;
+$blue: #7cc7ff;
+$green: #9fe6b0;
+
+ElevatorDirectionalCallPanel {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	justify-content: flex-start;
+	align-items: center;
+	font-family: Poppins;
+	pointer-events: all;
+	padding-top: 14px;
+
+	.hotel-call-panel {
+		width: 148px;
+		height: 138px;
+		padding: 8px;
+		flex-direction: column;
+		background-color: $panel-bg;
+		border: 1px solid $panel-border;
+		border-radius: 8px;
+		box-shadow: 0 14px 42px rgba(0, 0, 0, 0.70);
+		gap: 6px;
+		overflow: hidden;
+	}
+
+	.status-strip {
+		width: 100%;
+		height: 36px;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		background-color: $surface;
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 6px;
+		gap: 10px;
+	}
+
+	.direction {
+		width: 20px;
+		height: 24px;
+		align-items: center;
+		justify-content: center;
+		color: $gold;
+		font-size: 17px;
+		font-weight: 800;
+	}
+
+	.floor {
+		height: 24px;
+		align-items: center;
+		justify-content: center;
+		color: $text;
+		font-size: 18px;
+		font-weight: 800;
+		white-space: nowrap;
+	}
+
+	.meta {
+		width: 100%;
+		height: 22px;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0 6px;
+	}
+
+	.label {
+		color: $muted;
+		font-size: 9px;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0;
+	}
+
+	.served-floor {
+		color: $text;
+		font-size: 15px;
+		font-weight: 800;
+	}
+
+	.direction-buttons {
+		width: 100%;
+		height: 42px;
+		flex-direction: row;
+		gap: 6px;
+	}
+
+	.call-button {
+		flex-grow: 1;
+		height: 42px;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba(255, 255, 255, 0.07);
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: 7px;
+		color: $text;
+		font-size: 18px;
+		font-weight: 800;
+		cursor: pointer;
+		pointer-events: all;
+	}
+
+	.call-button:hover {
+		background-color: rgba(214, 183, 106, 0.17);
+		border-color: rgba(214, 183, 106, 0.64);
+		color: $gold;
+	}
+
+	.call-button.queued {
+		background-color: rgba(159, 230, 176, 0.15);
+		border-color: rgba(159, 230, 176, 0.52);
+		color: $green;
+	}
+
+	.call-button.disabled {
+		opacity: 0.44;
+		cursor: default;
+	}
+
+	.moving.up .direction {
+		color: $blue;
+	}
+
+	.moving.down .direction {
+		color: $gold;
+	}
+}

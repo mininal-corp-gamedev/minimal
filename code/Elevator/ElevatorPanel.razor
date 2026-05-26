@@ -33,7 +33,11 @@
 	Elevator Lift => TargetElevator ?? Components.Get<Elevator>( FindMode.EverythingInSelfAndAncestors );
 
 	int FloorCount => Math.Clamp( Lift?.SafeFloorCount ?? 1, 1, 20 );
-	string PanelStateClass => Lift?.IsMoving == true ? "moving" : "idle";
+	string PanelStateClass => $"{(Lift?.IsMoving == true ? "moving" : "idle")} {DirectionClass}";
+	string DirectionClass => Lift?.Direction == ElevatorTravelDirection.Up ? "up" :
+		Lift?.Direction == ElevatorTravelDirection.Down ? "down" : "still";
+	string DirectionGlyph => Lift?.Direction == ElevatorTravelDirection.Up ? "^" :
+		Lift?.Direction == ElevatorTravelDirection.Down ? "v" : "-";
 
 	IEnumerable<int> Floors
 	{
@@ -52,7 +56,7 @@
 				return "-";
 
 			if ( Lift.IsMoving )
-				return $"{Lift.CurrentFloor} -> {Lift.TargetFloor}";
+				return $"{DirectionGlyph} {Lift.CurrentFloor} -> {Lift.TargetFloor}";
 
 			return Lift.CurrentFloor.ToString();
 		}
@@ -65,7 +69,10 @@
 			if ( Lift is null )
 				return GameLocalization.Phrase( "ui.elevator.offline", "Offline" );
 
-			return Lift.IsMoving ? GameLocalization.Phrase( "ui.elevator.moving", "Moving" ) : GameLocalization.Phrase( "ui.common.ready", "Ready" );
+			return Lift.Direction == ElevatorTravelDirection.Up ? GameLocalization.Phrase( "ui.elevator.up", "Up" ) :
+				Lift.Direction == ElevatorTravelDirection.Down ? GameLocalization.Phrase( "ui.elevator.down", "Down" ) :
+				Lift.IsMoving ? GameLocalization.Phrase( "ui.elevator.moving", "Moving" ) :
+				GameLocalization.Phrase( "ui.common.ready", "Ready" );
 		}
 	}
 
@@ -74,7 +81,13 @@
 		if ( IsFloorDisabled( floor ) )
 			return;
 
-		Lift?.RpcRequestFloor( floor );
+		var player = Player.Local;
+		var playerPosition = player?.WorldPosition ?? Vector3.Zero;
+		var eyePosition = playerPosition;
+		if ( player.IsValid() && player.Controller.IsValid() )
+			eyePosition = player.Controller.EyePosition;
+
+		Lift?.RpcRequestFloorFromPanel( floor, playerPosition, eyePosition );
 	}
 
 	bool IsFloorDisabled( int floor )
@@ -92,6 +105,9 @@
 
 		if ( Lift.IsMoving && Lift.TargetFloor == floor )
 			return "target";
+
+		if ( Lift.HasPendingCabRequest( floor ) )
+			return "queued";
 
 		if ( !Lift.IsMoving && Lift.CurrentFloor == floor )
 			return "current";
@@ -114,6 +130,11 @@
 		h.Add( Lift?.TargetFloor ?? 0 );
 		h.Add( Lift?.TravelOffset ?? 0f );
 		h.Add( Lift?.IsMoving ?? false );
+		h.Add( Lift?.DoorsOpen ?? false );
+		h.Add( Lift?.OpenDoorFloor ?? 0 );
+		h.Add( Lift?.Direction ?? ElevatorTravelDirection.Idle );
+		h.Add( Lift?.PendingCabFloors ?? "" );
+		h.Add( Lift?.QueueRevision ?? 0 );
 		h.Add( FloorText );
 		h.Add( StateText );
 		h.Add( PanelStateClass );

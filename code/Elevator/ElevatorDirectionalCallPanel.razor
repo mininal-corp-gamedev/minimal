@@ -1,0 +1,127 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="hotel-call-panel directional @PanelStateClass">
+		<div class="status-strip">
+			<div class="direction">@DirectionGlyph</div>
+			<div class="floor">@FloorText</div>
+		</div>
+
+		<div class="meta">
+			<div class="label">@GameLocalization.Phrase( "ui.elevator.floor", "Floor" )</div>
+			<div class="served-floor">@ClampedServedFloor</div>
+		</div>
+
+		<div class="direction-buttons">
+			<div class="call-button @ButtonClass( ElevatorTravelDirection.Up )" onclick=@(() => RequestCall( ElevatorTravelDirection.Up ))>
+				^
+			</div>
+			<div class="call-button @ButtonClass( ElevatorTravelDirection.Down )" onclick=@(() => RequestCall( ElevatorTravelDirection.Down ))>
+				v
+			</div>
+		</div>
+	</div>
+</root>
+
+@code
+{
+	[Property] public Elevator TargetElevator { get; set; }
+	[Property] public int ServedFloor { get; set; } = 2;
+	[Property] public float ElevatorSearchRadius { get; set; } = 512f;
+
+	Elevator Lift => TargetElevator ?? Components.Get<Elevator>( FindMode.EverythingInSelfAndAncestors ) ?? FindClosestElevator();
+	int ClampedServedFloor => Math.Clamp( ServedFloor, 1, Lift?.SafeFloorCount ?? 20 );
+	string PanelStateClass => $"{(Lift?.IsMoving == true ? "moving" : "idle")} {DirectionClass}";
+	string DirectionClass => Lift?.Direction == ElevatorTravelDirection.Up ? "up" :
+		Lift?.Direction == ElevatorTravelDirection.Down ? "down" : "still";
+	string DirectionGlyph => Lift?.Direction == ElevatorTravelDirection.Up ? "^" :
+		Lift?.Direction == ElevatorTravelDirection.Down ? "v" : "-";
+
+	string FloorText
+	{
+		get
+		{
+			if ( Lift is null )
+				return "-";
+
+			return Lift.IsMoving ? $"{Lift.CurrentFloor} -> {Lift.TargetFloor}" : Lift.CurrentFloor.ToString();
+		}
+	}
+
+	void RequestCall( ElevatorTravelDirection direction )
+	{
+		if ( IsButtonDisabled( direction ) )
+			return;
+
+		var player = Player.Local;
+		var playerPosition = player?.WorldPosition ?? Vector3.Zero;
+		var eyePosition = playerPosition;
+		if ( player.IsValid() && player.Controller.IsValid() )
+			eyePosition = player.Controller.EyePosition;
+
+		Lift?.RpcRequestHallCallFromPanel( ClampedServedFloor, (int)direction, playerPosition, eyePosition );
+	}
+
+	bool IsButtonDisabled( ElevatorTravelDirection direction )
+	{
+		return Lift is null || !Lift.CanRequestHallCall( ClampedServedFloor, direction );
+	}
+
+	string ButtonClass( ElevatorTravelDirection direction )
+	{
+		var queued = Lift?.HasPendingHallCall( ClampedServedFloor, direction ) == true ? "queued" : "";
+		var disabled = IsButtonDisabled( direction ) ? "disabled" : "";
+		return $"{queued} {disabled}";
+	}
+
+	Elevator FindClosestElevator()
+	{
+		var maxDistance = MathF.Max( 0f, ElevatorSearchRadius );
+		if ( maxDistance <= 0f )
+			return null;
+
+		Elevator closest = null;
+		var closestDistance = maxDistance;
+		foreach ( var elevator in Scene.GetAllComponents<Elevator>() )
+		{
+			if ( !elevator.IsValid() )
+				continue;
+
+			var distance = Vector3.DistanceBetween( GameObject.WorldPosition, elevator.GameObject.WorldPosition );
+			if ( distance > closestDistance )
+				continue;
+
+			closest = elevator;
+			closestDistance = distance;
+		}
+
+		return closest;
+	}
+
+	protected override int BuildHash()
+	{
+		var h = new HashCode();
+		h.Add( Lift );
+		h.Add( GameLocalization.CurrentCode );
+		h.Add( ServedFloor );
+		h.Add( ClampedServedFloor );
+		h.Add( Lift?.CurrentFloor ?? 0 );
+		h.Add( Lift?.TargetFloor ?? 0 );
+		h.Add( Lift?.IsMoving ?? false );
+		h.Add( Lift?.DoorsOpen ?? false );
+		h.Add( Lift?.OpenDoorFloor ?? 0 );
+		h.Add( Lift?.Direction ?? ElevatorTravelDirection.Idle );
+		h.Add( Lift?.PendingUpHallFloors ?? "" );
+		h.Add( Lift?.PendingDownHallFloors ?? "" );
+		h.Add( Lift?.QueueRevision ?? 0 );
+		h.Add( FloorText );
+		h.Add( PanelStateClass );
+		h.Add( ButtonClass( ElevatorTravelDirection.Up ) );
+		h.Add( ButtonClass( ElevatorTravelDirection.Down ) );
+		return h.ToHashCode();
+	}
+}

@@ -189,14 +189,7 @@
 	private void SetLanguage( string code )
 	{
 		GameLocalization.SetLanguage( code );
-		RpcSetLanguage( code );
 		StateHasChanged();
-	}
-
-	[Rpc.Host]
-	private static void RpcSetLanguage( string code )
-	{
-		GameLocalization.SetLanguage( code );
 	}
 
 	private string GetLocalJobName()

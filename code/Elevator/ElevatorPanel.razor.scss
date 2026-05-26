@@ -1,10 +1,11 @@
-$panel-bg: rgba(10, 12, 15, 0.9);
-$panel-border: rgba(255, 255, 255, 0.12);
-$text: rgba(255, 255, 255, 0.94);
-$muted: rgba(255, 255, 255, 0.58);
-$amber: #ffbf4d;
-$green: #9dffb7;
-$blue: #66d9ff;
+$panel-bg: rgba(7, 8, 10, 0.94);
+$panel-border: rgba(214, 183, 106, 0.34);
+$display-bg: rgba(255, 255, 255, 0.045);
+$text: rgba(255, 255, 255, 0.95);
+$muted: rgba(255, 255, 255, 0.56);
+$gold: #d6b76a;
+$blue: #7cc7ff;
+$green: #9fe6b0;
 
 ElevatorPanel {
 	position: absolute;
@@ -18,29 +19,29 @@ ElevatorPanel {
 	pointer-events: all;
 
 	.elevator-panel {
-		width: 260px;
+		width: 276px;
 		padding: 12px;
 		flex-direction: column;
 		background-color: $panel-bg;
 		border: 1px solid $panel-border;
 		border-radius: 8px;
-		box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45);
+		box-shadow: 0 14px 42px rgba(0, 0, 0, 0.68);
 		gap: 10px;
 	}
 
 	.display {
-		min-height: 92px;
+		height: 96px;
 		padding: 10px;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		background-color: rgba(255, 255, 255, 0.06);
+		background-color: $display-bg;
 		border: 1px solid rgba(255, 255, 255, 0.08);
 		border-radius: 6px;
 	}
 
 	.label {
-		font-size: 12px;
+		font-size: 10px;
 		font-weight: 700;
 		letter-spacing: 0;
 		color: $muted;
@@ -49,21 +50,33 @@ ElevatorPanel {
 
 	.floor {
 		margin-top: 2px;
-		font-size: 30px;
+		height: 38px;
+		font-size: 28px;
 		font-weight: 800;
 		color: $text;
 		white-space: nowrap;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.state {
-		margin-top: 2px;
-		font-size: 13px;
-		font-weight: 700;
+		height: 18px;
+		font-size: 12px;
+		font-weight: 800;
 		color: $green;
+		text-transform: uppercase;
 	}
 
 	.moving .state {
-		color: $amber;
+		color: $gold;
+	}
+
+	.moving.up .floor {
+		color: $blue;
+	}
+
+	.moving.down .floor {
+		color: $gold;
 	}
 
 	.floor-buttons {
@@ -79,8 +92,8 @@ ElevatorPanel {
 		height: 38px;
 		align-items: center;
 		justify-content: center;
-		background-color: rgba(255, 255, 255, 0.08);
-		border: 1px solid rgba(255, 255, 255, 0.14);
+		background-color: rgba(255, 255, 255, 0.065);
+		border: 1px solid rgba(255, 255, 255, 0.13);
 		border-radius: 6px;
 		color: $text;
 		font-size: 18px;
@@ -90,25 +103,26 @@ ElevatorPanel {
 	}
 
 	.floor-button:hover {
-		background-color: rgba(102, 217, 255, 0.18);
-		border-color: rgba(102, 217, 255, 0.55);
-		color: $blue;
+		background-color: rgba(214, 183, 106, 0.16);
+		border-color: rgba(214, 183, 106, 0.62);
+		color: $gold;
 	}
 
 	.floor-button.current {
-		background-color: rgba(157, 255, 183, 0.17);
-		border-color: rgba(157, 255, 183, 0.55);
+		background-color: rgba(159, 230, 176, 0.16);
+		border-color: rgba(159, 230, 176, 0.56);
 		color: $green;
 	}
 
-	.floor-button.target {
-		background-color: rgba(255, 191, 77, 0.18);
-		border-color: rgba(255, 191, 77, 0.6);
-		color: $amber;
+	.floor-button.target,
+	.floor-button.queued {
+		background-color: rgba(214, 183, 106, 0.18);
+		border-color: rgba(214, 183, 106, 0.66);
+		color: $gold;
 	}
 
 	.floor-button.disabled {
-		opacity: 0.45;
+		opacity: 0.42;
 		cursor: default;
 	}
 }

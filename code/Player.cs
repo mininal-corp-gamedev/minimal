@@ -339,16 +339,17 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     public void ApplyElevatorCarryDelta(Vector3 delta)
     {
-        if (!Networking.IsHost) return;
         if (delta.LengthSquared <= 0.000001f) return;
 
-        if (!IsProxy)
+        if (IsProxy)
         {
-            ApplyElevatorDelta(delta);
+            if (Networking.IsHost)
+                RpcOwnerQueueElevatorCarryDelta(delta);
+
             return;
         }
 
-        RpcOwnerQueueElevatorCarryDelta(delta);
+        ApplyElevatorDelta(delta);
     }
 
     [Rpc.Owner]
@@ -398,12 +399,17 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         WorldPosition += delta;
         ResetElevatorFallDamageGrace();
 
+        var groundVelocity = Time.Delta > 0f ? delta / Time.Delta : Vector3.Zero;
+        Controller.GroundVelocity = groundVelocity;
+
         if (!Controller.Body.IsValid())
             return;
 
         var velocity = Controller.Body.Velocity;
-        if (MathF.Abs(delta.z) > 0.001f && velocity.z < 0f)
+        if (delta.z > 0.001f && velocity.z < 0f)
             velocity.z = 0f;
+        else if (delta.z < -0.001f && velocity.z > groundVelocity.z)
+            velocity.z = groundVelocity.z;
 
         Controller.Body.Velocity = velocity;
     }

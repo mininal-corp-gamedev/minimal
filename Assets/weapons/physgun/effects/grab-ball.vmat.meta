@@ -10,10 +10,7 @@
       "IncludeSourceFiles": false,
       "Resources": null,
       "PackageReferences": null,
-      "EditorReferences": [
-        "mapperskai.wood1_512#12659",
-        "prayandplay.compactprinter#111644"
-      ],
+      "EditorReferences": [],
       "Mounts": null,
       "IsStandaloneOnly": false,
       "Metadata": {

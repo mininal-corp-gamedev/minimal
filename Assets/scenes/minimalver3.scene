@@ -35792,6 +35792,18 @@
                   "OnComponentFixedUpdate": null,
                   "OnComponentStart": null,
                   "OnComponentUpdate": null
+                },
+                {
+                  "__type": "TriggerCasino",
+                  "__guid": "55c88911-ef52-42b7-ad66-b882b7a03ac4",
+                  "__enabled": true,
+                  "Flags": 0,
+                  "OnComponentDestroy": null,
+                  "OnComponentDisabled": null,
+                  "OnComponentEnabled": null,
+                  "OnComponentFixedUpdate": null,
+                  "OnComponentStart": null,
+                  "OnComponentUpdate": null
                 }
               ],
               "Children": []
@@ -35924,6 +35936,313 @@
             }
           ],
           "Children": []
+        },
+        {
+          "__guid": "f97c5691-df59-4105-a9a9-c2009b092984",
+          "__version": 2,
+          "Flags": 0,
+          "Name": "Elevator",
+          "Position": "0,0,0",
+          "Rotation": "0,0,0,1",
+          "Scale": "1,1,1",
+          "Tags": "",
+          "Enabled": true,
+          "NetworkMode": 2,
+          "NetworkFlags": 0,
+          "NetworkOrphaned": 0,
+          "NetworkTransmit": true,
+          "OwnerTransfer": 1,
+          "Components": [],
+          "Children": [
+            {
+              "__guid": "004e31c5-65cc-4017-baf9-f796df1a67bd",
+              "__version": 2,
+              "__Prefab": "prefabs/elevator/elevator.prefab",
+              "__PrefabInstancePatch": {
+                "AddedObjects": [],
+                "RemovedObjects": [],
+                "PropertyOverrides": [
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "15bfeb8c-92bd-42f0-bdbd-af29fcc76401"
+                    },
+                    "Property": "Position",
+                    "Value": "-411.354553,-1288.2196,28.6095772"
+                  },
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "15bfeb8c-92bd-42f0-bdbd-af29fcc76401"
+                    },
+                    "Property": "Rotation",
+                    "Value": "0,0,0.923879564,0.382683426"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "624ddc45-d635-4b3c-a901-384c651d89ce"
+                    },
+                    "Property": "DoorCloseSeconds",
+                    "Value": 2.4
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "624ddc45-d635-4b3c-a901-384c651d89ce"
+                    },
+                    "Property": "FloorHeights",
+                    "Value": [
+                      192,
+                      144,
+                      144,
+                      160
+                    ]
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "624ddc45-d635-4b3c-a901-384c651d89ce"
+                    },
+                    "Property": "UseCustomFloorHeights",
+                    "Value": true
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "75debfa8-a2a8-48bc-ac7b-8460aefebb8d"
+                    },
+                    "Property": "PanelSize",
+                    "Value": "512,432"
+                  }
+                ],
+                "MovedObjects": []
+              },
+              "__PrefabIdToInstanceId": {
+                "15bfeb8c-92bd-42f0-bdbd-af29fcc76401": "004e31c5-65cc-4017-baf9-f796df1a67bd",
+                "1bfbea33-4e8d-405b-b008-86333ee8864a": "eca72d12-f021-4c6f-a1da-bfda29b7e391",
+                "eae7697a-1383-459d-8aa8-724c5cafb6d7": "14f4fa29-dcba-4d06-956b-9404dce507f1",
+                "9eb53293-c44a-4b18-9180-6524d15b94a8": "456e82d8-feb0-45ce-9e61-6cd9468a04e1",
+                "624ddc45-d635-4b3c-a901-384c651d89ce": "3caf36ed-21d9-4204-883f-d6655d27719e",
+                "fab84254-a52c-4a60-9a85-81a5fed63c76": "741c22ab-fba3-48bf-b33d-1972d69e6af8",
+                "75debfa8-a2a8-48bc-ac7b-8460aefebb8d": "d859fa8f-40ef-45b5-a1d0-b0cb2d645446",
+                "23b731b8-93f0-4fc8-afdd-b3bf98ae2d88": "dcebbb6e-f35c-4722-b9c8-bf8ed7f7c0cd"
+              }
+            },
+            {
+              "__guid": "1fef4270-2001-4860-a64c-4113d1591f25",
+              "__version": 2,
+              "__Prefab": "prefabs/elevator/elevator_call_single.prefab",
+              "__PrefabInstancePatch": {
+                "AddedObjects": [],
+                "RemovedObjects": [],
+                "PropertyOverrides": [
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "48fd2a37-e5cc-47f3-9f6f-6f3f1df8214a"
+                    },
+                    "Property": "Position",
+                    "Value": "-271.791931,-1314.84705,81.3087692"
+                  },
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "48fd2a37-e5cc-47f3-9f6f-6f3f1df8214a"
+                    },
+                    "Property": "Rotation",
+                    "Value": "0,0,0.923879504,-0.382683635"
+                  }
+                ],
+                "MovedObjects": []
+              },
+              "__PrefabIdToInstanceId": {
+                "48fd2a37-e5cc-47f3-9f6f-6f3f1df8214a": "1fef4270-2001-4860-a64c-4113d1591f25",
+                "7a848e86-0b1a-47d5-bf42-2f740dc1cfb6": "f047892b-ac13-4c42-ba22-3ef34a38fd39",
+                "1f3b4bde-bfc9-455c-87dd-ac66c545ec73": "aa625400-bb46-46eb-b53b-51348126a60b"
+              }
+            },
+            {
+              "__guid": "81bbfdd6-8989-4e42-ad2b-90d6188643bf",
+              "__version": 2,
+              "__Prefab": "prefabs/elevator/elevator_call_directional.prefab",
+              "__PrefabInstancePatch": {
+                "AddedObjects": [],
+                "RemovedObjects": [],
+                "PropertyOverrides": [
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "516fd802-cf89-4f1f-93d6-5723ad94f4cc"
+                    },
+                    "Property": "Position",
+                    "Value": "-266.758545,-1319.73499,271.54422"
+                  },
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "516fd802-cf89-4f1f-93d6-5723ad94f4cc"
+                    },
+                    "Property": "Rotation",
+                    "Value": "0,0,0.923879564,-0.382683456"
+                  }
+                ],
+                "MovedObjects": []
+              },
+              "__PrefabIdToInstanceId": {
+                "516fd802-cf89-4f1f-93d6-5723ad94f4cc": "81bbfdd6-8989-4e42-ad2b-90d6188643bf",
+                "98da3f38-b3e9-4f48-929b-9dc06cc28b1f": "455a5e0e-1278-418a-9d85-243059e07f11",
+                "3d50fb67-5ed6-4bec-a59a-c98c2ec42e81": "310f3c04-452f-400c-b575-de54b907897e"
+              }
+            },
+            {
+              "__guid": "8ef9f957-b03a-468b-8c59-8baed748e143",
+              "__version": 2,
+              "__Prefab": "prefabs/elevator/elevator_call_directional.prefab",
+              "__PrefabInstancePatch": {
+                "AddedObjects": [],
+                "RemovedObjects": [],
+                "PropertyOverrides": [
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "516fd802-cf89-4f1f-93d6-5723ad94f4cc"
+                    },
+                    "Property": "Name",
+                    "Value": "elevator_call_directional (1)"
+                  },
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "516fd802-cf89-4f1f-93d6-5723ad94f4cc"
+                    },
+                    "Property": "Position",
+                    "Value": "-266.758545,-1319.73499,415.495239"
+                  },
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "516fd802-cf89-4f1f-93d6-5723ad94f4cc"
+                    },
+                    "Property": "Rotation",
+                    "Value": "0,0,0.923879564,-0.382683456"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "3d50fb67-5ed6-4bec-a59a-c98c2ec42e81"
+                    },
+                    "Property": "ServedFloor",
+                    "Value": 3
+                  }
+                ],
+                "MovedObjects": []
+              },
+              "__PrefabIdToInstanceId": {
+                "516fd802-cf89-4f1f-93d6-5723ad94f4cc": "8ef9f957-b03a-468b-8c59-8baed748e143",
+                "98da3f38-b3e9-4f48-929b-9dc06cc28b1f": "63f701f6-4c9c-4ac1-b43f-88fdb9d23bc9",
+                "3d50fb67-5ed6-4bec-a59a-c98c2ec42e81": "6e629dfc-5d0b-45be-9aa3-1e91feac706e"
+              }
+            },
+            {
+              "__guid": "6f08d9e7-0136-4b24-a939-38ebfcb3891b",
+              "__version": 2,
+              "__Prefab": "prefabs/elevator/elevator_call_directional.prefab",
+              "__PrefabInstancePatch": {
+                "AddedObjects": [],
+                "RemovedObjects": [],
+                "PropertyOverrides": [
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "516fd802-cf89-4f1f-93d6-5723ad94f4cc"
+                    },
+                    "Property": "Name",
+                    "Value": "elevator_call_directional (2)"
+                  },
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "516fd802-cf89-4f1f-93d6-5723ad94f4cc"
+                    },
+                    "Property": "Position",
+                    "Value": "-266.758545,-1319.73499,559.483093"
+                  },
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "516fd802-cf89-4f1f-93d6-5723ad94f4cc"
+                    },
+                    "Property": "Rotation",
+                    "Value": "0,0,0.923879564,-0.382683456"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "3d50fb67-5ed6-4bec-a59a-c98c2ec42e81"
+                    },
+                    "Property": "ServedFloor",
+                    "Value": 4
+                  }
+                ],
+                "MovedObjects": []
+              },
+              "__PrefabIdToInstanceId": {
+                "516fd802-cf89-4f1f-93d6-5723ad94f4cc": "6f08d9e7-0136-4b24-a939-38ebfcb3891b",
+                "98da3f38-b3e9-4f48-929b-9dc06cc28b1f": "1ddab4c4-2702-4358-a911-ecf175d88fba",
+                "3d50fb67-5ed6-4bec-a59a-c98c2ec42e81": "7b690d10-4ac2-4bcf-9f1f-5212bc501db0"
+              }
+            },
+            {
+              "__guid": "68af8a37-3c29-404f-af84-81ff14b3ec3f",
+              "__version": 2,
+              "__Prefab": "prefabs/elevator/elevator_call_single.prefab",
+              "__PrefabInstancePatch": {
+                "AddedObjects": [],
+                "RemovedObjects": [],
+                "PropertyOverrides": [
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "48fd2a37-e5cc-47f3-9f6f-6f3f1df8214a"
+                    },
+                    "Property": "Name",
+                    "Value": "elevator_call_single (1)"
+                  },
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "48fd2a37-e5cc-47f3-9f6f-6f3f1df8214a"
+                    },
+                    "Property": "Position",
+                    "Value": "-288.29007,-1302.83716,726.036987"
+                  },
+                  {
+                    "Target": {
+                      "Type": "GameObject",
+                      "IdValue": "48fd2a37-e5cc-47f3-9f6f-6f3f1df8214a"
+                    },
+                    "Property": "Rotation",
+                    "Value": "0,0,0.382683396,-0.923879564"
+                  },
+                  {
+                    "Target": {
+                      "Type": "Component",
+                      "IdValue": "1f3b4bde-bfc9-455c-87dd-ac66c545ec73"
+                    },
+                    "Property": "ServedFloor",
+                    "Value": 5
+                  }
+                ],
+                "MovedObjects": []
+              },
+              "__PrefabIdToInstanceId": {
+                "48fd2a37-e5cc-47f3-9f6f-6f3f1df8214a": "68af8a37-3c29-404f-af84-81ff14b3ec3f",
+                "7a848e86-0b1a-47d5-bf42-2f740dc1cfb6": "601a5613-fd2e-4c41-b3e4-a0af35aa788c",
+                "1f3b4bde-bfc9-455c-87dd-ac66c545ec73": "1b0603b0-9953-441a-aa14-bcbc41632734"
+              }
+            }
+          ]
         }
       ]
     },
@@ -36540,187 +36859,6 @@
       "Children": []
     },
     {
-      "__guid": "1b83b9da-0ead-469e-ab60-6c17770be70b",
-      "__version": 2,
-      "Flags": 0,
-      "Name": "metal_platform",
-      "Position": "-78.6602173,1423.89209,28.8572998",
-      "Rotation": "0,0,0,1",
-      "Scale": "2.07133055,1.6615169,1",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.Prop",
-          "__guid": "8789c1d1-c4e3-4220-8fa9-f2952b4754f3",
-          "__enabled": true,
-          "Flags": 0,
-          "BodyGroups": 18446744073709551615,
-          "Health": 0,
-          "IsStatic": true,
-          "MaterialGroup": null,
-          "Model": "props/other/metal_platform.vmdl",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OnPropBreak": null,
-          "OnPropTakeDamage": null,
-          "StartAsleep": false,
-          "Tint": "1,1,1,1"
-        },
-        {
-          "__type": "Sandbox.ModelRenderer",
-          "__guid": "e9d9e513-01e5-4894-ad6b-eb5be073bf4f",
-          "__enabled": true,
-          "Flags": 0,
-          "BodyGroups": 18446744073709551615,
-          "CreateAttachments": false,
-          "LodOverride": null,
-          "MaterialGroup": null,
-          "MaterialOverride": null,
-          "Materials": null,
-          "Model": "props/other/metal_platform.vmdl",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "RenderOptions": {
-            "GameLayer": true,
-            "OverlayLayer": false,
-            "BloomLayer": false,
-            "AfterUILayer": false
-          },
-          "RenderType": "On",
-          "Tint": "1,1,1,1"
-        },
-        {
-          "__type": "Sandbox.ModelCollider",
-          "__guid": "3bd2d7b3-663d-40c7-9cbc-28978e321a66",
-          "__enabled": true,
-          "Flags": 0,
-          "ColliderFlags": 0,
-          "Elasticity": null,
-          "Friction": null,
-          "IsTrigger": false,
-          "Model": "props/other/metal_platform.vmdl",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OnObjectTriggerEnter": null,
-          "OnObjectTriggerExit": null,
-          "OnTriggerEnter": null,
-          "OnTriggerExit": null,
-          "RollingResistance": null,
-          "Static": true,
-          "Surface": null,
-          "SurfaceVelocity": "0,0,0"
-        },
-        {
-          "__type": "Elevator",
-          "__guid": "ec078b25-cdb9-4c99-944e-1f389a68af0a",
-          "__enabled": true,
-          "Flags": 0,
-          "ArriveSound": null,
-          "CarryPlayers": true,
-          "FloorCount": 5,
-          "FloorHeight": 128,
-          "FloorHeights": [
-            128,
-            128,
-            128,
-            128
-          ],
-          "InitialFloor": 1,
-          "MaxUseDistance": 180,
-          "MoveSpeed": 128,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "PassengerHorizontalRadius": 96,
-          "PassengerReleaseGraceSeconds": 0.16,
-          "PassengerTraceDistance": 42,
-          "Platform": null,
-          "RejectRequestsWhileMoving": false,
-          "StartSound": null,
-          "UseCustomFloorHeights": false
-        }
-      ],
-      "Children": [
-        {
-          "__guid": "1c4704f8-f141-4bb7-8cb6-f0f97a5d0a57",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "World",
-          "Position": "-29.0783901,-57.6933784,47.4553299",
-          "Rotation": "0,0,0.70710665,0.707106829",
-          "Scale": "0.764183402,0.649999976,1",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.WorldPanel",
-              "__guid": "0eadeb11-9f06-4a75-91dc-9284f0542bc5",
-              "__enabled": true,
-              "Flags": 0,
-              "HorizontalAlign": "Center",
-              "InteractionRange": 1000,
-              "LookAtCamera": false,
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "PanelSize": "512,512",
-              "RenderOptions": {
-                "GameLayer": true,
-                "OverlayLayer": false,
-                "BloomLayer": false,
-                "AfterUILayer": false
-              },
-              "RenderScale": 1,
-              "VerticalAlign": "Center"
-            },
-            {
-              "__type": "Sandbox.ElevatorPanel",
-              "__guid": "86614002-951f-46e8-a38d-0201d5a6745f",
-              "__enabled": true,
-              "Flags": 0,
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "TargetElevator": null
-            }
-          ],
-          "Children": []
-        }
-      ]
-    },
-    {
       "__guid": "eeaf7cfe-be11-4b28-8af8-4767bcf13457",
       "__version": 2,
       "__Prefab": "prefabs/managers.prefab",
@@ -36801,6 +36939,22 @@
               "Type": "Component",
               "IdValue": "29530828-3a12-4bf2-86c7-f67d92c8a553"
             }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "fac48538-215f-46d8-ba88-33eb457b7aee"
+            },
+            "NewParent": {
+              "Type": "GameObject",
+              "IdValue": "1eb7475f-1c69-4490-90c5-e0137be5e753"
+            },
+            "NewContainerProperty": "Components",
+            "IsNewContainerArray": true,
+            "NewPreviousElement": {
+              "Type": "Component",
+              "IdValue": "a8a62c56-48f9-47cc-83f2-76a57f9ae300"
+            }
           }
         ]
       },
@@ -36840,7 +36994,9 @@
         "f8fdb7de-52f0-45c7-afcf-c4aa9055dae5": "998226c2-5f40-4d49-8ba7-8498b7526542",
         "38a38e67-23cb-4b18-aaf1-3b16a4c5ed93": "e44ba402-ed5b-452d-8f8f-60e2bf7cd066",
         "a8a62c56-48f9-47cc-83f2-76a57f9ae300": "4bc88c80-2f5f-47a5-b39a-21c1f6f80bb3",
-        "90e0b204-7e91-4fa0-95d8-af5422fab591": "5f78ccc8-555b-4d8b-9ef8-f30829af303d"
+        "90e0b204-7e91-4fa0-95d8-af5422fab591": "5f78ccc8-555b-4d8b-9ef8-f30829af303d",
+        "fac48538-215f-46d8-ba88-33eb457b7aee": "a5a44f1e-daa5-40c2-a9ca-00f2b8519114",
+        "7d108d48-bf0d-42ac-8332-3fe25805e639": "87557910-f464-41b4-87d8-d5fe76f39ce9"
       }
     },
     {
@@ -37804,6 +37960,506 @@
       "OwnerTransfer": 1,
       "Components": [],
       "Children": []
+    },
+    {
+      "__guid": "e8b1ebc9-2485-4056-bb35-30ee222ada8f",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "door_metal",
+      "Position": "-175.835449,1363.94177,32.1914101",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1.36896813,1.17249489",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "56073163-8156-47eb-8d41-374943d1c3b8",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/architecture/door/door_metal.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "c9f586b0-1981-4f10-be71-a263d7ef48a6",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/architecture/door/door_metal.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "5e19ab68-e3d1-4508-b5df-eef95a412bf0",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/architecture/door/door_metal.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "ElevatorDoor",
+          "__guid": "1eefd4b7-c0eb-417e-a2d4-3de4101b6e10",
+          "__enabled": true,
+          "Flags": 0,
+          "CloseSpeed": 112,
+          "ElevatorSearchRadius": 2048,
+          "Floor": 1,
+          "LeftDoor": {
+            "_type": "gameobject",
+            "go": "0d829b27-fd1f-4d75-914c-8379a1202d34"
+          },
+          "LeftOpenOffset": "-0,48,-0",
+          "MatchAnyFloor": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OpenSpeed": 96,
+          "RightDoor": {
+            "_type": "gameobject",
+            "go": "e8b1ebc9-2485-4056-bb35-30ee222ada8f"
+          },
+          "RightOpenOffset": "0,-48,0",
+          "TargetElevator": {
+            "_type": "component",
+            "component_id": "3caf36ed-21d9-4204-883f-d6655d27719e",
+            "go": "004e31c5-65cc-4017-baf9-f796df1a67bd",
+            "component_type": "Elevator"
+          }
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "0d829b27-fd1f-4d75-914c-8379a1202d34",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "door_metal (1)",
+      "Position": "-175.835449,1424.07019,32.1914101",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1.36896813,1.17249489",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "9a080c8e-701f-4b23-9a4c-c64c253c5c5c",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/architecture/door/door_metal.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "b8dff561-d5ed-4000-b8b4-4d7a8bc57705",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/architecture/door/door_metal.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "8ec962a5-21b4-4925-aec3-35ef127068bc",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/architecture/door/door_metal.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "ElevatorDoor",
+          "__guid": "e4f0f3e8-86b6-4667-9447-dfe56aece38e",
+          "__enabled": true,
+          "Flags": 0,
+          "CloseSpeed": 112,
+          "ElevatorSearchRadius": 2048,
+          "Floor": 1,
+          "LeftDoor": {
+            "_type": "gameobject",
+            "go": "0d829b27-fd1f-4d75-914c-8379a1202d34"
+          },
+          "LeftOpenOffset": "-0,48,-0",
+          "MatchAnyFloor": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OpenSpeed": 96,
+          "RightDoor": {
+            "_type": "gameobject",
+            "go": "e8b1ebc9-2485-4056-bb35-30ee222ada8f"
+          },
+          "RightOpenOffset": "0,-48,0",
+          "TargetElevator": {
+            "_type": "component",
+            "component_id": "3caf36ed-21d9-4204-883f-d6655d27719e",
+            "go": "004e31c5-65cc-4017-baf9-f796df1a67bd",
+            "component_type": "Elevator"
+          }
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "846c307d-e977-495c-9dce-9ca072561b7e",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "door_metal (3)",
+      "Position": "-175.835449,1363.94177,223.78125",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1.36896813,1.17249489",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "533de999-04d0-4fe8-a8f8-15fc21635abf",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/architecture/door/door_metal.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "4c257dc2-a158-4dff-9313-599a4c8c45e2",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/architecture/door/door_metal.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "4c5ffa10-525e-42de-a963-b6e6977af1e5",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/architecture/door/door_metal.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "ElevatorDoor",
+          "__guid": "34739ba8-cea9-476a-89e2-141a4005e854",
+          "__enabled": true,
+          "Flags": 0,
+          "CloseSpeed": 112,
+          "ElevatorSearchRadius": 2048,
+          "Floor": 2,
+          "LeftDoor": {
+            "_type": "gameobject",
+            "go": "0d829b27-fd1f-4d75-914c-8379a1202d34"
+          },
+          "LeftOpenOffset": "-0,48,-0",
+          "MatchAnyFloor": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OpenSpeed": 96,
+          "RightDoor": {
+            "_type": "gameobject",
+            "go": "846c307d-e977-495c-9dce-9ca072561b7e"
+          },
+          "RightOpenOffset": "0,-48,0",
+          "TargetElevator": {
+            "_type": "component",
+            "component_id": "3caf36ed-21d9-4204-883f-d6655d27719e",
+            "go": "004e31c5-65cc-4017-baf9-f796df1a67bd",
+            "component_type": "Elevator"
+          }
+        }
+      ],
+      "Children": []
+    },
+    {
+      "__guid": "168ec2db-b3e2-4c61-a607-f8ef96eab984",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "door_metal (2)",
+      "Position": "-175.835449,1424.07019,223.78125",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1.36896813,1.17249489",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.Prop",
+          "__guid": "a44b4448-73a3-401c-823b-75c45f57be58",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "Health": 0,
+          "IsStatic": true,
+          "MaterialGroup": null,
+          "Model": "models/architecture/door/door_metal.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnPropBreak": null,
+          "OnPropTakeDamage": null,
+          "StartAsleep": false,
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelRenderer",
+          "__guid": "4eff2748-589f-4ed3-8641-4b6cc32a6fc8",
+          "__enabled": true,
+          "Flags": 0,
+          "BodyGroups": 18446744073709551615,
+          "CreateAttachments": false,
+          "LodOverride": null,
+          "MaterialGroup": null,
+          "MaterialOverride": null,
+          "Materials": null,
+          "Model": "models/architecture/door/door_metal.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "RenderOptions": {
+            "GameLayer": true,
+            "OverlayLayer": false,
+            "BloomLayer": false,
+            "AfterUILayer": false
+          },
+          "RenderType": "On",
+          "Tint": "1,1,1,1"
+        },
+        {
+          "__type": "Sandbox.ModelCollider",
+          "__guid": "1e043248-caa0-4f60-b708-d66b28abf545",
+          "__enabled": true,
+          "Flags": 0,
+          "ColliderFlags": 0,
+          "Elasticity": null,
+          "Friction": null,
+          "IsTrigger": false,
+          "Model": "models/architecture/door/door_metal.vmdl",
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OnObjectTriggerEnter": null,
+          "OnObjectTriggerExit": null,
+          "OnTriggerEnter": null,
+          "OnTriggerExit": null,
+          "RollingResistance": null,
+          "Static": true,
+          "Surface": null,
+          "SurfaceVelocity": "0,0,0"
+        },
+        {
+          "__type": "ElevatorDoor",
+          "__guid": "a875107e-6729-4776-b0d9-73e331d267ef",
+          "__enabled": true,
+          "Flags": 0,
+          "CloseSpeed": 112,
+          "ElevatorSearchRadius": 2048,
+          "Floor": 2,
+          "LeftDoor": {
+            "_type": "gameobject",
+            "go": "168ec2db-b3e2-4c61-a607-f8ef96eab984"
+          },
+          "LeftOpenOffset": "-0,24,-0",
+          "MatchAnyFloor": false,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "OpenSpeed": 96,
+          "RightDoor": {
+            "_type": "gameobject",
+            "go": "e8b1ebc9-2485-4056-bb35-30ee222ada8f"
+          },
+          "RightOpenOffset": "0,-24,0",
+          "TargetElevator": {
+            "_type": "component",
+            "component_id": "3caf36ed-21d9-4204-883f-d6655d27719e",
+            "go": "004e31c5-65cc-4017-baf9-f796df1a67bd",
+            "component_type": "Elevator"
+          }
+        }
+      ],
+      "Children": []
     }
   ],
   "SceneProperties": {
@@ -37828,14 +38484,14 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
-        }
-      },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "135f3985-5141-4fc3-864d-216b95674cfd"
+        }
+      },
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       }
     }
@@ -37878,6 +38534,7 @@
     "facepunch.wheely_bin#143949",
     "facepunch.wire_cage_b_painted#111152",
     "fish.slot_machine#105356",
+    "fpopium.door_metal#184464",
     "frogpond.bar_stool#12950",
     "gkaf.door_1#26044",
     "gkaf.door_2_window_a#26046",
@@ -37897,7 +38554,6 @@
     "polyhaven.wooden_picnic_table#132127",
     "smlp.sanae#10353",
     "subzerostudios.wood058#148619",
-    "thebox.metalplatform#168259",
     "tones.bartap#36845"
   ],
   "__version": 3

@@ -1,0 +1,25 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="weed-growth @StatusClass">
+		<div class="weed-growth-text">@PercentText</div>
+	</div>
+</root>
+
+@code
+{
+	Weed Weed => GameObject.Components.Get<Weed>( FindMode.EverythingInSelfAndAncestors );
+
+	int Percent => Math.Clamp( (int)MathF.Round( (Weed?.GrowProgress ?? 0f) * 100f ), 0, 100 );
+	string PercentText => $"{Percent}%";
+	string StatusClass => Percent >= 100 ? "grown" : "growing";
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine( Percent, StatusClass );
+	}
+}

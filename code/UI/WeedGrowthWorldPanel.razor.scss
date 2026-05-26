@@ -1,0 +1,36 @@
+WeedGrowthWorldPanel {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	justify-content: center;
+	align-items: center;
+	font-family: Poppins;
+	font-weight: 800;
+
+	.weed-growth {
+		width: 220px;
+		height: 72px;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.weed-growth-text {
+		width: 220px;
+		height: 72px;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		font-size: 36px;
+		color: #72f06d;
+		text-stroke: 4px rgba( 0, 0, 0, 0.9 );
+		white-space: nowrap;
+	}
+
+	.weed-growth.grown {
+		.weed-growth-text {
+			color: #d8ff7a;
+		}
+	}
+}

@@ -1,0 +1,17 @@
+{
+  "Id": "groower",
+  "Header": "Groower",
+  "Category": "Crime",
+  "Description": "Drug dealer.",
+  "MaxCount": 4,
+  "Salary": 0,
+  "Vote": false,
+  "CanDemote": true,
+  "Color": "0.26667,0.76078,0.35686,1",
+  "FromJobs": [],
+  "HasPostSpawned": false,
+  "HasPostDemote": false,
+  "HasPostJoined": false,
+  "__references": [],
+  "__version": 0
+}

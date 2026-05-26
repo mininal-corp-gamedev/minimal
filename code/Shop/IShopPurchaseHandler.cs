@@ -11,4 +11,5 @@ public sealed class ShopPurchaseContext
 	public ShopDefinition Shop { get; init; }
 	public Player Buyer { get; init; }
 	public Connection Connection { get; init; }
+	public string FailureMessage { get; set; }
 }

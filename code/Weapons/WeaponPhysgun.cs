@@ -582,8 +582,9 @@ public sealed class WeaponPhysgun : Weapon
         var ownsPrinter = printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player);
 
         var ownsPrinterUpgrade = PlayerOwnsMoneyPrinterUpgrade(rb.GameObject, player);
+        var ownsGroowerItem = PlayerOwnsGroowerItem(rb.GameObject, player);
 
-        return ownsProp || ownsPrinter || ownsPrinterUpgrade;
+        return ownsProp || ownsPrinter || ownsPrinterUpgrade || ownsGroowerItem;
     }
 
     private void UpdateSpin()
@@ -1363,14 +1364,27 @@ public sealed class WeaponPhysgun : Weapon
         var ownsPrinter = printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player);
 
         var ownsPrinterUpgrade = PlayerOwnsMoneyPrinterUpgrade(rb.GameObject, player);
+        var ownsGroowerItem = PlayerOwnsGroowerItem(rb.GameObject, player);
 
-        return ownsProp || ownsPrinter || ownsPrinterUpgrade;
+        return ownsProp || ownsPrinter || ownsPrinterUpgrade || ownsGroowerItem;
     }
 
     private static bool PlayerOwnsMoneyPrinterUpgrade(GameObject target, Player player)
     {
         var upgrade = target.Components.Get<MoneyPrinterUpgrade>(FindMode.EverythingInSelfAndAncestors);
         if (!upgrade.IsValid())
+            return false;
+
+        var shopObject = target.Components.Get<ShopObject>(FindMode.EverythingInSelfAndAncestors);
+        return shopObject.IsValid() && IsSamePlayer(shopObject.PlayerOwner, player);
+    }
+
+    private static bool PlayerOwnsGroowerItem(GameObject target, Player player)
+    {
+        var hasGroowerItem = target.Components.Get<Weed>(FindMode.EverythingInSelfAndAncestors).IsValid()
+            || target.Components.Get<WeedFertilizer>(FindMode.EverythingInSelfAndAncestors).IsValid();
+
+        if (!hasGroowerItem)
             return false;
 
         var shopObject = target.Components.Get<ShopObject>(FindMode.EverythingInSelfAndAncestors);

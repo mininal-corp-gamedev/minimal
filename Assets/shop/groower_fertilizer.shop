@@ -1,0 +1,25 @@
+{
+  "Id": "groower_fertilizer",
+  "Header": "Fertilizer",
+  "Category": "Drugs",
+  "Description": "Speeds up growth for a weed pot.",
+  "ItemDefinition": null,
+  "Price": 75,
+  "Max": 0,
+  "IconPath": "icons/items/default.vtex",
+  "Model": "maps/models/props/player_prop/usable/fertilizer.vmdl",
+  "SpawnPrefab": {
+    "_type": "gameobject",
+    "prefab": "prefabs/Groower/fertilizer.prefab"
+  },
+  "IsAllowEveryone": false,
+  "HasRemoveAfterChangeJob": true,
+  "JobsAllow": [
+    "jobs/groower.job"
+  ],
+  "HasPostPurchased": true,
+  "__references": [
+    "keepitdev.fertilizer#138864"
+  ],
+  "__version": 0
+}

@@ -1,0 +1,15 @@
+{
+  "Id": "ziplock",
+  "Category": "drugs",
+  "Header": "ZipLock",
+  "Description": "Packed weed.",
+  "MaxCount": 100,
+  "IconPath": "icons/marihuanna.vtex",
+  "Model": null,
+  "CanUse": false,
+  "CanDrop": true,
+  "IsJobItem": false,
+  "CanSave": true,
+  "__references": [],
+  "__version": 0
+}

@@ -83,7 +83,11 @@ public sealed class ShopManager : Component
 		if ( !ShopHandlerRegistry.FirePostPurchased( context ) )
 		{
 			buyer.Money += price;
-			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.shop.purchase_failed", "Purchase failed." ), null );
+			var failureMessage = string.IsNullOrWhiteSpace( context.FailureMessage )
+				? GameLocalization.Phrase( "notify.shop.purchase_failed", "Purchase failed." )
+				: context.FailureMessage;
+
+			NotifyBuyer( caller, false, failureMessage, null );
 			return;
 		}
 

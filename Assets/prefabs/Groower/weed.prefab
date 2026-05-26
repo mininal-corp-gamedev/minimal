@@ -68,12 +68,51 @@
         "SurfaceVelocity": "0,0,0"
       },
       {
+        "__type": "Sandbox.Rigidbody",
+        "__guid": "6f5e2f03-f632-4d2d-bddb-bff08d51c246",
+        "__enabled": true,
+        "Flags": 0,
+        "AngularDamping": 0,
+        "EnableImpactDamage": true,
+        "EnhancedCcd": false,
+        "Gravity": true,
+        "GravityScale": 1,
+        "ImpactDamage": 0,
+        "LinearDamping": 0,
+        "Locking": {
+          "X": false,
+          "Y": false,
+          "Z": false,
+          "Pitch": false,
+          "Yaw": false,
+          "Roll": false
+        },
+        "MassCenterOverride": "0,0,0",
+        "MassOverride": 0,
+        "MinImpactDamageSpeed": 500,
+        "MotionEnabled": true,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OverrideMassCenter": false,
+        "RigidbodyFlags": 0,
+        "SleepThreshold": 2,
+        "StartAsleep": false
+      },
+      {
         "__type": "Weed",
         "__guid": "40a9ae65-aa87-44d9-a440-b45a9902659a",
         "__enabled": true,
         "Flags": 0,
-        "GrowTime": 40,
-        "HarvestReward": 100,
+        "GrowTime": 120,
+        "HarvestAmount": 1,
+        "HarvestItemId": "ziplock",
+        "Health": 100,
+        "MaturePlantScale": 0.38,
+        "MaxHealth": 100,
         "MaxInteractDistance": 100,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
@@ -86,7 +125,8 @@
           "component_id": "d54855fb-7ee3-448b-b0db-544c2e5e6fb6",
           "go": "f13d3d0e-242d-4896-a30c-d545034ed392",
           "component_type": "ModelRenderer"
-        }
+        },
+        "StartPlantScale": 0.2
       }
     ],
     "Children": [
@@ -154,7 +194,7 @@
               {
                 "__type": "Sandbox.SpriteRenderer",
                 "__guid": "de044321-b658-42e5-a8af-9f04d81c9f50",
-                "__enabled": true,
+                "__enabled": false,
                 "Flags": 0,
                 "__version": 2,
                 "Additive": false,
@@ -248,7 +288,7 @@
                                   }
                                 }
                               },
-                              "compiled": "textures/generated/text/8e5ed3349992aac.vtex"
+                              "compiled": null
                             },
                             "BroadcastMessages": []
                           }
@@ -261,13 +301,70 @@
                 },
                 "StartingAnimationName": "Default",
                 "TextureFilter": "Bilinear"
+              },
+              {
+                "__type": "Sandbox.WorldPanel",
+                "__guid": "420c51c5-1394-495a-a150-d1b9a0217a94",
+                "__enabled": true,
+                "Flags": 0,
+                "HorizontalAlign": "Center",
+                "InteractionRange": 1000,
+                "LookAtCamera": true,
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null,
+                "PanelSize": "220,72",
+                "RenderOptions": {
+                  "GameLayer": true,
+                  "OverlayLayer": false,
+                  "BloomLayer": false,
+                  "AfterUILayer": false
+                },
+                "RenderScale": 1,
+                "VerticalAlign": "Center"
+              },
+              {
+                "__type": "Sandbox.WeedGrowthWorldPanel",
+                "__guid": "7db739fd-9bf5-45ed-9a84-072f286c03f8",
+                "__enabled": true,
+                "Flags": 0,
+                "OnComponentDestroy": null,
+                "OnComponentDisabled": null,
+                "OnComponentEnabled": null,
+                "OnComponentFixedUpdate": null,
+                "OnComponentStart": null,
+                "OnComponentUpdate": null
               }
             ],
             "Children": []
           }
         ]
       }
-    ]
+    ],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
   },
   "ResourceVersion": 2,
   "ShowInMenu": false,

@@ -1534,7 +1534,11 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (string.IsNullOrWhiteSpace(packageId)) return false;
 
         var items = DeserializeJobWorkshopItems(JobWorkshopItemsSerialized);
-        if (items.Contains(packageId)) return false;
+        if (items.Contains(packageId))
+        {
+            HostRefreshJobWorkshopClothing();
+            return false;
+        }
 
         items.Add(packageId);
         HostSetJobWorkshopItems(items);
@@ -1764,6 +1768,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         JobWorkshopClothingRevision++;
+        HostSendJobWorkshopClothingToOwner();
     }
 
     private void HostSetJobWorkshopItems(List<string> items)
@@ -1777,6 +1782,44 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             SyncJobWorkshopItemsToDresser(JobWorkshopItemsSerialized);
 
         HostRefreshJobWorkshopClothing();
+    }
+
+    private void HostSendJobWorkshopClothingToOwner()
+    {
+        if (!Networking.IsHost)
+            return;
+
+        var owner = GameObject.Network.Owner;
+        if (owner is null)
+            return;
+
+        using (Rpc.FilterInclude(connection => connection.SteamId.Value == owner.SteamId.Value))
+        {
+            RpcOwnerApplyJobWorkshopClothing(JobWorkshopItemsSerialized ?? "", JobWorkshopClothingRevision);
+        }
+    }
+
+    [Rpc.Broadcast]
+    private void RpcOwnerApplyJobWorkshopClothing(string serialized, int revision)
+    {
+        if (Rpc.Caller is not null && !Rpc.Caller.IsHost)
+            return;
+
+        JobWorkshopItemsSerialized = serialized ?? "";
+        JobWorkshopClothingRevision = revision;
+
+        if (!Dresser.IsValid())
+        {
+            _jobWorkshopItemsSyncPending = true;
+            return;
+        }
+
+        SyncJobWorkshopItemsToDresser(JobWorkshopItemsSerialized);
+        _observedJobWorkshopItemsSerialized = JobWorkshopItemsSerialized;
+        _observedJobWorkshopClothingRevision = JobWorkshopClothingRevision;
+        _jobWorkshopItemsSyncPending = false;
+        ResetOwnerClothingApplyState(GetOwnerSteamId());
+        ScheduleOwnerClothingRetry(0.05f);
     }
 
     private void SyncJobWorkshopItemsToDresser(string serialized)

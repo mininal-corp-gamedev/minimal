@@ -11,6 +11,7 @@ public sealed class JobDefinition : GameResource
     [Property] public bool CanDemote { get; set; } = true;
     [Property] public Color Color { get; set; } = Color.White;
     [Property] public List<JobDefinition> FromJobs { get; set; } = new();
+    [Property] public List<string> WorkshopClothing { get; set; } = new();
 
     [Property, Group("Events")] public bool HasPostSpawned { get; set; } = false;
     [Property, Group("Events")] public bool HasPostDemote { get; set; } = false;

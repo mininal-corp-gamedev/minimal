@@ -568,6 +568,8 @@ public static partial class GameLocalization
 		["ui.escape.discord"] = "Discord",
 		["ui.escape.server"] = "Server",
 		["ui.escape.settings_empty"] = "Empty",
+		["ui.escape.prop_protection"] = "Add to Prop Protection",
+		["ui.escape.prop_protection_title"] = "Prop Protection",
 	};
 
 	private static Dictionary<string, string> BuiltInRussianGenerated() => new( System.StringComparer.OrdinalIgnoreCase )
@@ -1136,5 +1138,7 @@ public static partial class GameLocalization
 		["ui.escape.discord"] = "Discord",
 		["ui.escape.server"] = "Сервер",
 		["ui.escape.settings_empty"] = "Пусто",
+		["ui.escape.prop_protection"] = "Добавить в Prop Protection",
+		["ui.escape.prop_protection_title"] = "Prop Protection",
 	};
 }

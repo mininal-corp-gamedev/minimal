@@ -990,6 +990,7 @@
 
 			gameObj.Tags.Add( "prop" );
 			gameObj.NetworkSpawn();
+			OwnedPropNetwork.ConfigurePropCustom( gameObj );
 
 			Log.Info( $"[PropsMenu] {caller.DisplayName} spawned cloud prop '{GetPropHeader( prop )}' (ident: {prop.Ident})." );
 			NotifyCaller( caller, GameLocalization.Format( "notify.props.spawned", "Spawned: {0}.", GetPropHeader( prop ) ), true );

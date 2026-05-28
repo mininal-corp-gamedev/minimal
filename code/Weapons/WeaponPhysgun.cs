@@ -25,6 +25,7 @@ public sealed class WeaponPhysgun : Weapon
     private const int HostMaxOverlapIterationsLimit = 12;
     private const float HostMaxAimOriginError = 220f;
     private const float HostGrabInputTimeout = 0.35f;
+    private const float ShopGravityGunMaxDistance = 200f;
     private const float HostSyncedBeamSag = 48f;
     private const float HostSyncedBeamMoveBendScale = 0.035f;
     private const float HostSyncedBeamMaxBend = 140f;
@@ -111,6 +112,7 @@ public sealed class WeaponPhysgun : Weapon
 
     private static readonly Dictionary<long, HostGrabState> HostGrabStates = new();
     private static readonly Dictionary<long, int> HostBeamSequences = new();
+    private static readonly Dictionary<GameObject, long> HostHeldObjectGrabbers = new();
 
     public bool BeamActive => _beamHasLastEnd || _pullHoverActive || _mode == GrabMode.PhysgunSeek || _mode == GrabMode.Physgun || _mode == GrabMode.GravityGun;
     public bool PullActive => _pullHoverActive || _mode == GrabMode.GravityGun;
@@ -173,6 +175,7 @@ public sealed class WeaponPhysgun : Weapon
 
         if (state.IsValid())
         {
+            HostReleaseNetworkOwnership( state.GameObject, player.GameObject.Network.Owner );
             HostResolveGrabbedPlayerOverlaps(state, preserveVelocity: false,
                 padding: 6f, pushSpeed: 120f, maxIterations: 6);
             HostDisableHeldCollisionMode(state);
@@ -209,14 +212,19 @@ public sealed class WeaponPhysgun : Weapon
         }
 
         if (!HostCanUsePhysgun(state.Player)
-            || !HostCanGrabRigidbody(state.Player, state.Body)
+            || !HostCanGrabRigidbody(state.Player, state.Body, state.Mode)
             || !state.Body.MotionEnabled
-            || state.Body.IsProxy
             || !state.Body.PhysicsBody.IsValid())
         {
             HostEndGrab(connection, state.GameObject, preserveVelocity: false,
                 state.ReleasePlayerPadding, state.ReleasePushSpeed, state.ReleaseMaxResolveIterations);
             HostRejectGrab(connection, state.GameObject);
+            return;
+        }
+
+        if (!HostCanHostSimulateGrabbedBody(state))
+        {
+            HostUpdateSyncedBeam(state);
             return;
         }
 
@@ -295,6 +303,7 @@ public sealed class WeaponPhysgun : Weapon
     protected override void OnWeaponFixedUpdate()
     {
         UpdateViewmodelState();
+        ApplyOwnedClientGrabMovement();
     }
 
     protected override void OnWeaponUpdate()
@@ -566,25 +575,13 @@ public sealed class WeaponPhysgun : Weapon
         if (!rb.IsValid())
             return false;
 
-        return LocalPlayerCanGrab(rb);
+        return LocalPlayerCanGrab(rb, mode);
     }
 
-    private static bool LocalPlayerCanGrab(Rigidbody rb)
+    private static bool LocalPlayerCanGrab(Rigidbody rb, GrabMode mode)
     {
         var player = Player.Local;
-        if (!player.IsValid() || !rb.IsValid() || !rb.GameObject.IsValid())
-            return false;
-
-        var prop = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors);
-        var ownsProp = prop.IsValid() && IsSamePlayer(prop.PlayerOwner, player);
-
-        var printer = rb.GameObject.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors);
-        var ownsPrinter = printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player);
-
-        var ownsPrinterUpgrade = PlayerOwnsMoneyPrinterUpgrade(rb.GameObject, player);
-        var ownsGrowerItem = PlayerOwnsGrowerItem(rb.GameObject, player);
-
-        return ownsProp || ownsPrinter || ownsPrinterUpgrade || ownsGrowerItem;
+        return player.IsValid() && HostCanGrabRigidbody(player, rb, mode);
     }
 
     private void UpdateSpin()
@@ -722,6 +719,37 @@ public sealed class WeaponPhysgun : Weapon
 
         _grabbed.WorldRotation = targetRot;
         _grabbed.WorldPosition = targetPos - targetRot * _localOffset;
+    }
+
+    private void ApplyOwnedClientGrabMovement()
+    {
+        if (Networking.IsHost)
+            return;
+
+        if (_mode == GrabMode.None || _mode == GrabMode.PhysgunSeek || !_grabbed.IsValid())
+            return;
+
+        if (_grabbed.IsProxy)
+            return;
+
+        var player = Player.Local;
+        if (!player.IsValid() || !player.Controller.IsValid())
+            return;
+
+        var eye = player.Controller.EyeTransform;
+        var grabDistance = HostClampGrabDistance(_grabbed, GetBeamEndPosition(), eye,
+            _grabDistance, MinHoldDistance, MaxHoldDistance);
+        var targetPos = eye.Position + eye.Forward * grabDistance;
+
+        var targetRot = _mode == GrabMode.GravityGun
+            ? eye.Rotation * _grabOffset
+            : Rotation.FromYaw(player.Controller.EyeAngles.yaw) * _grabOffset;
+
+        var desiredBodyPos = targetPos - targetRot * _localOffset;
+        _grabbed.WorldRotation = targetRot;
+        _grabbed.WorldPosition = desiredBodyPos;
+        _grabbed.Velocity = Vector3.Zero;
+        _grabbed.AngularVelocity = Vector3.Zero;
     }
 
     private void RequestHostStartGrab(GrabMode mode, Vector3 origin, Vector3 forward, float yaw, int sessionId)
@@ -942,6 +970,15 @@ public sealed class WeaponPhysgun : Weapon
         if (!HostTryFindGrabTarget(player, GrabMode.GravityGun, aim, maxRange, seekRadius, out var tr, out var rb))
             return;
 
+        if (!HostCanGrabRigidbody(player, rb, GrabMode.GravityGun))
+            return;
+
+        if (IsHeldByAnotherPlayer(rb.GameObject, caller.SteamId.Value))
+            return;
+
+        if (IsShopGravityGunTarget(rb) && !HostIsWithinShopGravityGunDistance(player, rb))
+            return;
+
         if (!HostCanMoveBody(rb))
             return;
 
@@ -985,7 +1022,25 @@ public sealed class WeaponPhysgun : Weapon
             return;
         }
 
-        if (rb.IsProxy || !rb.PhysicsBody.IsValid())
+        if (!rb.PhysicsBody.IsValid())
+        {
+            HostRejectGrab(caller, rb.GameObject);
+            return;
+        }
+
+        if (!HostCanGrabRigidbody(player, rb, mode))
+        {
+            HostRejectGrab(caller, rb.GameObject);
+            return;
+        }
+
+        if (IsHeldByAnotherPlayer(rb.GameObject, caller.SteamId.Value))
+        {
+            HostRejectGrab(caller, rb.GameObject);
+            return;
+        }
+
+        if (mode == GrabMode.GravityGun && IsShopGravityGunTarget(rb) && !HostIsWithinShopGravityGunDistance(player, rb))
         {
             HostRejectGrab(caller, rb.GameObject);
             return;
@@ -1050,6 +1105,8 @@ public sealed class WeaponPhysgun : Weapon
         }
 
         rb.GameObject.Tags.Add(HeldCollisionTag);
+        rb.GameObject.Network.AssignOwnership(caller);
+        HostRegisterHeldObject(rb.GameObject, caller.SteamId.Value);
         HostGrabStates[state.SteamId] = state;
         RpcBroadcastPhysgunSound(attachSound, tr.HitPosition);
     }
@@ -1067,10 +1124,17 @@ public sealed class WeaponPhysgun : Weapon
             return;
 
         if (!HostCanUsePhysgun(state.Player)
-            || !HostCanGrabRigidbody(state.Player, state.Body)
+            || !HostCanGrabRigidbody(state.Player, state.Body, state.Mode)
             || !state.Body.MotionEnabled
-            || state.Body.IsProxy
             || !state.Body.PhysicsBody.IsValid())
+        {
+            HostEndGrab(caller, target, preserveVelocity: false, releasePlayerPadding, 120f, 6);
+            HostRejectGrab(caller, target);
+            return;
+        }
+
+        if (state.Mode == GrabMode.GravityGun && IsShopGravityGunTarget(state.Body)
+            && !HostIsWithinShopGravityGunDistance(state.Player, state.Body))
         {
             HostEndGrab(caller, target, preserveVelocity: false, releasePlayerPadding, 120f, 6);
             HostRejectGrab(caller, target);
@@ -1116,6 +1180,7 @@ public sealed class WeaponPhysgun : Weapon
         releaseMaxResolveIterations = Math.Clamp(releaseMaxResolveIterations, 1, HostMaxOverlapIterationsLimit);
 
         HostRemoveJoint(state);
+        HostReleaseNetworkOwnership(state.GameObject, caller);
         HostResolveGrabbedPlayerOverlaps(state, preserveVelocity, releasePlayerPadding,
             releasePushSpeed, releaseMaxResolveIterations);
         HostDisableHeldCollisionMode(state);
@@ -1352,43 +1417,117 @@ public sealed class WeaponPhysgun : Weapon
         if (!rb.IsValid() || !rb.GameObject.IsValid())
             return false;
 
-        return HostCanGrabRigidbody(player, rb);
+        return HostCanGrabRigidbody(player, rb, mode);
     }
 
-    private static bool HostCanGrabRigidbody(Player player, Rigidbody rb)
+    private static bool HostCanGrabRigidbody(Player player, Rigidbody rb, GrabMode mode)
     {
-        var prop = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors);
-        var ownsProp = prop.IsValid() && IsSamePlayer(prop.PlayerOwner, player);
+        if (!player.IsValid() || !rb.IsValid() || !rb.GameObject.IsValid())
+            return false;
+
+        var prop = TryGetPropCustom(rb, out var propComponent);
+        var shopObject = TryGetShopObject(rb, out var shopComponent);
+
+        if (mode == GrabMode.GravityGun)
+        {
+            if (prop)
+                return false;
+
+            if (shopObject)
+                return true;
+
+            return HasGravityGunShopTarget(rb.GameObject);
+        }
+
+        if (shopObject && !prop)
+            return false;
+
+        if (prop)
+            return propComponent.PlayerOwner.IsValid() && propComponent.PlayerOwner.CanTouchProp(propComponent, player);
 
         var printer = rb.GameObject.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors);
-        var ownsPrinter = printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player);
+        if (printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player))
+            return true;
 
-        var ownsPrinterUpgrade = PlayerOwnsMoneyPrinterUpgrade(rb.GameObject, player);
-        var ownsGrowerItem = PlayerOwnsGrowerItem(rb.GameObject, player);
-
-        return ownsProp || ownsPrinter || ownsPrinterUpgrade || ownsGrowerItem;
+        return false;
     }
 
-    private static bool PlayerOwnsMoneyPrinterUpgrade(GameObject target, Player player)
+    private static bool TryGetPropCustom(Rigidbody rb, out PropCustom prop)
     {
-        var upgrade = target.Components.Get<MoneyPrinterUpgrade>(FindMode.EverythingInSelfAndAncestors);
-        if (!upgrade.IsValid())
-            return false;
-
-        var shopObject = target.Components.Get<ShopObject>(FindMode.EverythingInSelfAndAncestors);
-        return shopObject.IsValid() && IsSamePlayer(shopObject.PlayerOwner, player);
+        prop = rb.GameObject.Components.Get<PropCustom>(FindMode.EverythingInSelfAndAncestors);
+        return prop.IsValid();
     }
 
-    private static bool PlayerOwnsGrowerItem(GameObject target, Player player)
+    private static bool TryGetShopObject(Rigidbody rb, out ShopObject shopObject)
     {
-        var hasGrowerItem = target.Components.Get<Weed>(FindMode.EverythingInSelfAndAncestors).IsValid()
+        shopObject = rb.GameObject.Components.Get<ShopObject>(FindMode.EverythingInSelfAndAncestors);
+        return shopObject.IsValid();
+    }
+
+    private static bool HasGravityGunShopTarget(GameObject target)
+    {
+        if (target.Components.Get<ShopObject>(FindMode.EverythingInSelfAndAncestors).IsValid())
+            return true;
+
+        return target.Components.Get<MoneyPrinterBase>(FindMode.EverythingInSelfAndAncestors).IsValid()
+            || target.Components.Get<Weed>(FindMode.EverythingInSelfAndAncestors).IsValid()
             || target.Components.Get<WeedFertilizer>(FindMode.EverythingInSelfAndAncestors).IsValid();
+    }
 
-        if (!hasGrowerItem)
+    private static bool IsShopGravityGunTarget(Rigidbody rb)
+    {
+        return TryGetShopObject(rb, out _) || HasGravityGunShopTarget(rb.GameObject);
+    }
+
+    private static bool HostIsWithinShopGravityGunDistance(Player player, Rigidbody rb)
+    {
+        if (!player.IsValid() || !rb.IsValid())
             return false;
 
-        var shopObject = target.Components.Get<ShopObject>(FindMode.EverythingInSelfAndAncestors);
-        return shopObject.IsValid() && IsSamePlayer(shopObject.PlayerOwner, player);
+        return Vector3.DistanceBetween(player.WorldPosition, rb.WorldPosition) <= ShopGravityGunMaxDistance;
+    }
+
+    private static bool IsHeldByAnotherPlayer(GameObject target, long grabberSteamId)
+    {
+        if (!target.IsValid())
+            return false;
+
+        if (!HostHeldObjectGrabbers.TryGetValue(target, out var holderSteamId))
+            return false;
+
+        return holderSteamId != grabberSteamId;
+    }
+
+    private static void HostRegisterHeldObject(GameObject target, long grabberSteamId)
+    {
+        if (!target.IsValid() || grabberSteamId == 0L)
+            return;
+
+        HostHeldObjectGrabbers[target] = grabberSteamId;
+    }
+
+    private static void HostUnregisterHeldObject(GameObject target)
+    {
+        if (!target.IsValid())
+            return;
+
+        HostHeldObjectGrabbers.Remove(target);
+    }
+
+    private static void HostReleaseNetworkOwnership(GameObject target, Connection caller)
+    {
+        if (!Networking.IsHost || !target.IsValid() || caller is null)
+            return;
+
+        HostUnregisterHeldObject(target);
+
+        if (target.Network.Owner == caller)
+            target.Network.DropOwnership();
+    }
+
+    private static bool HostCanHostSimulateGrabbedBody(HostGrabState state)
+    {
+        return state.Body.IsValid() && !state.Body.IsProxy;
     }
 
     private static bool HostCanMoveBody(Rigidbody body)

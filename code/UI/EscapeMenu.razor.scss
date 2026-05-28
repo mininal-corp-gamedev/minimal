@@ -244,4 +244,100 @@ EscapeMenu {
 		font-weight: 400;
 		color: $em-text-dim;
 	}
+
+	.settings-btn {
+		height: 48px;
+		padding: 0 20px;
+		margin-bottom: 16px;
+		border-radius: 10px;
+		background-color: rgba(255, 255, 255, 0.08);
+		border: 2px solid rgba(255, 255, 255, 0.14);
+		font-family: Poppins;
+		font-size: 16px;
+		font-weight: 700;
+		color: $em-text;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+
+		&:hover {
+			background-color: rgba(67, 255, 108, 0.14);
+			border-color: rgba(67, 255, 108, 0.45);
+		}
+	}
+
+	.prop-protection-list {
+		flex-direction: column;
+		flex-grow: 1;
+		overflow-y: scroll;
+		padding-top: 8px;
+		border-top: 1px solid $em-divider;
+	}
+
+	.prop-protection-header {
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 600;
+		color: $em-text-dim;
+		margin-bottom: 12px;
+	}
+
+	.prop-protection-row {
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		padding: 8px 12px;
+		background-color: rgba(255, 255, 255, 0.05);
+		border-radius: 8px;
+		margin-bottom: 8px;
+	}
+
+	.prop-protection-avatar {
+		width: 32px;
+		height: 32px;
+		background-size: cover;
+		background-position: center;
+		border-radius: 50%;
+		margin-right: 12px;
+	}
+
+	.prop-protection-info {
+		flex-direction: column;
+		flex-grow: 1;
+	}
+
+	.prop-protection-name {
+		font-family: Poppins;
+		font-size: 14px;
+		font-weight: 600;
+		color: $em-text;
+	}
+
+	.prop-protection-job {
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 500;
+		color: $em-text-dim;
+	}
+
+	.prop-protection-add-btn,
+	.prop-protection-del-btn {
+		padding: 6px 14px;
+		border-radius: 8px;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 700;
+		color: $em-text;
+		cursor: pointer;
+	}
+
+	.prop-protection-add-btn {
+		background-color: rgba(67, 255, 108, 0.18);
+		border: 1px solid rgba(67, 255, 108, 0.45);
+	}
+
+	.prop-protection-del-btn {
+		background-color: rgba(255, 67, 108, 0.18);
+		border: 1px solid rgba(255, 67, 108, 0.45);
+	}
 }

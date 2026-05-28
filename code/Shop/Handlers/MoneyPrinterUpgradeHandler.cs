@@ -31,10 +31,11 @@
             return false;
 
         var shopObj = printerObject.AddComponent<ShopObject>();
-        shopObj.PlayerOwner = buyer;
+        shopObj.SetOwner( buyer );
         shopObj.Definition = shop;
 
-        printerObject.NetworkSpawn(context.Buyer.Network.Owner);
+        printerObject.NetworkSpawn();
+        OwnedPropNetwork.ConfigureShopObject( printerObject );
 
         return true;
     }

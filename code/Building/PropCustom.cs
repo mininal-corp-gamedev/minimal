@@ -80,11 +80,48 @@ public sealed class PropCustom : Component, Component.INetworkListener
 		if ( !Networking.IsHost )
 			return;
 
-		var networkOwner = GameObject.Network.Owner;
-		var playerOwner = PlayerOwner.IsValid() ? PlayerOwner.GameObject.Network.Owner : null;
-		if ( networkOwner?.SteamId != channel.SteamId && playerOwner?.SteamId != channel.SteamId )
+		if ( !IsPlayerOwnerConnection( channel ) )
 			return;
 
 		GameObject.Destroy();
+	}
+
+	public static bool IsPlayerOwnerConnection( PropCustom prop, Connection channel )
+	{
+		if ( !prop.IsValid() || channel is null )
+			return false;
+
+		return prop.IsPlayerOwnerConnection( channel );
+	}
+
+	private bool IsPlayerOwnerConnection( Connection channel )
+	{
+		if ( !PlayerOwner.IsValid() )
+			return false;
+
+		var ownerConn = PlayerOwner.GameObject.Network.Owner;
+		return ownerConn is not null && ownerConn.SteamId == channel.SteamId;
+	}
+
+	public static void HostDestroyAllForPlayerOwner( Player playerOwner )
+	{
+		if ( !Networking.IsHost || !playerOwner.IsValid() )
+			return;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return;
+
+		foreach ( var go in scene.GetAllObjects( true ) )
+		{
+			if ( !go.Components.TryGet<PropCustom>( out var prop ) )
+				continue;
+			if ( !prop.IsValid() || !prop.GameObject.IsValid() )
+				continue;
+			if ( prop.PlayerOwner != playerOwner )
+				continue;
+
+			prop.GameObject.Destroy();
+		}
 	}
 }

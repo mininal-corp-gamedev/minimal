@@ -36,7 +36,7 @@ public sealed class MoneyPrinter1ShopHandler : IShopPurchaseHandler
 			return false;
 
 		var shopObj = printerObject.AddComponent<ShopObject>();
-        shopObj.PlayerOwner = buyer;
+		shopObj.SetOwner( buyer );
 		shopObj.Definition = shop;
 
         var printer = printerObject.Components.Get<MoneyPrinterBase>( FindMode.EverythingInSelfAndDescendants );
@@ -46,9 +46,10 @@ public sealed class MoneyPrinter1ShopHandler : IShopPurchaseHandler
 		// PropCustom мы НЕ ставим намеренно: с ним physgun (ЛКМ) разрешил бы захват
 		// принтера, а по требованию принтер должен браться только gravitygun-ом (ПКМ).
 		// Доступ для gravitygun обеспечивается отдельной веткой в WeaponPhysgun
-		// (по наличию MoneyPrinterBase + PlayerOwner).
+		// (по наличию ShopObject).
 
-		printerObject.NetworkSpawn(context.Buyer.Network.Owner);
+		printerObject.NetworkSpawn();
+		OwnedPropNetwork.ConfigureShopObject( printerObject );
 		return true;
 	}
 }

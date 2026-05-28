@@ -1,6 +1,8 @@
 @using Sandbox;
 @using Sandbox.UI;
 @using System;
+@using System.Collections.Generic;
+@using System.Linq;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -46,7 +48,38 @@
 					{
 						<div class="settings-page">
 							<div class="page-title">@GameLocalization.Phrase( "ui.escape.settings", "Settings" )</div>
-							<div class="page-placeholder">@GameLocalization.Phrase( "ui.escape.settings_empty", "Empty" )</div>
+							<button class="settings-btn" onclick=@OnPropProtectionClicked>@GameLocalization.Phrase( "ui.escape.prop_protection", "Add to Prop Protection" )</button>
+							@if ( ShowPropProtectionList )
+							{
+								<div class="prop-protection-list">
+									<div class="prop-protection-header">@GameLocalization.Phrase( "ui.escape.prop_protection_title", "Prop Protection" )</div>
+									@foreach ( var conn in PropProtectionPlayers )
+									{
+										var sid = conn.SteamId.Value;
+										var localSteamId = Player.Local?.GameObject.Network.Owner?.SteamId.Value ?? 0L;
+										var isSelf = sid == localSteamId;
+										var isProtected = !isSelf && Player.Local.IsValid() && Player.Local.IsInPropProtection( sid );
+										<div class="prop-protection-row">
+											<div class="prop-protection-avatar" style="background-image: url( avatar:@sid )"></div>
+											<div class="prop-protection-info">
+												<div class="prop-protection-name">@conn.DisplayName</div>
+												<div class="prop-protection-job">@GetPlayerJobName( conn )</div>
+											</div>
+											@if ( isSelf )
+											{
+											}
+											else if ( isProtected )
+											{
+												<button class="prop-protection-del-btn" onclick=@(() => OnRemovePropProtection( conn ))>@GameLocalization.Phrase( "ui.common.delete" )</button>
+											}
+											else
+											{
+												<button class="prop-protection-add-btn" onclick=@(() => OnAddPropProtection( conn ))>@GameLocalization.Phrase( "ui.common.add" )</button>
+											}
+										</div>
+									}
+								</div>
+							}
 						</div>
 					}
 					else
@@ -79,6 +112,8 @@
 
 	bool IsDiscordOpening { get; set; } = false;
 	TimeUntil DiscordCloseAt { get; set; } = 0f;
+	bool ShowPropProtectionList { get; set; } = false;
+	List<Connection> PropProtectionPlayers { get; set; } = new();
 
 	float Progress
 	{
@@ -137,8 +172,58 @@
 	private void OnSettingsClicked()
 	{
 		ActiveSection = ActiveSection == 1 ? 0 : 1;
+		if ( ActiveSection != 1 )
+			ShowPropProtectionList = false;
 		StateHasChanged();
 	}
+
+	private void OnPropProtectionClicked()
+	{
+		ShowPropProtectionList = !ShowPropProtectionList;
+		if ( ShowPropProtectionList )
+			RefreshPropProtectionPlayers();
+		StateHasChanged();
+	}
+
+	private void RefreshPropProtectionPlayers()
+	{
+		var localSteamId = Player.Local?.GameObject.Network.Owner?.SteamId.Value ?? 0L;
+		PropProtectionPlayers = Connection.All
+			.Where( c => c is not null )
+			.OrderByDescending( c => c.SteamId.Value == localSteamId )
+			.ThenBy( c => c.DisplayName )
+			.ToList();
+	}
+
+	private void OnAddPropProtection( Connection conn )
+	{
+		if ( conn is null || !Player.Local.IsValid() )
+			return;
+
+		Player.Local.RpcRequestAddPropProtection( conn.SteamId.Value );
+		RefreshPropProtectionPlayers();
+		StateHasChanged();
+	}
+
+	private void OnRemovePropProtection( Connection conn )
+	{
+		if ( conn is null || !Player.Local.IsValid() )
+			return;
+
+		Player.Local.RpcRequestRemovePropProtection( conn.SteamId.Value );
+		RefreshPropProtectionPlayers();
+		StateHasChanged();
+	}
+
+	private static string GetPlayerJobName( Connection connection )
+	{
+		if ( connection is null )
+			return GameLocalization.Phrase( "common.no_job", "No Job" );
+
+		return GameLocalization.JobHeader( FindPlayerBySteamId( connection.SteamId.Value )?.Job?.JobDefinition );
+	}
+
+	private static Player FindPlayerBySteamId( long steamId ) => Player.FindPlayerBySteamId( steamId );
 
 	private void OnSandboxSettingsClicked()
 	{
@@ -234,6 +319,9 @@
 		hash.Add( UiModalManager.Version );
 		hash.Add( GameLocalization.CurrentCode );
 		hash.Add( GameLocalization.Version );
+		hash.Add( ShowPropProtectionList );
+		hash.Add( PropProtectionPlayers.Count );
+		hash.Add( Player.Local?.PropProtectionIdsSerialized );
 
 		// Перерисовываем каждый кадр во время анимации, чтобы плавно менять opacity.
 		if ( IsVisible && AnimUntil > 0f )

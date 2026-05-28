@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
-public sealed class Player : Component, ICustomDamagable, PlayerController.IEvents
+public sealed class Player : Component, ICustomDamagable, PlayerController.IEvents, Component.INetworkListener
 {
     public static Player Local { get; private set; }
     private static readonly SoundEvent DefaultPhysgunBeamStartSound = new("weapons/physgun/sounds/physgun.shoot.start.sound");
@@ -37,6 +37,11 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     /// <summary>Maximum number of spawned props this player can own at once.</summary>
     [Property] public int MaxProps { get; set; } = 20;
+
+    // TODO: persist PropProtectionIdsSerialized in player save.
+
+    /// <summary>Host-authoritative, network-synced, semicolon-separated list of prop-protection SteamIds.</summary>
+    [Sync( SyncFlags.FromHost )] public string PropProtectionIdsSerialized { get; private set; } = "";
 
     [Sync(SyncFlags.FromHost)] public bool IsGod { get; set; } = false;
     [Sync(SyncFlags.FromHost)] public bool IsSafezone { get; set; } = false;
@@ -3429,6 +3434,113 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
 
         return null;
+    }
+
+    public IEnumerable<long> PropProtectionIds
+    {
+        get
+        {
+            if ( string.IsNullOrWhiteSpace( PropProtectionIdsSerialized ) )
+                yield break;
+
+            var parts = PropProtectionIdsSerialized.Split( ';', StringSplitOptions.RemoveEmptyEntries );
+            foreach ( var part in parts )
+            {
+                if ( long.TryParse( part, out var id ) && id != 0L )
+                    yield return id;
+            }
+        }
+    }
+
+    public bool IsInPropProtection( long steamId )
+    {
+        if ( steamId == 0L )
+            return false;
+
+        foreach ( var id in PropProtectionIds )
+        {
+            if ( id == steamId )
+                return true;
+        }
+
+        return false;
+    }
+
+    public bool IsInPropProtection( Player player )
+    {
+        if ( !player.IsValid() )
+            return false;
+
+        var steamId = player.GameObject.Network.Owner?.SteamId.Value ?? 0L;
+        return steamId != 0L && IsInPropProtection( steamId );
+    }
+
+    public bool CanTouchProp( PropCustom prop, Player toucher )
+    {
+        if ( !prop.IsValid() || !toucher.IsValid() )
+            return false;
+
+        if ( prop.PlayerOwner == toucher )
+            return true;
+
+        var toucherSteamId = toucher.GameObject.Network.Owner?.SteamId.Value ?? 0L;
+        if ( toucherSteamId == 0L )
+            return false;
+
+        return prop.PlayerOwner.IsValid() && prop.PlayerOwner.IsInPropProtection( toucherSteamId );
+    }
+
+    [Rpc.Host]
+    public void RpcRequestAddPropProtection( long steamId )
+    {
+        if ( !Networking.IsHost )
+            return;
+
+        var caller = Rpc.Caller;
+        if ( caller is null || caller.SteamId.Value != GameObject.Network.Owner?.SteamId.Value )
+            return;
+
+        if ( steamId == 0L || steamId == caller.SteamId.Value )
+            return;
+
+        var set = new HashSet<long>( PropProtectionIds );
+        if ( !set.Add( steamId ) )
+            return;
+
+        PropProtectionIdsSerialized = string.Join( ";", set );
+    }
+
+    [Rpc.Host]
+    public void RpcRequestRemovePropProtection( long steamId )
+    {
+        if ( !Networking.IsHost )
+            return;
+
+        var caller = Rpc.Caller;
+        if ( caller is null || caller.SteamId.Value != GameObject.Network.Owner?.SteamId.Value )
+            return;
+
+        if ( steamId == 0L )
+            return;
+
+        var set = new HashSet<long>( PropProtectionIds );
+        if ( !set.Remove( steamId ) )
+            return;
+
+        PropProtectionIdsSerialized = string.Join( ";", set );
+    }
+
+    void Component.INetworkListener.OnDisconnected( Connection channel )
+    {
+        if ( !Networking.IsHost )
+            return;
+
+        var player = FindPlayerBySteamId( channel.SteamId.Value );
+        if ( !player.IsValid() )
+            return;
+
+        PropCustom.HostDestroyAllForPlayerOwner( player );
+        ShopObject.HostDestroyAllForPlayerOwner( player );
     }
 
     public void RegisterSpawnedProp( PropCustom prop )

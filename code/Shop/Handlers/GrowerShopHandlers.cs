@@ -57,7 +57,7 @@ file static class GrowerShopSpawner
             return false;
 
         var shopObj = spawnedObject.AddComponent<ShopObject>();
-        shopObj.PlayerOwner = buyer;
+        shopObj.SetOwner( buyer );
         shopObj.Definition = shop;
 
         if ( !spawnedObject.Components.Get<Rigidbody>( FindMode.EverythingInSelfAndDescendants ).IsValid() )
@@ -70,7 +70,8 @@ file static class GrowerShopSpawner
                 weed.SetOwner( buyer );
         }
 
-        spawnedObject.NetworkSpawn( context.Buyer.Network.Owner );
+        spawnedObject.NetworkSpawn();
+        OwnedPropNetwork.ConfigureShopObject( spawnedObject );
         return true;
     }
 }

@@ -1,0 +1,15 @@
+{
+  "Id": "armor",
+  "Category": "Other",
+  "Header": "Armor",
+  "Description": "Use to restore armor to 100.",
+  "MaxCount": 1,
+  "IconPath": "icons/armor.vtex",
+  "Model": null,
+  "CanUse": true,
+  "CanDrop": true,
+  "IsJobItem": false,
+  "CanSave": true,
+  "__references": [],
+  "__version": 0
+}

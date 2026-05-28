@@ -43,8 +43,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Sync(SyncFlags.FromHost)] public bool IsCasino { get; set; } = false;
     [Sync(SyncFlags.FromHost)] public float Health { get; set; } = 100f;
     [Sync(SyncFlags.FromHost)] public float MaxHealth { get; set; } = 100f;
-    [Sync(SyncFlags.FromHost)] public float Armor { get; set; } = 0f; //todo make
-    [Sync(SyncFlags.FromHost)] public float MaxArmor { get; set; } = 100f; //todo make
+    [Sync(SyncFlags.FromHost)] public float Armor { get; set; } = 0f;
+    [Sync(SyncFlags.FromHost)] public float MaxArmor { get; set; } = 100f;
+    [Property, Category("Armor")] public float ArmorDamageAbsorbFraction { get; set; } = 0.8f;
+    [Property, Category("Armor")] public bool ArmorProtectsFallDamage { get; set; } = false;
     [Sync(SyncFlags.FromHost)] public int Level { get; set; } = 1; //todo make
     [Sync(SyncFlags.FromHost)] public int Exp { get; set; } = 0; //todo make
     [Sync(SyncFlags.FromHost)] public int MaxExp { get; set; } = 0; //todo make
@@ -485,17 +487,17 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     /// Запрос на урон. Применять Health может только хост (он — Sync-владелец).
     /// На хосте применяем сразу, на клиенте отправляем <see cref="RpcRequestDamage"/>.
     /// </summary>
-    public void TakeDamageFromWeapon(float damage, GameObject attacker = null, string deathMessage = null, Vector3 damagePosition = default, Vector3 damageOrigin = default, bool launchRagdoll = false)
+    public void TakeDamageFromWeapon(float damage, GameObject attacker = null, string deathMessage = null, Vector3 damagePosition = default, Vector3 damageOrigin = default, bool launchRagdoll = false, bool useArmor = true)
     {
         if (damage <= 0f) return;
 
         if (Networking.IsHost)
         {
-            HostApplyDamage(damage, attacker, deathMessage, damagePosition, damageOrigin, launchRagdoll);
+            HostApplyDamage(damage, attacker, deathMessage, damagePosition, damageOrigin, launchRagdoll, useArmor);
             return;
         }
 
-        RpcRequestDamage(damage, attacker, deathMessage, damagePosition, damageOrigin, launchRagdoll);
+        RpcRequestDamage(damage, attacker, deathMessage, damagePosition, damageOrigin, launchRagdoll, useArmor);
     }
 
     [Rpc.Broadcast]
@@ -551,13 +553,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     /// (что и было причиной «клиент не дамажит клиента»).
     /// </summary>
     [Rpc.Host]
-    private void RpcRequestDamage(float damage, GameObject attacker, string deathMessage, Vector3 damagePosition, Vector3 damageOrigin, bool launchRagdoll)
+    private void RpcRequestDamage(float damage, GameObject attacker, string deathMessage, Vector3 damagePosition, Vector3 damageOrigin, bool launchRagdoll, bool useArmor)
     {
         if (!Networking.IsHost) return;
-        HostApplyDamage(damage, attacker, deathMessage, damagePosition, damageOrigin, launchRagdoll);
+        HostApplyDamage(damage, attacker, deathMessage, damagePosition, damageOrigin, launchRagdoll, useArmor);
     }
 
-    private void HostApplyDamage(float damage, GameObject attacker, string deathMessage = null, Vector3 damagePosition = default, Vector3 damageOrigin = default, bool launchRagdoll = false)
+    private void HostApplyDamage(float damage, GameObject attacker, string deathMessage = null, Vector3 damagePosition = default, Vector3 damageOrigin = default, bool launchRagdoll = false, bool useArmor = true)
     {
         if (!Networking.IsHost) return;
         if (IsArrested) return;
@@ -569,14 +571,45 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         // владельца), но на всякий случай отбрасываем явный self-hit.
         if (attacker.IsValid() && attacker == GameObject) return;
 
-        Health = Math.Max(0f, Health - damage);
+        var healthDamage = HostApplyArmorReduction(damage, useArmor, out var armorDamage);
+        Health = Math.Max(0f, Health - healthDamage);
         WorldHud?.WorldHudRefresh();
 
         RpcOnPlayerHit(Renderer);
-        RpcOwnerDamageTaken(damage);
+        RpcOwnerDamageTaken(MathF.Max(healthDamage, armorDamage * 0.35f));
 
         if (Health <= 0f)
             HostDie(BuildDeathMessage(attacker, deathMessage), launchRagdoll ? CreateDeathLaunchVelocity(damageOrigin) : Vector3.Zero, damageOrigin);
+    }
+
+    private float HostApplyArmorReduction(float damage, bool useArmor, out float armorDamage)
+    {
+        armorDamage = 0f;
+
+        if (!useArmor || Armor <= 0f || MaxArmor <= 0f)
+            return damage;
+
+        var absorbFraction = Math.Clamp(ArmorDamageAbsorbFraction, 0f, 1f);
+        if (absorbFraction <= 0f)
+            return damage;
+
+        armorDamage = MathF.Min(Armor, damage * absorbFraction);
+        Armor = MathF.Max(0f, Armor - armorDamage);
+
+        return MathF.Max(0f, damage - armorDamage);
+    }
+
+    public void HostSetArmor(float armor)
+    {
+        if (!Networking.IsHost) return;
+
+        Armor = Math.Clamp(armor, 0f, MathF.Max(0f, MaxArmor));
+        WorldHud?.WorldHudRefresh();
+    }
+
+    public void HostGiveFullArmor()
+    {
+        HostSetArmor(MaxArmor);
     }
 
     /// <summary>Смерть. Хост показывает владельцу экран смерти и откладывает респавн.</summary>
@@ -588,6 +621,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         ClearQueuedElevatorCarryDelta();
         IsDead = true;
         Health = 0f;
+        Armor = 0f;
         DeathTimeUntilRespawn = MathF.Max(0.1f, RespawnDelaySeconds);
         DeathMessage = string.IsNullOrWhiteSpace(deathMessage) ? GameLocalization.Phrase( "ui.hud.default_death_message", "You died." ) : deathMessage;
         HostSetEquippedWeaponItemId(null);
@@ -1021,7 +1055,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (damage <= 0f) return;
 
         _nextFallDamageAllowed = 0.2f;
-        HostApplyDamage(damage, null, GameLocalization.Phrase( "ui.hud.fall_death", "You died from a fall." ) );
+        HostApplyDamage(damage, null, GameLocalization.Phrase( "ui.hud.fall_death", "You died from a fall." ), useArmor: ArmorProtectsFallDamage );
     }
 
     private float CalculateFallDamage(float distance)
@@ -1580,6 +1614,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         ItemUseRegistry.Register("ammo_revolver", new AmmoUseHandler(AmmoWeaponType.Revolver));
         ItemUseRegistry.Register("ammo_shotgun", new AmmoUseHandler(AmmoWeaponType.Shotgun));
         ItemUseRegistry.Register("burger", new WepBurgerUseHandler());
+        ItemUseRegistry.Register("armor", new ArmorUseHandler());
 
         _itemUseHandlersRegistered = true;
     }

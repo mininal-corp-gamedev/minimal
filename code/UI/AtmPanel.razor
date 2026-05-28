@@ -1,6 +1,7 @@
-﻿@using Sandbox;
+@using Sandbox;
 @using Sandbox.UI;
 @using System;
+@using System.Globalization;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -8,65 +9,88 @@
 	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
 	{
 		<div class="atm-overlay">
-			<div class="atm-dialog">
+			<div class="atm-shell">
 
 				<div class="atm-titlebar">
-					<div class="atm-title">@GameLocalization.Phrase( "ui.atm.title" )</div>
+					<div class="atm-title-block">
+						<div class="atm-kicker">@GameLocalization.Phrase( "ui.atm.bank_card", "Bank card" )</div>
+						<div class="atm-title">@GameLocalization.Phrase( "ui.atm.title" )</div>
+					</div>
 					<button class="close-btn" onclick=@Close>X</button>
 				</div>
 
 				<div class="atm-content">
-					<div class="col-left">
-						<div class="player-name">@PlayerName</div>
+					<div class="account-panel">
+						<div class="bank-card">
+							<div class="card-row">
+								<div class="card-mark"></div>
+								<div class="card-type">@GameLocalization.Phrase( "ui.atm.account", "ACCOUNT" )</div>
+							</div>
+							<div class="card-balance">@AccountText</div>
+							<div class="card-holder">
+								<div class="card-label">@GameLocalization.Phrase( "ui.atm.card_holder", "Card holder" )</div>
+								<div class="card-name">@PlayerName</div>
+							</div>
+						</div>
 
-						<div class="balances">
-							<div class="balance-card">
+						<div class="balance-grid">
+							<button class="balance-card cash" onclick=@(() => SetAmount( CashMoney ))>
 								<div class="balance-label">@GameLocalization.Phrase( "ui.atm.cash" )</div>
-								<div class="balance-value">$@CashMoney</div>
-							</div>
-							<div class="balance-card accent">
+								<div class="balance-value">@CashText</div>
+								<div class="balance-hint">@GameLocalization.Phrase( "ui.common.max", "MAX" )</div>
+							</button>
+							<button class="balance-card account" onclick=@(() => SetAmount( AtmMoney ))>
 								<div class="balance-label">@GameLocalization.Phrase( "ui.atm.account" )</div>
-								<div class="balance-value">$@AtmMoney</div>
-							</div>
-						</div>
-
-						<div class="input-row">
-							<div class="input-display">@(string.IsNullOrEmpty( _inputStr ) ? "0" : _inputStr)</div>
-							<button class="clear-btn" onclick=@ClearInput>C</button>
-						</div>
-
-						<div class="quick-add-row">
-							<button class="quick-btn" onclick=@(() => AddAmount( 1 ))>+1</button>
-							<button class="quick-btn" onclick=@(() => AddAmount( 10 ))>+10</button>
-							<button class="quick-btn" onclick=@(() => AddAmount( 100 ))>+100</button>
-							<button class="quick-btn" onclick=@(() => AddAmount( 1000 ))>+1K</button>
-							<button class="quick-btn" onclick=@(() => AddAmount( 10000 ))>+10K</button>
-						</div>
-
-						<div class="action-col">
-							<button class="action-btn deposit-btn" onclick=@OnDeposit>@GameLocalization.Phrase( "ui.atm.deposit" )</button>
-							<button class="action-btn withdraw-btn" onclick=@OnWithdraw>@GameLocalization.Phrase( "ui.atm.withdraw" )</button>
+								<div class="balance-value">@AccountText</div>
+								<div class="balance-hint">@GameLocalization.Phrase( "ui.common.max", "MAX" )</div>
+							</button>
 						</div>
 					</div>
 
-					<div class="col-right">
-						<div class="numpad-row">
-							<button class="num-btn" onclick=@(() => AppendDigit( "7" ))>7</button>
-							<button class="num-btn" onclick=@(() => AppendDigit( "8" ))>8</button>
-							<button class="num-btn" onclick=@(() => AppendDigit( "9" ))>9</button>
+					<div class="transaction-panel">
+						<div class="amount-header">
+							<div class="amount-label">@GameLocalization.Phrase( "ui.atm.amount", "Amount" )</div>
+							<button class="clear-btn" onclick=@ClearInput>C</button>
 						</div>
-						<div class="numpad-row">
-							<button class="num-btn" onclick=@(() => AppendDigit( "4" ))>4</button>
-							<button class="num-btn" onclick=@(() => AppendDigit( "5" ))>5</button>
-							<button class="num-btn" onclick=@(() => AppendDigit( "6" ))>6</button>
+
+						<div class="input-display">@InputText</div>
+
+						<div class="quick-section">
+							<div class="quick-label">@GameLocalization.Phrase( "ui.atm.quick", "Quick" )</div>
+							<div class="quick-add-row">
+								<button class="quick-btn" onclick=@(() => AddAmount( 100 ))>+100</button>
+								<button class="quick-btn" onclick=@(() => AddAmount( 500 ))>+500</button>
+								<button class="quick-btn" onclick=@(() => AddAmount( 1000 ))>+1K</button>
+								<button class="quick-btn" onclick=@(() => AddAmount( 10000 ))>+10K</button>
+							</div>
 						</div>
-						<div class="numpad-row">
-							<button class="num-btn" onclick=@(() => AppendDigit( "1" ))>1</button>
-							<button class="num-btn" onclick=@(() => AppendDigit( "2" ))>2</button>
-							<button class="num-btn" onclick=@(() => AppendDigit( "3" ))>3</button>
+
+						<div class="numpad">
+							<div class="numpad-row">
+								<button class="num-btn" onclick=@(() => AppendDigit( "7" ))>7</button>
+								<button class="num-btn" onclick=@(() => AppendDigit( "8" ))>8</button>
+								<button class="num-btn" onclick=@(() => AppendDigit( "9" ))>9</button>
+							</div>
+							<div class="numpad-row">
+								<button class="num-btn" onclick=@(() => AppendDigit( "4" ))>4</button>
+								<button class="num-btn" onclick=@(() => AppendDigit( "5" ))>5</button>
+								<button class="num-btn" onclick=@(() => AppendDigit( "6" ))>6</button>
+							</div>
+							<div class="numpad-row">
+								<button class="num-btn" onclick=@(() => AppendDigit( "1" ))>1</button>
+								<button class="num-btn" onclick=@(() => AppendDigit( "2" ))>2</button>
+								<button class="num-btn" onclick=@(() => AppendDigit( "3" ))>3</button>
+							</div>
+							<div class="numpad-row">
+								<button class="num-btn muted" onclick=@Backspace>DEL</button>
+								<button class="num-btn" onclick=@(() => AppendDigit( "0" ))>0</button>
+								<button class="num-btn muted" onclick=@ClearInput>C</button>
+							</div>
 						</div>
-						<div class="numpad-row">
-							<button class="num-btn" onclick=@(() => AppendDigit( "0" ))>0</button>
+
+						<div class="action-row">
+							<button class="@DepositButtonClass" onclick=@OnDeposit>@GameLocalization.Phrase( "ui.atm.deposit" )</button>
+							<button class="@WithdrawButtonClass" onclick=@OnWithdraw>@GameLocalization.Phrase( "ui.atm.withdraw" )</button>
 						</div>
 					</div>
 				</div>
@@ -88,6 +112,14 @@
 	string PlayerName => Player.Local?.GameObject.Network.Owner?.DisplayName ?? "-";
 	int CashMoney => Player.Local?.Money ?? 0;
 	int AtmMoney => Player.Local?.MoneyAtm ?? 0;
+	int CurrentAmount => GetInputAmount();
+	bool CanDeposit => CurrentAmount > 0 && CashMoney >= CurrentAmount;
+	bool CanWithdraw => CurrentAmount > 0 && AtmMoney >= CurrentAmount;
+	string CashText => FormatMoney( CashMoney );
+	string AccountText => FormatMoney( AtmMoney );
+	string InputText => FormatMoney( CurrentAmount );
+	string DepositButtonClass => CanDeposit ? "action-btn deposit-btn" : "action-btn deposit-btn disabled";
+	string WithdrawButtonClass => CanWithdraw ? "action-btn withdraw-btn" : "action-btn withdraw-btn disabled";
 
 	public static void Open( Atm atm )
 	{
@@ -141,10 +173,21 @@
 	private void AddAmount( int amount )
 	{
 		var current = string.IsNullOrEmpty( _inputStr ) ? 0 : (int.TryParse( _inputStr, out var v ) ? v : 0);
-		var next = current + amount;
-		if ( next < 0 ) next = 0;
+		var next = Math.Clamp( current + amount, 0, 999999999 );
 		_inputStr = next.ToString();
-		if ( _inputStr.Length > 9 ) _inputStr = _inputStr.Substring( 0, 9 );
+		StateHasChanged();
+	}
+
+	private void SetAmount( int amount )
+	{
+		_inputStr = Math.Clamp( amount, 0, 999999999 ).ToString();
+		StateHasChanged();
+	}
+
+	private void Backspace()
+	{
+		if ( string.IsNullOrEmpty( _inputStr ) ) return;
+		_inputStr = _inputStr.Length <= 1 ? "" : _inputStr.Substring( 0, _inputStr.Length - 1 );
 		StateHasChanged();
 	}
 
@@ -156,6 +199,9 @@
 
 	private int GetInputAmount() =>
 		string.IsNullOrEmpty( _inputStr ) ? 0 : (int.TryParse( _inputStr, out var v ) ? v : 0);
+
+	private static string FormatMoney( int value ) =>
+		$"${Math.Max( 0, value ).ToString( "N0", CultureInfo.InvariantCulture )}";
 
 	private void OnDeposit()
 	{

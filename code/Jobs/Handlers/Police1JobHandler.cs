@@ -10,6 +10,7 @@ public sealed class Police1JobHandler : IJobHandler
 
 	public void PostSpawned( PlayerJob job, Player player )
 	{
+		player.HostGiveFullArmor();
 		player.HostAddJobWorkshopItem( WorkshopSkinPackageId );
 	}
 
@@ -22,6 +23,7 @@ public sealed class Police1JobHandler : IJobHandler
 	public void PostJoined( PlayerJob job, Player player )
 	{
 		Log.Info( $"[Police1Job] {player.Network.Owner?.DisplayName} joined as Officer" );
+		player.HostGiveFullArmor();
 		player.HostGiveJobItem( "handcuff", 1, canDrop: false, canSave: false );
 		player.HostAddJobWorkshopItem( WorkshopSkinPackageId );
 	}

@@ -8,6 +8,7 @@ public sealed class SheriffJobHandler : IJobHandler
 
 	public void PostSpawned( PlayerJob job, Player player )
 	{
+		player.HostGiveFullArmor();
 	}
 
 	public void PostDemote( PlayerJob job, Player player )
@@ -18,6 +19,7 @@ public sealed class SheriffJobHandler : IJobHandler
 	public void PostJoined( PlayerJob job, Player player )
 	{
 		Log.Info( $"[SheriffJob] {player.Network.Owner?.DisplayName} joined as Sheriff" );
+		player.HostGiveFullArmor();
 		player.HostGiveJobItem( "handcuff", 1, canDrop: false, canSave: false );
 	}
 }

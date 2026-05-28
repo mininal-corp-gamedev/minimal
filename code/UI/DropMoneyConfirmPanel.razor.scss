@@ -1,9 +1,14 @@
+$brand-pink: #ff436c;
+$brand-pink-light: #ffd7e2;
+$brand-dark: rgba(5, 8, 20, 0.96);
+
 DropMoneyConfirmPanel {
 	position: absolute;
 	top: 0;
 	left: 0;
 	right: 0;
 	bottom: 0;
+	z-index: 100;
 	pointer-events: none;
 
 	.money-confirm-overlay {
@@ -14,8 +19,8 @@ DropMoneyConfirmPanel {
 		bottom: 0;
 		align-items: center;
 		justify-content: center;
-		background-color: rgba(0, 0, 0, 0.34);
-		backdrop-filter: blur(4px) saturate(75%);
+		background-color: rgba(0, 0, 0, 0.58);
+		backdrop-filter: blur(6px) saturate(75%);
 		pointer-events: all;
 	}
 
@@ -23,8 +28,8 @@ DropMoneyConfirmPanel {
 		width: 360px;
 		flex-direction: column;
 		padding: 22px;
-		background-color: rgba(20, 20, 24, 0.94);
-		border: 1px solid rgba(255, 255, 255, 0.12);
+		background-color: $brand-dark;
+		border: 1px solid rgba(255, 67, 108, 0.40);
 		border-radius: 8px;
 		box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
 	}
@@ -33,14 +38,14 @@ DropMoneyConfirmPanel {
 		font-family: Poppins;
 		font-size: 24px;
 		font-weight: 900;
-		color: rgba(255, 255, 255, 0.96);
+		color: $brand-pink-light;
 	}
 
 	.panel-subtitle {
 		font-family: Poppins;
 		font-size: 13px;
 		font-weight: 600;
-		color: rgba(255, 255, 255, 0.58);
+		color: rgba(255, 215, 226, 0.70);
 		margin-top: 5px;
 		margin-bottom: 18px;
 	}
@@ -50,20 +55,20 @@ DropMoneyConfirmPanel {
 		font-size: 12px;
 		font-weight: 800;
 		text-transform: uppercase;
-		color: rgba(255, 255, 255, 0.66);
+		color: rgba(255, 215, 226, 0.78);
 		margin-bottom: 6px;
 	}
 
 	.money-input {
 		height: 42px;
 		padding: 0 12px;
-		background-color: rgba(255, 255, 255, 0.08);
-		border: 1px solid rgba(255, 255, 255, 0.14);
+		background-color: rgba(255, 215, 226, 0.08);
+		border: 1px solid rgba(255, 215, 226, 0.24);
 		border-radius: 6px;
-		color: white;
+		color: $brand-pink-light;
 		font-family: Poppins;
 		font-size: 16px;
-		font-weight: 700;
+		font-weight: 800;
 	}
 
 	.actions {
@@ -82,13 +87,17 @@ DropMoneyConfirmPanel {
 		font-size: 13px;
 		font-weight: 800;
 		color: white;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
 	}
 
 	.secondary {
-		background-color: rgba(255, 255, 255, 0.1);
+		background-color: rgba(255, 215, 226, 0.18);
+		color: $brand-pink-light;
 	}
 
 	.primary {
-		background-color: #34a853;
+		background-color: $brand-pink;
 	}
 }

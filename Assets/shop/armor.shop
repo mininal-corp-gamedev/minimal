@@ -1,0 +1,20 @@
+{
+  "Id": "armor",
+  "Header": "Armor",
+  "Category": "Other",
+  "Description": "Armor vest. Use it to restore armor to 100.",
+  "ItemDefinition": "items/armor.item",
+  "Price": 350,
+  "Max": 0,
+  "IconPath": "icons/armor.vtex",
+  "Model": null,
+  "SpawnPrefab": null,
+  "IsAllowEveryone": false,
+  "HasRemoveAfterChangeJob": false,
+  "JobsAllow": [
+    "jobs/gun_dealer.job"
+  ],
+  "HasPostPurchased": false,
+  "__references": [],
+  "__version": 0
+}

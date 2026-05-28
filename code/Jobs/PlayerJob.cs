@@ -50,6 +50,9 @@ public sealed class PlayerJob : Component
 			OnJobJoined?.Invoke( player, newDef );
 		}
 
+		if ( player.IsValid() )
+			player.HostApplyJobWorkshopClothing( newDef );
+
 		if ( jobId != DefaultJobId && player.IsValid() )
 			player.HostGrantAchievement( "change_job" );
 
@@ -70,6 +73,9 @@ public sealed class PlayerJob : Component
 		ShopManager.RemoveShopObjectsOnJobChange( player );
 		JobHandlerRegistry.FirePostDemote( this, player, oldDef );
 		OnJobDemote?.Invoke( player );
+
+		if ( player.IsValid() )
+			player.HostClearJobWorkshopClothing();
 	}
 
 	/// <summary>
@@ -77,7 +83,11 @@ public sealed class PlayerJob : Component
 	/// </summary>
 	public void NotifySpawned()
 	{
-		JobHandlerRegistry.FirePostSpawned( this, Player );
+		var player = Player;
+		if ( player.IsValid() )
+			player.HostApplyJobWorkshopClothing( JobDefinition );
+
+		JobHandlerRegistry.FirePostSpawned( this, player );
 	}
 
 	protected override void OnUpdate()

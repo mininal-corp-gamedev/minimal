@@ -9,6 +9,10 @@
   "CanDemote": true,
   "Color": "0.36552,0.64685,0.89302,1",
   "FromJobs": [],
+  "WorkshopClothing": [
+    "raf/sheriffshirt",
+    "raf/sheriffpants"
+  ],
   "HasPostSpawned": true,
   "HasPostDemote": true,
   "HasPostJoined": true,

@@ -8,6 +8,7 @@ using Sandbox.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
@@ -1536,12 +1537,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var items = DeserializeJobWorkshopItems(JobWorkshopItemsSerialized);
         if (items.Contains(packageId))
         {
-            HostRefreshJobWorkshopClothing();
+            HostRefreshJobWorkshopClothing(forceOwnerApply: true);
             return false;
         }
 
         items.Add(packageId);
-        HostSetJobWorkshopItems(items);
+        HostSetJobWorkshopItems(items, forceOwnerApply: true);
         return true;
     }
 
@@ -1553,8 +1554,22 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var items = DeserializeJobWorkshopItems(JobWorkshopItemsSerialized);
         if (!items.Remove(packageId)) return false;
 
-        HostSetJobWorkshopItems(items);
+        HostSetJobWorkshopItems(items, forceOwnerApply: true);
         return true;
+    }
+
+    public void HostApplyJobWorkshopClothing(JobDefinition jobDefinition, bool forceOwnerApply = true)
+    {
+        if (!Networking.IsHost) return;
+
+        HostSetJobWorkshopItems(jobDefinition?.WorkshopClothing, forceOwnerApply);
+    }
+
+    public void HostClearJobWorkshopClothing(bool forceOwnerApply = true)
+    {
+        if (!Networking.IsHost) return;
+
+        HostSetJobWorkshopItems(null, forceOwnerApply);
     }
 
     public int HostRemoveJobItems()
@@ -1697,8 +1712,11 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         try
         {
             Dresser.Source = Dresser.ClothingSource.Manual;
-            var a = ClothingContainer.CreateFromConnection(GameObject.Network.Owner, false); //todo Изменил под будущую систему Job Skins, но в dresser жуткий пиздец, надо доделывать
-            Dresser.Clothing = a.Clothing;
+            var ownerClothing = ClothingContainer.CreateFromConnection(GameObject.Network.Owner, false);
+            var clothingEntries = new List<ClothingContainer.ClothingEntry>(ownerClothing?.Clothing ?? new List<ClothingContainer.ClothingEntry>());
+            var jobClothing = await InstallJobWorkshopClothing(DeserializeJobWorkshopItems(JobWorkshopItemsSerialized), CancellationToken.None);
+            RemoveClothingEntriesConflictingWithJobClothing(clothingEntries, jobClothing);
+            Dresser.Clothing = clothingEntries;
             await Dresser.Apply();
 
             var currentOwnerSteamId = GameObject.IsValid() ? GetOwnerSteamId() : 0L;
@@ -1762,16 +1780,17 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         ScheduleOwnerClothingRetry(0.05f);
     }
 
-    private void HostRefreshJobWorkshopClothing()
+    private void HostRefreshJobWorkshopClothing(bool forceOwnerApply = false)
     {
         if (!Networking.IsHost)
             return;
 
         JobWorkshopClothingRevision++;
-        HostSendJobWorkshopClothingToOwner();
+        if (forceOwnerApply)
+            HostSendJobWorkshopClothingToOwner();
     }
 
-    private void HostSetJobWorkshopItems(List<string> items)
+    private void HostSetJobWorkshopItems(IReadOnlyList<string> items, bool forceOwnerApply = false)
     {
         if (!Networking.IsHost)
             return;
@@ -1781,7 +1800,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (Dresser.IsValid())
             SyncJobWorkshopItemsToDresser(JobWorkshopItemsSerialized);
 
-        HostRefreshJobWorkshopClothing();
+        HostRefreshJobWorkshopClothing(forceOwnerApply);
     }
 
     private void HostSendJobWorkshopClothingToOwner()
@@ -1865,7 +1884,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         return result;
     }
 
-    private static string SerializeJobWorkshopItems(List<string> items)
+    private static string SerializeJobWorkshopItems(IReadOnlyList<string> items)
     {
         if (items is null || items.Count == 0)
             return "";
@@ -1886,6 +1905,79 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
 
         return string.Join(";", uniqueItems);
+    }
+
+    private static async Task<List<Clothing>> InstallJobWorkshopClothing(IReadOnlyList<string> packageIds, CancellationToken cancellationToken)
+    {
+        var result = new List<Clothing>();
+        if (packageIds is null || packageIds.Count == 0)
+            return result;
+
+        foreach (var packageId in packageIds)
+        {
+            var clothing = await InstallJobWorkshopClothing(packageId, cancellationToken);
+            if (clothing is not null)
+                result.Add(clothing);
+        }
+
+        return result;
+    }
+
+    private static async Task<Clothing> InstallJobWorkshopClothing(string ident, CancellationToken cancellationToken)
+    {
+        if (string.IsNullOrEmpty(ident))
+            return null;
+
+        var package = await Package.FetchAsync(ident, partial: false);
+        if (package is null || package.TypeName != "clothing")
+            return null;
+
+        if (cancellationToken.IsCancellationRequested)
+            return null;
+
+        var primaryAsset = package.PrimaryAsset;
+        if (string.IsNullOrWhiteSpace(primaryAsset))
+            return null;
+
+        if (await package.MountAsync() is null)
+            return null;
+
+        if (cancellationToken.IsCancellationRequested)
+            return null;
+
+        return ResourceLibrary.Get<Clothing>(primaryAsset);
+    }
+
+    private static void RemoveClothingEntriesConflictingWithJobClothing(List<ClothingContainer.ClothingEntry> clothingEntries, IReadOnlyList<Clothing> jobClothing)
+    {
+        if (clothingEntries is null || clothingEntries.Count == 0)
+            return;
+        if (jobClothing is null || jobClothing.Count == 0)
+            return;
+
+        var jobSlotsMask = 0UL;
+        foreach (var clothing in jobClothing)
+            jobSlotsMask |= GetClothingSlotsMask(clothing);
+
+        if (jobSlotsMask == 0UL)
+            return;
+
+        clothingEntries.RemoveAll(entry =>
+        {
+            var clothing = entry?.Clothing;
+            if (clothing is null)
+                return false;
+
+            return (GetClothingSlotsMask(clothing) & jobSlotsMask) != 0UL;
+        });
+    }
+
+    private static ulong GetClothingSlotsMask(Clothing clothing)
+    {
+        if (clothing is null)
+            return 0UL;
+
+        return Convert.ToUInt64(clothing.SlotsOver) | Convert.ToUInt64(clothing.SlotsUnder);
     }
 
     private void HookInventoryEvents()

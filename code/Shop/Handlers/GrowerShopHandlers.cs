@@ -1,26 +1,26 @@
 using Sandbox;
 
-public sealed class GroowerWeedShopHandler : IShopPurchaseHandler
+public sealed class GrowerWeedShopHandler : IShopPurchaseHandler
 {
-    public string ShopId => "groower_weed";
+    public string ShopId => "grower_weed";
 
     public bool PostPurchased( ShopPurchaseContext context )
     {
-        return GroowerShopSpawner.SpawnOwnedObject( context, configureWeed: true );
+        return GrowerShopSpawner.SpawnOwnedObject( context, configureWeed: true );
     }
 }
 
-public sealed class GroowerFertilizerShopHandler : IShopPurchaseHandler
+public sealed class GrowerFertilizerShopHandler : IShopPurchaseHandler
 {
-    public string ShopId => "groower_fertilizer";
+    public string ShopId => "grower_fertilizer";
 
     public bool PostPurchased( ShopPurchaseContext context )
     {
-        return GroowerShopSpawner.SpawnOwnedObject( context, configureWeed: false );
+        return GrowerShopSpawner.SpawnOwnedObject( context, configureWeed: false );
     }
 }
 
-file static class GroowerShopSpawner
+file static class GrowerShopSpawner
 {
     private const float SpawnDistance = 60f;
     private const float SpawnHeight = 24f;
@@ -37,7 +37,7 @@ file static class GroowerShopSpawner
 
         if ( !shop.SpawnPrefab.IsValid() )
         {
-            Log.Warning( $"GroowerShopSpawner: SpawnPrefab is not set for '{shop.Id}'." );
+            Log.Warning( $"GrowerShopSpawner: SpawnPrefab is not set for '{shop.Id}'." );
             return false;
         }
 

@@ -55,7 +55,7 @@ public class Weapon : Component
     /// <summary>Есть ли стрельба от бедра (без прицела).</summary>
     [Property, Category("Combat")] public virtual bool HasHipFire { get; set; } = true;
 
-    /// <summary>Одиночный выстрел по нажатию (Revolver), иначе — по зажатию.</summary>
+    /// <summary>Одиночный выстрел по нажатию, иначе — по зажатию.</summary>
     [Property, Category("Combat")] public virtual bool SemiAuto { get; set; } = false;
 
     /// <summary>Есть ли перезарядка.</summary>

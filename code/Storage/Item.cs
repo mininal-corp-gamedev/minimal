@@ -10,7 +10,7 @@ public sealed class Item
     public bool IsJobItem { get; set; } = false;
     public bool CanSave { get; set; } = true;
 
-    public ItemDefinition Definition => ItemDatabase.Get(Id);
+    public ItemDefinition Definition => ItemDatabase.TryGet(Id, out var def) ? def : null;
 
     public Item(string id, int count)
     {
@@ -55,7 +55,7 @@ public sealed class Item
 
     public static Item Create(string id, int count, bool? canDrop = null, bool? isJobItem = null, bool? canSave = null)
     {
-        var def = ItemDatabase.Get(id);
+        ItemDatabase.TryGet(id, out var def);
         var maxCount = Math.Max(1, def?.MaxCount ?? 1);
         var item = new Item(id, Math.Clamp(count, 0, maxCount));
 

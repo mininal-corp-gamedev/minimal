@@ -148,7 +148,6 @@
           "WeaponPhysgun": null,
           "WeaponPickaxe": null,
           "WeaponPicklock": null,
-          "WeaponRevolverPrefab": null,
           "WeaponShotgunPrefab": null,
           "WeaponToolgun": null,
           "WeaponUspPrefab": null,
@@ -160,7 +159,6 @@
           "WorldWeaponPhysgun": null,
           "WorldWeaponPickaxe": null,
           "WorldWeaponPicklock": null,
-          "WorldWeaponRevolverPrefab": null,
           "WorldWeaponShotgunPrefab": null,
           "WorldWeaponToolgun": null,
           "WorldWeaponUspPrefab": null

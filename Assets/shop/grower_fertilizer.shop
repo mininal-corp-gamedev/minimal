@@ -1,5 +1,5 @@
 {
-  "Id": "groower_fertilizer",
+  "Id": "grower_fertilizer",
   "Header": "Fertilizer",
   "Category": "Drugs",
   "Description": "Speeds up growth for a weed pot.",
@@ -10,12 +10,12 @@
   "Model": "maps/models/props/player_prop/usable/fertilizer.vmdl",
   "SpawnPrefab": {
     "_type": "gameobject",
-    "prefab": "prefabs/Groower/fertilizer.prefab"
+    "prefab": "prefabs/grower/fertilizer.prefab"
   },
   "IsAllowEveryone": false,
   "HasRemoveAfterChangeJob": true,
   "JobsAllow": [
-    "jobs/groower.job"
+    "jobs/grower.job"
   ],
   "HasPostPurchased": true,
   "__references": [

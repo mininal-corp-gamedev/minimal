@@ -10,7 +10,7 @@ public static class ItemDatabase
     {
         EnsureLoaded();
 
-        if (!_cache!.TryGetValue(id, out var def))
+        if (!TryGet(id, out var def))
         {
             Log.Error($"ItemDefinition '{id}' not found");
 
@@ -18,6 +18,18 @@ public static class ItemDatabase
         }
 
         return def;
+    }
+
+    public static bool TryGet(string id, out ItemDefinition definition)
+    {
+        EnsureLoaded();
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            definition = null;
+            return false;
+        }
+
+        return _cache!.TryGetValue(id, out definition);
     }
 
     private static void EnsureLoaded()

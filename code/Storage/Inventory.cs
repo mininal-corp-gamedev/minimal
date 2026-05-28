@@ -447,6 +447,8 @@ public sealed class Inventory
                 continue;
             if (string.IsNullOrWhiteSpace(savedSlot.Id) || savedSlot.Count <= 0)
                 continue;
+            if (!ItemDatabase.TryGet(savedSlot.Id, out _))
+                continue;
 
             var item = Item.Create(savedSlot.Id, savedSlot.Count, savedSlot.CanDrop, savedSlot.IsJobItem, savedSlot.CanSave);
             _slots[savedSlot.Index].Set(item);

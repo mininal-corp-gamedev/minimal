@@ -205,23 +205,7 @@
               "Type": "Component",
               "IdValue": "d3707d98-1a98-4e1e-899b-3fb4fbbffa03"
             },
-            "Property": "WeaponRevolverPrefab",
-            "Value": null
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "d3707d98-1a98-4e1e-899b-3fb4fbbffa03"
-            },
             "Property": "WeaponShotgunPrefab",
-            "Value": null
-          },
-          {
-            "Target": {
-              "Type": "Component",
-              "IdValue": "d3707d98-1a98-4e1e-899b-3fb4fbbffa03"
-            },
-            "Property": "WorldWeaponRevolverPrefab",
             "Value": null
           },
           {

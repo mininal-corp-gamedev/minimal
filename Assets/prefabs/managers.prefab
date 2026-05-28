@@ -158,10 +158,6 @@
               "_type": "gameobject",
               "prefab": "prefabs/weapons/picklock.prefab"
             },
-            "WeaponRevolverPrefab": {
-              "_type": "gameobject",
-              "prefab": "prefabs/weapons/revolver.prefab"
-            },
             "WeaponShotgunPrefab": {
               "_type": "gameobject",
               "prefab": "prefabs/weapons/shotgun.prefab"
@@ -202,10 +198,6 @@
             "WorldWeaponPicklock": {
               "_type": "gameobject",
               "prefab": "prefabs/weapons/picklock.prefab"
-            },
-            "WorldWeaponRevolverPrefab": {
-              "_type": "gameobject",
-              "prefab": "prefabs/weapons/wm/w_revolver.prefab"
             },
             "WorldWeaponShotgunPrefab": {
               "_type": "gameobject",

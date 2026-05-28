@@ -1,6 +1,6 @@
 {
-  "Id": "groower",
-  "Header": "Groower",
+  "Id": "grower",
+  "Header": "Grower",
   "Category": "Crime",
   "Description": "Drug dealer.",
   "MaxCount": 4,

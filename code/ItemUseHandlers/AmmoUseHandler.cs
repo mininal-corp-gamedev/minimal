@@ -38,7 +38,6 @@ public sealed class AmmoUseHandler : IItemUseHandler
             AmmoWeaponType.Usp => manager.Usp,
             AmmoWeaponType.Mp5 => manager.Mp5,
             AmmoWeaponType.M4A1 => manager.M4A1,
-            AmmoWeaponType.Revolver => manager.Revolver,
             AmmoWeaponType.Shotgun => manager.Shotgun,
             _ => null
         };
@@ -50,6 +49,5 @@ public enum AmmoWeaponType
     Usp,
     Mp5,
     M4A1,
-    Revolver,
     Shotgun
 }

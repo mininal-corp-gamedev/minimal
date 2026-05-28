@@ -1,5 +1,5 @@
 {
-  "Id": "groower_weed",
+  "Id": "grower_weed",
   "Header": "Weed Pot",
   "Category": "Drugs",
   "Description": "Creates a growable weed pot in front of you.",
@@ -10,12 +10,12 @@
   "Model": null,
   "SpawnPrefab": {
     "_type": "gameobject",
-    "prefab": "prefabs/Groower/weed.prefab"
+    "prefab": "prefabs/grower/weed.prefab"
   },
   "IsAllowEveryone": false,
   "HasRemoveAfterChangeJob": true,
   "JobsAllow": [
-    "jobs/groower.job"
+    "jobs/grower.job"
   ],
   "HasPostPurchased": true,
   "__references": [],

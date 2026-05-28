@@ -8,6 +8,8 @@
 <root>
 	@if ( ShouldShow )
 	{
+		<div class="damage-overlay" style="opacity: @DamageOverlayOpacityCss"></div>
+
 		<div class="hud-stack">
 			<div class="profile-panel">
 				<div class="avatar" style="background-image: url( avatar:@LocalSteamId )"></div>
@@ -78,6 +80,7 @@
 
 	string CashText => FormatMoney( LocalPlayer?.Money ?? 0 );
 	string CardText => FormatMoney( LocalPlayer?.MoneyAtm ?? 0 );
+	string DamageOverlayOpacityCss => (LocalPlayer?.DamageOverlayAlpha ?? 0f).ToString( "0.###", CultureInfo.InvariantCulture );
 
 	private static float Percent( float value, float maxValue )
 	{
@@ -110,6 +113,7 @@
 		hash.Add( LocalPlayer?.MaxArmor ?? 0f );
 		hash.Add( LocalPlayer?.Money ?? 0 );
 		hash.Add( LocalPlayer?.MoneyAtm ?? 0 );
+		hash.Add( DamageOverlayOpacityCss );
 		hash.Add( GameLocalization.CurrentCode );
 		return hash.ToHashCode();
 	}

@@ -799,7 +799,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     private void RpcOwnerDamageTaken(float damage)
     {
         _timeSinceDamageTaken = 0f;
-        _lastDamageOverlayStrength = Math.Clamp(damage / MathF.Max(MaxHealth, 1f), 0.18f, 0.55f);
+        _lastDamageOverlayStrength = Math.Clamp(damage / MathF.Max(MaxHealth, 1f), 0.34f, 0.72f);
     }
 
     public float DamageOverlayAlpha
@@ -807,7 +807,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         get
         {
             var fade = 1f - Math.Clamp((float)_timeSinceDamageTaken / 0.9f, 0f, 1f);
-            return Math.Clamp(_lastDamageOverlayStrength * fade, 0f, 0.65f);
+            return Math.Clamp(_lastDamageOverlayStrength * fade, 0f, 0.72f);
         }
     }
 
@@ -1599,7 +1599,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         ItemUseRegistry.Register("usp", new WepUspUseHandler());
         ItemUseRegistry.Register("mp5", new WepMp5UseHandler());
         ItemUseRegistry.Register("m4a1", new WepM4a1UseHandler());
-        ItemUseRegistry.Register("revolver", new WepRevolverUseHandler());
         ItemUseRegistry.Register("shotgun", new WepShotgunUseHandler());
         ItemUseRegistry.Register("physgun", new WepPhysgunUseHandler());
         ItemUseRegistry.Register("toolgun", new WepToolgunUseHandler());
@@ -1611,7 +1610,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         ItemUseRegistry.Register("ammo_usp", new AmmoUseHandler(AmmoWeaponType.Usp));
         ItemUseRegistry.Register("ammo_mp5", new AmmoUseHandler(AmmoWeaponType.Mp5));
         ItemUseRegistry.Register("ammo_m4a1", new AmmoUseHandler(AmmoWeaponType.M4A1));
-        ItemUseRegistry.Register("ammo_revolver", new AmmoUseHandler(AmmoWeaponType.Revolver));
         ItemUseRegistry.Register("ammo_shotgun", new AmmoUseHandler(AmmoWeaponType.Shotgun));
         ItemUseRegistry.Register("burger", new WepBurgerUseHandler());
         ItemUseRegistry.Register("armor", new ArmorUseHandler());
@@ -2311,7 +2309,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             "usp"      => manager.Usp,
             "mp5"      => manager.Mp5,
             "m4a1"     => manager.M4A1,
-            "revolver" => manager.Revolver,
             "shotgun"  => manager.Shotgun,
             "physgun"  => manager.Physgun,
             "toolgun"  => manager.Toolgun,
@@ -2352,7 +2349,6 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         {
             "usp" => CitizenAnimationHelper.HoldTypes.Pistol,
             "toolgun" => CitizenAnimationHelper.HoldTypes.Pistol,
-            "revolver" => CitizenAnimationHelper.HoldTypes.Pistol,
             "mp5" => CitizenAnimationHelper.HoldTypes.Rifle,
             "m4a1" => CitizenAnimationHelper.HoldTypes.Rifle,
             "shotgun" => CitizenAnimationHelper.HoldTypes.Rifle,

@@ -582,9 +582,9 @@ public sealed class WeaponPhysgun : Weapon
         var ownsPrinter = printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player);
 
         var ownsPrinterUpgrade = PlayerOwnsMoneyPrinterUpgrade(rb.GameObject, player);
-        var ownsGroowerItem = PlayerOwnsGroowerItem(rb.GameObject, player);
+        var ownsGrowerItem = PlayerOwnsGrowerItem(rb.GameObject, player);
 
-        return ownsProp || ownsPrinter || ownsPrinterUpgrade || ownsGroowerItem;
+        return ownsProp || ownsPrinter || ownsPrinterUpgrade || ownsGrowerItem;
     }
 
     private void UpdateSpin()
@@ -1364,9 +1364,9 @@ public sealed class WeaponPhysgun : Weapon
         var ownsPrinter = printer.IsValid() && IsSamePlayer(printer.PlayerOwner, player);
 
         var ownsPrinterUpgrade = PlayerOwnsMoneyPrinterUpgrade(rb.GameObject, player);
-        var ownsGroowerItem = PlayerOwnsGroowerItem(rb.GameObject, player);
+        var ownsGrowerItem = PlayerOwnsGrowerItem(rb.GameObject, player);
 
-        return ownsProp || ownsPrinter || ownsPrinterUpgrade || ownsGroowerItem;
+        return ownsProp || ownsPrinter || ownsPrinterUpgrade || ownsGrowerItem;
     }
 
     private static bool PlayerOwnsMoneyPrinterUpgrade(GameObject target, Player player)
@@ -1379,12 +1379,12 @@ public sealed class WeaponPhysgun : Weapon
         return shopObject.IsValid() && IsSamePlayer(shopObject.PlayerOwner, player);
     }
 
-    private static bool PlayerOwnsGroowerItem(GameObject target, Player player)
+    private static bool PlayerOwnsGrowerItem(GameObject target, Player player)
     {
-        var hasGroowerItem = target.Components.Get<Weed>(FindMode.EverythingInSelfAndAncestors).IsValid()
+        var hasGrowerItem = target.Components.Get<Weed>(FindMode.EverythingInSelfAndAncestors).IsValid()
             || target.Components.Get<WeedFertilizer>(FindMode.EverythingInSelfAndAncestors).IsValid();
 
-        if (!hasGroowerItem)
+        if (!hasGrowerItem)
             return false;
 
         var shopObject = target.Components.Get<ShopObject>(FindMode.EverythingInSelfAndAncestors);

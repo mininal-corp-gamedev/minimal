@@ -17,6 +17,7 @@ public sealed class Police1JobHandler : IJobHandler
 	public void PostDemote( PlayerJob job, Player player )
 	{
 		Log.Info( $"[Police1Job] {player.Network.Owner?.DisplayName} lost Officer job" );
+		player.HostSetArmor( 0f );
 		player.HostRemoveJobWorkshopItem( WorkshopSkinPackageId );
 	}
 

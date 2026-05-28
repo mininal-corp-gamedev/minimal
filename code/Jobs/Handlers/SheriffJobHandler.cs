@@ -14,6 +14,7 @@ public sealed class SheriffJobHandler : IJobHandler
 	public void PostDemote( PlayerJob job, Player player )
 	{
 		Log.Info( $"[SheriffJob] {player.Network.Owner?.DisplayName} lost Sheriff job" );
+		player.HostSetArmor( 0f );
 	}
 
 	public void PostJoined( PlayerJob job, Player player )

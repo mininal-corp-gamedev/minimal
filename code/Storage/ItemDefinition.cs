@@ -3,7 +3,7 @@
 [AssetType( Name = "Item Definition", Extension = "item", Category = "Minimal")]
 public sealed class ItemDefinition : GameResource
 {
-    [Property] public string Id { get; set; } = "";
+    public string Id => ResourceName;
     [Property] public string Category { get; set; } = "Other";
     [Property] public string Header { get; set; } = "";
     [Property] public string Description { get; set; } = "";

@@ -785,6 +785,8 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 
 		if ( !Buy( buyer ) ) return;
 
+		buyer.HostGrantAchievement( "buy_door" );
+
 		NotifyDoorFeedback(
 			caller,
 			GameLocalization.Format( "notify.door.bought", "Door bought for ${0}. Doors: {1}/{2}.", BuyPrice, buyer.OwnedDoorsCount, buyer.MaxDoors ),

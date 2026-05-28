@@ -50,6 +50,9 @@ public sealed class PlayerJob : Component
 			OnJobJoined?.Invoke( player, newDef );
 		}
 
+		if ( jobId != DefaultJobId && player.IsValid() )
+			player.HostGrantAchievement( "change_job" );
+
 		JobHandlerRegistry.FirePostJoined( this, player );
 	}
 

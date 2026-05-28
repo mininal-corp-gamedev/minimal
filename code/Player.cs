@@ -3786,4 +3786,60 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         SpawnInternal();
     }
+
+    // ===================== ACHIEVEMENTS & STATS =====================
+
+    /// <summary>
+    /// Хост: выдать достижение владельцу этого игрока на его клиенте.
+    /// Вызывать только с хоста (<c>Networking.IsHost</c>).
+    /// </summary>
+    public void HostGrantAchievement( string achievementId )
+    {
+        if ( !Networking.IsHost ) return;
+        if ( string.IsNullOrEmpty( achievementId ) ) return;
+
+        if ( !IsProxy )
+        {
+            Sandbox.Services.Achievements.Unlock( achievementId );
+            return;
+        }
+
+        RpcOwnerGrantAchievement( achievementId );
+    }
+
+    /// <summary>
+    /// Хост: прибавить значение стата владельцу этого игрока на его клиенте.
+    /// Вызывать только с хоста (<c>Networking.IsHost</c>).
+    /// </summary>
+    public void HostIncrementStat( string statName, float amount = 1f )
+    {
+        if ( !Networking.IsHost ) return;
+        if ( string.IsNullOrEmpty( statName ) ) return;
+
+        if ( !IsProxy )
+        {
+            Sandbox.Services.Stats.Increment( statName, amount );
+            return;
+        }
+
+        RpcOwnerIncrementStat( statName, amount );
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerGrantAchievement( string achievementId )
+    {
+        if ( Networking.IsHost ) return;
+        if ( IsProxy ) return;
+
+        Sandbox.Services.Achievements.Unlock( achievementId );
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerIncrementStat( string statName, float amount )
+    {
+        if ( Networking.IsHost ) return;
+        if ( IsProxy ) return;
+
+        Sandbox.Services.Stats.Increment( statName, amount );
+    }
 }

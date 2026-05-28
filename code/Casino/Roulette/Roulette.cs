@@ -216,9 +216,13 @@ public sealed class Roulette : Component, Component.IPressable
 			_betsBySteamId[steamId] = bets;
 		}
 
+		var isFirstBet = bets.Count == 0;
 		bets.Add( bet );
 		ActiveRouletteBySteamId[steamId] = this;
 		player.Money -= amount;
+
+		if ( isFirstBet )
+			player.HostGrantAchievement( "roulette" );
 
 		using ( Rpc.FilterInclude( c => c.SteamId.Value == steamId ) )
 		{

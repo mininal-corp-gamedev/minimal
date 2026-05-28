@@ -120,18 +120,6 @@
             },
             "RenderScale": 1,
             "VerticalAlign": "Center"
-          },
-          {
-            "__type": "Sandbox.AtmWorldPanel",
-            "__guid": "68d7d38c-182a-4270-828e-2d78d27e904f",
-            "__enabled": true,
-            "Flags": 0,
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null
           }
         ],
         "Children": []

@@ -1733,12 +1733,6 @@
               "Type": "Component",
               "IdValue": "f65a94c5-8917-4a8b-a3a0-919ac7f45b6d"
             }
-          },
-          {
-            "Id": {
-              "Type": "Component",
-              "IdValue": "68d7d38c-182a-4270-828e-2d78d27e904f"
-            }
           }
         ],
         "PropertyOverrides": [
@@ -1759,8 +1753,7 @@
         "d3054d77-6460-4ad8-8737-b65e6b00dd54": "161140a2-f8ee-4f85-a166-ca164e7bb28e",
         "cac5b277-2370-4b92-aae4-740f0b9bbc5e": "85a54c30-cd07-45c3-985b-2412584e24d4",
         "b6148c88-eb95-4f48-832e-ce6a4783a68c": "7794f9b5-3805-4b71-b1a8-65beb6241cf3",
-        "f65a94c5-8917-4a8b-a3a0-919ac7f45b6d": "3fba74d5-8c5f-4ddd-abba-8518c974a1f9",
-        "096b4ace-ac8c-4417-9577-e514200c0cc8": "4a4fde9f-b878-4785-87d7-5d5c69480ee0"
+        "f65a94c5-8917-4a8b-a3a0-919ac7f45b6d": "3fba74d5-8c5f-4ddd-abba-8518c974a1f9"
       }
     },
     {

@@ -1,0 +1,43 @@
+DeathScreen
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(5, 8, 20, 1.0);
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+
+	&.hidden
+	{
+		display: none;
+	}
+
+	.title
+	{
+		font-size: 48px;
+		font-family: Poppins;
+		font-weight: 700;
+		color: #ff436c;
+		margin-bottom: 16px;
+	}
+
+	.death-message
+	{
+		font-size: 20px;
+		font-family: Poppins;
+		font-weight: 400;
+		color: rgba(255, 255, 255, 0.92);
+		margin-bottom: 12px;
+	}
+
+	.timer
+	{
+		font-size: 18px;
+		font-family: Poppins;
+		font-weight: 600;
+		color: rgba(255, 255, 255, 0.75);
+	}
+}

@@ -1,0 +1,24 @@
+@using Sandbox;
+@using Sandbox.UI;
+@inherits PanelComponent
+@namespace Sandbox
+
+<root class="@(!Player.Local?.IsDead == true ? "hidden" : "")">
+	<div class="title">YOU DIED</div>
+	<div class="death-message">@Player.Local?.DeathMessage</div>
+	<div class="timer">Respawn in @(MathF.Ceiling(Player.Local != null ? (float)Player.Local.DeathTimeUntilRespawn : 0f))s</div>
+</root>
+
+@code
+{
+
+
+	/// <summary>
+	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
+	/// </summary>
+	protected override int BuildHash() => System.HashCode.Combine(
+		Player.Local?.IsDead,
+		Player.Local?.DeathMessage,
+		Player.Local?.DeathTimeUntilRespawn
+	);
+}

@@ -6,7 +6,9 @@ $context-dim: rgba(255, 255, 255, 0.58);
 $wheel-size: 560px;
 $center-size: 154px;
 $action-width: 144px;
-$action-height: 96px;
+$action-height: 118px;
+$action-center-h: 208px;
+$action-side-v: 221px;
 
 ContextMenu {
 	position: absolute;
@@ -76,13 +78,15 @@ ContextMenu {
 		position: absolute;
 		width: $action-width;
 		height: $action-height;
+		z-index: 2;
 		flex-direction: column;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
+		overflow: visible;
 		background-color: transparent;
 		border: 1px solid transparent;
 		border-radius: 12px;
-		padding: 8px;
+		padding: 10px 8px 8px;
 		transition: background-color 0.08s ease-out, border-color 0.08s ease-out;
 
 		&:hover {
@@ -97,81 +101,52 @@ ContextMenu {
 	}
 
 	.pos-top {
-		left: 50%;
+		left: $action-center-h;
 		top: 66px;
-		transform: translateX( -50% );
-
-		&:hover {
-			transform: translateX( -50% );
-		}
 	}
 
 	.pos-right {
 		right: 54px;
-		top: 50%;
-		transform: translateY( -50% );
-
-		&:hover {
-			transform: translateY( -50% );
-		}
+		top: $action-side-v;
 	}
 
 	.pos-bottom {
-		left: 50%;
+		left: $action-center-h;
 		bottom: 66px;
-		transform: translateX( -50% );
-
-		&:hover {
-			transform: translateX( -50% );
-		}
 	}
 
 	.pos-left {
 		left: 54px;
-		top: 50%;
-		transform: translateY( -50% );
-
-		&:hover {
-			transform: translateY( -50% );
-		}
+		top: $action-side-v;
 	}
 
 	.action-icon {
 		width: 28px;
 		height: 28px;
+		min-width: 28px;
+		min-height: 28px;
 		flex-shrink: 0;
 		margin-bottom: 6px;
 		background-repeat: no-repeat;
 		background-size: contain;
 		background-position: center;
 		background-image-tint: rgba(255, 255, 255, 0.76);
-	}
 
-	.action-icon.money {
-		background-image: url("icons/wallet.vtex");
-	}
+		&.money {
+			background-image: url("icons/wallet.vtex");
+		}
 
-	.action-icon.job {
-		background-image: url("icons/job.vtex");
-	}
+		&.job {
+			background-image: url("icons/job.vtex");
+		}
 
-	.action-icon.dice {
-		background-image: url("icons/dice.vtex");
-	}
-
-	.action-icon.surrender {
-		background-image: url("icons/health.vtex");
-	}
-
-	.action-icon.sit {
-		background-image: url("icons/job.vtex");
-	}
-
-	.action-icon.status {
-		background-image: url("icons/weapons/pickaxe.vtex");
+		&.dice {
+			background-image: url("icons/dice.vtex");
+		}
 	}
 
 	.action-title {
+		flex-shrink: 0;
 		font-family: Montserrat;
 		font-size: 14px;
 		font-weight: 700;
@@ -183,6 +158,7 @@ ContextMenu {
 	}
 
 	.action-subtitle {
+		flex-shrink: 0;
 		font-family: Montserrat;
 		font-size: 11px;
 		font-weight: 600;
@@ -196,6 +172,7 @@ ContextMenu {
 		position: absolute;
 		left: 50%;
 		top: 50%;
+		z-index: 1;
 		width: $center-size;
 		height: $center-size;
 		transform: translateX( -50% ) translateY( -50% );

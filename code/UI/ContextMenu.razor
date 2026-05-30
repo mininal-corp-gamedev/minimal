@@ -16,8 +16,8 @@
 					{
 						<button class="context-action @action.PositionClass @(ActiveAction == action.Id ? "active" : "")" onmouseover=@(() => ActiveAction = action.Id) onclick=@(() => RunAction( action.Id ))>
 							<div class="action-icon @action.IconClass"></div>
-							<div class="action-title">@GameLocalization.Phrase( action.TitleKey, action.TitleFallback )</div>
-							<div class="action-subtitle">@GameLocalization.Phrase( action.SubtitleKey, action.SubtitleFallback )</div>
+							<div class="action-title">@GetActionTitle( action.Id )</div>
+							<div class="action-subtitle">@GetActionSubtitle( action.Id )</div>
 						</button>
 					}
 				}
@@ -55,10 +55,28 @@
 
 	static readonly ContextAction[] Actions =
 	{
-		new( "drop_money", "ui.context.drop_money", "Drop Money", "ui.context.cash", "Cash", "pos-left", "money" ),
-		new( "transfer_money", "ui.context.transfer_money", "Transfer Money", "ui.context.player_ahead", "Player ahead", "pos-right", "money" ),
-		new( "dice", "ui.context.dice", "Dice", "ui.context.casino", "Casino", "pos-top", "dice" ),
-		new( "demote", "ui.context.demote", "Demote", "ui.context.vote", "Vote", "pos-bottom", "job" )
+		new( "drop_money", "pos-left", "money" ),
+		new( "transfer_money", "pos-right", "money" ),
+		new( "dice", "pos-top", "dice" ),
+		new( "demote", "pos-bottom", "job" )
+	};
+
+	static string GetActionTitle( string id ) => id switch
+	{
+		"drop_money" => GameLocalization.Phrase( "ui.context.drop_money", "Drop Money" ),
+		"transfer_money" => GameLocalization.Phrase( "ui.context.transfer_money", "Transfer Money" ),
+		"dice" => GameLocalization.Phrase( "ui.context.dice", "Dice" ),
+		"demote" => GameLocalization.Phrase( "ui.context.demote", "Demote" ),
+		_ => string.Empty
+	};
+
+	static string GetActionSubtitle( string id ) => id switch
+	{
+		"drop_money" => GameLocalization.Phrase( "ui.context.cash", "Cash" ),
+		"transfer_money" => GameLocalization.Phrase( "ui.context.player_ahead", "Player ahead" ),
+		"dice" => GameLocalization.Phrase( "ui.context.casino", "Casino" ),
+		"demote" => GameLocalization.Phrase( "ui.context.vote", "Vote" ),
+		_ => string.Empty
 	};
 
 	bool IsActionVisible( ContextAction action )
@@ -162,6 +180,7 @@
 		hash.Add( Player.Local?.Money ?? 0 );
 		hash.Add( Player.Local?.Job?.JobDefinition?.Header );
 		hash.Add( GameLocalization.CurrentCode );
+		hash.Add( GameLocalization.Version );
 		hash.Add( Player.Local?.Health ?? 0f );
 		hash.Add( Player.Local?.IsCasino ?? false );
 		hash.Add( VotePanel.HasOpenVote );
@@ -173,20 +192,12 @@
 	sealed class ContextAction
 	{
 		public string Id { get; }
-		public string TitleKey { get; }
-		public string TitleFallback { get; }
-		public string SubtitleKey { get; }
-		public string SubtitleFallback { get; }
 		public string PositionClass { get; }
 		public string IconClass { get; }
 
-		public ContextAction( string id, string titleKey, string titleFallback, string subtitleKey, string subtitleFallback, string positionClass, string iconClass )
+		public ContextAction( string id, string positionClass, string iconClass )
 		{
 			Id = id;
-			TitleKey = titleKey;
-			TitleFallback = titleFallback;
-			SubtitleKey = subtitleKey;
-			SubtitleFallback = subtitleFallback;
 			PositionClass = positionClass;
 			IconClass = iconClass;
 		}

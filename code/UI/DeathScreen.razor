@@ -21,4 +21,12 @@
 		Player.Local?.DeathMessage,
 		Player.Local?.DeathTimeUntilRespawn
 	);
+
+	protected override void OnUpdate()
+	{
+		if (Player.Local?.IsDead == true && (float)Player.Local.DeathTimeUntilRespawn > 0f)
+		{
+			StateHasChanged();
+		}
+	}
 }

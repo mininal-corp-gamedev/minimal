@@ -1,4 +1,5 @@
 using Sandbox;
+using System;
 
 public sealed class MoneyPrinterUpgrade : Component, Component.ICollisionListener
 {
@@ -7,6 +8,8 @@ public sealed class MoneyPrinterUpgrade : Component, Component.ICollisionListene
 
     void ICollisionListener.OnCollisionStart(Collision collision)
     {
+        if (!Networking.IsHost) return;
+
         var obj = collision.Other.GameObject;
 
         if (obj.Components.TryGet<MoneyPrinterBase>(out var printer, FindMode.EverythingInSelfAndParent))
@@ -15,14 +18,15 @@ public sealed class MoneyPrinterUpgrade : Component, Component.ICollisionListene
         }
     }
 
-    [Rpc.Host]
     private void UpgradePrinter(MoneyPrinterBase printer)
     {
         if (!Networking.IsHost) return;
         if (!GameObject.IsValid()) return;
+        if (!printer.IsValid() || !printer.GameObject.IsValid()) return;
+        if (Vector3.DistanceBetween(WorldPosition, printer.WorldPosition) > 140f) return;
 
         printer.MoneyPerTick += MoneyPerTick;
-        printer.TickInterval -= TickInterval;
+        printer.TickInterval = MathF.Max(0.05f, printer.TickInterval - TickInterval);
 
         GameObject.Destroy();
     }

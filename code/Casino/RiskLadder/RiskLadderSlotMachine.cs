@@ -72,6 +72,9 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 		if ( !Networking.IsHost )
 			return;
 
+		if ( slotMachineGo != GameObject )
+			return;
+
 		var slotMachine = slotMachineGo.Components.Get<RiskLadderSlotMachine>();
 		if ( !slotMachine.IsValid() )
 			return;
@@ -81,7 +84,7 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 			return;
 
 		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
-		if ( !player.IsValid() )
+		if ( !player.IsValid() || player.GameObject.Network.Owner != caller )
 			return;
 
 		slotMachine.HostRisk( player, caller );
@@ -93,6 +96,9 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 		if ( !Networking.IsHost )
 			return;
 
+		if ( slotMachineGo != GameObject )
+			return;
+
 		var slotMachine = slotMachineGo.Components.Get<RiskLadderSlotMachine>();
 		if ( !slotMachine.IsValid() )
 			return;
@@ -102,7 +108,7 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 			return;
 
 		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
-		if ( !player.IsValid() )
+		if ( !player.IsValid() || player.GameObject.Network.Owner != caller )
 			return;
 
 		slotMachine.HostCashout( player, caller );

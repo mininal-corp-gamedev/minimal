@@ -29,7 +29,7 @@ public sealed class ShopManager : Component
 		}
 
 		var buyer = FindPlayerBySteamId( caller.SteamId.Value );
-		if ( !buyer.IsValid() )
+		if ( !buyer.IsValid() || buyer.GameObject.Network.Owner != caller )
 		{
 			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), null );
 			return;

@@ -178,6 +178,9 @@ public sealed class Roulette : Component, Component.IPressable
 		if ( !rouletteGo.IsValid() )
 			return;
 
+		if ( rouletteGo != GameObject )
+			return;
+
 		var roulette = rouletteGo.Components.Get<Roulette>();
 		if ( !roulette.IsValid() )
 			return;

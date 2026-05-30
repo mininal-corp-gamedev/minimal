@@ -22,7 +22,7 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	[Property] public int BuyPrice { get; set; } = 50;
 
 	/// <summary>Sell price — half of <see cref="BuyPrice"/>.</summary>
-	public int SellPrice => BuyPrice / 2;
+	public int SellPrice => Math.Max( 0, BuyPrice / 2 );
 
 	/// <summary>If true, the door belongs to specific jobs: it cannot be bought, and only players holding an allowed job can lock/unlock it.</summary>
 	[Property] public bool HasOnlyJobs { get; set; } = false;
@@ -753,10 +753,11 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		if ( IsBlocked ) return false;
 		if ( HasOnlyJobs ) return false; // Job-only doors cannot be bought.
 		if ( HasOwner ) return false;
-		if ( buyer.Money < BuyPrice ) return false;
+		var buyPrice = Math.Max( 0, BuyPrice );
+		if ( buyer.Money < buyPrice ) return false;
 		if ( buyer.OwnedDoorsCount >= buyer.MaxDoors ) return false; // Player has reached their door limit.
 
-		buyer.Money -= BuyPrice;
+		buyer.Money -= buyPrice;
 		PlayerOwner = buyer;
 		WorldHud?.WorldHudRefresh();
 

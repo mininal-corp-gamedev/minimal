@@ -28,12 +28,15 @@ public sealed class MoneyDropped : Component, Component.IPressable
         var caller = Rpc.Caller;
         if ( caller is null ) return;
 
+        if ( moneyGo != GameObject )
+            return;
+
         var dropped = moneyGo.Components.Get<MoneyDropped>();
         if ( !dropped.IsValid() || dropped.Money <= 0 )
             return;
 
         var player = FindPlayerBySteamId( caller.SteamId.Value );
-        if ( !player.IsValid() )
+        if ( !player.IsValid() || player.GameObject.Network.Owner != caller )
             return;
 
         if ( Vector3.DistanceBetween( player.WorldPosition, dropped.WorldPosition ) > 120f )

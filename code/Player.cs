@@ -83,6 +83,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         get => _money;
         set
         {
+            value = Math.Max( 0, value );
             if (_money == value) return;
             _money = value;
             if (Networking.IsHost && _saveInitialized)
@@ -97,6 +98,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         get => _moneyAtm;
         set
         {
+            value = Math.Max( 0, value );
             if (_moneyAtm == value) return;
             _moneyAtm = value;
             if (Networking.IsHost && _saveInitialized)
@@ -3059,6 +3061,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     public void TakeBox( int amount )
     {
+        if ( !Networking.IsHost )
+            return;
+
+        if ( amount <= 0 )
+            return;
+
         Money += amount;
     
         RpcNotifyTakeBox( amount );
@@ -3104,7 +3112,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if ( caller is null ) return;
 
         var player = FindPlayerBySteamId( caller.SteamId.Value );
-        if ( !player.IsValid() )
+        if ( !player.IsValid() || player.GameObject.Network.Owner != caller )
         {
             NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), false );
             return;
@@ -3148,7 +3156,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if ( caller is null ) return;
 
         var player = FindPlayerBySteamId( caller.SteamId.Value );
-        if ( !player.IsValid() )
+        if ( !player.IsValid() || player.GameObject.Network.Owner != caller )
         {
             NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), false );
             return;
@@ -3173,7 +3181,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
 
         var target = FindPlayerBySteamId( targetSteamId );
-        if ( !target.IsValid() )
+        if ( !target.IsValid() || target.GameObject.Network.Owner?.SteamId.Value != targetSteamId )
         {
             NotifyMoneyResult( caller, GameLocalization.Phrase( "notify.money.transfer_target_not_found", "Transfer target not found." ), false );
             return;

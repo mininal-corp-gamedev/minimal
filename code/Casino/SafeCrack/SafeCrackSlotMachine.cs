@@ -65,6 +65,9 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 		if ( !Networking.IsHost )
 			return;
 
+		if ( slotMachineGo != GameObject )
+			return;
+
 		var slotMachine = slotMachineGo.Components.Get<SafeCrackSlotMachine>();
 		if ( !slotMachine.IsValid() )
 			return;
@@ -74,7 +77,7 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 			return;
 
 		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
-		if ( !player.IsValid() )
+		if ( !player.IsValid() || player.GameObject.Network.Owner != caller )
 			return;
 
 		slotMachine.HostSpin( player, caller );

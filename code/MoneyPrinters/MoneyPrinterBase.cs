@@ -134,6 +134,18 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
     private void RpcApplyDamage( float damage )
     {
         if ( !Networking.IsHost ) return;
+
+        var caller = Rpc.Caller;
+        if ( caller is null ) return;
+
+        var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
+        if ( !player.IsValid() || player.GameObject.Network.Owner != caller )
+            return;
+
+        if ( Vector3.DistanceBetween( player.WorldPosition, WorldPosition ) > MathF.Max( 1f, MaxDistance + 160f ) )
+            return;
+
+        damage = Math.Clamp( damage, 0f, MaxHealth );
         ApplyDamage( damage );
     }
 
@@ -189,9 +201,15 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
     {
         if ( !Networking.IsHost ) return;
 
+        var caller = Rpc.Caller;
+        if ( caller is null ) return;
+
+        if ( printerGo != GameObject )
+            return;
+
         var printer = printerGo.Components.Get<MoneyPrinterBase>();
 
-        if ( printer is null )
+        if ( !printer.IsValid() )
         {
             Log.Warning( "RpcOnTakeMoney: printer component not found" );
             return;
@@ -204,23 +222,23 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
             if ( !go.Components.TryGet<Player>( out var candidate ) ) 
                 continue;
 
-            if ( candidate.GameObject.Network.Owner?.SteamId == Rpc.Caller.SteamId )
+            if ( candidate.GameObject.Network.Owner?.SteamId == caller.SteamId )
             {
                 ply = candidate;
                 break;
             }
         }
 
-        if ( ply is null )
+        if ( !ply.IsValid() || ply.GameObject.Network.Owner != caller )
         {
-            Log.Warning( $"RpcOnTakeMoney: player not found for {Rpc.Caller.DisplayName}" );
+            Log.Warning( $"RpcOnTakeMoney: player not found for {caller.DisplayName}" );
             return;
         }
 
         var dist = Vector3.DistanceBetween( ply.WorldPosition, printer.WorldPosition );
         if ( dist > printer.MaxDistance )
         {
-            Log.Warning( $"RpcOnTakeMoney: {Rpc.Caller.DisplayName} too far ({dist:F0})" );
+            Log.Warning( $"RpcOnTakeMoney: {caller.DisplayName} too far ({dist:F0})" );
             return;
         }
 
@@ -238,6 +256,6 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
         ply.TakeBox( payout );
         printer.RefreshVisual();
 
-        Log.Info( $"{printer.PrinterName}: {Rpc.Caller.DisplayName} collected ${payout}" );
+        Log.Info( $"{printer.PrinterName}: {caller.DisplayName} collected ${payout}" );
     }
 }

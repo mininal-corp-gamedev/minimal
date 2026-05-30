@@ -1,4 +1,5 @@
 using Sandbox;
+using System;
 
 public sealed class HoboTaxCollector : Component, Component.IPressable, Component.ICollisionListener
 {
@@ -15,13 +16,16 @@ public sealed class HoboTaxCollector : Component, Component.IPressable, Componen
         }
     }
 
-    [Rpc.Host]
     private void Add(MoneyDropped money)
     {
         if (!Networking.IsHost) return;
         if (!GameObject.IsValid()) return;
+        if (!money.IsValid() || !money.GameObject.IsValid()) return;
+        if (money.Money <= 0) return;
+        if (Vector3.DistanceBetween(WorldPosition, money.WorldPosition) > 140f) return;
 
-        Money += money.Money;
+        Money = (int)Math.Clamp((long)Money + money.Money, 0L, int.MaxValue);
+        money.Money = 0;
 
         money.DestroyGameObject();
     }
@@ -37,24 +41,50 @@ public sealed class HoboTaxCollector : Component, Component.IPressable, Componen
                 return false;
             }
 
-            Collect(ply);
+            if (Networking.IsHost)
+                HostCollect(ply, ply.GameObject.Network.Owner);
+            else
+                RpcCollect();
         }
 
         return true;
     }
 
     [Rpc.Host]
-    private void Collect(Player ply)
+    private void RpcCollect()
     {
         if (!Networking.IsHost) return;
-        if (ply != PlayerOwner)
+
+        var caller = Rpc.Caller;
+        if (caller is null) return;
+
+        var player = Player.FindPlayerBySteamId(caller.SteamId.Value);
+        if (!player.IsValid() || player.GameObject.Network.Owner != caller)
+            return;
+
+        HostCollect(player, caller);
+    }
+
+    private void HostCollect(Player player, Connection caller)
+    {
+        if (!Networking.IsHost) return;
+        if (!player.IsValid()) return;
+
+        if (player != PlayerOwner)
         {
-            Rpc.Caller.Kick("[HoboTaxCollector] Try to collect money");
+            caller?.Kick("[HoboTaxCollector] Try to collect money");
 
             return;
         }
 
-        ply.Money += Money;
+        var ownerConnection = PlayerOwner.GameObject.Network.Owner;
+        if (caller is not null && ownerConnection != caller)
+            return;
+
+        if (Money <= 0)
+            return;
+
+        player.Money = (int)Math.Clamp((long)player.Money + Money, 0L, int.MaxValue);
         Money = 0;
     }
 }

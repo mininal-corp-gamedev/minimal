@@ -886,7 +886,7 @@
 			return;
 
 		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
-		if ( !player.IsValid() || !player.Controller.IsValid() )
+		if ( !player.IsValid() || player.GameObject.Network.Owner != caller || !player.Controller.IsValid() )
 		{
 			NotifyCaller( caller, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), false );
 			return;

@@ -54,6 +54,9 @@ public sealed class SlotMachine : Component, Component.IPressable
         if ( !Networking.IsHost )
             return;
 
+        if ( slotMachineGo != GameObject )
+            return;
+
         var slotMachine = slotMachineGo.Components.Get<SlotMachine>();
         if ( slotMachine is null )
             return;
@@ -63,7 +66,7 @@ public sealed class SlotMachine : Component, Component.IPressable
             return;
 
         var player = slotMachine.FindPlayerBySteamId( caller.SteamId.Value );
-        if ( player is null )
+        if ( !player.IsValid() || player.GameObject.Network.Owner != caller )
             return;
 
         slotMachine.ProcessSpinOnHost( player, caller );

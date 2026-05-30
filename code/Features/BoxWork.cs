@@ -52,10 +52,16 @@ public sealed class BoxWork : Component, Component.IPressable
         // TODO (дедик): заменить Networking.IsHost на #if SERVER
         if ( !Networking.IsHost ) return;
 
+        var caller = Rpc.Caller;
+        if ( caller is null ) return;
+
+        if ( boxGo != GameObject )
+            return;
+
         // 1. Получаем компонент коробки
         var box = boxGo.Components.Get<BoxWork>();
 
-        if ( box is null )
+        if ( !box.IsValid() )
         {
             Log.Warning( "RpcTakeBox: BoxWork component not found" );
             return;
@@ -68,25 +74,25 @@ public sealed class BoxWork : Component, Component.IPressable
         {
             if ( !go.Components.TryGet<Player>( out var candidate ) ) continue;
 
-            if ( candidate.GameObject.Network.Owner.SteamId == Rpc.Caller.SteamId )
+            if ( candidate.GameObject.Network.Owner?.SteamId == caller.SteamId )
             {
                 ply = candidate;
                 break;
             }
         }
 
-        if ( ply is null )
+        if ( !ply.IsValid() || ply.GameObject.Network.Owner != caller )
         {
-            Log.Warning( $"RpcTakeBox: player not found for {Rpc.Caller.DisplayName}" );
+            Log.Warning( $"RpcTakeBox: player not found for {caller.DisplayName}" );
             return;
         }
 
         // 3. Проверка дистанции
         var dist = Vector3.DistanceBetween( ply.WorldPosition, box.WorldPosition );
 
-        if ( dist > MaxDistance )
+        if ( dist > box.MaxDistance )
         {
-            Log.Warning( $"RpcTakeBox: {Rpc.Caller.DisplayName} too far ({dist:F0} > {MaxDistance})" );
+            Log.Warning( $"RpcTakeBox: {caller.DisplayName} too far ({dist:F0} > {box.MaxDistance})" );
             return;
         }
 
@@ -97,6 +103,9 @@ public sealed class BoxWork : Component, Component.IPressable
             return;
         }
 
+        if ( box.Amount <= 0 )
+            return;
+
         // 5. Засчитываем
         box.CanLoot = false;
         box._delayToRefresh = box.Delay;
@@ -106,7 +115,7 @@ public sealed class BoxWork : Component, Component.IPressable
         box.RpcLootVisual();
         
 
-        Log.Info( $"{Rpc.Caller.DisplayName} looted ${box.Amount} from box" );
+        Log.Info( $"{caller.DisplayName} looted ${box.Amount} from box" );
     }
 
     // ─────────────────────────────────────────────

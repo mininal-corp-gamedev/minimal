@@ -37,6 +37,7 @@ public sealed class TextscreenTool : ToolMode
 
 	public override ToolUseResult Use(ToolUseContext context)
 	{
+#if SERVER
 		var player = context.Player;
 		if (player.OwnedPropsCount >= player.MaxProps)
 			return ToolUseResult.Fail(GameLocalization.Format("notify.props.limit_reached", "Prop limit reached ({0}).", player.MaxProps));
@@ -82,6 +83,9 @@ public sealed class TextscreenTool : ToolMode
 
 		textscreenObject.NetworkSpawn(context.Caller);
 		return ToolUseResult.Ok(GameLocalization.Phrase("notify.toolgun.textscreen_spawned", "Textscreen spawned."));
+#else
+		return ToolUseResult.Fail(null);
+#endif
 	}
 
 	public static string TextKey(int index) => $"line{index}.text";

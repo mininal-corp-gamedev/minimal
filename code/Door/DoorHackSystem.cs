@@ -14,6 +14,7 @@ public sealed class DoorHackSystem : Component
 
 	public static void HostRequestStartHackFromRpc( GameObject targetObject )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -90,11 +91,13 @@ public sealed class DoorHackSystem : Component
 		}
 
 		_ = FailAttemptOnTimeout( steamId, attempt.Id, instructionSeconds + gameSeconds + TimeoutGraceSeconds );
+#endif
 	}
 
 	[Rpc.Host]
 	public static void RpcSubmitHackResult( int attemptId, bool completed )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -111,6 +114,7 @@ public sealed class DoorHackSystem : Component
 
 		var success = completed && attempt.InstructionUntil && !attempt.SuccessUntil;
 		FinishAttempt( caller, attempt, success );
+#endif
 	}
 
 	[Rpc.Broadcast]
@@ -124,6 +128,7 @@ public sealed class DoorHackSystem : Component
 
 	private static async System.Threading.Tasks.Task FailAttemptOnTimeout( long steamId, int attemptId, float seconds )
 	{
+#if SERVER
 		await System.Threading.Tasks.Task.Delay( TimeSpan.FromSeconds( MathF.Max( 0.1f, seconds ) ) );
 
 		if ( !Networking.IsHost )
@@ -134,10 +139,14 @@ public sealed class DoorHackSystem : Component
 
 		var connection = FindConnectionBySteamId( steamId );
 		FinishAttempt( connection, attempt, false );
+#else
+		await System.Threading.Tasks.Task.CompletedTask;
+#endif
 	}
 
 	private static void FinishAttempt( Connection caller, ActiveHackAttempt attempt, bool success )
 	{
+#if SERVER
 		ActiveAttemptsBySteamId.Remove( attempt.SteamId );
 
 		var player = Player.FindPlayerBySteamId( attempt.SteamId );
@@ -162,6 +171,7 @@ public sealed class DoorHackSystem : Component
 		player.LockpickCooldown = FailedCooldownSeconds;
 		hackable.HostOnDoorHackFailed( player );
 		NotifyLockpicker( caller, GameLocalization.Format( "notify.lockpick.failed", "Lockpick failed. Next attempt in {0:0}s.", FailedCooldownSeconds ), NotificationType.Error, 3.5f );
+#endif
 	}
 
 	public static bool TryGetHackable( GameObject targetObject, out IDoorHackable hackable )
@@ -180,6 +190,7 @@ public sealed class DoorHackSystem : Component
 
 	private static Connection FindConnectionBySteamId( long steamId )
 	{
+#if SERVER
 		foreach ( var connection in Connection.All )
 		{
 			if ( connection is not null && connection.SteamId.Value == steamId )
@@ -187,10 +198,14 @@ public sealed class DoorHackSystem : Component
 		}
 
 		return null;
+#else
+		return null;
+#endif
 	}
 
 	private static void NotifyLockpicker( Connection target, string text, NotificationType type, float aliveSeconds )
 	{
+#if SERVER
 		if ( target is null )
 			return;
 
@@ -198,6 +213,7 @@ public sealed class DoorHackSystem : Component
 		{
 			RpcShowLockpickNotification( text, (int)type, aliveSeconds );
 		}
+#endif
 	}
 
 	[Rpc.Broadcast]

@@ -1,5 +1,5 @@
 {
-  "Title": "MinimalRP",
+  "Title": "Minimal RP",
   "Type": "game",
   "Org": "minimalinc",
   "Ident": "mrp",
@@ -11,7 +11,7 @@
   "Mounts": null,
   "IsStandaloneOnly": false,
   "Metadata": {
-    "MaxPlayers": 30,
+    "MaxPlayers": 64,
     "MinPlayers": 1,
     "TickRate": 50,
     "GameNetworkType": "Multiplayer",
@@ -23,12 +23,8 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "CsProjName": "",
+    "StartupScene": "scenes/titan_test.scene",
     "LaunchMode": "DedicatedServerOnly",
-    "ControlModes": {
-      "Keyboard": true,
-      "VR": false,
-      "Gamepad": false
-    },
-    "StartupScene": "scenes/minimalver3.scene"
+    "DedicatedServerStartupScene": "scenes/titan_test.scene"
   }
 }

@@ -52,7 +52,9 @@
 	[Property] public float MessageRadius { get; set; } = 400f;
 
 	private readonly List<ChatMessage> Messages = new();
+#if SERVER
 	private readonly Dictionary<ulong, double> HostNextAllowedSendAt = new();
+#endif
 
 	private bool IsChatOpen;
 	private bool WasChatOpenLastFrame;
@@ -202,6 +204,7 @@
 	[Rpc.Host]
 	private void SendChatToHost( string message )
 	{
+#if SERVER
 		var caller = Rpc.Caller;
 		if ( caller is null )
 			return;
@@ -217,6 +220,7 @@
 			HandleHostCommand( caller, sender, normalized );
 		else
 			SendLocalMessage( caller, sender, normalized, ChatMessageType.Local );
+#endif
 	}
 
 	[Rpc.Broadcast]
@@ -234,6 +238,7 @@
 
 	public static void SendLocalSystemMessageFromHost( Player origin, string message )
 	{
+#if SERVER
 		if ( !Networking.IsHost || !origin.IsValid() )
 			return;
 
@@ -257,6 +262,7 @@
 		{
 			RpcReceiveLocalSystemMessage( normalized );
 		}
+#endif
 	}
 
 	[Rpc.Broadcast]
@@ -265,6 +271,7 @@
 		Instance?.AddLocalSystemMessage( message );
 	}
 
+#if SERVER
 	private void HandleHostCommand( Connection caller, Player sender, string message )
 	{
 		var commandLine = message[1..].TrimStart();
@@ -408,6 +415,7 @@
 		HostNextAllowedSendAt[steamId] = Time.Now + SendCooldownSeconds;
 		return true;
 	}
+#endif
 
 	private void SnapScrollToBottom()
 	{

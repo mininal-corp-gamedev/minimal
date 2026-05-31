@@ -7,23 +7,28 @@ public sealed class TriggerBuilding : Component, Component.ITriggerListener
 
     void ITriggerListener.OnTriggerEnter(GameObject other)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (!other.Components.TryGet<PropCustom>(out var prop, FindMode.EverythingInSelfAndParent)) return;
 
         prop.SetTriggerBuilding(this);
         CheckProp(prop, true);
+#endif
     }
 
     void ITriggerListener.OnTriggerExit(GameObject other)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (!other.Components.TryGet<PropCustom>(out var prop, FindMode.EverythingInSelfAndParent)) return;
 
         prop.ClearTriggerBuilding(this);
+#endif
     }
 
     public bool CheckProp(PropCustom prop, bool notifyOwner)
     {
+#if SERVER
         if (!Networking.IsHost) return false;
         if (!prop.IsValid() || !prop.GameObject.IsValid()) return false;
 
@@ -36,6 +41,9 @@ public sealed class TriggerBuilding : Component, Component.ITriggerListener
 
         prop.GameObject.Destroy();
         return false;
+#else
+        return false;
+#endif
     }
 
     public bool IsJobAllowed(Player player)

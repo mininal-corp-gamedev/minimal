@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
 
-public sealed class Player : Component, ICustomDamagable, PlayerController.IEvents, Component.INetworkListener
+public sealed partial class Player : Component, ICustomDamagable, PlayerController.IEvents, Component.INetworkListener
 {
     public static Player Local { get; private set; }
     private static readonly SoundEvent DefaultPhysgunBeamStartSound = new("weapons/physgun/sounds/physgun.shoot.start.sound");
@@ -86,8 +86,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             value = Math.Max( 0, value );
             if (_money == value) return;
             _money = value;
+#if SERVER
             if (Networking.IsHost && _saveInitialized)
                 SavePlayerData();
+#endif
         }
     }
 
@@ -101,8 +103,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             value = Math.Max( 0, value );
             if (_moneyAtm == value) return;
             _moneyAtm = value;
+#if SERVER
             if (Networking.IsHost && _saveInitialized)
                 SavePlayerData();
+#endif
         }
     }
 
@@ -287,9 +291,11 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     public void AdminRespawn()
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         HostTriggerRespawn();
+#endif
     }
 
     /// <summary>
@@ -300,6 +306,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     /// </summary>
     public void HostTriggerRespawn()
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         var hasSpawnTransform = TryGetSpawnTransform(out var spawnPosition, out var spawnRotation);
@@ -324,6 +331,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         RpcOwnerSpawn(spawnPosition, spawnRotation);
         RpcClearDeathRagdoll();
+#endif
     }
 
     /// <summary>
@@ -333,6 +341,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     /// </summary>
     public void HostTeleport(Vector3 position, Rotation rotation)
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         if (!IsProxy)
@@ -345,6 +354,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
 
         RpcOwnerTeleport(position, rotation);
+#endif
     }
 
     public void ApplyElevatorCarryDelta(Vector3 delta)
@@ -353,8 +363,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if (IsProxy)
         {
+#if SERVER
             if (Networking.IsHost)
                 RpcOwnerQueueElevatorCarryDelta(delta);
+#endif
 
             return;
         }
@@ -484,11 +496,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     public void OnDamage(in DamageInfo dmgInfo)
     {
+#if SERVER
         // Server (host) authority: урон применяет ТОЛЬКО хост; клиент только просит.
         if (IsArrested) return;
         if (IsSafezone) return;
 
         TakeDamageFromWeapon(dmgInfo.Damage, dmgInfo.Attacker, damagePosition: dmgInfo.Position, damageOrigin: dmgInfo.Origin, launchRagdoll: dmgInfo.Tags.Contains("explosion"));
+#endif
     }
 
     /// <summary>
@@ -499,11 +513,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         if (damage <= 0f) return;
 
+#if SERVER
         if (Networking.IsHost)
         {
             HostApplyDamage(damage, attacker, deathMessage, damagePosition, damageOrigin, launchRagdoll, useArmor);
             return;
         }
+#endif
 
         RpcRequestDamage(damage, attacker, deathMessage, damagePosition, damageOrigin, launchRagdoll, useArmor);
     }
@@ -563,12 +579,15 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Host]
     private void RpcRequestDamage(float damage, GameObject attacker, string deathMessage, Vector3 damagePosition, Vector3 damageOrigin, bool launchRagdoll, bool useArmor)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         HostApplyDamage(damage, attacker, deathMessage, damagePosition, damageOrigin, launchRagdoll, useArmor);
+#endif
     }
 
     private void HostApplyDamage(float damage, GameObject attacker, string deathMessage = null, Vector3 damagePosition = default, Vector3 damageOrigin = default, bool launchRagdoll = false, bool useArmor = true)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (IsArrested) return;
         if (IsSafezone) return;
@@ -588,10 +607,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if (Health <= 0f)
             HostDie(BuildDeathMessage(attacker, deathMessage), launchRagdoll ? CreateDeathLaunchVelocity(damageOrigin) : Vector3.Zero, damageOrigin);
+#endif
     }
 
     private float HostApplyArmorReduction(float damage, bool useArmor, out float armorDamage)
     {
+#if SERVER
         armorDamage = 0f;
 
         if (!useArmor || Armor <= 0f || MaxArmor <= 0f)
@@ -605,14 +626,20 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         Armor = MathF.Max(0f, Armor - armorDamage);
 
         return MathF.Max(0f, damage - armorDamage);
+#else
+        armorDamage = 0f;
+        return damage;
+#endif
     }
 
     public void HostSetArmor(float armor)
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         Armor = Math.Clamp(armor, 0f, MathF.Max(0f, MaxArmor));
         WorldHud?.WorldHudRefresh();
+#endif
     }
 
     public void HostGiveFullArmor()
@@ -623,6 +650,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     /// <summary>Смерть. Хост показывает владельцу экран смерти и откладывает респавн.</summary>
     private void HostDie(string deathMessage = null, Vector3 ragdollVelocity = default, Vector3 damageOrigin = default)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (IsDead) return;
 
@@ -642,13 +670,16 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             CreateDeathObserver();
 
         HostSetLifePresentationEnabled(false);
+#endif
     }
 
     public void HostKill(string deathMessage = null)
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         HostDie(deathMessage);
+#endif
     }
 
     [Rpc.Owner]
@@ -685,11 +716,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (IsProxy)
             return;
 
+#if SERVER
         if (Networking.IsHost)
         {
             HostSetLifePresentationEnabled(enabled);
             return;
         }
+#endif
 
         RpcRequestHostLifePresentationEnabled(enabled);
     }
@@ -697,6 +730,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Host]
     private void RpcRequestHostLifePresentationEnabled(bool enabled)
     {
+#if SERVER
         if (!Networking.IsHost)
             return;
 
@@ -708,15 +742,18 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         HostSetLifePresentationEnabled(enabled);
+#endif
     }
 
     private void HostSetLifePresentationEnabled(bool enabled)
     {
+#if SERVER
         if (!Networking.IsHost)
             return;
 
         ApplyLifePresentationEnabled(enabled);
         RpcApplyLifePresentationEnabled(enabled);
+#endif
     }
 
     [Rpc.Broadcast]
@@ -749,11 +786,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private void HostUpdateDeathRespawn()
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (!IsDead) return;
         if ((float)_deathTimeUntilRespawn > 0f) return;
 
         HostTriggerRespawn();
+#endif
     }
 
     private static string BuildDeathMessage(GameObject attacker, string fallback)
@@ -1029,11 +1068,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (distance <= SafeFallDistance) return;
         if (!Networking.IsHost && IsProxy) return;
 
+#if SERVER
         if (Networking.IsHost)
         {
             HostApplyFallDamage(distance);
             return;
         }
+#endif
 
         RpcRequestFallDamage(distance);
     }
@@ -1041,6 +1082,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Host]
     private void RpcRequestFallDamage(float distance)
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         var caller = Rpc.Caller;
@@ -1050,10 +1092,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (!player.IsValid() || player != this) return;
 
         player.HostApplyFallDamage(distance);
+#endif
     }
 
     private void HostApplyFallDamage(float distance)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (!_nextFallDamageAllowed) return;
         if (IsArrested || IsDead || Health <= 0f) return;
@@ -1064,6 +1108,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         _nextFallDamageAllowed = 0.2f;
         HostApplyDamage(damage, null, GameLocalization.Phrase( "ui.hud.fall_death", "You died from a fall." ), useArmor: ArmorProtectsFallDamage );
+#endif
     }
 
     private float CalculateFallDamage(float distance)
@@ -1104,11 +1149,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     /// <summary>Совместимость со старым API (вызывалось локально владельцем).</summary>
     public void Die()
     {
+#if SERVER
         if (Networking.IsHost)
         {
             HostDie();
             return;
         }
+#endif
 
         if (IsProxy) return;
         RpcRequestDie();
@@ -1117,6 +1164,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Host]
     private void RpcRequestDie()
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         var caller = Rpc.Caller;
@@ -1126,6 +1174,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (!player.IsValid() || player != this) return;
 
         player.HostDie();
+#endif
     }
 
     public void SwitchWeapon(Weapon wep = null)
@@ -1159,10 +1208,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private void HostSetEquippedWeaponItemId(string itemId)
     {
+#if SERVER
         if (!Networking.IsHost)
             return;
 
         EquippedWeaponItemId = string.IsNullOrWhiteSpace(itemId) ? "" : itemId;
+#endif
     }
 
     public bool UseInventorySlot(int slotIndex)
@@ -1171,8 +1222,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (!IsAlive) return false;
         if (IsArrested) return false; // Арестованный не может пользоваться предметами
 
+#if SERVER
         if (Networking.IsHost)
             return HostUseInventorySlot(slotIndex);
+#endif
 
         // Оптимистичный локальный апдейт подсветки слота: без него хотбар
         // визуально «лагает» на величину сетевого RTT, пока не придёт
@@ -1208,6 +1261,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Host]
     private void RpcRequestUseInventorySlot(int slotIndex)
     {
+#if SERVER
         if (!Networking.IsHost)
             return;
 
@@ -1216,10 +1270,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         player.HostUseInventorySlot(slotIndex);
+#endif
     }
 
     private bool HostUseInventorySlot(int slotIndex)
     {
+#if SERVER
         if (!Networking.IsHost) return false;
         if (!_inventorySaveInitialized) return false;
         if (IsArrested) return false;
@@ -1290,6 +1346,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
 
         return successful;
+#else
+        return false;
+#endif
     }
 
     [Rpc.Owner]
@@ -1396,8 +1455,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         if (IsProxy) return false;
 
+#if SERVER
         if (Networking.IsHost)
             return HostMoveOrSwapInventorySlots(fromIndex, toIndex);
+#endif
 
         RpcRequestMoveOrSwapInventorySlots(fromIndex, toIndex);
         return true;
@@ -1406,6 +1467,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Host]
     private void RpcRequestMoveOrSwapInventorySlots(int fromIndex, int toIndex)
     {
+#if SERVER
         if (!Networking.IsHost)
             return;
 
@@ -1414,10 +1476,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         player.HostMoveOrSwapInventorySlots(fromIndex, toIndex);
+#endif
     }
 
     private bool HostMoveOrSwapInventorySlots(int fromIndex, int toIndex)
     {
+#if SERVER
         if (!Networking.IsHost) return false;
         if (!_inventorySaveInitialized) return false;
         if (Inventory is null) return false;
@@ -1427,6 +1491,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             SendInventorySnapshotToOwner();
 
         return successful;
+#else
+        return false;
+#endif
     }
 
     public void DropItem(Slot slot, int count = 1)
@@ -1442,11 +1509,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     {
         if (IsProxy) return;
 
+#if SERVER
         if (Networking.IsHost)
         {
             HostDropInventorySlot(slotIndex, count);
             return;
         }
+#endif
 
         RpcRequestDropInventorySlot(slotIndex, count);
     }
@@ -1454,6 +1523,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Host]
     private void RpcRequestDropInventorySlot(int slotIndex, int count)
     {
+#if SERVER
         if (!Networking.IsHost)
             return;
 
@@ -1462,10 +1532,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         player.HostDropInventorySlot(slotIndex, count);
+#endif
     }
 
     private bool HostDropInventorySlot(int slotIndex, int count)
     {
+#if SERVER
         if (!Networking.IsHost) return false;
         if (!_inventorySaveInitialized) return false;
         if (count <= 0) return false;
@@ -1514,16 +1586,23 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         NotifyInventoryResult(GameObject.Network.Owner, GameLocalization.Format( "notify.inventory.dropped", "You dropped: {0}", GameLocalization.ItemHeader( item.Definition ) ), true);
         return true;
+#else
+        return false;
+#endif
     }
 
     public bool HostAddItem(Item item)
     {
+#if SERVER
         if (!Networking.IsHost) return false;
         if (!_inventorySaveInitialized) return false;
         if (Inventory is null || item is null) return false;
         if (!Inventory.CanAddItem(item)) return false;
 
         return Inventory.AddItem(item);
+#else
+        return false;
+#endif
     }
 
     public bool HostGiveJobItem(string itemId, int count = 1, bool canDrop = true, bool canSave = false)
@@ -1533,6 +1612,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     public bool HostAddJobWorkshopItem(string packageId)
     {
+#if SERVER
         if (!Networking.IsHost) return false;
         if (string.IsNullOrWhiteSpace(packageId)) return false;
 
@@ -1546,10 +1626,14 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         items.Add(packageId);
         HostSetJobWorkshopItems(items, forceOwnerApply: true);
         return true;
+#else
+        return false;
+#endif
     }
 
     public bool HostRemoveJobWorkshopItem(string packageId)
     {
+#if SERVER
         if (!Networking.IsHost) return false;
         if (string.IsNullOrWhiteSpace(packageId)) return false;
 
@@ -1558,32 +1642,44 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         HostSetJobWorkshopItems(items, forceOwnerApply: true);
         return true;
+#else
+        return false;
+#endif
     }
 
     public void HostApplyJobWorkshopClothing(JobDefinition jobDefinition, bool forceOwnerApply = true)
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         HostSetJobWorkshopItems(jobDefinition?.WorkshopClothing, forceOwnerApply);
+#endif
     }
 
     public void HostClearJobWorkshopClothing(bool forceOwnerApply = true)
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         HostSetJobWorkshopItems(null, forceOwnerApply);
+#endif
     }
 
     public int HostRemoveJobItems()
     {
+#if SERVER
         if (!Networking.IsHost) return 0;
         if (!_inventorySaveInitialized || Inventory is null) return 0;
 
         return Inventory.RemoveJobItems();
+#else
+        return 0;
+#endif
     }
 
     public int HostTryPickup(ItemComponent droppedItem)
     {
+#if SERVER
         if (!Networking.IsHost) return 0;
         if (!_inventorySaveInitialized) return 0;
         if (!droppedItem.IsValid()) return 0;
@@ -1610,6 +1706,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         NotifyInventoryResult(GameObject.Network.Owner, GameLocalization.Format( "notify.inventory.picked_up", "Picked up {0} x{1}", itemName, taken ), true);
         return taken;
+#else
+        return 0;
+#endif
     }
 
     private void SetupWorldHud()
@@ -1784,16 +1883,19 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private void HostRefreshJobWorkshopClothing(bool forceOwnerApply = false)
     {
+#if SERVER
         if (!Networking.IsHost)
             return;
 
         JobWorkshopClothingRevision++;
         if (forceOwnerApply)
             HostSendJobWorkshopClothingToOwner();
+#endif
     }
 
     private void HostSetJobWorkshopItems(IReadOnlyList<string> items, bool forceOwnerApply = false)
     {
+#if SERVER
         if (!Networking.IsHost)
             return;
 
@@ -1803,10 +1905,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             SyncJobWorkshopItemsToDresser(JobWorkshopItemsSerialized);
 
         HostRefreshJobWorkshopClothing(forceOwnerApply);
+#endif
     }
 
     private void HostSendJobWorkshopClothingToOwner()
     {
+#if SERVER
         if (!Networking.IsHost)
             return;
 
@@ -1818,6 +1922,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         {
             RpcOwnerApplyJobWorkshopClothing(JobWorkshopItemsSerialized ?? "", JobWorkshopClothingRevision);
         }
+#endif
     }
 
     [Rpc.Broadcast]
@@ -1989,8 +2094,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         Inventory.OnChanged += ValidateCurrentWeaponInventoryState;
 
+#if SERVER
         if (Networking.IsHost)
             Inventory.OnChanged += HostOnInventoryChanged;
+#endif
 
         _inventoryEventsHooked = true;
     }
@@ -2001,28 +2108,34 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         Inventory.OnChanged -= ValidateCurrentWeaponInventoryState;
+#if SERVER
         Inventory.OnChanged -= HostOnInventoryChanged;
+#endif
         _inventoryEventsHooked = false;
     }
 
     private static void RegisterJobInventoryEvents()
     {
+#if SERVER
         if (_jobInventoryEventsRegistered)
             return;
 
         PlayerJob.OnJobChanged += HandleJobChangedRemoveJobItems;
         PlayerJob.OnJobDemote += HandleJobDemoteRemoveJobItems;
         _jobInventoryEventsRegistered = true;
+#endif
     }
 
     private static void RegisterJobPropBuildingEvents()
     {
+#if SERVER
         if (_jobPropBuildingEventsRegistered)
             return;
 
         PlayerJob.OnJobChanged += HandleJobChangedValidatePropBuildings;
         PlayerJob.OnJobDemote += HandleJobDemoteValidatePropBuildings;
         _jobPropBuildingEventsRegistered = true;
+#endif
     }
 
     private static void HandleJobChangedRemoveJobItems(Player player, JobDefinition _)
@@ -2047,6 +2160,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private void HostOnInventoryChanged()
     {
+#if SERVER
         if (!Networking.IsHost)
             return;
         if (!_inventorySaveInitialized)
@@ -2059,6 +2173,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         SavePlayerInventory();
         SendInventorySnapshotToOwner();
+#endif
     }
 
     private long GetOwnerSteamId()
@@ -2071,12 +2186,16 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private static void EnsurePlayerSaveFolder()
     {
+#if SERVER
         FileSystem.Data.CreateDirectory( PlayerSaveFolder );
+#endif
     }
 
     private static void EnsureInventorySaveFolder()
     {
+#if SERVER
         FileSystem.Data.CreateDirectory( InventorySaveFolder );
+#endif
     }
 
     /// <summary>
@@ -2089,6 +2208,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Host]
     public static void RpcRequestPlayerSaveInit()
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var caller = Rpc.Caller;
@@ -2104,12 +2224,14 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if ( player._saveInitialized ) return;
 
         player.HostInitSave();
+#endif
     }
 
     /// <summary>Клиент-сторона: просит хост инициализировать инвентарный сейв.</summary>
     [Rpc.Host]
     public static void RpcRequestPlayerInventoryInit()
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var caller = Rpc.Caller;
@@ -2125,6 +2247,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if ( player._inventorySaveInitialized ) return;
 
         player.HostInitInventorySave();
+#endif
     }
 
     /// <summary>
@@ -2133,6 +2256,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     /// </summary>
     private void HostInitSave()
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var steamId = GetOwnerSteamId();
@@ -2179,10 +2303,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         // Гарантируем файл на диске даже если значение совпало с дефолтом
         // (тогда сеттер не вызвал бы SavePlayerData).
         SavePlayerData();
+#endif
     }
 
     private void HostInitInventorySave()
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         var steamId = GetOwnerSteamId();
@@ -2227,6 +2353,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         _inventorySaveInitialized = true;
         SavePlayerInventory();
         SendInventorySnapshotToOwner();
+#endif
     }
 
     /// <summary>
@@ -2236,6 +2363,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     /// </summary>
     private void SavePlayerData()
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
         if ( !_saveInitialized ) return;
 
@@ -2257,10 +2385,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         {
             Log.Warning( $"[PlayerSave] Save failed for {steamId}: {ex.Message}" );
         }
+#endif
     }
 
     private void SavePlayerInventory()
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (!_inventorySaveInitialized) return;
 
@@ -2276,14 +2406,17 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         {
             Log.Warning($"[InventorySave] Save failed for {steamId}: {ex.Message}");
         }
+#endif
     }
 
     private void SendInventorySnapshotToOwner()
     {
+#if SERVER
         if (!Networking.IsHost || Inventory is null)
             return;
 
         RpcReceiveInventorySnapshot(Inventory.CreateSnapshotJson(GetOwnerSteamId()));
+#endif
     }
 
     [Rpc.Owner]
@@ -2704,8 +2837,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     protected override void OnFixedUpdate()
     {
         ApplyQueuedElevatorCarryDelta();
+#if SERVER
         HostUpdateDeathRespawn();
         Minimal.Weapons.WeaponPhysgun.HostFixedUpdateForPlayer(this);
+#endif
         UpdateArrestEffects();
         CheckUseHotbarSlots();
         TryUndoLastOwnedProp();
@@ -2745,7 +2880,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     protected override void OnDestroy()
     {
+#if SERVER
         Minimal.Weapons.WeaponPhysgun.HostReleaseForPlayer( this );
+#endif
         UnhookInventoryEvents();
 
         RestoreDeathState();
@@ -2757,6 +2894,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     public void SetPhysgunBeam(bool active, Vector3 start = default, Vector3 end = default, Vector3 bend = default,
         Vector3 endNormal = default, bool grabbed = false)
     {
+#if SERVER
         if (!Networking.IsHost && IsProxy)
             return;
 
@@ -2766,6 +2904,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         PhysgunBeamBend = bend;
         PhysgunBeamEndNormal = endNormal.LengthSquared > 0.001f ? endNormal.Normal : Vector3.Up;
         PhysgunBeamGrabbed = grabbed;
+#endif
     }
 
     public void SetLocalPhysgunBeam(bool active, Vector3 start = default, Vector3 end = default, Vector3 bend = default,
@@ -3061,6 +3200,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     public void TakeBox( int amount )
     {
+#if SERVER
         if ( !Networking.IsHost )
             return;
 
@@ -3070,6 +3210,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         Money += amount;
     
         RpcNotifyTakeBox( amount );
+#endif
     }
  
     [Rpc.Owner]
@@ -3106,6 +3247,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Host]
     private void RpcRequestDropMoney( int amount )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var caller = Rpc.Caller;
@@ -3145,11 +3287,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         player.Money -= amount;
         Log.Info( $"[RpcRequestDropMoney] {caller.DisplayName} ({caller.SteamId}) dropped ${amount}" );
         NotifyMoneyResult( caller, GameLocalization.Format( "notify.money.dropped", "You dropped ${0}.", amount ), true );
+#endif
     }
 
     [Rpc.Host]
     private void RpcRequestTransferMoney( long targetSteamId, int amount )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var caller = Rpc.Caller;
@@ -3202,11 +3346,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         if ( targetConnection is not null )
             NotifyMoneyResult( targetConnection, GameLocalization.Format( "notify.money.received", "{0} transferred ${1} to you.", caller.DisplayName, amount ), true );
+#endif
     }
 
     [Rpc.Host]
     private void RpcRequestDiceOffer( long targetSteamId, int amount )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var caller = Rpc.Caller;
@@ -3233,11 +3379,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         Log.Info( $"[Dice] Offer: {caller.DisplayName} -> {GetConnectionName( targetConnection )}, ${amount}." );
         NotifyMoneyResult( caller, GameLocalization.Format( "notify.dice.offer_sent", "Dice offer sent to {0} for ${1}.", GetConnectionName( targetConnection ), amount ), true );
         target.RpcOwnerReceiveDiceOffer( caller.SteamId.Value, caller.DisplayName, amount );
+#endif
     }
 
     [Rpc.Host]
     private void RpcRespondDiceOffer( bool accepted )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var caller = Rpc.Caller;
@@ -3307,8 +3455,10 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         target.ClearPendingDiceOffer();
         target.RpcOwnerCloseDiceOffer( inviterSteamId );
         ResolveDiceRoundOnHost( inviter, target, inviterConnection, caller, inviterName, amount );
+#endif
     }
 
+#if SERVER
     private static bool ValidateDiceOfferOnHost( Connection caller, Player inviter, long targetSteamId, int amount, out Player target, out Connection targetConnection, out string reason )
     {
         target = null;
@@ -3503,6 +3653,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             inviter,
             GameLocalization.Format( "chat.dice.win", "{0} challenged {1} for ${2}. Rolls: {0} {3}, {1} {4}. {5} won.", safeInviterName, targetName, amount, inviterRoll, targetRoll, winnerName ) );
     }
+#endif
 
     [Rpc.Owner]
     private void RpcOwnerReceiveDiceOffer( long inviterSteamId, string inviterName, int amount )
@@ -3517,6 +3668,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         DiceConfirmPanel.CloseIncoming( inviterSteamId );
     }
 
+#if SERVER
     private static bool TrySpawnDroppedMoney( Player player, Connection owner, int amount )
     {
         var forward = player.Controller.IsValid()
@@ -3557,11 +3709,16 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var direction = (target.WorldPosition - player.WorldPosition).Normal;
         return Vector3.Dot( forward.Normal, direction ) > 0.35f;
     }
+#endif
 
     private Player FindCallerPlayer()
     {
+#if SERVER
         var caller = Rpc.Caller;
         return caller is null ? null : FindPlayerBySteamId(caller.SteamId.Value);
+#else
+        return null;
+#endif
     }
 
     public static Player FindPlayerBySteamId( long steamId )
@@ -3636,6 +3793,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Host]
     public void RpcRequestAddPropProtection( long steamId )
     {
+#if SERVER
         if ( !Networking.IsHost )
             return;
 
@@ -3651,11 +3809,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         PropProtectionIdsSerialized = string.Join( ";", set );
+#endif
     }
 
     [Rpc.Host]
     public void RpcRequestRemovePropProtection( long steamId )
     {
+#if SERVER
         if ( !Networking.IsHost )
             return;
 
@@ -3671,10 +3831,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         PropProtectionIdsSerialized = string.Join( ";", set );
+#endif
     }
 
     void Component.INetworkListener.OnDisconnected( Connection channel )
     {
+#if SERVER
         if ( !Networking.IsHost )
             return;
 
@@ -3684,27 +3846,33 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
         PropCustom.HostDestroyAllForPlayerOwner( player );
         ShopObject.HostDestroyAllForPlayerOwner( player );
+#endif
     }
 
     public void RegisterSpawnedProp( PropCustom prop )
     {
+#if SERVER
         if ( !prop.IsValid() )
             return;
 
         _ownedPropSpawnStack.RemoveAll( x => !x.IsValid() || x == prop );
         _ownedPropSpawnStack.Add( prop );
+#endif
     }
 
     public void UnregisterSpawnedProp( PropCustom prop )
     {
+#if SERVER
         if ( !prop.IsValid() )
             return;
 
         _ownedPropSpawnStack.RemoveAll( x => !x.IsValid() || x == prop );
+#endif
     }
 
     public void HostValidatePropsInTriggerBuildings()
     {
+#if SERVER
         if ( !Networking.IsHost )
             return;
 
@@ -3716,10 +3884,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
             building.CheckProp( prop, true );
         }
+#endif
     }
 
     public void NotifyPropBuildingForbidden()
     {
+#if SERVER
         if ( !Networking.IsHost )
             return;
 
@@ -3727,10 +3897,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             GameObject.Network.Owner,
             GameLocalization.Phrase( "notify.props.building_forbidden", "You cannot place props in this zone." ),
             false );
+#endif
     }
 
     private List<PropCustom> GetOwnedPropsSnapshot()
     {
+#if SERVER
         var props = new List<PropCustom>();
 
         if ( Scene is null )
@@ -3749,6 +3921,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
 
         return props;
+#else
+        return new List<PropCustom>();
+#endif
     }
 
     private void TryUndoLastOwnedProp()
@@ -3758,11 +3933,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if ( !Input.Pressed( "Undo" ) )
             return;
 
+#if SERVER
         if ( Networking.IsHost )
         {
             HostUndoLastOwnedProp( GameObject.Network.Owner );
             return;
         }
+#endif
 
         RpcRequestUndoLastOwnedProp();
     }
@@ -3770,6 +3947,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Host]
     private void RpcRequestUndoLastOwnedProp()
     {
+#if SERVER
         if ( !Networking.IsHost )
             return;
 
@@ -3782,10 +3960,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         player.HostUndoLastOwnedProp( caller );
+#endif
     }
 
     private void HostUndoLastOwnedProp( Connection connection )
     {
+#if SERVER
         if ( !Networking.IsHost )
             return;
 
@@ -3800,10 +3980,12 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var propName = !propObject.IsValid() || string.IsNullOrWhiteSpace( propObject.Name ) ? "Prop" : propObject.Name;
         propObject?.Destroy();
         NotifyInventoryResult( connection, GameLocalization.Format( "notify.props.removed", "Removed prop: {0}", propName ), true );
+#endif
     }
 
     private PropCustom GetLastOwnedProp()
     {
+#if SERVER
         _ownedPropSpawnStack.RemoveAll( x => !x.IsValid() || !x.GameObject.IsValid() );
 
         for ( int i = _ownedPropSpawnStack.Count - 1; i >= 0; i-- )
@@ -3819,6 +4001,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
 
         return null;
+#else
+        return null;
+#endif
     }
 
     private static string GetConnectionName( Connection connection )
@@ -3828,6 +4013,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private static void NotifyInventoryResult(Connection connection, string message, bool success)
     {
+#if SERVER
         if (connection is null)
             return;
 
@@ -3835,6 +4021,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         {
             RpcReceiveInventoryResult(message, success);
         }
+#endif
     }
 
     [Rpc.Broadcast]
@@ -3848,6 +4035,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
 
     private static void NotifyMoneyResult( Connection connection, string message, bool success )
     {
+#if SERVER
         if ( connection is null )
             return;
 
@@ -3855,6 +4043,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         {
             RpcReceiveMoneyResult( message, success );
         }
+#endif
     }
 
     [Rpc.Broadcast]
@@ -3903,7 +4092,9 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
                 CurrentWeapon = null;
                 CurrentInventorySlotIndex = -1;
                 CurrentWeaponItemId = null;
+#if SERVER
                 HostSetEquippedWeaponItemId(null);
+#endif
                 RpcSetHoldType(Renderer, 0);
                 RpcSetHoldTypeHandedness(Renderer, 0);
                 RpcSetPlayerReload(false);
@@ -3940,6 +4131,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     [Rpc.Host]
     private void RpcHostArrestTarget(GameObject targetObj)
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         var caller = Rpc.Caller;
@@ -3956,11 +4148,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         target.HostArrest();
+#endif
     }
 
     [Rpc.Host]
     private void RpcHostReleaseTarget(GameObject targetObj)
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         var caller = Rpc.Caller;
@@ -3976,11 +4170,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
             return;
 
         target.HostRelease();
+#endif
     }
 
     [Rpc.Host]
     private void RpcHostSelfRelease()
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         var caller = Rpc.Caller;
@@ -3991,11 +4187,13 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         if (!p.IsArrested) return;
 
         p.HostRelease();
+#endif
     }
 
     /// <summary>Хост: переводит игрока в состояние ареста и телепортирует к точке спавна тюрьмы.</summary>
     private void HostArrest()
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (IsArrested) return;
 
@@ -4012,17 +4210,20 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         var pos = arrestSpawn.IsValid() ? arrestSpawn.WorldPosition : WorldPosition;
         var rot = arrestSpawn.IsValid() ? arrestSpawn.WorldRotation : WorldRotation;
         RpcApplyArrest(pos, rot);
+#endif
     }
 
     /// <summary>Хост: снимает арест и просит клиент респавнуться на обычной точке.</summary>
     private void HostRelease()
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (!IsArrested) return;
 
         IsArrested = false;
         ArrestTimeUntilRelease = 0f;
         RpcApplyRelease();
+#endif
     }
 
     [Rpc.Owner]
@@ -4050,6 +4251,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     /// </summary>
     public void HostGrantAchievement( string achievementId )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
         if ( string.IsNullOrEmpty( achievementId ) ) return;
 
@@ -4060,6 +4262,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
 
         RpcOwnerGrantAchievement( achievementId );
+#endif
     }
 
     /// <summary>
@@ -4068,6 +4271,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
     /// </summary>
     public void HostIncrementStat( string statName, float amount = 1f )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
         if ( string.IsNullOrEmpty( statName ) ) return;
 
@@ -4078,6 +4282,7 @@ public sealed class Player : Component, ICustomDamagable, PlayerController.IEven
         }
 
         RpcOwnerIncrementStat( statName, amount );
+#endif
     }
 
     [Rpc.Owner]

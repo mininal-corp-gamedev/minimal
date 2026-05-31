@@ -27,8 +27,10 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 	public string LocalStatusText => _localStatusText;
 	public string LocalVisualState => _localVisualState;
 
+#if SERVER
 	private readonly Dictionary<long, SafeCrackSession> _sessionsBySteamId = new();
 	private readonly Dictionary<long, float> _nextActionTimeBySteamId = new();
+#endif
 
 	private int _localLocksOpened;
 	private string _localStatusText = GameLocalization.Phrase( "ui.common.ready", "Ready" );
@@ -51,7 +53,9 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 
 		if ( Networking.IsHost )
 		{
+#if SERVER
 			HostSpin( player, player.GameObject.Network.Owner );
+#endif
 			return true;
 		}
 
@@ -62,6 +66,7 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 	[Rpc.Host]
 	private void RpcRequestSpin( GameObject slotMachineGo )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -81,8 +86,10 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 			return;
 
 		slotMachine.HostSpin( player, caller );
+#endif
 	}
 
+#if SERVER
 	private void HostSpin( Player player, Connection connection )
 	{
 		if ( !Networking.IsHost || !player.IsValid() || connection is null )
@@ -175,6 +182,7 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 				MathF.Max( MinRevealDelay, SpinDuration ) );
 		}
 	}
+#endif
 
 	[Rpc.Broadcast]
 	private void RpcOwnerStartSpin( string outcome, int locksOpened, int payout, int lostValue, float revealDelay )
@@ -206,6 +214,7 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 		_localVisualState = "reject";
 	}
 
+#if SERVER
 	private void SendRejectedToOwner( Connection connection, string reason )
 	{
 		var session = GetSession( connection.SteamId.Value );
@@ -223,6 +232,7 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 
 		return default;
 	}
+#endif
 
 	public int GetJackpotPayout()
 	{
@@ -260,6 +270,7 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 		return distance <= MaxDistance;
 	}
 
+#if SERVER
 	private bool IsOnCooldown( long steamId )
 	{
 		return _nextActionTimeBySteamId.TryGetValue( steamId, out var nextAllowedTime )
@@ -270,6 +281,7 @@ public sealed class SafeCrackSlotMachine : Component, Component.IPressable
 	{
 		_nextActionTimeBySteamId[steamId] = Time.Now + MathF.Max( 0.05f, seconds );
 	}
+#endif
 
 	private static bool TryGetPlayerFromPress( IPressable.Event e, out Player player )
 	{

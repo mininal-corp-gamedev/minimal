@@ -30,15 +30,18 @@ public sealed class JobManager : Component
 
     protected override void OnFixedUpdate()
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (!SalaryTime) return;
 
         SalaryTime = SalaryDelay;
         Payday();
+#endif
     }
 
     public void Payday()
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         foreach (var player in Scene.GetAll<Player>())
@@ -49,6 +52,7 @@ public sealed class JobManager : Component
                 //todo notify player about salary
             }
         }
+#endif
     }
 
     public GameObject GetRandomArrestSpawn()

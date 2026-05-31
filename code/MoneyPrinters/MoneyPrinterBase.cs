@@ -46,8 +46,10 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
 
     public void SetOwner( Player owner )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
         PlayerOwner = owner;
+#endif
     }
 
     // ─────────────────────────────────────────────
@@ -56,6 +58,7 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
 
     protected override void OnStart()
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         Health         = MaxHealth;
@@ -65,10 +68,12 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
         IsWorking      = StoredMoney < MaxMoney;
 
         RefreshVisual();
+#endif
     }
 
     protected override void OnFixedUpdate()
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         // ── Таймер для UI (без удаления объекта) ──
@@ -96,6 +101,7 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
 
             RefreshVisual();
         }
+#endif
     }
 
     // ─────────────────────────────────────────────
@@ -123,7 +129,9 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
         // На хосте применяем урон сразу, иначе пробрасываем через RPC.
         if ( Networking.IsHost )
         {
+#if SERVER
             ApplyDamage( dmgInfo.Damage );
+#endif
             return;
         }
 
@@ -133,6 +141,7 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
     [Rpc.Host]
     private void RpcApplyDamage( float damage )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var caller = Rpc.Caller;
@@ -147,8 +156,10 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
 
         damage = Math.Clamp( damage, 0f, MaxHealth );
         ApplyDamage( damage );
+#endif
     }
 
+#if SERVER
     private void ApplyDamage( float damage )
     {
         if ( damage <= 0f ) return;
@@ -163,6 +174,7 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
             GameObject.Destroy();
         }
     }
+#endif
 
     // ─────────────────────────────────────────────
     //  IPressable — клиент нажал E
@@ -199,6 +211,7 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
     [Rpc.Host]
     public void RpcOnTakeMoney( GameObject printerGo )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var caller = Rpc.Caller;
@@ -257,5 +270,6 @@ public class MoneyPrinterBase : Component, Component.IPressable, ICustomDamagabl
         printer.RefreshVisual();
 
         Log.Info( $"{printer.PrinterName}: {caller.DisplayName} collected ${payout}" );
+#endif
     }
 }

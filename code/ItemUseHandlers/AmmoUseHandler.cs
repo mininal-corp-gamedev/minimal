@@ -17,6 +17,7 @@ public sealed class AmmoUseHandler : IItemUseHandler
 
     public bool Use(Item item, Player caller)
     {
+#if SERVER
         var weapon = GetWeapon();
         if (weapon.IsValid())
             weapon.TotalReserveAmmo += weapon.ClipSize * 2;
@@ -25,6 +26,9 @@ public sealed class AmmoUseHandler : IItemUseHandler
 
         item.Remove(1);
         return true;
+#else
+        return false;
+#endif
     }
 
     private Weapon GetWeapon()

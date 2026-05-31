@@ -422,6 +422,7 @@
 	[Rpc.Host]
 	private static void RpcRequestJoinJob( string jobId )
 	{
+#if SERVER
 		var caller = Rpc.Caller;
 		if ( caller is null )
 			return;
@@ -477,6 +478,7 @@
 
 		callerPlayer.Job.SetJob( normalized );
 		NotifyCaller( caller, GameLocalization.Format( "notify.jobs.joined", "You joined: {0}.", GameLocalization.JobHeader( jobDefinition ) ), true );
+#endif
 	}
 
 	private static Player FindPlayerBySteamId( long steamId )
@@ -494,6 +496,7 @@
 		return null;
 	}
 
+#if SERVER
 	private static void NotifyCaller( Connection caller, string text, bool success )
 	{
 		using ( Rpc.FilterInclude( x => x.SteamId.Value == caller.SteamId.Value ) )
@@ -501,6 +504,7 @@
 			RpcReceiveJoinJobResult( text, success );
 		}
 	}
+#endif
 
 	[Rpc.Broadcast]
 	private static void RpcReceiveJoinJobResult( string text, bool success )

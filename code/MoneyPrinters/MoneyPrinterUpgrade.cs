@@ -8,6 +8,7 @@ public sealed class MoneyPrinterUpgrade : Component, Component.ICollisionListene
 
     void ICollisionListener.OnCollisionStart(Collision collision)
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         var obj = collision.Other.GameObject;
@@ -16,8 +17,10 @@ public sealed class MoneyPrinterUpgrade : Component, Component.ICollisionListene
         {
             UpgradePrinter(printer);
         }
+#endif
     }
 
+#if SERVER
     private void UpgradePrinter(MoneyPrinterBase printer)
     {
         if (!Networking.IsHost) return;
@@ -30,4 +33,5 @@ public sealed class MoneyPrinterUpgrade : Component, Component.ICollisionListene
 
         GameObject.Destroy();
     }
+#endif
 }

@@ -11,37 +11,45 @@ public sealed class PropCustom : Component, Component.INetworkListener
 
 	public void SetOwner( Player owner )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		PlayerOwner = owner;
+#endif
 	}
 
 	public void SetTint( Color tint )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		PropTint = tint;
 		ApplyTint();
+#endif
 	}
 
 	public void SetTriggerBuilding( TriggerBuilding building )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		TriggerBuilding = building;
+#endif
 	}
 
 	public void ClearTriggerBuilding( TriggerBuilding building )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 		if ( TriggerBuilding != building )
 			return;
 
 		TriggerBuilding = null;
+#endif
 	}
 
 	protected override void OnUpdate()
@@ -77,6 +85,7 @@ public sealed class PropCustom : Component, Component.INetworkListener
 
 	void Component.INetworkListener.OnDisconnected( Connection channel )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -84,6 +93,7 @@ public sealed class PropCustom : Component, Component.INetworkListener
 			return;
 
 		GameObject.Destroy();
+#endif
 	}
 
 	public static bool IsPlayerOwnerConnection( PropCustom prop, Connection channel )
@@ -105,6 +115,7 @@ public sealed class PropCustom : Component, Component.INetworkListener
 
 	public static void HostDestroyAllForPlayerOwner( Player playerOwner )
 	{
+#if SERVER
 		if ( !Networking.IsHost || !playerOwner.IsValid() )
 			return;
 
@@ -123,5 +134,6 @@ public sealed class PropCustom : Component, Component.INetworkListener
 
 			prop.GameObject.Destroy();
 		}
+#endif
 	}
 }

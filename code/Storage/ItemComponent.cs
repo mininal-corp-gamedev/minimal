@@ -46,7 +46,11 @@ public sealed class ItemComponent : Component, Component.ICollisionListener, Com
             return false;
 
         if (Networking.IsHost)
+#if SERVER
             return player.HostTryPickup(this) > 0;
+#else
+            return false;
+#endif
 
         RpcRequestPickup(GameObject);
         return true;
@@ -62,6 +66,7 @@ public sealed class ItemComponent : Component, Component.ICollisionListener, Com
 
     public int TryPickup(Inventory inventory)
     {
+#if SERVER
         if (inventory is null || ItemDefinition is null)
             return 0;
 
@@ -116,6 +121,9 @@ public sealed class ItemComponent : Component, Component.ICollisionListener, Com
         }
 
         return totalTaken;
+#else
+        return 0;
+#endif
     }
 
     void ICollisionListener.OnCollisionStart(Collision collision)
@@ -143,6 +151,7 @@ public sealed class ItemComponent : Component, Component.ICollisionListener, Com
     [Rpc.Host]
     private static void RpcRequestPickup(GameObject itemObject)
     {
+#if SERVER
         if (!Networking.IsHost)
             return;
         if (!itemObject.IsValid())
@@ -161,5 +170,6 @@ public sealed class ItemComponent : Component, Component.ICollisionListener, Com
             return;
 
         player.HostTryPickup(item);
+#endif
     }
 }

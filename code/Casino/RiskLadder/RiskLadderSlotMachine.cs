@@ -31,8 +31,10 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 	public bool LocalHasBank => _localBank > 0;
 	public bool LocalAtMaxStep => _localStep >= GetSafeMaxStep();
 
+#if SERVER
 	private readonly Dictionary<long, RiskLadderSession> _sessionsBySteamId = new();
 	private readonly Dictionary<long, float> _nextActionTimeBySteamId = new();
+#endif
 
 	private int _localStep;
 	private int _localBank;
@@ -58,7 +60,9 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 
 		if ( Networking.IsHost )
 		{
+#if SERVER
 			HostRisk( player, player.GameObject.Network.Owner );
+#endif
 			return true;
 		}
 
@@ -69,6 +73,7 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 	[Rpc.Host]
 	private void RpcRequestRisk( GameObject slotMachineGo )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -88,11 +93,13 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 			return;
 
 		slotMachine.HostRisk( player, caller );
+#endif
 	}
 
 	[Rpc.Host]
 	private void RpcRequestCashout( GameObject slotMachineGo )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -112,8 +119,10 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 			return;
 
 		slotMachine.HostCashout( player, caller );
+#endif
 	}
 
+#if SERVER
 	private void HostRisk( Player player, Connection connection )
 	{
 		if ( !Networking.IsHost || !player.IsValid() || connection is null )
@@ -238,6 +247,7 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 			RpcOwnerCashout( payout );
 		}
 	}
+#endif
 
 	[Rpc.Broadcast]
 	private void RpcOwnerStartRiskSpin( bool didWin, bool startedRound, int step, int bank, int lostValue, float winChance, float revealDelay )
@@ -284,6 +294,7 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 		_localVisualState = "reject";
 	}
 
+#if SERVER
 	private void SendRejectedToOwner( Connection connection, string reason )
 	{
 		var session = GetSession( connection.SteamId.Value );
@@ -301,6 +312,7 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 
 		return default;
 	}
+#endif
 
 	public int GetBankForStep( int step )
 	{
@@ -337,6 +349,7 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 		return distance <= MaxDistance;
 	}
 
+#if SERVER
 	private bool IsOnCooldown( long steamId )
 	{
 		return _nextActionTimeBySteamId.TryGetValue( steamId, out var nextAllowedTime )
@@ -347,6 +360,7 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 	{
 		_nextActionTimeBySteamId[steamId] = Time.Now + MathF.Max( 0.05f, seconds );
 	}
+#endif
 
 	private static bool TryGetPlayerFromPress( IPressable.Event e, out Player player )
 	{
@@ -421,7 +435,9 @@ public sealed class RiskLadderSlotMachine : Component, Component.IPressable
 
 		if ( Networking.IsHost )
 		{
+#if SERVER
 			HostCashout( player, player.GameObject.Network.Owner );
+#endif
 			return;
 		}
 

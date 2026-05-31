@@ -853,17 +853,21 @@ public sealed class WeaponPhysgun : Weapon
         float maxRange, float minHoldDistance, float maxHoldDistance, float gravityGunHoldDistance,
         float seekRadius, SoundEvent attachSound, GameObject unfreezeEffectPrefab)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         HostStartGrab(Rpc.Caller, mode, origin, forward, yaw, sessionId, maxRange, minHoldDistance,
             maxHoldDistance, gravityGunHoldDistance, seekRadius, attachSound, unfreezeEffectPrefab);
+#endif
     }
 
     [Rpc.Host(NetFlags.UnreliableNoDelay)]
     private static void RpcHostPullAtAim(Vector3 origin, Vector3 forward, float yaw,
         float maxRange, float pullDistance, float pullForce, float seekRadius)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         HostPullAtAim(Rpc.Caller, origin, forward, yaw, maxRange, pullDistance, pullForce, seekRadius);
+#endif
     }
 
     [Rpc.Host(NetFlags.UnreliableNoDelay)]
@@ -873,21 +877,25 @@ public sealed class WeaponPhysgun : Weapon
         float minHoldDistance, float maxHoldDistance, float maxLinearSpeed, float rotationLerp,
         float releasePlayerPadding, float heldPlayerPadding, int heldMaxResolveIterations)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         HostUpdateGrab(Rpc.Caller, target, grabDistance, grabOffset,
             sessionId, inputSequence,
             aimPosition, aimForward, aimYaw,
             minHoldDistance, maxHoldDistance, maxLinearSpeed, rotationLerp,
             releasePlayerPadding, heldPlayerPadding, heldMaxResolveIterations);
+#endif
     }
 
     [Rpc.Host]
     private static void RpcHostEndGrab(GameObject target, bool preserveVelocity,
         float releasePlayerPadding, float releasePushSpeed, int releaseMaxResolveIterations)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         HostEndGrab(Rpc.Caller, target, preserveVelocity, releasePlayerPadding,
             releasePushSpeed, releaseMaxResolveIterations);
+#endif
     }
 
     [Rpc.Host]
@@ -895,31 +903,38 @@ public sealed class WeaponPhysgun : Weapon
         float releasePlayerPadding, float releasePushSpeed, int releaseMaxResolveIterations,
         SoundEvent freezeSound, GameObject freezeEffectPrefab)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         HostFreezeGrab(Rpc.Caller, target, releasePlayerPadding,
             releasePushSpeed, releaseMaxResolveIterations, freezeSound, freezeEffectPrefab);
+#endif
     }
 
     [Rpc.Host]
     private static void RpcHostUnfreezeAllAtAim(Vector3 origin, Vector3 forward, float maxRange, GameObject unfreezeEffectPrefab)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         HostUnfreezeAllAtAim(Rpc.Caller, origin, forward, maxRange, unfreezeEffectPrefab);
+#endif
     }
 
     [Rpc.Host]
     private static void RpcHostLaunchGrab(GameObject target, float launchForce,
         float releasePlayerPadding, float releasePushSpeed, int releaseMaxResolveIterations)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         HostLaunchGrab(Rpc.Caller, target, launchForce, releasePlayerPadding,
             releasePushSpeed, releaseMaxResolveIterations);
+#endif
     }
 
     [Rpc.Host(NetFlags.UnreliableNoDelay)]
     private static void RpcHostUpdatePhysgunBeam(int sequence, Vector3 start, Vector3 end, Vector3 bend,
         Vector3 endNormal, bool grabbed, float maxRange)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (!TryGetCallerPlayer(Rpc.Caller, out var player)) return;
         if (!HostCanUsePhysgun(player)) return;
@@ -934,11 +949,13 @@ public sealed class WeaponPhysgun : Weapon
         var safeNormal = IsFiniteVector(endNormal) && endNormal.LengthSquared > 0.001f ? endNormal.Normal : Vector3.Up;
 
         player.SetPhysgunBeam(true, safeStart, safeEnd, safeBend, safeNormal, grabbed: false);
+#endif
     }
 
     [Rpc.Host]
     private static void RpcHostClearPhysgunBeam(int sequence)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (!TryGetCallerPlayer(Rpc.Caller, out var player)) return;
         if (!HostAcceptBeamSequence(Rpc.Caller, sequence)) return;
@@ -947,6 +964,7 @@ public sealed class WeaponPhysgun : Weapon
             return;
 
         player.SetPhysgunBeam(false);
+#endif
     }
 
     private static void HostPullAtAim(Connection caller, Vector3 origin, Vector3 forward, float yaw,

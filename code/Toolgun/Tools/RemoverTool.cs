@@ -8,6 +8,7 @@ public sealed class RemoverTool : ToolMode
 
 	public override ToolUseResult Use(ToolUseContext context)
 	{
+#if SERVER
 		var prop = context.TargetProp;
 		var propObject = prop.GameObject;
 		var propName = !propObject.IsValid() || string.IsNullOrWhiteSpace(propObject.Name) ? "Prop" : propObject.Name;
@@ -16,5 +17,8 @@ public sealed class RemoverTool : ToolMode
 		propObject.Destroy();
 
 		return ToolUseResult.Ok(GameLocalization.Format( "notify.toolgun.prop_removed", "Removed prop: {0}.", propName ));
+#else
+		return ToolUseResult.Fail(null);
+#endif
 	}
 }

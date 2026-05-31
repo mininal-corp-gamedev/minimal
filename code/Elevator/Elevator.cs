@@ -73,6 +73,7 @@ public sealed class Elevator : Component
 	{
 		CacheBasePosition();
 
+#if SERVER
 		if ( Networking.IsHost )
 		{
 			var initialFloor = ClampFloor( InitialFloor );
@@ -85,6 +86,7 @@ public sealed class Elevator : Component
 			Direction = ElevatorTravelDirection.Idle;
 			SyncPendingRequests();
 		}
+#endif
 
 		ApplyPlatformPosition();
 	}
@@ -103,7 +105,9 @@ public sealed class Elevator : Component
 		var platform = GetPlatform();
 		var previousPlatformPosition = platform.IsValid() ? platform.WorldPosition : WorldPosition;
 
+#if SERVER
 		if ( !Networking.IsHost )
+#endif
 		{
 			var carryLocalPassenger = ShouldCarryLocalPassenger();
 			ApplyPlatformPosition();
@@ -113,6 +117,7 @@ public sealed class Elevator : Component
 			return;
 		}
 
+#if SERVER
 		NormalizeHostFloors();
 		RefreshPassengers();
 		if ( UpdateDoorSequence() )
@@ -161,6 +166,7 @@ public sealed class Elevator : Component
 		var moveDelta = GetPlatformMovementDelta( previousPlatformPosition );
 		ApplyPlatformSurfaceVelocity( moveDelta );
 		CarryPassengers( moveDelta );
+#endif
 	}
 
 	public bool CanRequestFloor( int floor )
@@ -218,23 +224,28 @@ public sealed class Elevator : Component
 	[Rpc.Host]
 	public void RpcRequestFloor( int floor )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		HostTryRequestFloor( floor, Rpc.Caller );
+#endif
 	}
 
 	[Rpc.Host]
 	public void RpcRequestFloorFromPanel( int floor, Vector3 clientWorldPosition, Vector3 clientEyePosition )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		HostTryRequestFloor( floor, Rpc.Caller, clientWorldPosition, clientEyePosition );
+#endif
 	}
 
 	private void HostTryRequestFloor( int floor, Connection caller, Vector3? clientWorldPosition = null, Vector3? clientEyePosition = null )
 	{
+#if SERVER
 		if ( caller is null )
 			return;
 
@@ -245,19 +256,23 @@ public sealed class Elevator : Component
 		}
 
 		HostQueueCabRequest( floor );
+#endif
 	}
 
 	[Rpc.Host]
 	public void RpcRequestHallCallFromPanel( int floor, int direction, Vector3 clientWorldPosition, Vector3 clientEyePosition )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		HostTryRequestHallCall( floor, (ElevatorTravelDirection)Math.Clamp( direction, -1, 1 ), Rpc.Caller, clientWorldPosition, clientEyePosition );
+#endif
 	}
 
 	private void HostTryRequestHallCall( int floor, ElevatorTravelDirection direction, Connection caller, Vector3? clientWorldPosition = null, Vector3? clientEyePosition = null )
 	{
+#if SERVER
 		if ( caller is null )
 			return;
 
@@ -269,18 +284,22 @@ public sealed class Elevator : Component
 		}
 
 		HostQueueHallRequest( normalizedFloor, direction );
+#endif
 	}
 
 	public void HostSetTargetFloor( int floor )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		HostQueueCabRequest( floor );
+#endif
 	}
 
 	private void HostQueueCabRequest( int floor )
 	{
+#if SERVER
 		if ( !Networking.IsHost || !CanRequestFloor( floor ) )
 			return;
 
@@ -300,10 +319,12 @@ public sealed class Elevator : Component
 		_cabRequests.Add( target );
 		SyncPendingRequests();
 		UpdateQueueTarget( true );
+#endif
 	}
 
 	private void HostQueueHallRequest( int floor, ElevatorTravelDirection direction )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -327,10 +348,12 @@ public sealed class Elevator : Component
 		GetHallRequestSet( normalizedDirection ).Add( target );
 		SyncPendingRequests();
 		UpdateQueueTarget( true );
+#endif
 	}
 
 	private void UpdateQueueTarget( bool playStartSound = false )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -385,6 +408,7 @@ public sealed class Elevator : Component
 			RpcPlaySoundAtPlatform( StartSound );
 
 		_playStartSoundOnNextMove = false;
+#endif
 	}
 
 	private void CompleteStopAtFloor( int floor )

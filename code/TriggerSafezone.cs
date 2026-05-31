@@ -19,11 +19,13 @@ public sealed class TriggerSafezone : Component, Component.ITriggerListener
     [Rpc.Host]
     private void ChangeSafezoneRpc(Player ply)
     {
+#if SERVER
         if (!Networking.IsHost) return;
         if (ply.Network.Owner != Rpc.Caller) return;
 
         ply.IsSafezone = !ply.IsSafezone;
 
         Log.Info($"[Safezone] {Rpc.Caller.DisplayName} ({Rpc.Caller.SteamId}) - {ply.IsSafezone}");
+#endif
     }
 }

@@ -33,7 +33,9 @@ public sealed class Atm : Component, Component.IPressable
 
 		if ( Networking.IsHost )
 		{
+#if SERVER
 			HostDeposit( local, amount );
+#endif
 			return;
 		}
 
@@ -59,7 +61,9 @@ public sealed class Atm : Component, Component.IPressable
 
 		if ( Networking.IsHost )
 		{
+#if SERVER
 			HostWithdraw( local, amount );
+#endif
 			return;
 		}
 
@@ -69,6 +73,7 @@ public sealed class Atm : Component, Component.IPressable
 	[Rpc.Host]
 	private void RpcRequestDeposit( int amount )
 	{
+#if SERVER
 		if ( !Networking.IsHost ) return;
 
 		var caller = Rpc.Caller;
@@ -100,11 +105,13 @@ public sealed class Atm : Component, Component.IPressable
 		}
 
 		HostDeposit( player, amount );
+#endif
 	}
 
 	[Rpc.Host]
 	private void RpcRequestWithdraw( int amount )
 	{
+#if SERVER
 		if ( !Networking.IsHost ) return;
 
 		var caller = Rpc.Caller;
@@ -136,8 +143,10 @@ public sealed class Atm : Component, Component.IPressable
 		}
 
 		HostWithdraw( player, amount );
+#endif
 	}
 
+#if SERVER
 	private void HostDeposit( Player player, int amount )
 	{
 		if ( !Networking.IsHost ) return;
@@ -161,7 +170,9 @@ public sealed class Atm : Component, Component.IPressable
 		Log.Info( $"[ATM] {conn?.DisplayName} withdrew ${amount}. ATM balance: ${player.MoneyAtm}" );
 		NotifyAtmResult( conn, GameLocalization.Format( "notify.atm.withdrew", "Withdrew ${0}. Account: ${1}", amount, player.MoneyAtm ), true );
 	}
+#endif
 
+#if SERVER
 	private static void NotifyAtmResult( Connection connection, string message, bool success )
 	{
 		if ( connection is null ) return;
@@ -171,6 +182,7 @@ public sealed class Atm : Component, Component.IPressable
 			RpcReceiveAtmResult( message, success );
 		}
 	}
+#endif
 
 	[Rpc.Broadcast]
 	private static void RpcReceiveAtmResult( string message, bool success )

@@ -136,6 +136,7 @@
 	[Rpc.Host]
 	private static void RpcRequestDemote( long targetSteamId )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -166,8 +167,10 @@
 			NotifyCaller( caller, GameLocalization.Phrase( "notify.demote.started", "Demote vote started." ), true );
 		else
 			NotifyCaller( caller, GameLocalization.Phrase( "notify.vote.could_not_start", "Could not start vote." ), false );
+#endif
 	}
 
+#if SERVER
 	private static void NotifyCaller( Connection caller, string text, bool success )
 	{
 		using ( Rpc.FilterInclude( x => x.SteamId.Value == caller.SteamId.Value ) )
@@ -175,6 +178,7 @@
 			RpcReceiveDemoteResult( text, success );
 		}
 	}
+#endif
 
 	[Rpc.Broadcast]
 	private static void RpcReceiveDemoteResult( string text, bool success )

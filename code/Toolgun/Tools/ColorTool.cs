@@ -52,11 +52,15 @@ public sealed class ColorTool : ToolMode
 
 	public override ToolUseResult Use(ToolUseContext context)
 	{
+#if SERVER
 		var colorId = context.Config.TryGetValue(ColorConfigKey, out var value) ? value : "white";
 		if (!Colors.TryGetValue(colorId ?? string.Empty, out var color))
 			color = Color.White;
 
 		context.TargetProp.SetTint(color);
 		return ToolUseResult.Ok(GameLocalization.Phrase( "notify.toolgun.prop_colored", "Prop painted." ));
+#else
+		return ToolUseResult.Fail(null);
+#endif
 	}
 }

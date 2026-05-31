@@ -8,14 +8,17 @@ public sealed class ShopObject : Component, Component.INetworkListener
 
 	public void SetOwner( Player owner )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		PlayerOwner = owner;
+#endif
 	}
 
 	void Component.INetworkListener.OnDisconnected( Connection channel )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -23,6 +26,7 @@ public sealed class ShopObject : Component, Component.INetworkListener
 			return;
 
 		GameObject.Destroy();
+#endif
 	}
 
 	private bool IsPlayerOwnerConnection( Connection channel )
@@ -36,6 +40,7 @@ public sealed class ShopObject : Component, Component.INetworkListener
 
 	public static void HostDestroyAllForPlayerOwner( Player playerOwner )
 	{
+#if SERVER
 		if ( !Networking.IsHost || !playerOwner.IsValid() )
 			return;
 
@@ -52,5 +57,6 @@ public sealed class ShopObject : Component, Component.INetworkListener
 
 			so.GameObject.Destroy();
 		}
+#endif
 	}
 }

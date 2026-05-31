@@ -23,6 +23,7 @@ public sealed class MoneyDropped : Component, Component.IPressable
     [Rpc.Host]
     private void RpcTakeDroppedMoney( GameObject moneyGo )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var caller = Rpc.Caller;
@@ -54,6 +55,7 @@ public sealed class MoneyDropped : Component, Component.IPressable
         }
 
         dropped.GameObject.Destroy();
+#endif
     }
 
     [Rpc.Broadcast]
@@ -64,6 +66,7 @@ public sealed class MoneyDropped : Component, Component.IPressable
 
     private static Player FindPlayerBySteamId( long steamId )
     {
+#if SERVER
         var scene = Game.ActiveScene;
         if ( scene is null )
             return null;
@@ -75,5 +78,8 @@ public sealed class MoneyDropped : Component, Component.IPressable
         }
 
         return null;
+#else
+        return null;
+#endif
     }
 }

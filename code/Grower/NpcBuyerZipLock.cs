@@ -28,6 +28,7 @@ public sealed class NpcBuyerZipLock : Component, Component.IPressable
     [Rpc.Host]
     public static void RpcSellZipLocks( GameObject buyerObject, int amount )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var caller = Rpc.Caller;
@@ -100,8 +101,10 @@ public sealed class NpcBuyerZipLock : Component, Component.IPressable
         player.Money = (int)Math.Clamp( (long)player.Money + payout, 0L, int.MaxValue );
 
         NotifySeller( caller, GameLocalization.Format( "notify.ziplock_sell.sold", "Sold {0} ZipLock for ${1}.", amount, payout ), true );
+#endif
     }
 
+#if SERVER
     private static void NotifySeller( Connection connection, string message, bool success )
     {
         if ( connection is null ) return;
@@ -111,6 +114,7 @@ public sealed class NpcBuyerZipLock : Component, Component.IPressable
             RpcReceiveZipLockSellResult( message, success );
         }
     }
+#endif
 
     [Rpc.Broadcast]
     private static void RpcReceiveZipLockSellResult( string message, bool success )

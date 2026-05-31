@@ -17,8 +17,10 @@ public sealed class SlotMachine : Component, Component.IPressable
     public string LocalStatusText => _localStatusText;
     public string LocalVisualState => _localVisualState;
 
+#if SERVER
     private readonly Dictionary<long, int> _multipliersBySteamId = new();
     private readonly Dictionary<long, float> _nextPressTimeBySteamId = new();
+#endif
 
     private int _localMultiplier = 1;
     private string _localStatusText = GameLocalization.Phrase( "ui.common.ready", "Ready" );
@@ -40,7 +42,9 @@ public sealed class SlotMachine : Component, Component.IPressable
 
         if ( Networking.IsHost )
         {
+#if SERVER
             ProcessSpinOnHost( player, player.GameObject.Network.Owner );
+#endif
             return true;
         }
 
@@ -51,6 +55,7 @@ public sealed class SlotMachine : Component, Component.IPressable
     [Rpc.Host]
     private void RpcRequestSpin( GameObject slotMachineGo )
     {
+#if SERVER
         if ( !Networking.IsHost )
             return;
 
@@ -70,8 +75,10 @@ public sealed class SlotMachine : Component, Component.IPressable
             return;
 
         slotMachine.ProcessSpinOnHost( player, caller );
+#endif
     }
 
+#if SERVER
     private void ProcessSpinOnHost( Player player, Connection connection )
     {
         if ( !Networking.IsHost || player is null || connection is null )
@@ -127,6 +134,7 @@ public sealed class SlotMachine : Component, Component.IPressable
             RpcOwnerStartSpin( didWin, newMultiplier, payout, revealDelay );
         }
     }
+#endif
 
     [Rpc.Broadcast]
     private void RpcOwnerStartSpin( bool didWin, int newMultiplier, int payout, float revealDelay )
@@ -151,6 +159,7 @@ public sealed class SlotMachine : Component, Component.IPressable
         _localVisualState = "reject";
     }
 
+#if SERVER
     private void SendRejectedToOwner( Connection connection, string reason )
     {
         var multiplier = GetMultiplierForPlayer( connection.SteamId.Value );
@@ -200,6 +209,7 @@ public sealed class SlotMachine : Component, Component.IPressable
 
         return null;
     }
+#endif
 
     private static bool TryGetPlayerFromPress( IPressable.Event e, out Player player )
     {

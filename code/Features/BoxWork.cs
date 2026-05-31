@@ -32,13 +32,14 @@ public sealed class BoxWork : Component, Component.IPressable
 
     public void Refresh()
     {
-        // TODO (дедик): заменить Networking.IsHost на #if SERVER
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         CanLoot = true;
         _delayToRefresh = 0;
 
         RpcRefreshVisual();
+#endif
     }
 
     // ─────────────────────────────────────────────
@@ -49,7 +50,7 @@ public sealed class BoxWork : Component, Component.IPressable
     [Rpc.Host]
     public void RpcTakeBox( GameObject boxGo )
     {
-        // TODO (дедик): заменить Networking.IsHost на #if SERVER
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var caller = Rpc.Caller;
@@ -116,6 +117,7 @@ public sealed class BoxWork : Component, Component.IPressable
         
 
         Log.Info( $"{caller.DisplayName} looted ${box.Amount} from box" );
+#endif
     }
 
     // ─────────────────────────────────────────────
@@ -124,7 +126,7 @@ public sealed class BoxWork : Component, Component.IPressable
 
     protected override void OnFixedUpdate()
     {
-        // TODO (дедик): заменить Networking.IsHost на #if SERVER
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         if ( CanLoot ) return;
@@ -133,6 +135,7 @@ public sealed class BoxWork : Component, Component.IPressable
         {
             Refresh();
         }
+#endif
     }
 
     // ─────────────────────────────────────────────

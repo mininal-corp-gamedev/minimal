@@ -32,6 +32,9 @@ public sealed class WeaponBurger : Weapon
     [Rpc.Host]
     private void Eat(Player player)
     {
+#if SERVER
+        if (!Networking.IsHost)
+            return;
         if (Rpc.Caller != player.Network.Owner)
         {
             Rpc.Caller.Kick("[Weapon Burger] try to food the non-owned player");
@@ -45,5 +48,6 @@ public sealed class WeaponBurger : Weapon
         player.Health = MathF.Min(player.Health + Health, player.MaxHealth);
         player.WorldHud?.WorldHudRefresh();
         player.Inventory.RemoveItem(itemId, 1);
+#endif
     }
 }

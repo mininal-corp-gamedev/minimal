@@ -31,16 +31,25 @@ public sealed class PushTool : ToolMode
 
 	public override ToolUseResult Use(ToolUseContext context)
 	{
+#if SERVER
 		return Move(context, awayFromPlayer: true);
+#else
+		return ToolUseResult.Fail(null);
+#endif
 	}
 
 	public override ToolUseResult UseSecondary(ToolUseContext context)
 	{
+#if SERVER
 		return Move(context, awayFromPlayer: false);
+#else
+		return ToolUseResult.Fail(null);
+#endif
 	}
 
 	private static ToolUseResult Move(ToolUseContext context, bool awayFromPlayer)
 	{
+#if SERVER
 		var units = GetUnits(context.Config);
 
 		var propObject = context.TargetProp.GameObject;
@@ -54,10 +63,14 @@ public sealed class PushTool : ToolMode
 		FreezeProp(propObject);
 
 		return ToolUseResult.Ok(null);
+#else
+		return ToolUseResult.Fail(null);
+#endif
 	}
 
 	private static void FreezeProp(GameObject propObject)
 	{
+#if SERVER
 		if (!propObject.IsValid())
 			return;
 
@@ -68,6 +81,7 @@ public sealed class PushTool : ToolMode
 		body.Velocity = Vector3.Zero;
 		body.AngularVelocity = Vector3.Zero;
 		body.MotionEnabled = false;
+#endif
 	}
 
 	private static float GetUnits(IReadOnlyDictionary<string, string> config)

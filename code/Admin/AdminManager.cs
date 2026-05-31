@@ -22,7 +22,9 @@ public sealed class AdminManager : Component, Component.INetworkListener
 	protected override void OnStart()
 	{
 		Instance = this;
+#if SERVER
 		EnsureFolders();
+#endif
 	}
 
 	protected override void OnDestroy()
@@ -42,6 +44,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 	[Rpc.Host]
 	public static void RpcRequestRankInit()
 	{
+#if SERVER
 		var caller = Rpc.Caller;
 		if ( caller is null )
 			return;
@@ -57,26 +60,111 @@ public sealed class AdminManager : Component, Component.INetworkListener
 			return;
 
 		player.AdminRank = LoadRank( caller.SteamId.Value ).Rank;
+#endif
 	}
 
-	[Rpc.Host] public static void RpcRequestKick( long steamId, string reason ) => Kick( Rpc.Caller, steamId, reason );
-	[Rpc.Host] public static void RpcRequestBan( long steamId, string reason ) => Ban( Rpc.Caller, steamId, reason );
-	[Rpc.Host] public static void RpcRequestUnban( long steamId ) => Unban( Rpc.Caller, steamId );
-	[Rpc.Host] public static void RpcRequestSpawn( long steamId ) => Respawn( Rpc.Caller, steamId );
-	[Rpc.Host] public static void RpcRequestSetMoney( long steamId, int value ) => SetMoney( Rpc.Caller, steamId, value );
-	[Rpc.Host] public static void RpcRequestSetHp( long steamId, float value ) => SetHp( Rpc.Caller, steamId, value );
-	[Rpc.Host] public static void RpcRequestKill( long steamId ) => Kill( Rpc.Caller, steamId );
-	[Rpc.Host] public static void RpcRequestSetJob( long steamId, string jobId ) => SetJob( Rpc.Caller, steamId, jobId );
-	[Rpc.Host] public static void RpcRequestSellDoor() => SellDoor( Rpc.Caller );
-	[Rpc.Host] public static void RpcRequestSellDoorAt( Vector3 eyePosition, Vector3 eyeForward ) => SellDoor( Rpc.Caller, eyePosition, eyeForward );
-	[Rpc.Host] public static void RpcRequestGoto( long steamId ) => Goto( Rpc.Caller, steamId );
-	[Rpc.Host] public static void RpcRequestTp( long steamId ) => TeleportToCaller( Rpc.Caller, steamId );
-	[Rpc.Host] public static void RpcRequestReturn( long steamId ) => Return( Rpc.Caller, steamId );
-	[Rpc.Host] public static void RpcRequestGiveRank( long steamId, int rank ) => GiveRank( Rpc.Caller, steamId, rank );
+	[Rpc.Host] public static void RpcRequestKick( long steamId, string reason )
+	{
+#if SERVER
+		Kick( Rpc.Caller, steamId, reason );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestBan( long steamId, string reason )
+	{
+#if SERVER
+		Ban( Rpc.Caller, steamId, reason );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestUnban( long steamId )
+	{
+#if SERVER
+		Unban( Rpc.Caller, steamId );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestSpawn( long steamId )
+	{
+#if SERVER
+		Respawn( Rpc.Caller, steamId );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestSetMoney( long steamId, int value )
+	{
+#if SERVER
+		SetMoney( Rpc.Caller, steamId, value );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestSetHp( long steamId, float value )
+	{
+#if SERVER
+		SetHp( Rpc.Caller, steamId, value );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestKill( long steamId )
+	{
+#if SERVER
+		Kill( Rpc.Caller, steamId );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestSetJob( long steamId, string jobId )
+	{
+#if SERVER
+		SetJob( Rpc.Caller, steamId, jobId );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestSellDoor()
+	{
+#if SERVER
+		SellDoor( Rpc.Caller );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestSellDoorAt( Vector3 eyePosition, Vector3 eyeForward )
+	{
+#if SERVER
+		SellDoor( Rpc.Caller, eyePosition, eyeForward );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestGoto( long steamId )
+	{
+#if SERVER
+		Goto( Rpc.Caller, steamId );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestTp( long steamId )
+	{
+#if SERVER
+		TeleportToCaller( Rpc.Caller, steamId );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestReturn( long steamId )
+	{
+#if SERVER
+		Return( Rpc.Caller, steamId );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestGiveRank( long steamId, int rank )
+	{
+#if SERVER
+		GiveRank( Rpc.Caller, steamId, rank );
+#endif
+	}
 
 	[ConCmd( "adm", ConVarFlags.Server )]
 	public static void AdmCommand( Connection caller, string command = "", string steamIdText = "", string value = "", string extra1 = "", string extra2 = "", string extra3 = "", string extra4 = "", string extra5 = "", string extra6 = "", string extra7 = "", string extra8 = "" )
 	{
+#if SERVER
 		var argsTail = JoinArgs( value, extra1, extra2, extra3, extra4, extra5, extra6, extra7, extra8 );
 		if ( !TryParseSteamId( steamIdText, out var steamId ) && !string.Equals( command, "selldoor", StringComparison.OrdinalIgnoreCase ) )
 		{
@@ -132,27 +220,35 @@ public sealed class AdminManager : Component, Component.INetworkListener
 				NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.usage", "Usage: adm <kick|ban|unban|spawn|setmoney|sethp|kill|setjob|selldoor|goto|tp|return|giverank> ..." ), AdminNotifyType.Warn );
 				break;
 		}
+#endif
 	}
 
 	public bool AcceptConnection( Connection channel, string reason )
 	{
+#if SERVER
 		if ( channel is null )
 			return true;
 
 		return !IsBanned( channel.SteamId.Value, out _ );
+#else
+		return true;
+#endif
 	}
 
 	public void OnConnected( Connection channel )
 	{
+#if SERVER
 		if ( channel is null )
 			return;
 
 		if ( IsBanned( channel.SteamId.Value, out var ban ) )
 			CloseBannedClient( channel, ban.Reason );
+#endif
 	}
 
 	public void OnActive( Connection channel )
 	{
+#if SERVER
 		if ( channel is null )
 			return;
 
@@ -165,12 +261,14 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var player = FindPlayerBySteamId( channel.SteamId.Value );
 		if ( player.IsValid() )
 			player.AdminRank = LoadRank( channel.SteamId.Value ).Rank;
+#endif
 	}
 
 	public void OnDisconnected( Connection channel )
 	{
 	}
 
+#if SERVER
 	private static void Kick( Connection caller, long steamId, string reason )
 	{
 		if ( !HasAccess( caller, ModeratorRank, out var error ) )
@@ -772,6 +870,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 			RpcNotify( text, type );
 		}
 	}
+#endif
 
 	[Rpc.Broadcast]
 	private static void RpcNotify( string text, AdminNotifyType type )

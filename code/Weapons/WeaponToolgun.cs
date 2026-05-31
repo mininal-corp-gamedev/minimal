@@ -54,9 +54,11 @@ public sealed class WeaponToolgun : Weapon
 		var eye = Player.Local.Controller.EyeTransform;
 		var configJson = ToolgunClientState.GetConfigJson();
 
+#if SERVER
 		if (Networking.IsHost)
 			HostUseTool(GetLocalPlayerConnection(), tool.Id, configJson, eye.Position, eye.Forward, AttackRange, secondaryPressed);
 		else
+#endif
 			RpcRequestUseTool(tool.Id, configJson, eye.Position, eye.Forward, AttackRange, secondaryPressed);
 
 		var origin = ShotPos != null ? ShotPos.WorldPosition : WorldPosition;
@@ -72,14 +74,17 @@ public sealed class WeaponToolgun : Weapon
 	[Rpc.Host]
 	private static void RpcRequestUseTool(string toolId, string configJson, Vector3 eyePosition, Vector3 eyeForward, float attackRange, bool isSecondary)
 	{
+#if SERVER
 		if (!Networking.IsHost)
 			return;
 
 		HostUseTool(Rpc.Caller, toolId, configJson, eyePosition, eyeForward, attackRange, isSecondary);
+#endif
 	}
 
 	private static void HostUseTool(Connection caller, string toolId, string configJson, Vector3 eyePosition, Vector3 eyeForward, float attackRange, bool isSecondary)
 	{
+#if SERVER
 		if (!Networking.IsHost)
 			return;
 		if (caller is null)
@@ -144,10 +149,12 @@ public sealed class WeaponToolgun : Weapon
 		var result = isSecondary ? tool.UseSecondary(context) : tool.Use(context);
 		if (!string.IsNullOrWhiteSpace(result.Message))
 			NotifyCaller(caller, result.Message, result.Success);
+#endif
 	}
 
 	private static void NotifyCaller(Connection caller, string message, bool success)
 	{
+#if SERVER
 		if (caller is null)
 			return;
 
@@ -155,6 +162,7 @@ public sealed class WeaponToolgun : Weapon
 		{
 			RpcReceiveToolResult(message, success);
 		}
+#endif
 	}
 
 	[Rpc.Broadcast]

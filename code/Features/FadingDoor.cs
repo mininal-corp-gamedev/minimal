@@ -27,28 +27,34 @@ public sealed class FadingDoor : Component, IDoorHackable
 
 	public void SetOwner( Player owner )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		PlayerOwner = owner;
+#endif
 	}
 
 	public void Open()
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		IsOpen = true;
 		ApplyCollisionState();
+#endif
 	}
 
 	public void Close()
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		IsOpen = false;
 		ApplyCollisionState();
+#endif
 	}
 
 	protected override void OnUpdate()
@@ -66,7 +72,9 @@ public sealed class FadingDoor : Component, IDoorHackable
 
 		if ( Networking.IsHost )
 		{
+#if SERVER
 			HostToggle( Player.Local );
+#endif
 			return;
 		}
 
@@ -76,6 +84,7 @@ public sealed class FadingDoor : Component, IDoorHackable
 	[Rpc.Host]
 	private void RpcRequestToggle()
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -85,8 +94,10 @@ public sealed class FadingDoor : Component, IDoorHackable
 
 		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
 		HostToggle( player );
+#endif
 	}
 
+#if SERVER
 	private void HostToggle( Player player )
 	{
 		if ( !Networking.IsHost )
@@ -99,11 +110,14 @@ public sealed class FadingDoor : Component, IDoorHackable
 		else
 			Open();
 	}
+#endif
 
 	[Rpc.Host]
 	public void RpcRequestLockpick()
 	{
+#if SERVER
 		DoorHackSystem.HostRequestStartHackFromRpc( GameObject );
+#endif
 	}
 
 	public void RequestDoorHack()
@@ -122,15 +136,19 @@ public sealed class FadingDoor : Component, IDoorHackable
 
 	public void HostOnDoorHackSucceeded( Player hacker )
 	{
+#if SERVER
 		if ( !Networking.IsHost ) return;
 		if ( !CanBeDoorHacked( hacker ) ) return;
 
 		Open();
+#endif
 	}
 
 	public void HostOnDoorHackFailed( Player hacker )
 	{
+#if SERVER
 		if ( !Networking.IsHost ) return;
+#endif
 	}
 
 	private void ApplyCollisionState()

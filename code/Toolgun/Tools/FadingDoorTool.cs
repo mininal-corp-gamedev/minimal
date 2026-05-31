@@ -8,6 +8,7 @@ public sealed class FadingDoorTool : ToolMode
 
 	public override ToolUseResult Use(ToolUseContext context)
 	{
+#if SERVER
 		var gameObject = context.TargetProp.GameObject;
 		if (!gameObject.Components.TryGet<global::FadingDoor>(out var door))
 		{
@@ -20,5 +21,8 @@ public sealed class FadingDoorTool : ToolMode
 		door.Close();
 		door.Destroy();
 		return ToolUseResult.Ok(GameLocalization.Phrase( "notify.toolgun.fading_door_removed", "Fading Door removed." ));
+#else
+		return ToolUseResult.Fail(null);
+#endif
 	}
 }

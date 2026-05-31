@@ -487,6 +487,7 @@ public sealed class Glass : Component, Component.ExecuteInEditor, Component.IDam
 
 	public void OnDamage( in DamageInfo damage )
 	{
+#if SERVER
 		if ( Networking.IsHost )
 		{
 			HostShatterAt( damage.Position );
@@ -494,23 +495,28 @@ public sealed class Glass : Component, Component.ExecuteInEditor, Component.IDam
 		}
 
 		RpcRequestShatter( damage.Position );
+#endif
 	}
 
 	[Rpc.Host]
 	private void RpcRequestShatter( Vector3 worldPosition )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		HostShatterAt( worldPosition );
+#endif
 	}
 
 	private void HostShatterAt( Vector3 worldPosition )
 	{
+#if SERVER
 		if ( !TryFindShardAtWorldPosition( worldPosition, out _, out _ ) )
 			return;
 
 		RpcShatterAt( worldPosition );
+#endif
 	}
 
 	[Rpc.Broadcast]

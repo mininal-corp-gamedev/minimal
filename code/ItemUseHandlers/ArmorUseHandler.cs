@@ -10,6 +10,7 @@ public sealed class ArmorUseHandler : IItemUseHandler
 
     public bool Use(Item item, Player caller)
     {
+#if SERVER
         if (!caller.IsValid() || item is null)
             return false;
 
@@ -25,5 +26,8 @@ public sealed class ArmorUseHandler : IItemUseHandler
 
         item.Remove(1);
         return true;
+#else
+        return false;
+#endif
     }
 }

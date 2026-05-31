@@ -290,6 +290,7 @@ public class Weapon : Component
 
     protected virtual void ApplyDamageAlongTrace(Vector3 origin, Vector3 direction, float damage)
     {
+#if SERVER
         if (damage <= 0) return;
         if (direction.LengthSquared < 0.0001f) return;
 
@@ -321,6 +322,7 @@ public class Weapon : Component
             if ((end - traceStart).LengthSquared <= 0.01f)
                 return;
         }
+#endif
     }
 
     private SceneTraceResult DoTraceSegment(Vector3 start, Vector3 end, IReadOnlyList<GameObject> ignoredObjects)
@@ -360,6 +362,7 @@ public class Weapon : Component
     /// <summary>Нанести урон по результату трассировки. Вызывается из PerformFire.</summary>
     protected virtual void ApplyDamageToTrace(SceneTraceResult tr, float damage)
     {
+#if SERVER
         if (!tr.Hit || damage <= 0) return;
 
         if (Player.Local?.IsSafezone == true) return;
@@ -413,6 +416,7 @@ public class Weapon : Component
 
             go = go.Parent;
         }
+#endif
     }
 
 

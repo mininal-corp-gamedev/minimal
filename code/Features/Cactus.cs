@@ -11,13 +11,16 @@ public sealed class Cactus : Component, Component.IPressable
 
     public void Refresh()
     {
+#if SERVER
         Renderer.Tint = Color.Green; //todo everyone rpc
 
         CanHarvest = true;
+#endif
     }
 
     public void Harvest(Player ply)
     {
+#if SERVER
         Renderer.Tint = Color.Black;
 
         CanHarvest = false;
@@ -27,10 +30,12 @@ public sealed class Cactus : Component, Component.IPressable
         Notification.Info(GameLocalization.Format( "notify.cactus.harvest", "You harvested {0} cactus.", Count ), 3.5f);
 
         Log.Info($"{ply} harvest {Count} cactus");
+#endif
     }
 
     protected override void OnFixedUpdate()
 	{
+#if SERVER
         if (CanHarvest) return;
 
         if (_delayToRefresh)
@@ -39,6 +44,7 @@ public sealed class Cactus : Component, Component.IPressable
 
             Refresh();
         }
+#endif
 	}
 
     public bool Press(IPressable.Event e)
@@ -47,8 +53,38 @@ public sealed class Cactus : Component, Component.IPressable
 
         if (!go.Components.TryGet<Player>(out var ply, FindMode.EverythingInSelfAndParent)) return false;
 
-        Harvest(ply);
+        if ( Networking.IsHost )
+        {
+#if SERVER
+            Harvest(ply);
+#endif
+        }
+        else
+        {
+            RpcHarvestCactus( GameObject );
+        }
 
         return true;
+    }
+
+    [Rpc.Host]
+    private void RpcHarvestCactus( GameObject cactusGo )
+    {
+#if SERVER
+        if ( !Networking.IsHost ) return;
+        if ( cactusGo != GameObject ) return;
+
+        var caller = Rpc.Caller;
+        if ( caller is null ) return;
+
+        var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
+        if ( !player.IsValid() || player.GameObject.Network.Owner != caller )
+            return;
+
+        if ( !CanHarvest )
+            return;
+
+        Harvest( player );
+#endif
     }
 }

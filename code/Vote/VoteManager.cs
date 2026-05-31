@@ -30,6 +30,7 @@ public sealed class VoteManager : Component
 
 	public static bool TryStartJobVote( Player requester, JobDefinition jobDefinition )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return false;
 
@@ -49,10 +50,14 @@ public sealed class VoteManager : Component
 				requester.Job.SetJob( jobDefinition.Id );
 				Notify( GameLocalization.Format( "notify.vote.became_job", "{0} became {1}.", GetPlayerName( requester ), GameLocalization.JobHeader( jobDefinition ) ), true );
 			} ) ?? false;
+#else
+		return false;
+#endif
 	}
 
 	public static bool TryStartDemoteVote( Player target )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return false;
 
@@ -77,6 +82,9 @@ public sealed class VoteManager : Component
 				target.Job.SetJob( demoteJob.Id );
 				Notify( GameLocalization.Format( "notify.vote.demoted_to", "{0} was demoted to {1}.", GetPlayerName( target ), GameLocalization.JobHeader( demoteJob ) ), true );
 			} ) ?? false;
+#else
+		return false;
+#endif
 	}
 
 	public static bool CanTakeJob( Player player, JobDefinition jobDefinition, out string reason )
@@ -170,12 +178,15 @@ public sealed class VoteManager : Component
 	[Rpc.Host]
 	public static void RpcSubmitVote( int voteId, bool yes )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		Instance?.ReceiveVote( Rpc.Caller, voteId, yes );
+#endif
 	}
 
+#if SERVER
 	private bool StartVote( string header, Action onPassed )
 	{
 		if ( !Networking.IsHost )
@@ -266,6 +277,7 @@ public sealed class VoteManager : Component
 		obj.Name = "VoteManager";
 		return obj.Components.Create<VoteManager>();
 	}
+#endif
 
 	private static int GetJobPlayerCount( string jobId )
 	{
@@ -283,6 +295,7 @@ public sealed class VoteManager : Component
 		return count;
 	}
 
+#if SERVER
 	private static string GetPlayerName( Player player )
 	{
 		return player?.GameObject?.Network.Owner?.DisplayName ?? GameLocalization.Phrase( "common.player", "Player" );
@@ -292,6 +305,7 @@ public sealed class VoteManager : Component
 	{
 		RpcReceiveVoteNotice( message, success );
 	}
+#endif
 
 	[Rpc.Broadcast]
 	private static void RpcOpenVote( int voteId, string header )

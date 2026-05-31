@@ -15,26 +15,32 @@ public sealed class Textscreen : Component
 
 	public void SetOwner( Player owner )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		PlayerOwner = owner;
+#endif
 	}
 
 	public void SetLines( IReadOnlyList<TextscreenLine> lines )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		LinesJson = JsonSerializer.Serialize( NormalizeLines( lines ) );
+#endif
 	}
 
 	public void SetBackground( bool hasBackground )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
 		HasBackground = hasBackground;
+#endif
 	}
 
 	public IReadOnlyList<TextscreenLine> GetLines()

@@ -8,14 +8,17 @@ public sealed class HoboTaxCollector : Component, Component.IPressable, Componen
 
     void ICollisionListener.OnCollisionStart(Collision collision)
     {
+#if SERVER
         var obj = collision.Other.GameObject;
 
         if (obj.Components.TryGet<MoneyDropped>(out var money, FindMode.EverythingInSelfAndParent))
         {
             Add(money);
         }
+#endif
     }
 
+#if SERVER
     private void Add(MoneyDropped money)
     {
         if (!Networking.IsHost) return;
@@ -29,6 +32,7 @@ public sealed class HoboTaxCollector : Component, Component.IPressable, Componen
 
         money.DestroyGameObject();
     }
+#endif
 
     public bool Press(IPressable.Event e)
     {
@@ -42,9 +46,15 @@ public sealed class HoboTaxCollector : Component, Component.IPressable, Componen
             }
 
             if (Networking.IsHost)
+            {
+#if SERVER
                 HostCollect(ply, ply.GameObject.Network.Owner);
+#endif
+            }
             else
+            {
                 RpcCollect();
+            }
         }
 
         return true;
@@ -53,6 +63,7 @@ public sealed class HoboTaxCollector : Component, Component.IPressable, Componen
     [Rpc.Host]
     private void RpcCollect()
     {
+#if SERVER
         if (!Networking.IsHost) return;
 
         var caller = Rpc.Caller;
@@ -63,8 +74,10 @@ public sealed class HoboTaxCollector : Component, Component.IPressable, Componen
             return;
 
         HostCollect(player, caller);
+#endif
     }
 
+#if SERVER
     private void HostCollect(Player player, Connection caller)
     {
         if (!Networking.IsHost) return;
@@ -87,4 +100,5 @@ public sealed class HoboTaxCollector : Component, Component.IPressable, Componen
         player.Money = (int)Math.Clamp((long)player.Money + Money, 0L, int.MaxValue);
         Money = 0;
     }
+#endif
 }

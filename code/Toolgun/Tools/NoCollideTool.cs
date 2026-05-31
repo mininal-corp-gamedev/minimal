@@ -11,19 +11,27 @@ public sealed class NoCollideTool : ToolMode
 
 	public override ToolUseResult Use(ToolUseContext context)
 	{
+#if SERVER
 		var propObject = context.TargetProp.GameObject;
 		if (!propObject.Tags.Has(NoCollidePlayerTag))
 			propObject.Tags.Add(NoCollidePlayerTag);
 
 		return ToolUseResult.Ok(GameLocalization.Phrase( "notify.toolgun.nocollide_enabled", "No Collide enabled for prop." ));
+#else
+		return ToolUseResult.Fail(null);
+#endif
 	}
 
 	public override ToolUseResult UseSecondary(ToolUseContext context)
 	{
+#if SERVER
 		var propObject = context.TargetProp.GameObject;
 		if (propObject.Tags.Has(NoCollidePlayerTag))
 			propObject.Tags.Remove(NoCollidePlayerTag);
 
 		return ToolUseResult.Ok(GameLocalization.Phrase( "notify.toolgun.nocollide_disabled", "No Collide disabled for prop." ));
+#else
+		return ToolUseResult.Fail(null);
+#endif
 	}
 }

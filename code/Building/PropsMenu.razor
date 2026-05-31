@@ -756,6 +756,7 @@
 	[Rpc.Host]
 	private static void RpcRequestPropFavorites()
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -764,11 +765,13 @@
 			return;
 
 		SendPropFavorites( caller, LoadPropFavorites( caller.SteamId.Value ).PropIds );
+#endif
 	}
 
 	[Rpc.Host]
 	private static void RpcSetPropFavorite( string propId, bool favorite )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -803,8 +806,10 @@
 
 		SavePropFavorites( data );
 		SendPropFavorites( caller, data.PropIds );
+#endif
 	}
 
+#if SERVER
 	private static void SendPropFavorites( Connection caller, IEnumerable<string> propIds )
 	{
 		if ( caller is null )
@@ -874,10 +879,12 @@
 		EnsurePropFavoritesFolder();
 		FileSystem.Data.WriteJson( GetPropFavoritesPath( data.SteamId ), data );
 	}
+#endif
 
 	[Rpc.Host]
 	private static void RpcRequestSpawnProp( string propId, Vector3 eyePosition, Vector3 eyeForward )
 	{
+#if SERVER
 		if ( !Networking.IsHost )
 			return;
 
@@ -938,8 +945,10 @@
 		var playerCopy = player;
 		var propCopy = prop;
 		_ = SpawnCloudPropAsync( callerCopy, playerCopy, propCopy, spawnPosition, Rotation.LookAt( yawForward ) );
+#endif
 	}
 
+#if SERVER
 	private static async Task SpawnCloudPropAsync( Connection caller, Player player, PropDefinition prop, Vector3 position, Rotation rotation )
 	{
 		try
@@ -1009,6 +1018,7 @@
 			RpcReceiveSpawnResult( text, success );
 		}
 	}
+#endif
 
 	[Rpc.Broadcast]
 	private static void RpcReceiveSpawnResult( string text, bool success )

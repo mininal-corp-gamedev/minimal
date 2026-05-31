@@ -26,19 +26,23 @@ public sealed class Weed : Component, Component.IPressable, ICustomDamagable
 
     protected override void OnStart()
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         Health = MaxHealth;
         _timeUntilGrown = GrowTime;
         GrowProgress = 0f;
         IsHarvested = false;
+#endif
     }
 
     protected override void OnFixedUpdate()
     {
         if ( Networking.IsHost && !IsHarvested )
         {
+#if SERVER
             UpdateGrowProgressFromTimer();
+#endif
         }
 
         UpdateVisual();
@@ -46,12 +50,15 @@ public sealed class Weed : Component, Component.IPressable, ICustomDamagable
 
     public void SetOwner( Player owner )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
         PlayerOwner = owner;
+#endif
     }
 
     public bool ApplyGrowthSpeedMultiplier( float multiplier )
     {
+#if SERVER
         if ( !Networking.IsHost ) return false;
         if ( IsHarvested || IsGrown ) return false;
 
@@ -64,13 +71,18 @@ public sealed class Weed : Component, Component.IPressable, ICustomDamagable
         _timeUntilGrown = remaining / multiplier;
         UpdateGrowProgressFromTimer();
         return true;
+#else
+        return false;
+#endif
     }
 
+#if SERVER
     private void UpdateGrowProgressFromTimer()
     {
         float remaining = MathF.Max( 0f, (float)_timeUntilGrown );
         GrowProgress = Math.Clamp( 1f - remaining / MathF.Max( 0.01f, GrowTime ), 0f, 1f );
     }
+#endif
 
     private void UpdateVisual()
     {
@@ -85,6 +97,7 @@ public sealed class Weed : Component, Component.IPressable, ICustomDamagable
     [Rpc.Host]
     public void RpcHarvestWeed( GameObject weedGo )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
 
         var weed = weedGo.Components.Get<Weed>();
@@ -127,13 +140,16 @@ public sealed class Weed : Component, Component.IPressable, ICustomDamagable
         weed.IsHarvested = true;
         NotifyHarvester( caller, GameLocalization.Format( "notify.weed.harvested", "Harvested: {0} x{1}.", GameLocalization.ItemHeader( itemDefinition ), item.Count ), true );
         weed.GameObject.Destroy();
+#endif
     }
 
     public void OnDamage( in DamageInfo dmgInfo )
     {
         if ( Networking.IsHost )
         {
+#if SERVER
             ApplyDamage( dmgInfo.Damage );
+#endif
             return;
         }
 
@@ -143,10 +159,13 @@ public sealed class Weed : Component, Component.IPressable, ICustomDamagable
     [Rpc.Host]
     private void RpcApplyDamage( float damage )
     {
+#if SERVER
         if ( !Networking.IsHost ) return;
         ApplyDamage( damage );
+#endif
     }
 
+#if SERVER
     private void ApplyDamage( float damage )
     {
         if ( damage <= 0f ) return;
@@ -156,6 +175,7 @@ public sealed class Weed : Component, Component.IPressable, ICustomDamagable
         if ( Health <= 0f )
             GameObject.Destroy();
     }
+#endif
 
     public bool Press( IPressable.Event e )
     {
@@ -176,6 +196,7 @@ public sealed class Weed : Component, Component.IPressable, ICustomDamagable
         return true;
     }
 
+#if SERVER
     private static void NotifyHarvester( Connection connection, string message, bool success )
     {
         if ( connection is null ) return;
@@ -185,6 +206,7 @@ public sealed class Weed : Component, Component.IPressable, ICustomDamagable
             RpcReceiveWeedNotification( message, success );
         }
     }
+#endif
 
     [Rpc.Broadcast]
     private static void RpcReceiveWeedNotification( string message, bool success )

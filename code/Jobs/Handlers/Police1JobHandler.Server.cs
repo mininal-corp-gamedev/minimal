@@ -13,8 +13,8 @@ public sealed class Police1JobHandler : IJobHandler
 
 	public void PostDemote( PlayerJob job, Player player )
 	{
-        player.HostSetArmor(0f);
-    }
+		player.HostSetArmor( 0f );
+	}
 
 	public void PostJoined( PlayerJob job, Player player )
 	{

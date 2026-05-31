@@ -1,6 +1,6 @@
 using System;
 
-public sealed class PlayerJob : Component
+public sealed partial class PlayerJob : Component
 {
 	public const string DefaultJobId = "citizen";
 
@@ -29,53 +29,17 @@ public sealed class PlayerJob : Component
 	[Rpc.Host]
 	public void SetJob( string jobId )
 	{
-		var newDef = JobDatabase.Get( jobId );
-		if ( newDef == null )
-			return;
-
-		var player = Player;
-		var hadJob = !string.IsNullOrEmpty( JobId );
-		var oldDef = JobDefinition;
-
-		JobId = jobId;
-
-		if ( hadJob )
-		{
-			ShopManager.RemoveShopObjectsOnJobChange( player );
-			JobHandlerRegistry.FirePostDemote( this, player, oldDef );
-			OnJobChanged?.Invoke( player, newDef );
-		}
-		else
-		{
-			OnJobJoined?.Invoke( player, newDef );
-		}
-
-		if ( player.IsValid() )
-			player.HostApplyJobWorkshopClothing( newDef );
-
-		if ( jobId != DefaultJobId && player.IsValid() )
-			player.HostGrantAchievement( "change_job" );
-
-		JobHandlerRegistry.FirePostJoined( this, player );
+#if SERVER
+		SetJobServer( jobId );
+#endif
 	}
 
 	[Rpc.Host]
 	public void RemoveJob()
 	{
-		if ( string.IsNullOrEmpty( JobId ) )
-			return;
-
-		var player = Player;
-		var oldDef = JobDefinition;
-
-		JobId = "";
-
-		ShopManager.RemoveShopObjectsOnJobChange( player );
-		JobHandlerRegistry.FirePostDemote( this, player, oldDef );
-		OnJobDemote?.Invoke( player );
-
-		if ( player.IsValid() )
-			player.HostClearJobWorkshopClothing();
+#if SERVER
+		RemoveJobServer();
+#endif
 	}
 
 	/// <summary>
@@ -83,11 +47,9 @@ public sealed class PlayerJob : Component
 	/// </summary>
 	public void NotifySpawned()
 	{
-		var player = Player;
-		if ( player.IsValid() )
-			player.HostApplyJobWorkshopClothing( JobDefinition );
-
-		JobHandlerRegistry.FirePostSpawned( this, player );
+#if SERVER
+		NotifySpawnedServer();
+#endif
 	}
 
 	protected override void OnUpdate()

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 public static class JobHandlerRegistry
 {
@@ -39,9 +40,9 @@ public static class JobHandlerRegistry
 	internal static void FirePostSpawned( PlayerJob job, Player player )
 	{
 		var def = job.JobDefinition;
-        if ( def == null || !def.HasPostSpawned ) return;
+		if ( def == null || !def.HasPostSpawned ) return;
 
-        Get( def.Id )?.PostSpawned( job, player );
+		Get( def.Id )?.PostSpawned( job, player );
 	}
 
 	internal static void FirePostDemote( PlayerJob job, Player player, JobDefinition oldDef )

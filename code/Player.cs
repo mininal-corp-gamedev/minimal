@@ -2224,6 +2224,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         if ( player._saveInitialized ) return;
 
         player.HostInitSave();
+        Roulette.HostSyncAllToConnection( caller );
 #endif
     }
 

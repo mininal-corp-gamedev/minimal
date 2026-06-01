@@ -30,7 +30,7 @@
 		get
 		{
 			var roulette = TargetRoulette;
-			return roulette.IsValid() && roulette.IsBetting;
+			return roulette.IsValid() && roulette.IsUiBetting;
 		}
 	}
 
@@ -42,10 +42,10 @@
 			if ( !roulette.IsValid() )
 				return "missing";
 
-			if ( roulette.IsSpinning )
+			if ( roulette.IsUiSpinning )
 				return "spinning";
 
-			if ( roulette.IsShowingResult )
+			if ( roulette.IsUiShowingResult )
 				return "result";
 
 			return "betting";
@@ -60,11 +60,11 @@
 			if ( !roulette.IsValid() )
 				return GameLocalization.Phrase( "ui.roulette.title", "Roulette" );
 
-			if ( roulette.IsSpinning )
-				return GameLocalization.Format( "ui.roulette.spin_seconds", "Spin {0}s", roulette.GetPhaseSecondsLeft() );
+			if ( roulette.IsUiSpinning )
+				return GameLocalization.Phrase( "ui.roulette.spinning", "Spinning" );
 
-			if ( roulette.IsShowingResult )
-				return GameLocalization.Format( "ui.roulette.result_seconds", "Result {0}s", roulette.GetPhaseSecondsLeft() );
+			if ( roulette.IsUiShowingResult )
+				return GameLocalization.Phrase( "ui.roulette.result", "Result" );
 
 			return WaitingTimerText;
 		}
@@ -90,11 +90,11 @@
 			if ( !roulette.IsValid() )
 				return "-";
 
-			if ( roulette.IsSpinning )
-				return roulette.CurrentDisplayNumber.ToString();
+			if ( roulette.IsUiSpinning )
+				return roulette.UiDisplayNumber.ToString();
 
-			if ( roulette.IsShowingResult )
-				return roulette.FinalNumber.ToString();
+			if ( roulette.IsUiShowingResult )
+				return roulette.UiFinalNumber.ToString();
 
 			return "";
 		}
@@ -114,6 +114,13 @@
 		}
 	}
 
+	protected override void OnUpdate()
+	{
+		var roulette = TargetRoulette;
+		if ( roulette.IsValid() && (roulette.IsUiSpinning || roulette.IsUiBetting) )
+			StateHasChanged();
+	}
+
 	protected override int BuildHash()
 	{
 		var roulette = TargetRoulette;
@@ -121,10 +128,9 @@
 			return HashCode.Combine( GameLocalization.CurrentCode, "missing" );
 
 		var hash = new HashCode();
-		hash.Add( roulette.RoundState );
-		hash.Add( roulette.CurrentDisplayNumber );
-		hash.Add( roulette.FinalNumber );
 		hash.Add( roulette.ClientPhaseRoundState );
+		hash.Add( roulette.ClientDisplayNumber );
+		hash.Add( roulette.ClientFinalNumber );
 		hash.Add( roulette.GetPhaseSecondsLeft() );
 		hash.Add( roulette.MinBet );
 		hash.Add( roulette.MaxBet );

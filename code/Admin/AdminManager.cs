@@ -261,6 +261,8 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		var player = FindPlayerBySteamId( channel.SteamId.Value );
 		if ( player.IsValid() )
 			player.AdminRank = LoadRank( channel.SteamId.Value ).Rank;
+
+		Roulette.HostSyncAllToConnection( channel );
 #endif
 	}
 

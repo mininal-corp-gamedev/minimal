@@ -33,21 +33,41 @@ public sealed partial class Roulette : Component, Component.IPressable
 	[Property, Group( "Payouts" )] public int ColumnMultiplier { get; set; } = 3;
 	[Property, Group( "Payouts" )] public int ColorMultiplier { get; set; } = 2;
 
-	[Sync( SyncFlags.FromHost )] public int RoundState { get; private set; } = StateBetting;
-	[Sync( SyncFlags.FromHost )] public int CurrentDisplayNumber { get; private set; }
-	[Sync( SyncFlags.FromHost )] public int FinalNumber { get; private set; } = -1;
+	[Sync( SyncFlags.FromHost )]
+	[Change( nameof( OnRoundStateSynced ) )]
+	public int RoundState { get; private set; } = StateBetting;
+
+	[Sync( SyncFlags.FromHost )]
+	[Change( nameof( OnCurrentDisplayNumberSynced ) )]
+	public int CurrentDisplayNumber { get; private set; }
+
+	[Sync( SyncFlags.FromHost )]
+	[Change( nameof( OnFinalNumberSynced ) )]
+	public int FinalNumber { get; private set; } = -1;
 	// Host-only authority timers (not synced).
 	private TimeUntil BettingTimeUntil { get; set; }
 	private TimeUntil SpinTimeUntil { get; set; }
 	private TimeUntil ResultTimeUntil { get; set; }
 
-	// Client display countdown — seeded by RpcBroadcastRoundPhase on phase change.
+	// Client display — seeded by RpcBroadcastRoundPhase (Sync RoundState alone is not enough on proxies).
 	public TimeUntil ClientPhaseTimeUntil { get; private set; }
 	public int ClientPhaseRoundState { get; private set; } = StateBetting;
+	public int ClientDisplayNumber { get; private set; }
+	public int ClientFinalNumber { get; private set; } = -1;
 
 	public bool IsBetting => RoundState == StateBetting;
 	public bool IsSpinning => RoundState == StateSpinning;
 	public bool IsShowingResult => RoundState == StateResult;
+
+	/// <summary>Round phase for world UI / client visuals (from host broadcast).</summary>
+	public int UiRoundState => ClientPhaseRoundState;
+
+	public bool IsUiBetting => UiRoundState == StateBetting;
+	public bool IsUiSpinning => UiRoundState == StateSpinning;
+	public bool IsUiShowingResult => UiRoundState == StateResult;
+
+	public int UiDisplayNumber => IsUiSpinning ? ClientDisplayNumber : CurrentDisplayNumber;
+	public int UiFinalNumber => ClientFinalNumber >= 0 ? ClientFinalNumber : FinalNumber;
 
 	public int GetPhaseSecondsLeft() => Math.Max( 0, (int)Math.Ceiling( (float)ClientPhaseTimeUntil ) );
 	public IReadOnlyList<RouletteBet> LocalBets => _localBets;
@@ -56,8 +76,10 @@ public sealed partial class Roulette : Component, Component.IPressable
 
 	private readonly List<RouletteBet> _localBets = new();
 	private Rotation _circleBaseRotation = Rotation.Identity;
-	private float _circleSpinYaw;
 	private bool _circleBaseRotationCached;
+
+	[Sync( SyncFlags.FromHost )] private float SyncCircleSpinYaw { get; set; }
+	private float _clientCircleVisualYaw;
 
 	public bool Press( IPressable.Event e )
 	{
@@ -67,7 +89,7 @@ public sealed partial class Roulette : Component, Component.IPressable
 		if ( player.IsProxy )
 			return false;
 
-		if ( IsSpinning || IsShowingResult )
+		if ( IsUiSpinning || IsUiShowingResult )
 		{
 			RoulettePanel.CloseForRoulette( this );
 			Notification.Error( GameLocalization.Phrase( "notify.roulette.spinning", "Roulette is spinning." ), 3.5f );
@@ -216,10 +238,42 @@ public sealed partial class Roulette : Component, Component.IPressable
 	}
 
 	[Rpc.Broadcast]
+	private void RpcBroadcastSpinDisplay( int displayNumber )
+	{
+		if ( ClientPhaseRoundState == StateSpinning )
+			ClientDisplayNumber = displayNumber;
+	}
+
+	[Rpc.Broadcast]
 	private void RpcBroadcastRoundPhase( int roundState, float phaseDurationSeconds, int displayNumber, int finalNumber )
 	{
 		ClientPhaseRoundState = roundState;
 		ClientPhaseTimeUntil = MathF.Max( 0f, phaseDurationSeconds );
+		ClientDisplayNumber = displayNumber;
+
+		if ( finalNumber >= 0 )
+			ClientFinalNumber = finalNumber;
+
+		if ( roundState == StateBetting || roundState == StateSpinning )
+			_clientCircleVisualYaw = 0f;
+	}
+
+	private void OnRoundStateSynced( int oldState, int newState )
+	{
+		if ( ClientPhaseTimeUntil <= 0f )
+			ClientPhaseRoundState = newState;
+	}
+
+	private void OnCurrentDisplayNumberSynced( int oldValue, int newValue )
+	{
+		if ( IsUiSpinning )
+			ClientDisplayNumber = newValue;
+	}
+
+	private void OnFinalNumberSynced( int oldValue, int newValue )
+	{
+		if ( newValue >= 0 )
+			ClientFinalNumber = newValue;
 	}
 
 	[Rpc.Broadcast]
@@ -253,9 +307,9 @@ public sealed partial class Roulette : Component, Component.IPressable
 
 	protected override void OnUpdate()
 	{
-		UpdateCircleRotation();
-
 #if SERVER
+		HostUpdateCircleRotation();
+
 		if ( !Networking.IsHost )
 			return;
 
@@ -265,6 +319,8 @@ public sealed partial class Roulette : Component, Component.IPressable
 		CleanupDisconnectedPlayers();
 		HostUpdateRound();
 #endif
+
+		ApplyCircleRotation();
 	}
 
 	protected override void OnDestroy()
@@ -288,7 +344,7 @@ public sealed partial class Roulette : Component, Component.IPressable
 		}
 	}
 
-	private void UpdateCircleRotation()
+	private void ApplyCircleRotation()
 	{
 		if ( !Circle.IsValid() )
 			return;
@@ -296,10 +352,11 @@ public sealed partial class Roulette : Component, Component.IPressable
 		if ( !_circleBaseRotationCached )
 			CacheCircleBaseRotation();
 
-		if ( IsSpinning )
-			_circleSpinYaw = Angles.NormalizeAngle( _circleSpinYaw + CircleSpinYawSpeed * Time.Delta );
+		if ( IsUiSpinning )
+			_clientCircleVisualYaw = Angles.NormalizeAngle( _clientCircleVisualYaw + CircleSpinYawSpeed * Time.Delta );
 
-		Circle.LocalRotation = _circleBaseRotation * Rotation.FromYaw( _circleSpinYaw );
+		var yaw = IsUiSpinning ? _clientCircleVisualYaw : SyncCircleSpinYaw;
+		Circle.LocalRotation = _circleBaseRotation * Rotation.FromYaw( yaw );
 	}
 
 	private static bool TryGetPlayerFromPress( IPressable.Event e, out Player player )

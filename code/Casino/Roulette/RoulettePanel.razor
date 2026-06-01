@@ -223,7 +223,7 @@
 		if ( !roulette.IsValid() )
 			return false;
 
-		if ( roulette.IsSpinning || roulette.IsShowingResult )
+		if ( roulette.IsUiSpinning || roulette.IsUiShowingResult )
 		{
 			reason = GameLocalization.Phrase( "notify.roulette.spinning", "Roulette is spinning." );
 			return false;
@@ -347,18 +347,18 @@
 		if ( !roulette.IsValid() )
 			return "-";
 
-		if ( roulette.IsSpinning )
-			return GameLocalization.Format( "ui.roulette.spin_seconds", "Spin {0}s", roulette.GetPhaseSecondsLeft() );
+		if ( roulette.IsUiSpinning )
+			return GameLocalization.Phrase( "ui.roulette.spinning", "Spinning" );
 
-		if ( roulette.IsShowingResult )
-			return GameLocalization.Format( "ui.roulette.result_seconds", "Result {0}s", roulette.GetPhaseSecondsLeft() );
+		if ( roulette.IsUiShowingResult )
+			return GameLocalization.Phrase( "ui.roulette.result", "Result" );
 
 		return GameLocalization.Format( "ui.roulette.next_spin", "Next spin in {0}s", roulette.GetPhaseSecondsLeft() );
 	}
 
 	protected override void OnUpdate()
 	{
-		if ( IsOpen && ( !TargetRoulette.IsValid() || TargetRoulette.IsSpinning || TargetRoulette.IsShowingResult ) )
+		if ( IsOpen && ( !TargetRoulette.IsValid() || TargetRoulette.IsUiSpinning || TargetRoulette.IsUiShowingResult ) )
 			Close();
 
 		if ( IsOpen )

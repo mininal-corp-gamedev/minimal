@@ -179,6 +179,7 @@ public sealed partial class Roulette
 			{
 				CurrentDisplayNumber = Game.Random.Int( 0, 36 );
 				_nextDisplayNumberUpdate = DisplayNumberStepSeconds;
+				RpcBroadcastSpinDisplay( CurrentDisplayNumber );
 			}
 
 			if ( SpinTimeUntil )
@@ -195,11 +196,74 @@ public sealed partial class Roulette
 	{
 		_hostInitialized = true;
 		RoundState = StateBetting;
+		SyncCircleSpinYaw = 0f;
 		var duration = MathF.Max( 1f, BettingIntervalSeconds );
 		BettingTimeUntil = duration;
 		SpinTimeUntil = 0f;
 		ResultTimeUntil = 0f;
-		RpcBroadcastRoundPhase( StateBetting, duration, CurrentDisplayNumber, FinalNumber );
+		BroadcastCurrentPhase();
+	}
+
+	private void HostUpdateCircleRotation()
+	{
+		if ( !Circle.IsValid() )
+			return;
+
+		if ( !_circleBaseRotationCached )
+			CacheCircleBaseRotation();
+
+		if ( IsSpinning )
+			SyncCircleSpinYaw = Angles.NormalizeAngle( SyncCircleSpinYaw + CircleSpinYawSpeed * Time.Delta );
+	}
+
+	private float GetHostPhaseRemainingSeconds()
+	{
+		if ( IsBetting )
+			return MathF.Max( 0f, (float)BettingTimeUntil );
+
+		if ( IsSpinning )
+			return MathF.Max( 0f, (float)SpinTimeUntil );
+
+		if ( IsShowingResult )
+			return MathF.Max( 0f, (float)ResultTimeUntil );
+
+		return 0f;
+	}
+
+	private void BroadcastCurrentPhase()
+	{
+		var remaining = GetHostPhaseRemainingSeconds();
+		RpcBroadcastRoundPhase( RoundState, remaining, CurrentDisplayNumber, FinalNumber );
+	}
+
+	public static void HostSyncAllToConnection( Connection connection )
+	{
+		if ( !Networking.IsHost || connection is null )
+			return;
+
+		var scene = Game.ActiveScene;
+		if ( scene is null )
+			return;
+
+		foreach ( var roulette in scene.GetAllComponents<Roulette>() )
+		{
+			if ( !roulette.IsValid() )
+				continue;
+
+			roulette.HostSyncPhaseToConnection( connection );
+		}
+	}
+
+	private void HostSyncPhaseToConnection( Connection connection )
+	{
+		if ( !Networking.IsHost || connection is null )
+			return;
+
+		var remaining = GetHostPhaseRemainingSeconds();
+		using ( Rpc.FilterInclude( c => c.SteamId.Value == connection.SteamId.Value ) )
+		{
+			RpcBroadcastRoundPhase( RoundState, remaining, CurrentDisplayNumber, FinalNumber );
+		}
 	}
 
 	private void HostStartSpin()
@@ -212,7 +276,7 @@ public sealed partial class Roulette
 		CurrentDisplayNumber = Game.Random.Int( 0, 36 );
 		_nextDisplayNumberUpdate = DisplayNumberStepSeconds;
 		RpcClosePanelForSpin( GameObject );
-		RpcBroadcastRoundPhase( StateSpinning, duration, CurrentDisplayNumber, FinalNumber );
+		BroadcastCurrentPhase();
 	}
 
 	private void HostFinishSpin()
@@ -223,7 +287,7 @@ public sealed partial class Roulette
 		var duration = MathF.Max( 0.1f, ResultHoldSeconds );
 		ResultTimeUntil = duration;
 		SpinTimeUntil = 0f;
-		RpcBroadcastRoundPhase( StateResult, duration, CurrentDisplayNumber, FinalNumber );
+		BroadcastCurrentPhase();
 
 		ResolveBetsOnHost();
 	}

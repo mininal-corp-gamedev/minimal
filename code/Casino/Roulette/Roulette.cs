@@ -36,18 +36,20 @@ public sealed partial class Roulette : Component, Component.IPressable
 	[Sync( SyncFlags.FromHost )] public int RoundState { get; private set; } = StateBetting;
 	[Sync( SyncFlags.FromHost )] public int CurrentDisplayNumber { get; private set; }
 	[Sync( SyncFlags.FromHost )] public int FinalNumber { get; private set; } = -1;
-	// Host-side timers — NOT synced because TimeUntil is relative to the local clock
-	// and deserialises to garbage on remote clients. Use the integer properties below instead.
+	// Host-only authority timers (not synced).
 	private TimeUntil BettingTimeUntil { get; set; }
 	private TimeUntil SpinTimeUntil { get; set; }
 	private TimeUntil ResultTimeUntil { get; set; }
-	[Sync( SyncFlags.FromHost )] public int BettingSecondsLeft { get; private set; }
-	[Sync( SyncFlags.FromHost )] public int SpinSecondsLeft { get; private set; }
-	[Sync( SyncFlags.FromHost )] public int ResultSecondsLeft { get; private set; }
+
+	// Client display countdown — seeded by RpcBroadcastRoundPhase on phase change.
+	public TimeUntil ClientPhaseTimeUntil { get; private set; }
+	public int ClientPhaseRoundState { get; private set; } = StateBetting;
 
 	public bool IsBetting => RoundState == StateBetting;
 	public bool IsSpinning => RoundState == StateSpinning;
 	public bool IsShowingResult => RoundState == StateResult;
+
+	public int GetPhaseSecondsLeft() => Math.Max( 0, (int)Math.Ceiling( (float)ClientPhaseTimeUntil ) );
 	public IReadOnlyList<RouletteBet> LocalBets => _localBets;
 	public int LocalBetCount => _localBets.Count;
 	public static Roulette LocalActiveRoulette { get; private set; }
@@ -211,6 +213,13 @@ public sealed partial class Roulette : Component, Component.IPressable
 		var roulette = rouletteGo.Components.Get<Roulette>();
 		if ( roulette.IsValid() )
 			RoulettePanel.CloseForRoulette( roulette );
+	}
+
+	[Rpc.Broadcast]
+	private void RpcBroadcastRoundPhase( int roundState, float phaseDurationSeconds, int displayNumber, int finalNumber )
+	{
+		ClientPhaseRoundState = roundState;
+		ClientPhaseTimeUntil = MathF.Max( 0f, phaseDurationSeconds );
 	}
 
 	[Rpc.Broadcast]

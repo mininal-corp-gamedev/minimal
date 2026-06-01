@@ -61,10 +61,10 @@
 				return GameLocalization.Phrase( "ui.roulette.title", "Roulette" );
 
 			if ( roulette.IsSpinning )
-				return GameLocalization.Phrase( "ui.roulette.spinning", "Spinning" );
+				return GameLocalization.Format( "ui.roulette.spin_seconds", "Spin {0}s", roulette.GetPhaseSecondsLeft() );
 
 			if ( roulette.IsShowingResult )
-				return GameLocalization.Phrase( "ui.roulette.result", "Result" );
+				return GameLocalization.Format( "ui.roulette.result_seconds", "Result {0}s", roulette.GetPhaseSecondsLeft() );
 
 			return WaitingTimerText;
 		}
@@ -78,7 +78,7 @@
 			if ( !roulette.IsValid() )
 				return "-";
 
-			return GameLocalization.Format( "ui.roulette.next_spin", "Next spin in {0}s", roulette.BettingSecondsLeft );
+			return GameLocalization.Format( "ui.roulette.next_spin", "Next spin in {0}s", roulette.GetPhaseSecondsLeft() );
 		}
 	}
 
@@ -124,9 +124,8 @@
 		hash.Add( roulette.RoundState );
 		hash.Add( roulette.CurrentDisplayNumber );
 		hash.Add( roulette.FinalNumber );
-		hash.Add( roulette.BettingSecondsLeft );
-		hash.Add( roulette.SpinSecondsLeft );
-		hash.Add( roulette.ResultSecondsLeft );
+		hash.Add( roulette.ClientPhaseRoundState );
+		hash.Add( roulette.GetPhaseSecondsLeft() );
 		hash.Add( roulette.MinBet );
 		hash.Add( roulette.MaxBet );
 		hash.Add( GameLocalization.CurrentCode );

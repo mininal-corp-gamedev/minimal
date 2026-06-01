@@ -348,12 +348,12 @@
 			return "-";
 
 		if ( roulette.IsSpinning )
-			return GameLocalization.Format( "ui.roulette.spin_seconds", "Spin {0}s", roulette.SpinSecondsLeft );
+			return GameLocalization.Format( "ui.roulette.spin_seconds", "Spin {0}s", roulette.GetPhaseSecondsLeft() );
 
 		if ( roulette.IsShowingResult )
-			return GameLocalization.Format( "ui.roulette.result_seconds", "Result {0}s", roulette.ResultSecondsLeft );
+			return GameLocalization.Format( "ui.roulette.result_seconds", "Result {0}s", roulette.GetPhaseSecondsLeft() );
 
-		return GameLocalization.Format( "ui.roulette.next_spin", "Next spin in {0}s", roulette.BettingSecondsLeft );
+		return GameLocalization.Format( "ui.roulette.next_spin", "Next spin in {0}s", roulette.GetPhaseSecondsLeft() );
 	}
 
 	protected override void OnUpdate()
@@ -416,9 +416,8 @@
 		hash.Add( TargetRoulette?.RoundState ?? -1 );
 		hash.Add( TargetRoulette?.LocalBetCount ?? 0 );
 		hash.Add( TargetRoulette?.GetLocalBetTotal() ?? 0 );
-		hash.Add( TargetRoulette.IsValid() ? TargetRoulette.BettingSecondsLeft : 0 );
-		hash.Add( TargetRoulette.IsValid() ? TargetRoulette.SpinSecondsLeft : 0 );
-		hash.Add( TargetRoulette.IsValid() ? TargetRoulette.ResultSecondsLeft : 0 );
+		hash.Add( TargetRoulette.IsValid() ? TargetRoulette.ClientPhaseRoundState : -1 );
+		hash.Add( TargetRoulette.IsValid() ? TargetRoulette.GetPhaseSecondsLeft() : 0 );
 		hash.Add( Player.Local?.Money ?? 0 );
 		hash.Add( AmountInput );
 		hash.Add( SelectedKind );

@@ -36,9 +36,14 @@ public sealed partial class Roulette : Component, Component.IPressable
 	[Sync( SyncFlags.FromHost )] public int RoundState { get; private set; } = StateBetting;
 	[Sync( SyncFlags.FromHost )] public int CurrentDisplayNumber { get; private set; }
 	[Sync( SyncFlags.FromHost )] public int FinalNumber { get; private set; } = -1;
-	[Sync( SyncFlags.FromHost )] public TimeUntil BettingTimeUntil { get; private set; }
-	[Sync( SyncFlags.FromHost )] public TimeUntil SpinTimeUntil { get; private set; }
-	[Sync( SyncFlags.FromHost )] public TimeUntil ResultTimeUntil { get; private set; }
+	// Host-side timers — NOT synced because TimeUntil is relative to the local clock
+	// and deserialises to garbage on remote clients. Use the integer properties below instead.
+	private TimeUntil BettingTimeUntil { get; set; }
+	private TimeUntil SpinTimeUntil { get; set; }
+	private TimeUntil ResultTimeUntil { get; set; }
+	[Sync( SyncFlags.FromHost )] public int BettingSecondsLeft { get; private set; }
+	[Sync( SyncFlags.FromHost )] public int SpinSecondsLeft { get; private set; }
+	[Sync( SyncFlags.FromHost )] public int ResultSecondsLeft { get; private set; }
 
 	public bool IsBetting => RoundState == StateBetting;
 	public bool IsSpinning => RoundState == StateSpinning;

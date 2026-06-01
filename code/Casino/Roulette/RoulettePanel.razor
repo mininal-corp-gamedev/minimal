@@ -348,17 +348,12 @@
 			return "-";
 
 		if ( roulette.IsSpinning )
-			return GameLocalization.Format( "ui.roulette.spin_seconds", "Spin {0}s", SecondsLeft( roulette.SpinTimeUntil ) );
+			return GameLocalization.Format( "ui.roulette.spin_seconds", "Spin {0}s", roulette.SpinSecondsLeft );
 
 		if ( roulette.IsShowingResult )
-			return GameLocalization.Format( "ui.roulette.result_seconds", "Result {0}s", SecondsLeft( roulette.ResultTimeUntil ) );
+			return GameLocalization.Format( "ui.roulette.result_seconds", "Result {0}s", roulette.ResultSecondsLeft );
 
-		return GameLocalization.Format( "ui.roulette.next_spin", "Next spin in {0}s", SecondsLeft( roulette.BettingTimeUntil ) );
-	}
-
-	private static int SecondsLeft( TimeUntil timer )
-	{
-		return Math.Max( 0, (int)Math.Ceiling( (float)timer ) );
+		return GameLocalization.Format( "ui.roulette.next_spin", "Next spin in {0}s", roulette.BettingSecondsLeft );
 	}
 
 	protected override void OnUpdate()
@@ -421,9 +416,9 @@
 		hash.Add( TargetRoulette?.RoundState ?? -1 );
 		hash.Add( TargetRoulette?.LocalBetCount ?? 0 );
 		hash.Add( TargetRoulette?.GetLocalBetTotal() ?? 0 );
-		hash.Add( TargetRoulette.IsValid() ? SecondsLeft( TargetRoulette.BettingTimeUntil ) : 0 );
-		hash.Add( TargetRoulette.IsValid() ? SecondsLeft( TargetRoulette.SpinTimeUntil ) : 0 );
-		hash.Add( TargetRoulette.IsValid() ? SecondsLeft( TargetRoulette.ResultTimeUntil ) : 0 );
+		hash.Add( TargetRoulette.IsValid() ? TargetRoulette.BettingSecondsLeft : 0 );
+		hash.Add( TargetRoulette.IsValid() ? TargetRoulette.SpinSecondsLeft : 0 );
+		hash.Add( TargetRoulette.IsValid() ? TargetRoulette.ResultSecondsLeft : 0 );
 		hash.Add( Player.Local?.Money ?? 0 );
 		hash.Add( AmountInput );
 		hash.Add( SelectedKind );

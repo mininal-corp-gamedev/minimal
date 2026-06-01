@@ -43,6 +43,32 @@ public sealed partial class PlayerJob : Component
 	}
 
 	/// <summary>
+	/// Прямой серверный вызов смены работы. Используется из других серверных
+	/// обработчиков (TabMenu/Vote/Admin), чтобы не повторно входить в RPC-слой
+	/// через <see cref="SetJob"/> (на хосте это не выполняет тело, и работа не выдаётся).
+	/// </summary>
+	public void HostSetJob( string jobId )
+	{
+#if SERVER
+		if ( !Networking.IsHost )
+			return;
+
+		SetJobServer( jobId );
+#endif
+	}
+
+	/// <summary>Прямой серверный вызов снятия работы (см. <see cref="HostSetJob"/>).</summary>
+	public void HostRemoveJob()
+	{
+#if SERVER
+		if ( !Networking.IsHost )
+			return;
+
+		RemoveJobServer();
+#endif
+	}
+
+	/// <summary>
 	/// Called by Player after each spawn to fire the PostSpawned handler.
 	/// </summary>
 	public void NotifySpawned()

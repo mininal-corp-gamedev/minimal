@@ -26,18 +26,27 @@ public sealed class WeaponBurger : Weapon
         _firedThisFrame = true;
         _timeUntilNextFire = FireDelay;
 
-        Eat(Player.Local);
+        if (!Player.Local.IsValid()) return;
+
+        // Бургер — клиентский viewmodel (не сетевой объект), поэтому instance-RPC
+        // не находит GameObject на хосте ("Unknown GameObject for RPC Eat"). Шлём
+        // static-RPC, передавая сетевой объект игрока; хост сам валидирует владельца.
+        Eat(Player.Local.GameObject, Health);
     }
 
     [Rpc.Host]
-    private void Eat(Player player)
+    private static void Eat(GameObject playerGo, int healAmount)
     {
 #if SERVER
         if (!Networking.IsHost)
             return;
+
+        if (!playerGo.IsValid() || !playerGo.Components.TryGet<Player>(out var player))
+            return;
+
         if (Rpc.Caller != player.Network.Owner)
         {
-            Rpc.Caller.Kick("[Weapon Burger] try to food the non-owned player");
+            Rpc.Caller?.Kick("[Weapon Burger] try to food the non-owned player");
 
             return;
         }
@@ -45,7 +54,8 @@ public sealed class WeaponBurger : Weapon
         var itemId = player.CurrentWeaponItemId;
         if (string.IsNullOrWhiteSpace(itemId)) return;
 
-        player.Health = MathF.Min(player.Health + Health, player.MaxHealth);
+        var heal = Math.Clamp(healAmount, 0, (int)MathF.Ceiling(player.MaxHealth));
+        player.Health = MathF.Min(player.Health + heal, player.MaxHealth);
         player.WorldHud?.WorldHudRefresh();
         player.Inventory.RemoveItem(itemId, 1);
 #endif

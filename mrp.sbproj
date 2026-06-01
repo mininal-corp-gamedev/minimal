@@ -23,9 +23,9 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "CsProjName": "",
-    "StartupScene": "scenes/minimalver3.scene",
+    "StartupScene": "scenes/titan_test.scene",
     "LaunchMode": "DedicatedServerOnly",
-    "DedicatedServerStartupScene": "scenes/minimalver3.scene",
+    "DedicatedServerStartupScene": "scenes/titan_test.scene",
     "ParentPackage": null
   }
 }

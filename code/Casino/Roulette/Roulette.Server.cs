@@ -167,6 +167,8 @@ public sealed partial class Roulette
 
 	private void HostUpdateRound()
 	{
+		HostSyncTimerSeconds();
+
 		if ( IsBetting && BettingTimeUntil )
 		{
 			HostStartSpin();
@@ -191,21 +193,51 @@ public sealed partial class Roulette
 			HostStartBettingRound();
 	}
 
+	/// <summary>
+	/// Sync integer countdown seconds to clients. Only writes to networked properties
+	/// when the integer second actually changes, avoiding per-frame traffic.
+	/// </summary>
+	private void HostSyncTimerSeconds()
+	{
+		int secs;
+		if ( IsBetting )
+		{
+			secs = Math.Max( 0, (int)Math.Ceiling( (float)BettingTimeUntil ) );
+			if ( secs != BettingSecondsLeft ) BettingSecondsLeft = secs;
+		}
+		else if ( IsSpinning )
+		{
+			secs = Math.Max( 0, (int)Math.Ceiling( (float)SpinTimeUntil ) );
+			if ( secs != SpinSecondsLeft ) SpinSecondsLeft = secs;
+		}
+		else if ( IsShowingResult )
+		{
+			secs = Math.Max( 0, (int)Math.Ceiling( (float)ResultTimeUntil ) );
+			if ( secs != ResultSecondsLeft ) ResultSecondsLeft = secs;
+		}
+	}
+
 	private void HostStartBettingRound()
 	{
 		_hostInitialized = true;
 		RoundState = StateBetting;
 		BettingTimeUntil = MathF.Max( 1f, BettingIntervalSeconds );
+		BettingSecondsLeft = Math.Max( 0, (int)Math.Ceiling( (float)BettingTimeUntil ) );
 		SpinTimeUntil = 0f;
+		SpinSecondsLeft = 0;
 		ResultTimeUntil = 0f;
+		ResultSecondsLeft = 0;
 	}
 
 	private void HostStartSpin()
 	{
 		RoundState = StateSpinning;
 		SpinTimeUntil = MathF.Max( 0.1f, SpinDurationSeconds );
+		SpinSecondsLeft = Math.Max( 0, (int)Math.Ceiling( (float)SpinTimeUntil ) );
 		BettingTimeUntil = 0f;
+		BettingSecondsLeft = 0;
 		ResultTimeUntil = 0f;
+		ResultSecondsLeft = 0;
 		CurrentDisplayNumber = Game.Random.Int( 0, 36 );
 		_nextDisplayNumberUpdate = DisplayNumberStepSeconds;
 		RpcClosePanelForSpin( GameObject );
@@ -217,7 +249,9 @@ public sealed partial class Roulette
 		FinalNumber = Game.Random.Int( 0, 36 );
 		CurrentDisplayNumber = FinalNumber;
 		ResultTimeUntil = MathF.Max( 0.1f, ResultHoldSeconds );
+		ResultSecondsLeft = Math.Max( 0, (int)Math.Ceiling( (float)ResultTimeUntil ) );
 		SpinTimeUntil = 0f;
+		SpinSecondsLeft = 0;
 
 		ResolveBetsOnHost();
 	}

@@ -47,7 +47,7 @@ public sealed class VoteManager : Component
 				if ( !CanTakeJob( requester, jobDefinition, out _ ) )
 					return;
 
-				requester.Job.SetJob( jobDefinition.Id );
+				requester.Job.HostSetJob( jobDefinition.Id );
 				Notify( GameLocalization.Format( "notify.vote.became_job", "{0} became {1}.", GetPlayerName( requester ), GameLocalization.JobHeader( jobDefinition ) ), true );
 			} ) ?? false;
 #else
@@ -79,7 +79,7 @@ public sealed class VoteManager : Component
 				if ( demoteJob is null )
 					return;
 
-				target.Job.SetJob( demoteJob.Id );
+				target.Job.HostSetJob( demoteJob.Id );
 				Notify( GameLocalization.Format( "notify.vote.demoted_to", "{0} was demoted to {1}.", GetPlayerName( target ), GameLocalization.JobHeader( demoteJob ) ), true );
 			} ) ?? false;
 #else

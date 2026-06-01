@@ -40,6 +40,48 @@
       "Children": []
     },
     {
+      "__guid": "c2662d0d-9fa0-43c2-8dff-b09ba3647de2",
+      "__version": 2,
+      "Flags": 0,
+      "Name": "Network",
+      "Position": "-107.141602,665.325867,89.6166382",
+      "Rotation": "0,0,0,1",
+      "Scale": "1,1,1",
+      "Tags": "",
+      "Enabled": true,
+      "NetworkMode": 2,
+      "NetworkFlags": 0,
+      "NetworkOrphaned": 0,
+      "NetworkTransmit": true,
+      "OwnerTransfer": 1,
+      "Components": [
+        {
+          "__type": "Sandbox.NetworkHelper",
+          "__guid": "a160c4a6-2427-420d-b372-d42de46327bd",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "PlayerPrefab": {
+            "_type": "gameobject",
+            "prefab": "prefabs/player.prefab"
+          },
+          "SpawnPoints": [
+            {
+              "_type": "gameobject",
+              "go": "c2662d0d-9fa0-43c2-8dff-b09ba3647de2"
+            }
+          ],
+          "StartServer": true
+        }
+      ],
+      "Children": []
+    },
+    {
       "__guid": "c88b8f00-30bc-47ec-8627-525252b5ca21",
       "__version": 2,
       "Flags": 0,
@@ -194,14 +236,6 @@
           },
           {
             "Target": {
-              "Type": "GameObject",
-              "IdValue": "bfa99d0c-d2e8-43e1-b19b-faa0754a35dc"
-            },
-            "Property": "Flags",
-            "Value": 0
-          },
-          {
-            "Target": {
               "Type": "Component",
               "IdValue": "d3707d98-1a98-4e1e-899b-3fb4fbbffa03"
             },
@@ -258,13 +292,11 @@
       "__PrefabIdToInstanceId": {
         "3472ab49-201b-4eac-9402-b92a526b1bc1": "bdea3a53-6045-4a85-8a16-605f5453701b",
         "aa9461ff-8a4e-4be4-b3cf-4dc3d9be5c46": "83e4887c-ce16-4195-bd69-124c89d05444",
-        "bfa99d0c-d2e8-43e1-b19b-faa0754a35dc": "9c43c42b-2ef4-4100-9f5e-1dedfe7eecd7",
         "399cf7f2-c2a4-4938-86c2-90a4bf478502": "7ae3dbff-5ebf-4147-b87e-d3195b138f58",
         "464e5c7c-cdb6-48cd-b7ba-26aea23ebbdf": "1cc62fab-98a8-480f-b175-59a73ade9c7c",
         "f3a82ae2-3ba2-479d-89c2-ee6a7319be4c": "4ca70e3d-738f-4e07-8c96-871619b75669",
         "1eb7475f-1c69-4490-90c5-e0137be5e753": "5132ada6-1429-4417-b706-31f7f06aec8f",
         "86db9359-72cd-4fa8-8096-d46fbecd5e57": "477a5fd1-07ba-48f4-8b5e-25ae02d2bcf9",
-        "bdbe0d7a-9361-4c17-a8b3-1053ac18aca3": "8b47abf4-b09b-4d4e-a3f0-b6312ae59f68",
         "d3707d98-1a98-4e1e-899b-3fb4fbbffa03": "600fab8a-fa48-42e6-a9b5-fb2795c5e2ed",
         "937ac176-fa94-456a-8efe-6e35c7e31402": "ac303893-eebc-4ae3-bc7f-cdc978feb898",
         "48ba0cc7-69b6-4f42-bab8-9ffbd9c390a7": "5f731d43-3502-4de9-b189-971b177d204d",

@@ -316,6 +316,8 @@
 			return;
 		}
 
+		Log.Info("rassss");
+
 		RpcRequestJoinJob( normalized );
 	}
 
@@ -420,9 +422,11 @@
 	}
 
 	[Rpc.Host]
-	private static void RpcRequestJoinJob( string jobId )
+	private void RpcRequestJoinJob( string jobId )
 	{
 #if SERVER
+		Log.Info( $"Requesting to join job: {jobId}" );
+
 		var caller = Rpc.Caller;
 		if ( caller is null )
 			return;
@@ -476,7 +480,7 @@
 			return;
 		}
 
-		callerPlayer.Job.SetJob( normalized );
+		callerPlayer.Job.HostSetJob( normalized );
 		NotifyCaller( caller, GameLocalization.Format( "notify.jobs.joined", "You joined: {0}.", GameLocalization.JobHeader( jobDefinition ) ), true );
 #endif
 	}

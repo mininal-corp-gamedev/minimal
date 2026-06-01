@@ -78,7 +78,7 @@
 			if ( !roulette.IsValid() )
 				return "-";
 
-			return GameLocalization.Format( "ui.roulette.next_spin", "Next spin in {0}s", SecondsLeft( roulette.BettingTimeUntil ) );
+			return GameLocalization.Format( "ui.roulette.next_spin", "Next spin in {0}s", roulette.BettingSecondsLeft );
 		}
 	}
 
@@ -114,11 +114,6 @@
 		}
 	}
 
-	private static int SecondsLeft( TimeUntil timer )
-	{
-		return Math.Max( 0, (int)Math.Ceiling( (float)timer ) );
-	}
-
 	protected override int BuildHash()
 	{
 		var roulette = TargetRoulette;
@@ -129,9 +124,9 @@
 		hash.Add( roulette.RoundState );
 		hash.Add( roulette.CurrentDisplayNumber );
 		hash.Add( roulette.FinalNumber );
-		hash.Add( SecondsLeft( roulette.BettingTimeUntil ) );
-		hash.Add( SecondsLeft( roulette.SpinTimeUntil ) );
-		hash.Add( SecondsLeft( roulette.ResultTimeUntil ) );
+		hash.Add( roulette.BettingSecondsLeft );
+		hash.Add( roulette.SpinSecondsLeft );
+		hash.Add( roulette.ResultSecondsLeft );
 		hash.Add( roulette.MinBet );
 		hash.Add( roulette.MaxBet );
 		hash.Add( GameLocalization.CurrentCode );

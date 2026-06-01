@@ -464,7 +464,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 			return;
 		}
 
-		target.Job?.SetJob( normalizedJobId );
+		target.Job?.HostSetJob( normalizedJobId );
 		NotifyCaller( caller, GameLocalization.Format( "notify.admin.set_job", "Set {0} job to {1}.", GetPlayerName( target ), normalizedJobId ), AdminNotifyType.Info );
 	}
 

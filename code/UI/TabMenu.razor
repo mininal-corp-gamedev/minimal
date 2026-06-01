@@ -421,70 +421,6 @@
 		ShopManager.RpcRequestPurchase( normalized );
 	}
 
-	[Rpc.Host]
-	private void RpcRequestJoinJob( string jobId )
-	{
-#if SERVER
-		Log.Info( $"Requesting to join job: {jobId}" );
-
-		var caller = Rpc.Caller;
-		if ( caller is null )
-			return;
-
-		var normalized = (jobId ?? string.Empty).Trim();
-		if ( string.IsNullOrEmpty( normalized ) )
-		{
-			NotifyCaller( caller, GameLocalization.Phrase( "notify.jobs.empty_id", "Job id is empty." ), false );
-			return;
-		}
-
-		var jobDefinition = JobDatabase.Get( normalized );
-		if ( jobDefinition is null )
-		{
-			NotifyCaller( caller, GameLocalization.Phrase( "notify.jobs.not_found", "Job not found." ), false );
-			return;
-		}
-
-		var callerPlayer = FindPlayerBySteamId( caller.SteamId.Value );
-		if ( !callerPlayer.IsValid() || !callerPlayer.Job.IsValid() )
-		{
-			NotifyCaller( caller, GameLocalization.Phrase( "notify.player.not_ready", "Your player is not ready." ), false );
-			return;
-		}
-
-		if ( callerPlayer.IsArrested )
-		{
-			NotifyCaller( caller, GameLocalization.Phrase( "notify.player.arrested", "You are arrested." ), false );
-			return;
-		}
-
-		if ( string.Equals( callerPlayer.Job.JobId, normalized, StringComparison.Ordinal ) )
-		{
-			NotifyCaller( caller, GameLocalization.Phrase( "notify.jobs.already_have", "You already have this job." ), true );
-			return;
-		}
-
-		if ( !VoteManager.CanTakeJob( callerPlayer, jobDefinition, out var reason ) )
-		{
-			NotifyCaller( caller, reason, false );
-			return;
-		}
-
-		if ( jobDefinition.Vote && Connection.All.Count > 2 )
-		{
-			if ( VoteManager.TryStartJobVote( callerPlayer, jobDefinition ) )
-				NotifyCaller( caller, GameLocalization.Format( "notify.vote.started_for", "Vote started for {0}.", GameLocalization.JobHeader( jobDefinition ) ), true );
-			else
-				NotifyCaller( caller, GameLocalization.Phrase( "notify.vote.could_not_start", "Could not start vote." ), false );
-
-			return;
-		}
-
-		callerPlayer.Job.HostSetJob( normalized );
-		NotifyCaller( caller, GameLocalization.Format( "notify.jobs.joined", "You joined: {0}.", GameLocalization.JobHeader( jobDefinition ) ), true );
-#endif
-	}
-
 	private static Player FindPlayerBySteamId( long steamId )
 	{
 		var scene = Game.ActiveScene;
@@ -498,25 +434,6 @@
 		}
 
 		return null;
-	}
-
-#if SERVER
-	private static void NotifyCaller( Connection caller, string text, bool success )
-	{
-		using ( Rpc.FilterInclude( x => x.SteamId.Value == caller.SteamId.Value ) )
-		{
-			RpcReceiveJoinJobResult( text, success );
-		}
-	}
-#endif
-
-	[Rpc.Broadcast]
-	private static void RpcReceiveJoinJobResult( string text, bool success )
-	{
-		if ( success )
-			Notification.Info( text, 3.5f );
-		else
-			Notification.Error( text, 3.5f );
 	}
 
 	protected override void OnStart()

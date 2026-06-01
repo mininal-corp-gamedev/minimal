@@ -1792,210 +1792,33 @@
     {
       "__guid": "5128c058-70f5-450e-88dd-e8936f4d9ff6",
       "__version": 2,
-      "Flags": 0,
-      "Name": "roulette",
-      "Position": "550.786743,102.981934,39.0939713",
-      "Rotation": "0,0,-2.98023224E-08,1",
-      "Scale": "0.0274351686,0.0274351686,0.0274351686",
-      "Tags": "",
-      "Enabled": true,
-      "NetworkMode": 2,
-      "NetworkFlags": 0,
-      "NetworkOrphaned": 0,
-      "NetworkTransmit": true,
-      "OwnerTransfer": 1,
-      "Components": [
-        {
-          "__type": "Sandbox.ModelRenderer",
-          "__guid": "186853c9-76b4-4214-a1ff-3425ae7f5974",
-          "__enabled": true,
-          "Flags": 0,
-          "BodyGroups": 18446744073709551615,
-          "CreateAttachments": false,
-          "LodOverride": null,
-          "MaterialGroup": null,
-          "MaterialOverride": null,
-          "Materials": null,
-          "Model": "library/map/roulette/roulette.vmdl",
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "RenderOptions": {
-            "GameLayer": true,
-            "OverlayLayer": false,
-            "BloomLayer": false,
-            "AfterUILayer": false
-          },
-          "RenderType": "On",
-          "Tint": "1,1,1,1"
-        },
-        {
-          "__type": "Sandbox.BoxCollider",
-          "__guid": "c8fb0cd9-5d2a-4c22-8c54-e734299e13f0",
-          "__enabled": true,
-          "Flags": 0,
-          "Center": "-376.425171,1209.62866,-324.242188",
-          "ColliderFlags": 0,
-          "Elasticity": null,
-          "Friction": null,
-          "IsTrigger": false,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "OnObjectTriggerEnter": null,
-          "OnObjectTriggerExit": null,
-          "OnTriggerEnter": null,
-          "OnTriggerExit": null,
-          "RollingResistance": null,
-          "Scale": "2479.59033,4135.14844,993.883911",
-          "Static": true,
-          "Surface": null,
-          "SurfaceVelocity": "0,0,0"
-        },
-        {
-          "__type": "Roulette",
-          "__guid": "d6103e77-2ef2-4f4c-8890-89154d855156",
-          "__enabled": true,
-          "Flags": 0,
-          "BettingIntervalSeconds": 30,
-          "Circle": {
-            "_type": "gameobject",
-            "go": "8f16aa0e-07d9-4d2f-89c3-d21af4cc3b24"
-          },
-          "CircleSpinYawSpeed": 720,
-          "ColorMultiplier": 2,
-          "ColumnMultiplier": 3,
-          "DozenMultiplier": 3,
-          "EvenOddMultiplier": 2,
-          "LowHighMultiplier": 2,
-          "MaxBet": 1000,
-          "MaxUseDistance": 120,
-          "MinBet": 10,
-          "OnComponentDestroy": null,
-          "OnComponentDisabled": null,
-          "OnComponentEnabled": null,
-          "OnComponentFixedUpdate": null,
-          "OnComponentStart": null,
-          "OnComponentUpdate": null,
-          "ResultHoldSeconds": 1.5,
-          "RouletteWorldText": {
-            "_type": "gameobject",
-            "go": "29c2fa4b-794a-47d8-b287-947c58d40768"
-          },
-          "SpinDurationSeconds": 5,
-          "StraightMultiplier": 36,
-          "ZeroMultiplier": 36
-        }
-      ],
-      "Children": [
-        {
-          "__guid": "8f16aa0e-07d9-4d2f-89c3-d21af4cc3b24",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "circle",
-          "Position": "12.2892704,14.5317726,121.71347",
-          "Rotation": "0,0,0,1",
-          "Scale": "874.789612,874.789612,911.239136",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.ModelRenderer",
-              "__guid": "e45e903b-d957-4697-85d9-0f5d0360af53",
-              "__enabled": true,
-              "Flags": 0,
-              "BodyGroups": 18446744073709551615,
-              "CreateAttachments": false,
-              "LodOverride": null,
-              "MaterialGroup": null,
-              "MaterialOverride": null,
-              "Materials": null,
-              "Model": "library/map/roulette2/mesh.vmdl",
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "RenderOptions": {
-                "GameLayer": true,
-                "OverlayLayer": false,
-                "BloomLayer": false,
-                "AfterUILayer": false
-              },
-              "RenderType": "On",
-              "Tint": "1,1,1,1"
-            }
-          ],
-          "Children": []
-        },
-        {
-          "__guid": "29c2fa4b-794a-47d8-b287-947c58d40768",
-          "__version": 2,
-          "Flags": 0,
-          "Name": "3D World Text",
-          "Position": "0,0,1026.87964",
-          "Rotation": "0,0,0,1",
-          "Scale": "36.4495659,36.4495659,36.4495659",
-          "Tags": "",
-          "Enabled": true,
-          "NetworkMode": 2,
-          "NetworkFlags": 0,
-          "NetworkOrphaned": 0,
-          "NetworkTransmit": true,
-          "OwnerTransfer": 1,
-          "Components": [
-            {
-              "__type": "Sandbox.WorldPanel",
-              "__guid": "322d9a0b-8195-4b43-ace0-5afdf190e561",
-              "__enabled": true,
-              "Flags": 0,
-              "HorizontalAlign": "Center",
-              "InteractionRange": 1000,
-              "LookAtCamera": true,
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null,
-              "PanelSize": "512,512",
-              "RenderOptions": {
-                "GameLayer": true,
-                "OverlayLayer": false,
-                "BloomLayer": false,
-                "AfterUILayer": false
-              },
-              "RenderScale": 1,
-              "VerticalAlign": "Center"
+      "__Prefab": "prefabs/casino/roulette.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "2f4002f7-caec-4744-bf66-bea0487fd985"
             },
-            {
-              "__type": "Sandbox.RouletteWorldText",
-              "__guid": "71587611-7424-4ccd-9acd-0d2561ad6b5e",
-              "__enabled": true,
-              "Flags": 0,
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null
-            }
-          ],
-          "Children": []
-        }
-      ]
+            "Property": "Position",
+            "Value": "550.786743,102.981934,39.0939713"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "2f4002f7-caec-4744-bf66-bea0487fd985": "5128c058-70f5-450e-88dd-e8936f4d9ff6",
+        "1f71b181-80f2-43de-b8fb-195ec842f8b0": "186853c9-76b4-4214-a1ff-3425ae7f5974",
+        "343609a0-45ba-475b-a26b-92a955b78911": "c8fb0cd9-5d2a-4c22-8c54-e734299e13f0",
+        "13c5dd92-f2b8-41fa-8e02-e90a8bec34eb": "d6103e77-2ef2-4f4c-8890-89154d855156",
+        "bbc01e66-383d-49bb-a12a-96d0a66b8038": "8f16aa0e-07d9-4d2f-89c3-d21af4cc3b24",
+        "511b5d1e-b298-4caa-aec0-271e2f26e02e": "e45e903b-d957-4697-85d9-0f5d0360af53",
+        "b1759503-b893-4076-8e7c-b42d8c2c9e6b": "29c2fa4b-794a-47d8-b287-947c58d40768",
+        "ca02df18-366d-44cd-b5e7-7d604cec3104": "322d9a0b-8195-4b43-ace0-5afdf190e561",
+        "35d09f9f-378a-484f-a887-4922d26ff347": "71587611-7424-4ccd-9acd-0d2561ad6b5e"
+      }
     }
   ],
   "SceneProperties": {
@@ -2035,9 +1858,6 @@
   "ResourceVersion": 3,
   "Title": "titan_test",
   "Description": null,
-  "__references": [
-    "defqwop.roulettetable#206404",
-    "defqwop.roulettewheel#206396"
-  ],
+  "__references": [],
   "__version": 3
 }

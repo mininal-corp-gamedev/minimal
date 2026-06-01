@@ -5,8 +5,7 @@ Crosshair
 	left: 0;
 	right: 0;
 	bottom: 0;
-	z-index: 1;
-	background-color: transparent;
+	z-index: 0;
 	pointer-events: none;
 
 	.crosshair
@@ -21,6 +20,5 @@ Crosshair
 		background-color: white;
 		border-radius: 999px;
 		box-shadow: 0 0 2px rgba(0, 0, 0, 0.75);
-		color: #fff;
 	}
 }

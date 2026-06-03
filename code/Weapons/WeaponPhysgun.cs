@@ -1,4 +1,4 @@
-using Sandbox;
+﻿﻿using Sandbox;
 using Sandbox.Citizen;
 using Sandbox.Physics;
 using System;
@@ -1204,6 +1204,13 @@ public sealed class WeaponPhysgun : Weapon
         HostDisableHeldCollisionMode(state);
         state.Player.SetPhysgunBeam(false);
         HostGrabStates.Remove(state.SteamId);
+
+        if (state.Body.IsValid() && !state.Body.IsProxy && TryGetPropCustom(state.Body, out _))
+        {
+            state.Body.Velocity = Vector3.Zero;
+            state.Body.AngularVelocity = Vector3.Zero;
+            state.Body.MotionEnabled = false;
+        }
     }
 
     private static void HostFreezeGrab(Connection caller, GameObject target,
@@ -1264,6 +1271,9 @@ public sealed class WeaponPhysgun : Weapon
         foreach (var rb in bodies)
         {
             if (!rb.IsValid() || rb.IsProxy)
+                continue;
+
+            if (TryGetPropCustom(rb, out _))
                 continue;
 
             rb.MotionEnabled = true;

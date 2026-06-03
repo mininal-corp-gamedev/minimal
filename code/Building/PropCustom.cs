@@ -9,6 +9,22 @@ public sealed class PropCustom : Component, Component.INetworkListener
 	private bool _tintApplied;
 	private Color _lastAppliedTint;
 
+	protected override void OnStart()
+	{
+#if SERVER
+		if ( !Networking.IsHost )
+			return;
+
+		var rb = GameObject.Components.Get<Rigidbody>( FindMode.EverythingInSelfAndDescendants );
+		if ( rb.IsValid() )
+		{
+			rb.Velocity = Vector3.Zero;
+			rb.AngularVelocity = Vector3.Zero;
+			rb.MotionEnabled = false;
+		}
+#endif
+	}
+
 	public void SetOwner( Player owner )
 	{
 #if SERVER

@@ -275,7 +275,6 @@ public sealed partial class Roulette
 		ResultTimeUntil = 0f;
 		CurrentDisplayNumber = Game.Random.Int( 0, 36 );
 		_nextDisplayNumberUpdate = DisplayNumberStepSeconds;
-		RpcClosePanelForSpin( GameObject );
 		BroadcastCurrentPhase();
 	}
 

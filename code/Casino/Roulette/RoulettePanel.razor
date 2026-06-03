@@ -51,7 +51,7 @@
 					}
 				</div>
 
-				<div class="stake-row">
+				<div class="stake-row @(IsBettingLocked ? "betting-locked" : "")">
 					<div class="field-block">
 						<div class="field-label">@GameLocalization.Phrase( "ui.money.amount", "Amount" )</div>
 						<TextEntry class="roulette-input" Value:bind="@AmountInput" Placeholder="@GameLocalization.Phrase( "ui.money.placeholder", "Example: 250" )" onsubmit="@Submit"></TextEntry>
@@ -62,7 +62,7 @@
 					</div>
 				</div>
 
-				<div class="roulette-board">
+				<div class="roulette-board @(IsBettingLocked ? "betting-locked" : "")">
 					<button class="cell zero @(IsSelected( RouletteBetKind.Zero, 0 ) ? "selected" : "")" onclick=@(() => SelectBet( RouletteBetKind.Zero, 0 ))>0</button>
 
 					<div class="numbers-grid">
@@ -103,9 +103,17 @@
 				</div>
 
 				<div class="footer">
-					@if ( CurrentBetCount < Roulette.MaxBetsPerPlayer )
+					@if ( CanPlaceMoreBets )
 					{
 						<button class="place-btn" onclick=@Submit>@GameLocalization.Phrase( "ui.roulette.place_bet", "Place Bet" )</button>
+					}
+					else if ( IsUiSpinning )
+					{
+						<div class="view-only-hint">@GameLocalization.Phrase( "ui.roulette.spinning", "Spinning" )</div>
+					}
+					else if ( CurrentBetCount >= Roulette.MaxBetsPerPlayer )
+					{
+						<div class="max-bets-hint">@GameLocalization.Phrase( "notify.roulette.max_bets", "Maximum roulette bets reached." )</div>
 					}
 					@if ( !string.IsNullOrWhiteSpace( ErrorText ) )
 					{
@@ -138,7 +146,12 @@
 
 	private int SafeMinBet => TargetRoulette.IsValid() ? Math.Max( 1, TargetRoulette.MinBet ) : 1;
 	private int SafeMaxBet => TargetRoulette.IsValid() ? Math.Max( SafeMinBet, TargetRoulette.MaxBet ) : 1;
-	private int CurrentBetCount => TargetRoulette.IsValid() ? TargetRoulette.LocalBetCount : 0;
+	private int CurrentBetCount => IsTargetRouletteAlive ? TargetRoulette.LocalBetCount : 0;
+	private bool IsTargetRouletteAlive => TargetRoulette.IsValid() && TargetRoulette.GameObject.IsValid();
+	private bool IsUiSpinning => IsTargetRouletteAlive && TargetRoulette.IsUiSpinning;
+	private bool IsUiBetting => IsTargetRouletteAlive && TargetRoulette.IsUiBetting;
+	private bool CanPlaceMoreBets => IsUiBetting && CurrentBetCount < Roulette.MaxBetsPerPlayer;
+	private bool IsBettingLocked => !CanPlaceMoreBets;
 	private string SelectedLabel => TargetRoulette.IsValid()
 		? TargetRoulette.GetBetLabel( (int)SelectedKind, SelectedTarget )
 		: GameLocalization.Phrase( "ui.roulette.selection", "Selection" );
@@ -220,18 +233,26 @@
 			return false;
 		}
 
-		if ( !roulette.IsValid() )
+		if ( !IsRouletteAlive( roulette ) )
+			return false;
+
+		if ( Roulette.HasLocalActiveRouletteOtherThan( roulette ) )
+		{
+			reason = GameLocalization.Phrase( "notify.roulette.other_active", "You already have bets on another roulette." );
+			return false;
+		}
+
+		return true;
+	}
+
+	private static bool ValidatePlaceBet( Roulette roulette, out string reason )
+	{
+		if ( !ValidateOpen( roulette, out reason ) )
 			return false;
 
 		if ( roulette.IsUiSpinning || roulette.IsUiShowingResult )
 		{
 			reason = GameLocalization.Phrase( "notify.roulette.spinning", "Roulette is spinning." );
-			return false;
-		}
-
-		if ( Roulette.HasLocalActiveRouletteOtherThan( roulette ) )
-		{
-			reason = GameLocalization.Phrase( "notify.roulette.other_active", "You already have bets on another roulette." );
 			return false;
 		}
 
@@ -273,6 +294,12 @@
 
 	private void SelectBet( RouletteBetKind kind, int target )
 	{
+		if ( TryCloseIfTargetMissing() )
+			return;
+
+		if ( !CanPlaceMoreBets )
+			return;
+
 		SelectedKind = kind;
 		SelectedTarget = target;
 		ErrorText = "";
@@ -292,15 +319,12 @@
 	{
 		FocusSinkRef?.Focus();
 
-		if ( !TargetRoulette.IsValid() )
-		{
-			Close();
+		if ( TryCloseIfTargetMissing() )
 			return;
-		}
 
-		if ( !ValidateOpen( TargetRoulette, out var openReason ) )
+		if ( !ValidatePlaceBet( TargetRoulette, out var placeReason ) )
 		{
-			SetError( openReason );
+			SetError( placeReason );
 			return;
 		}
 
@@ -358,11 +382,30 @@
 
 	protected override void OnUpdate()
 	{
-		if ( IsOpen && ( !TargetRoulette.IsValid() || TargetRoulette.IsUiSpinning || TargetRoulette.IsUiShowingResult ) )
-			Close();
+		if ( IsOpen )
+		{
+			if ( !IsTargetRouletteAlive )
+				Close();
+			else if ( TargetRoulette.IsUiShowingResult )
+				Close();
+		}
 
 		if ( IsOpen )
 			UiModalManager.UpdateMouseVisibility();
+	}
+
+	private bool TryCloseIfTargetMissing()
+	{
+		if ( IsTargetRouletteAlive )
+			return false;
+
+		Close();
+		return true;
+	}
+
+	private static bool IsRouletteAlive( Roulette roulette )
+	{
+		return roulette.IsValid() && roulette.GameObject.IsValid();
 	}
 
 	protected override void OnStart()
@@ -415,6 +458,10 @@
 		hash.Add( TargetRoulette );
 		hash.Add( TargetRoulette?.RoundState ?? -1 );
 		hash.Add( TargetRoulette?.LocalBetCount ?? 0 );
+		hash.Add( CanPlaceMoreBets );
+		hash.Add( IsBettingLocked );
+		hash.Add( IsUiSpinning );
+		hash.Add( IsUiBetting );
 		hash.Add( TargetRoulette?.GetLocalBetTotal() ?? 0 );
 		hash.Add( TargetRoulette.IsValid() ? TargetRoulette.ClientPhaseRoundState : -1 );
 		hash.Add( TargetRoulette.IsValid() ? TargetRoulette.GetPhaseSecondsLeft() : 0 );

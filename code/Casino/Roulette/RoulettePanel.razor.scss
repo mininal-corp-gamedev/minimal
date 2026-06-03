@@ -153,6 +153,12 @@ RoulettePanel {
 		font-weight: 800;
 	}
 
+	.stake-row.betting-locked,
+	.roulette-board.betting-locked {
+		opacity: 0.55;
+		pointer-events: none;
+	}
+
 	.roulette-board {
 		width: 100%;
 		flex-direction: column;
@@ -261,6 +267,17 @@ RoulettePanel {
 
 	.place-btn:hover {
 		background-color: rgba(255, 67, 108, 0.32);
+	}
+
+	.max-bets-hint,
+	.view-only-hint {
+		color: rgba(255, 255, 255, 0.55);
+		font-size: 13px;
+		font-weight: 700;
+	}
+
+	.view-only-hint {
+		color: #8df57f;
 	}
 
 	.error-text {

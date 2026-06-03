@@ -89,13 +89,6 @@ public sealed partial class Roulette : Component, Component.IPressable
 		if ( player.IsProxy )
 			return false;
 
-		if ( IsUiSpinning || IsUiShowingResult )
-		{
-			RoulettePanel.CloseForRoulette( this );
-			Notification.Error( GameLocalization.Phrase( "notify.roulette.spinning", "Roulette is spinning." ), 3.5f );
-			return false;
-		}
-
 		RoulettePanel.Open( this );
 		return true;
 	}
@@ -224,17 +217,6 @@ public sealed partial class Roulette : Component, Component.IPressable
 
 		Notification.Error( text, 3.5f );
 		RoulettePanel.NotifyBetRejected( this, text );
-	}
-
-	[Rpc.Broadcast]
-	private void RpcClosePanelForSpin( GameObject rouletteGo )
-	{
-		if ( !rouletteGo.IsValid() )
-			return;
-
-		var roulette = rouletteGo.Components.Get<Roulette>();
-		if ( roulette.IsValid() )
-			RoulettePanel.CloseForRoulette( roulette );
 	}
 
 	[Rpc.Broadcast]

@@ -23,13 +23,14 @@ public static class ItemDatabase
     public static bool TryGet(string id, out ItemDefinition definition)
     {
         EnsureLoaded();
-        if (string.IsNullOrWhiteSpace(id))
+        var normalized = (id ?? string.Empty).Trim();
+        if (string.IsNullOrWhiteSpace(normalized))
         {
             definition = null;
             return false;
         }
 
-        return _cache!.TryGetValue(id, out definition);
+        return _cache!.TryGetValue(normalized, out definition);
     }
 
     private static void EnsureLoaded()
@@ -37,8 +38,24 @@ public static class ItemDatabase
         if (_cache != null)
             return;
 
-        _cache = ResourceLibrary
-            .GetAll<ItemDefinition>()
-            .ToDictionary(x => x.Id, x => x);
+        _cache = new Dictionary<string, ItemDefinition>();
+
+        foreach (var item in ResourceLibrary.GetAll<ItemDefinition>())
+        {
+            var id = (item.Id ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                Log.Warning($"ItemDatabase: item '{item.Header}' has empty Id.");
+                continue;
+            }
+
+            if (_cache.TryGetValue(id, out var existing))
+            {
+                Log.Warning($"ItemDatabase: duplicate item id '{id}' ({existing.Header} vs {item.Header}).");
+                continue;
+            }
+
+            _cache[id] = item;
+        }
     }
 }

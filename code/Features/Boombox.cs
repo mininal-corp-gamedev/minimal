@@ -40,6 +40,8 @@ public sealed partial class Boombox : Component, Component.IPressable, ICustomDa
 
 	private MusicPlayer _radioPlayer;
 
+	private static bool CanPlayAudioLocally() => Connection.Local is not null && !Connection.Local.IsHost;
+
 	protected override void OnStart()
 	{
 #if SERVER
@@ -48,7 +50,6 @@ public sealed partial class Boombox : Component, Component.IPressable, ICustomDa
 #endif
 
 		_ = EnsureCloudModelLoadedAsync();
-		UpdatePlaybackState();
 	}
 
 	protected override void OnUpdate()
@@ -119,27 +120,31 @@ public sealed partial class Boombox : Component, Component.IPressable, ICustomDa
 #endif
 	}
 
-	private void OnRadioEnabledChanged( bool _, bool _2 )
+	[Rpc.Broadcast( NetFlags.HostOnly )]
+	private void RpcSyncPlaybackState( bool isEnabled )
 	{
-		UpdatePlaybackState();
-	}
-
-	private void UpdatePlaybackState()
-	{
-		if ( !Enabled )
-		{
-			StopRadioPlayback();
+		if ( !CanPlayAudioLocally() )
 			return;
-		}
 
-		if ( IsRadioEnabled )
+		if ( isEnabled )
 			StartRadioPlayback();
 		else
 			StopRadioPlayback();
 	}
 
+	private void OnRadioEnabledChanged( bool _, bool _2 )
+	{
+		// Playback is intentionally driven by explicit host RPC events so the
+		// dedicated server never needs to touch URL audio playback itself.
+		// We also do not start URL playback on a listen-host client because that
+		// shares a process with host authority and has been unstable in practice.
+	}
+
 	private void StartRadioPlayback()
 	{
+		if ( !CanPlayAudioLocally() )
+			return;
+
 		if ( _radioPlayer is not null )
 		{
 			UpdateRadioTransform();
@@ -171,6 +176,9 @@ public sealed partial class Boombox : Component, Component.IPressable, ICustomDa
 
 	private void UpdateRadioTransform()
 	{
+		if ( !CanPlayAudioLocally() )
+			return;
+
 		if ( _radioPlayer is null )
 			return;
 

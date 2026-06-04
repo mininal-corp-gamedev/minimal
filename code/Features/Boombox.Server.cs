@@ -3,15 +3,6 @@ using System;
 
 public sealed partial class Boombox
 {
-	[Rpc.Broadcast( NetFlags.HostOnly )]
-	private void RpcSyncPlaybackState( bool isEnabled )
-	{
-		if ( isEnabled )
-			StartRadioPlayback();
-		else
-			StopRadioPlayback();
-	}
-
 	public static void HostSyncAllToConnection( Connection connection )
 	{
 #if SERVER
@@ -35,7 +26,7 @@ public sealed partial class Boombox
 	private void HostSyncPlaybackToConnection( Connection connection )
 	{
 #if SERVER
-		if ( !Networking.IsHost || connection is null )
+		if ( !Networking.IsHost || connection is null || connection.IsHost )
 			return;
 
 		using ( Rpc.FilterInclude( c => c.SteamId.Value == connection.SteamId.Value ) )
@@ -52,6 +43,10 @@ public sealed partial class Boombox
 			return;
 
 		IsRadioEnabled = !IsRadioEnabled;
+		using ( Rpc.FilterExclude( c => c.IsHost ) )
+		{
+			RpcSyncPlaybackState( IsRadioEnabled );
+		}
 #endif
 	}
 
@@ -67,6 +62,10 @@ public sealed partial class Boombox
 			return;
 
 		IsRadioEnabled = false;
+		using ( Rpc.FilterExclude( c => c.IsHost ) )
+		{
+			RpcSyncPlaybackState( false );
+		}
 		GameObject.Destroy();
 #endif
 	}

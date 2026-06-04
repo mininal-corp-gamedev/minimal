@@ -109,7 +109,9 @@
 		new( "goto", "Goto", "Teleport yourself to an online player.", 1, true, false, false, false, "", "" ),
 		new( "tp", "TP", "Teleport an online player to you.", 1, true, false, false, false, "", "" ),
 		new( "return", "Return", "Return a teleported player to the saved position.", 1, true, false, false, false, "", "" ),
-		new( "giverank", "Give Rank", "Give an admin rank to a SteamId.", 3, false, true, true, false, "Rank", "0-3" )
+		new( "giverank", "Give Rank", "Give an admin rank to a SteamId.", 3, false, true, true, false, "Rank", "0-3" ),
+		new( "inventory", "Inventory", "Print an online player's inventory to the console.", 2, true, false, false, false, "", "" ),
+		new( "clearinventory", "Clear Inventory", "Clear an online player's inventory except default items.", 2, true, false, false, false, "", "" )
 	};
 
 	private bool IsOpen { get; set; }
@@ -285,6 +287,12 @@
 			case "giverank":
 				if ( int.TryParse( ValueInput, out var rank ) ) AdminManager.RpcRequestGiveRank( steamId, rank );
 				else Notification.Error( GameLocalization.Phrase( "notify.admin.invalid_rank", "Invalid rank value." ), 3f );
+				break;
+			case "inventory":
+				AdminManager.RpcRequestPrintInventory( steamId );
+				break;
+			case "clearinventory":
+				AdminManager.RpcRequestClearInventory( steamId );
 				break;
 		}
 	}

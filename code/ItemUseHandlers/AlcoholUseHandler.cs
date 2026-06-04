@@ -51,8 +51,8 @@ public readonly struct AlcoholDrinkProfile
     {
         return drinkType switch
         {
-            AlcoholDrinkType.Wine => new AlcoholDrinkProfile( 0.42f, 25f, 18f, 1.35f ),
-            _ => new AlcoholDrinkProfile( 0.24f, 15f, 10f, 0.75f )
+            AlcoholDrinkType.Wine => new AlcoholDrinkProfile( 0.42f, 25f, 0.18f, 1.35f ),
+            _ => new AlcoholDrinkProfile( 0.24f, 15f, 0.08f, 0.75f )
         };
     }
 }

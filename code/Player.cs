@@ -161,6 +161,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
     private const float DiceOfferSendCooldownSeconds = 1f;
     private const float DiceOfferReceiveCooldownSeconds = 10f;
     private static readonly string[] DefaultInventoryItemIds = { "hands", "physgun", "toolgun", "keys" };
+    public static IReadOnlyList<string> DefaultInventoryItemIdsReadonly => DefaultInventoryItemIds;
 
     // Host-only gate. Until the save is loaded on the host, Money writes
     // must not overwrite the file on disk.
@@ -2223,10 +2224,11 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
             return;
         }
 
-        if ( player._saveInitialized ) return;
+		if ( player._saveInitialized ) return;
 
         player.HostInitSave();
         Roulette.HostSyncAllToConnection( caller );
+        Boombox.HostSyncAllToConnection( caller );
 #endif
     }
 
@@ -2396,6 +2398,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 #if SERVER
         if (!Networking.IsHost) return;
         if (!_inventorySaveInitialized) return;
+        if (Inventory is null) return;
 
         var steamId = GetOwnerSteamId();
         if (steamId == 0L) return;
@@ -2409,6 +2412,42 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         {
             Log.Warning($"[InventorySave] Save failed for {steamId}: {ex.Message}");
         }
+#endif
+    }
+
+    public int HostClearInventoryExceptDefaultItems()
+    {
+#if SERVER
+        if (!Networking.IsHost || Inventory is null)
+            return 0;
+
+        var removed = 0;
+        var defaults = new HashSet<string>(DefaultInventoryItemIds, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var slot in Inventory.Slots)
+        {
+            var item = slot.Item;
+            if (item is null)
+                continue;
+            if (defaults.Contains(item.Id))
+                continue;
+
+            removed += item.Count;
+            slot.Clear();
+        }
+
+        foreach (var itemId in DefaultInventoryItemIds)
+        {
+            if (Inventory.GetTotalCount(itemId) == 0)
+                Inventory.AddItem(Item.Create(itemId, 1, canDrop: false, isJobItem: false, canSave: true));
+        }
+
+        ValidateCurrentWeaponInventoryState();
+        SavePlayerInventory();
+        SendInventorySnapshotToOwner();
+        return removed;
+#else
+        return 0;
 #endif
     }
 

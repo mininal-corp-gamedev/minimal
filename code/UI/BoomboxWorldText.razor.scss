@@ -1,0 +1,42 @@
+BoomboxWorldText {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	justify-content: center;
+	align-items: center;
+	font-family: Poppins;
+
+	.boombox-world {
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+	}
+
+	.owner {
+		font-family: Poppins;
+		font-size: 34px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		text-align: center;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.65);
+	}
+
+	.status {
+		font-family: Poppins;
+		font-size: 18px;
+		font-weight: 700;
+		text-align: center;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.65);
+
+		&.on {
+			color: rgba(178, 255, 204, 0.92);
+		}
+
+		&.off {
+			color: rgba(255, 110, 110, 0.92);
+		}
+	}
+}

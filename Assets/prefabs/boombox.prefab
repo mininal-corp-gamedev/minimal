@@ -16,8 +16,61 @@
     "OwnerTransfer": 1,
     "Components": [
       {
+        "__type": "Boombox",
+        "__guid": "f9b5d0ad-4f36-4a7a-99c9-dd20d201671b",
+        "__enabled": true,
+        "Flags": 0,
+        "Health": 100,
+        "MaxHealth": 100,
+        "MaxUseDistance": 100,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "RadioDistance": 600,
+        "RadioUrl": "https://radio-srv1.11one.ru/record192k.mp3",
+        "RadioVolume": 1
+      },
+      {
+        "__type": "Sandbox.Rigidbody",
+        "__guid": "65b3289f-52f5-422e-a318-054e9d67382b",
+        "__enabled": true,
+        "Flags": 0,
+        "AngularDamping": 0,
+        "EnableImpactDamage": true,
+        "EnhancedCcd": false,
+        "Gravity": true,
+        "GravityScale": 1,
+        "ImpactDamage": 0,
+        "LinearDamping": 0,
+        "Locking": {
+          "X": false,
+          "Y": false,
+          "Z": false,
+          "Pitch": false,
+          "Yaw": false,
+          "Roll": false
+        },
+        "MassCenterOverride": "0,0,0",
+        "MassOverride": 0,
+        "MinImpactDamageSpeed": 500,
+        "MotionEnabled": true,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "OverrideMassCenter": false,
+        "RigidbodyFlags": 0,
+        "SleepThreshold": 2,
+        "StartAsleep": false
+      },
+      {
         "__type": "Sandbox.ModelRenderer",
-        "__guid": "bfd8bf33-4c43-4ac3-a3bf-beed3748a424",
+        "__guid": "e71a81b2-73e6-4fcc-ac73-28dac485f11e",
         "__enabled": true,
         "Flags": 0,
         "BodyGroups": 18446744073709551615,
@@ -26,7 +79,7 @@
         "MaterialGroup": null,
         "MaterialOverride": null,
         "Materials": null,
-        "Model": "models/props_urban/boombox.vmdl",
+        "Model": "pr/gta5_prop_mp3_dock.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -44,14 +97,14 @@
       },
       {
         "__type": "Sandbox.ModelCollider",
-        "__guid": "3ac3b139-bbf7-46ff-8b37-72ef1518d679",
+        "__guid": "27e2f7b0-f156-4294-b7f3-bcf713043528",
         "__enabled": true,
         "Flags": 0,
         "ColliderFlags": 0,
         "Elasticity": null,
         "Friction": null,
         "IsTrigger": false,
-        "Model": "models/props_urban/boombox.vmdl",
+        "Model": "pr/gta5_prop_mp3_dock.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -66,21 +119,86 @@
         "Static": false,
         "Surface": null,
         "SurfaceVelocity": "0,0,0"
-      },
-      {
-        "__type": "Boombox",
-        "__guid": "f9b5d0ad-4f36-4a7a-99c9-dd20d201671b",
-        "__enabled": true,
-        "Flags": 0,
-        "OnComponentDestroy": null,
-        "OnComponentDisabled": null,
-        "OnComponentEnabled": null,
-        "OnComponentFixedUpdate": null,
-        "OnComponentStart": null,
-        "OnComponentUpdate": null
       }
     ],
-    "Children": []
+    "Children": [
+      {
+        "__guid": "1820bc40-6969-4101-a525-9dd70f470319",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "3D World Text",
+        "Position": "0,0,12.5356359",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Sandbox.WorldPanel",
+            "__guid": "7b1e6c36-4dbe-4dd3-a18f-d14f2dede54f",
+            "__enabled": true,
+            "Flags": 0,
+            "HorizontalAlign": "Center",
+            "InteractionRange": 1000,
+            "LookAtCamera": true,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null,
+            "PanelSize": "512,200",
+            "RenderOptions": {
+              "GameLayer": true,
+              "OverlayLayer": false,
+              "BloomLayer": false,
+              "AfterUILayer": false
+            },
+            "RenderScale": 1,
+            "VerticalAlign": "Center"
+          },
+          {
+            "__type": "Sandbox.BoomboxWorldText",
+            "__guid": "e3cb1ddd-2929-4ec0-8a96-eeaa177f26ec",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          }
+        ],
+        "Children": []
+      }
+    ],
+    "__properties": {
+      "NetworkInterpolation": true,
+      "TimeScale": 1,
+      "WantsSystemScene": true,
+      "Metadata": {},
+      "NavMesh": {
+        "Enabled": false,
+        "IncludeStaticBodies": true,
+        "IncludeKeyframedBodies": true,
+        "EditorAutoUpdate": false,
+        "AgentHeight": 64,
+        "AgentRadius": 16,
+        "AgentStepSize": 18,
+        "AgentMaxSlope": 40,
+        "ExcludedBodies": "",
+        "IncludedBodies": "",
+        "DeferGeneration": false,
+        "CustomBounds": false
+      }
+    },
+    "__variables": []
   },
   "ResourceVersion": 2,
   "ShowInMenu": false,
@@ -88,7 +206,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "polyhaven.boombox#133261"
+    "gtavteam.gta5propmp3dock#97365"
   ],
   "__version": 2
 }

@@ -1,0 +1,47 @@
+@using Sandbox
+@using Sandbox.UI
+@using System
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	<div class="boombox-world">
+		<div class="owner">@OwnerTitle</div>
+		<div class="status @(IsRadioEnabled ? "on" : "off")">@StatusText</div>
+	</div>
+</root>
+
+@code
+{
+	private Boombox TargetBoombox => Components.Get<Boombox>( FindMode.EverythingInSelfAndAncestors );
+
+	private ShopObject ParentShopObject => GameObject?.Parent?.Components.Get<ShopObject>( FindMode.EverythingInSelfAndAncestors );
+
+	private bool IsRadioEnabled => TargetBoombox?.IsRadioEnabled ?? false;
+
+	private string OwnerTitle
+	{
+		get
+		{
+			var owner = ParentShopObject?.PlayerOwner;
+			if ( owner.IsValid() )
+			{
+				var name = owner.GameObject.Network.Owner?.DisplayName;
+				if ( !string.IsNullOrWhiteSpace( name ) )
+					return name;
+			}
+
+			return "Boombox";
+		}
+	}
+
+	private string StatusText => IsRadioEnabled ? "Radio On" : "Radio Off";
+
+	protected override int BuildHash()
+	{
+		return HashCode.Combine(
+			OwnerTitle,
+			IsRadioEnabled,
+			GameLocalization.CurrentCode );
+	}
+}

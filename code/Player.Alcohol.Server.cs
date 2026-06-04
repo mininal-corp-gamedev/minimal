@@ -8,7 +8,7 @@ public sealed partial class Player
     {
         if ( !Networking.IsHost )
             return false;
-        if ( !IsValid() || item is null )
+        if ( item is null )
             return false;
 
         var owner = GameObject.Network.Owner;

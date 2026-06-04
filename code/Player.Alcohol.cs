@@ -4,6 +4,7 @@ using System;
 public sealed partial class Player
 {
     private const float AlcoholShakeFrequency = 18f;
+    private const float AlcoholMaxPixelateScale = 0.35f;
 
     [Property, Category( "Alcohol" )] public float MaxAlcoholBlood { get; set; } = 1f;
     [Property, Category( "Alcohol" )] public float AlcoholBloodDecayPerSecond { get; set; } = 0.025f;
@@ -61,8 +62,9 @@ public sealed partial class Player
         var pixelate = GetAlcoholPixelate();
         if ( pixelate.IsValid() )
         {
-            pixelate.Enabled = true;
-            pixelate.Scale = MathF.Max( 1f, _alcoholEffectPixelateScale );
+            var scale = Math.Clamp( _alcoholEffectPixelateScale, 0f, AlcoholMaxPixelateScale );
+            pixelate.Enabled = scale > 0.001f;
+            pixelate.Scale = scale;
         }
     }
 
@@ -77,7 +79,7 @@ public sealed partial class Player
 
         if ( _alcoholPixelate.IsValid() )
         {
-            _alcoholPixelate.Scale = 1f;
+            _alcoholPixelate.Scale = 0f;
             _alcoholPixelate.Enabled = false;
         }
     }

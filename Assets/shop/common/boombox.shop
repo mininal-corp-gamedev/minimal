@@ -6,8 +6,8 @@
   "ItemDefinition": null,
   "Price": 2000,
   "Max": 1,
-  "IconPath": "icons/items/default.vtex",
-  "Model": null,
+  "IconPath": null,
+  "Model": "pr/gta5_prop_mp3_dock.vmdl",
   "SpawnPrefab": {
     "_type": "gameobject",
     "prefab": "prefabs/boombox.prefab"
@@ -16,6 +16,8 @@
   "HasRemoveAfterChangeJob": false,
   "JobsAllow": [],
   "HasPostPurchased": true,
-  "__references": [],
+  "__references": [
+    "gtavteam.gta5propmp3dock#97365"
+  ],
   "__version": 0
 }

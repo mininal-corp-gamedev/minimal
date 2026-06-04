@@ -2,6 +2,7 @@ using Sandbox;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 
 public sealed class AdminManager : Component, Component.INetworkListener
 {
@@ -161,6 +162,20 @@ public sealed class AdminManager : Component, Component.INetworkListener
 #endif
 	}
 
+	[Rpc.Host] public static void RpcRequestPrintInventory( long steamId )
+	{
+#if SERVER
+		PrintInventory( Rpc.Caller, steamId );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestClearInventory( long steamId )
+	{
+#if SERVER
+		ClearInventory( Rpc.Caller, steamId );
+#endif
+	}
+
 	[ConCmd( "adm", ConVarFlags.Server )]
 	public static void AdmCommand( Connection caller, string command = "", string steamIdText = "", string value = "", string extra1 = "", string extra2 = "", string extra3 = "", string extra4 = "", string extra5 = "", string extra6 = "", string extra7 = "", string extra8 = "" )
 	{
@@ -216,8 +231,16 @@ public sealed class AdminManager : Component, Component.INetworkListener
 				if ( int.TryParse( value, out var rank ) ) GiveRank( caller, steamId, rank );
 				else NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.invalid_rank", "Invalid rank value." ), AdminNotifyType.Error );
 				break;
+			case "inv":
+			case "inventory":
+				PrintInventory( caller, steamId );
+				break;
+			case "clearinv":
+			case "clearinventory":
+				ClearInventory( caller, steamId );
+				break;
 			default:
-				NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.usage", "Usage: adm <kick|ban|unban|spawn|setmoney|sethp|kill|setjob|selldoor|goto|tp|return|giverank> ..." ), AdminNotifyType.Warn );
+				NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.usage", "Usage: adm <kick|ban|unban|spawn|setmoney|sethp|kill|setjob|selldoor|goto|tp|return|giverank|inv|clearinv> ..." ), AdminNotifyType.Warn );
 				break;
 		}
 #endif
@@ -263,6 +286,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 			player.AdminRank = LoadRank( channel.SteamId.Value ).Rank;
 
 		Roulette.HostSyncAllToConnection( channel );
+		Boombox.HostSyncAllToConnection( channel );
 #endif
 	}
 
@@ -645,6 +669,44 @@ public sealed class AdminManager : Component, Component.INetworkListener
 		NotifyCaller( caller, GameLocalization.Format( "notify.admin.set_rank", "Set {0} rank to {1}.", steamId, GetRankName( clampedRank ) ), AdminNotifyType.Info );
 	}
 
+	private static void PrintInventory( Connection caller, long steamId )
+	{
+		if ( !HasAccess( caller, AdministratorRank, out var error ) )
+		{
+			NotifyCaller( caller, error, AdminNotifyType.Error );
+			return;
+		}
+
+		var target = FindPlayerBySteamId( steamId );
+		if ( !target.IsValid() )
+		{
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_offline", "Player is not online." ), AdminNotifyType.Error );
+			return;
+		}
+
+		PrintInventoryLog( caller, BuildInventoryLog( target ) );
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.inventory_printed", "Printed {0}'s inventory to console.", GetPlayerName( target ) ), AdminNotifyType.Info );
+	}
+
+	private static void ClearInventory( Connection caller, long steamId )
+	{
+		if ( !HasAccess( caller, AdministratorRank, out var error ) )
+		{
+			NotifyCaller( caller, error, AdminNotifyType.Error );
+			return;
+		}
+
+		var target = FindPlayerBySteamId( steamId );
+		if ( !target.IsValid() )
+		{
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_offline", "Player is not online." ), AdminNotifyType.Error );
+			return;
+		}
+
+		var removed = target.HostClearInventoryExceptDefaultItems();
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.inventory_cleared", "Cleared {0}'s inventory. Removed {1} item(s).", GetPlayerName( target ), removed ), AdminNotifyType.Info );
+	}
+
 	private static bool HasAccess( Connection caller, int requiredRank, out string error )
 	{
 		error = null;
@@ -727,6 +789,56 @@ public sealed class AdminManager : Component, Component.INetworkListener
 	private static string GetPlayerName( Player player )
 	{
 		return player.GameObject.Network.Owner?.DisplayName ?? GameLocalization.Phrase( "common.player", "Player" );
+	}
+
+	private static string BuildInventoryLog( Player player )
+	{
+		var builder = new StringBuilder();
+		var owner = player.GameObject.Network.Owner;
+		builder.AppendLine( $"[Admin] Inventory for {GetPlayerName( player )} ({owner?.SteamId.Value ?? 0}):" );
+
+		if ( player.Inventory is null || player.Inventory.Slots.Count == 0 )
+		{
+			builder.AppendLine( "  <no slots>" );
+			return builder.ToString();
+		}
+
+		var hasItems = false;
+		for ( var i = 0; i < player.Inventory.Slots.Count; i++ )
+		{
+			var slot = player.Inventory.Slots[i];
+			var item = slot.Item;
+			if ( item is null )
+			{
+				builder.AppendLine( $"  [{i}] <empty>" );
+				continue;
+			}
+
+			hasItems = true;
+			var header = item.Definition is null ? item.Id : GameLocalization.ItemHeader( item.Definition );
+			builder.AppendLine( $"  [{i}] {item.Id} ({header}) x{item.Count}" );
+		}
+
+		if ( !hasItems )
+			builder.AppendLine( "  <empty inventory>" );
+
+		var defaultItems = string.Join( ", ", Player.DefaultInventoryItemIdsReadonly );
+		builder.AppendLine( $"  Default items: {defaultItems}" );
+		return builder.ToString();
+	}
+
+	private static void PrintInventoryLog( Connection caller, string text )
+	{
+		if ( caller is null )
+		{
+			Log.Info( text );
+			return;
+		}
+
+		using ( Rpc.FilterInclude( c => c.SteamId.Value == caller.SteamId.Value ) )
+		{
+			RpcPrintInventoryLog( text );
+		}
 	}
 
 	private static bool TryParseSteamId( string text, out long steamId )
@@ -889,6 +1001,12 @@ public sealed class AdminManager : Component, Component.INetworkListener
 				Notification.Info( text, 3.5f );
 				break;
 		}
+	}
+
+	[Rpc.Broadcast]
+	private static void RpcPrintInventoryLog( string text )
+	{
+		Log.Info( text );
 	}
 
 	[Rpc.Broadcast]

@@ -18,17 +18,28 @@ public sealed class AmmoUseHandler : IItemUseHandler
     public bool Use(Item item, Player caller)
     {
 #if SERVER
+        if ( Networking.IsHost )
+        {
+            if ( !caller.HostTryUseAmmo( item, _weaponType ) )
+                return false;
+
+            // On a listen host the local weapon instance may exist on the host too.
+            var weapon = GetWeapon();
+            if ( weapon.IsValid() )
+                weapon.TotalReserveAmmo += weapon.ClipSize * 2;
+
+            return true;
+        }
+#else
         var weapon = GetWeapon();
-        if (weapon.IsValid())
-            weapon.TotalReserveAmmo += weapon.ClipSize * 2;
-        else if (!Networking.IsHost)
+        if ( !weapon.IsValid() )
             return false;
 
-        item.Remove(1);
+        weapon.TotalReserveAmmo += weapon.ClipSize * 2;
         return true;
-#else
-        return false;
 #endif
+
+        return false;
     }
 
     private Weapon GetWeapon()

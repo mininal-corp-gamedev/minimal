@@ -8,6 +8,7 @@
 	<div class="boombox-world">
 		<div class="owner">@OwnerTitle</div>
 		<div class="status @(IsRadioEnabled ? "on" : "off")">@StatusText</div>
+		<div class="health">@HealthText</div>
 	</div>
 </root>
 
@@ -18,6 +19,10 @@
 	private ShopObject ParentShopObject => GameObject?.Parent?.Components.Get<ShopObject>( FindMode.EverythingInSelfAndAncestors );
 
 	private bool IsRadioEnabled => TargetBoombox?.IsRadioEnabled ?? false;
+
+	private float Health => MathF.Max( 0f, TargetBoombox?.Health ?? 0f );
+
+	private float MaxHealth => MathF.Max( 1f, TargetBoombox?.MaxHealth ?? 1f );
 
 	private string OwnerTitle
 	{
@@ -37,11 +42,15 @@
 
 	private string StatusText => IsRadioEnabled ? "Radio On" : "Radio Off";
 
+	private string HealthText => $"HP {MathF.Ceiling( Health )} / {MathF.Ceiling( MaxHealth )}";
+
 	protected override int BuildHash()
 	{
 		return HashCode.Combine(
 			OwnerTitle,
 			IsRadioEnabled,
+			Health,
+			MaxHealth,
 			GameLocalization.CurrentCode );
 	}
 }

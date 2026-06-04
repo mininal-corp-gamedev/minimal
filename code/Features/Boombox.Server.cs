@@ -71,9 +71,8 @@ public sealed partial class Boombox
 #endif
 	}
 
-	private bool TryGetCallerBoomboxContext( GameObject boomboxObject, out Boombox boombox, out Player player, float extraDistance )
+	private bool TryGetCallerPlayer( out Player player, float extraDistance )
 	{
-		boombox = null;
 		player = null;
 
 #if SERVER
@@ -84,18 +83,11 @@ public sealed partial class Boombox
 		if ( caller is null )
 			return false;
 
-		if ( boomboxObject != GameObject )
-			return false;
-
-		boombox = boomboxObject.Components.Get<Boombox>();
-		if ( !boombox.IsValid() )
-			return false;
-
 		player = Player.FindPlayerBySteamId( caller.SteamId.Value );
 		if ( !player.IsValid() || player.GameObject.Network.Owner != caller )
 			return false;
 
-		if ( Vector3.DistanceBetween( player.WorldPosition, boombox.WorldPosition ) > MathF.Max( 1f, boombox.MaxUseDistance + extraDistance ) )
+		if ( Vector3.DistanceBetween( player.WorldPosition, WorldPosition ) > MathF.Max( 1f, MaxUseDistance + extraDistance ) )
 			return false;
 
 		return true;

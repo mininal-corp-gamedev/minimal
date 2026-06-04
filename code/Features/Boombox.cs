@@ -76,7 +76,7 @@ public sealed partial class Boombox : Component, Component.IPressable, ICustomDa
 			return;
 		}
 
-		RpcApplyDamage( GameObject, damage.Damage );
+		RpcApplyDamage( damage.Damage );
 	}
 
 	public bool Press( IPressable.Event e )
@@ -91,31 +91,31 @@ public sealed partial class Boombox : Component, Component.IPressable, ICustomDa
 		if ( player.IsProxy )
 			return false;
 
-		RpcToggleRadio( GameObject );
+		RpcToggleRadio();
 
 		return true;
 	}
 
 	[Rpc.Host]
-	private void RpcToggleRadio( GameObject boomboxObject )
+	private void RpcToggleRadio()
 	{
 #if SERVER
-		if ( !TryGetCallerBoomboxContext( boomboxObject, out var boombox, out _, 0f ) )
+		if ( !TryGetCallerPlayer( out _, 0f ) )
 			return;
 
-		boombox.ToggleRadioServer();
+		ToggleRadioServer();
 #endif
 	}
 
 	[Rpc.Host]
-	private void RpcApplyDamage( GameObject boomboxObject, float damage )
+	private void RpcApplyDamage( float damage )
 	{
 #if SERVER
-		if ( !TryGetCallerBoomboxContext( boomboxObject, out var boombox, out _, 160f ) )
+		if ( !TryGetCallerPlayer( out _, 160f ) )
 			return;
 
-		damage = Math.Clamp( damage, 0f, boombox.MaxHealth );
-		boombox.ApplyDamageServer( damage );
+		damage = Math.Clamp( damage, 0f, MaxHealth );
+		ApplyDamageServer( damage );
 #endif
 	}
 
@@ -214,6 +214,9 @@ public sealed partial class Boombox : Component, Component.IPressable, ICustomDa
 			if ( model is not null && !model.IsError )
 				return model;
 
+			// Temporary workaround: this boombox currently depends on a cloud model that
+			// may not be mounted on clients yet. Long-term we should avoid runtime cloud
+			// fetches here and ship a reliable local/project-owned model dependency instead.
 			var package = await Package.FetchAsync( CloudPackageIdent, partial: false );
 			if ( package is null )
 				return null;

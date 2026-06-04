@@ -2,7 +2,7 @@
   "Images": null,
   "Sequences": [
     {
-      "Source": "icons/items/beer.png",
+      "Source": "icons/items/alcohol/beer.png",
       "IsLooping": true,
       "FlipBook": false,
       "Columns": 0,

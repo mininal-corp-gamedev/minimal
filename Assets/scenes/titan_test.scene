@@ -140,6 +140,19 @@
           "OnComponentUpdate": null,
           "RightMouseAction": "Interact",
           "VRHandSource": "Left"
+        },
+        {
+          "__type": "Sandbox.MotionBlur",
+          "__guid": "4cf12fa2-7123-4844-b855-d06bf95d4d1e",
+          "__enabled": true,
+          "Flags": 0,
+          "OnComponentDestroy": null,
+          "OnComponentDisabled": null,
+          "OnComponentEnabled": null,
+          "OnComponentFixedUpdate": null,
+          "OnComponentStart": null,
+          "OnComponentUpdate": null,
+          "Scale": 0.7923077
         }
       ],
       "Children": []
@@ -1818,6 +1831,32 @@
         "b1759503-b893-4076-8e7c-b42d8c2c9e6b": "29c2fa4b-794a-47d8-b287-947c58d40768",
         "ca02df18-366d-44cd-b5e7-7d604cec3104": "322d9a0b-8195-4b43-ace0-5afdf190e561",
         "35d09f9f-378a-484f-a887-4922d26ff347": "71587611-7424-4ccd-9acd-0d2561ad6b5e"
+      }
+    },
+    {
+      "__guid": "727d25dd-277c-4ce2-819e-e9b38eff86c7",
+      "__version": 2,
+      "__Prefab": "prefabs/boombox.prefab",
+      "__PrefabInstancePatch": {
+        "AddedObjects": [],
+        "RemovedObjects": [],
+        "PropertyOverrides": [
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "8521269a-1b39-40e6-a837-a88f48d0ab1f"
+            },
+            "Property": "Position",
+            "Value": "488.125397,-25.0272713,16.5458298"
+          }
+        ],
+        "MovedObjects": []
+      },
+      "__PrefabIdToInstanceId": {
+        "8521269a-1b39-40e6-a837-a88f48d0ab1f": "727d25dd-277c-4ce2-819e-e9b38eff86c7",
+        "bfd8bf33-4c43-4ac3-a3bf-beed3748a424": "71372dc2-69b2-4822-967c-543cca417742",
+        "3ac3b139-bbf7-46ff-8b37-72ef1518d679": "7e5c1c79-83c9-452f-9fdb-b200f838ff30",
+        "f9b5d0ad-4f36-4a7a-99c9-dd20d201671b": "b2e07902-325a-4392-a643-fa2b0ef316ef"
       }
     }
   ],

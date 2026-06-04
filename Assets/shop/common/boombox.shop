@@ -1,0 +1,21 @@
+{
+  "Id": "boombox",
+  "Header": "Boombox",
+  "Category": "common",
+  "Description": "Играй музыка",
+  "ItemDefinition": null,
+  "Price": 2000,
+  "Max": 1,
+  "IconPath": "icons/items/default.vtex",
+  "Model": null,
+  "SpawnPrefab": {
+    "_type": "gameobject",
+    "prefab": "prefabs/boombox.prefab"
+  },
+  "IsAllowEveryone": true,
+  "HasRemoveAfterChangeJob": false,
+  "JobsAllow": [],
+  "HasPostPurchased": true,
+  "__references": [],
+  "__version": 0
+}

@@ -1,0 +1,18 @@
+{
+  "Id": "alco_beer",
+  "Header": "Пиво",
+  "Category": "food",
+  "Description": "",
+  "ItemDefinition": "items/alcohol/alco_beer.item",
+  "Price": 10,
+  "Max": 0,
+  "IconPath": "icons/items/default.vtex",
+  "Model": null,
+  "SpawnPrefab": null,
+  "IsAllowEveryone": true,
+  "HasRemoveAfterChangeJob": false,
+  "JobsAllow": [],
+  "HasPostPurchased": false,
+  "__references": [],
+  "__version": 0
+}

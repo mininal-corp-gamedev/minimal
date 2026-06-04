@@ -1738,6 +1738,8 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         ItemUseRegistry.Register("ammo_shotgun", new AmmoUseHandler(AmmoWeaponType.Shotgun));
         ItemUseRegistry.Register("burger", new WepBurgerUseHandler());
         ItemUseRegistry.Register("armor", new ArmorUseHandler());
+        ItemUseRegistry.Register("alco_beer", new AlcoholUseHandler(AlcoholDrinkType.Beer));
+        ItemUseRegistry.Register("alco_wine", new AlcoholUseHandler(AlcoholDrinkType.Wine));
 
         _itemUseHandlersRegistered = true;
     }
@@ -2840,6 +2842,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         ApplyQueuedElevatorCarryDelta();
 #if SERVER
         HostUpdateDeathRespawn();
+        HostUpdateAlcoholBlood();
         Minimal.Weapons.WeaponPhysgun.HostFixedUpdateForPlayer(this);
 #endif
         UpdateArrestEffects();
@@ -2876,6 +2879,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         EnsureWeaponVisualRendererReady();
         UpdateWorldWeaponVisual();
         UpdateRemotePhysgunIdleSound();
+        UpdateLocalAlcoholEffect();
         DrawPhysgunBeam();
     }
 
@@ -2887,6 +2891,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         UnhookInventoryEvents();
 
         RestoreDeathState();
+        RestoreLocalAlcoholEffect();
         DestroyPhysgunBeamVisual();
         DestroyWorldWeaponVisual();
         DestroyLocalInstance();

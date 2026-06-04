@@ -1,10 +1,10 @@
 {
   "Id": "alco_beer",
   "Category": "Alcohol",
-  "Header": "Beer",
-  "Description": "Пивка для рывка",
+  "Header": "Пиво",
+  "Description": "Пивка для рывка (15 секунд эффект)",
   "MaxCount": 1,
-  "IconPath": "icons/items/beer.vtex",
+  "IconPath": "icons/items/alcohol/beer.vtex",
   "Model": null,
   "CanUse": true,
   "CanDrop": true,

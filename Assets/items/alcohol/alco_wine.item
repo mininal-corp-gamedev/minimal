@@ -1,0 +1,15 @@
+{
+  "Id": "alco_wine",
+  "Category": "Alcohol",
+  "Header": "Вино",
+  "Description": "Дайте мне вина (25 секунд эффект)",
+  "MaxCount": 1,
+  "IconPath": "icons/items/alcohol/wine.vtex",
+  "Model": null,
+  "CanUse": true,
+  "CanDrop": true,
+  "IsJobItem": false,
+  "CanSave": true,
+  "__references": [],
+  "__version": 0
+}

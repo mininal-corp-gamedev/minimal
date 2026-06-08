@@ -14,13 +14,13 @@ Notification {
 	.notification-list {
 		flex-direction: column-reverse;
 		align-items: flex-end;
-		gap: 6px;
+		gap: 5px;
 	}
 
 	.notification-item {
-		padding: 8px 12px;
+		padding: 6px 10px;
 		background-color: rgba(12, 14, 18, 0.82);
-		border-radius: 10px;
+		border-radius: 8px;
 		box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
 		align-self: flex-end;
 		opacity: 0;
@@ -42,12 +42,12 @@ Notification {
 	.notification-content {
 		flex-direction: row;
 		align-items: center;
-		gap: 10px;
+		gap: 7px;
 	}
 
 	.notification-icon {
-		width: 42px;
-		height: 42px;
+		width: 32px;
+		height: 32px;
 		flex-shrink: 0;
 		background-repeat: no-repeat;
 		background-size: contain;
@@ -57,7 +57,7 @@ Notification {
 
 	.notification-text {
 		color: #4fd945;
-		font-size: 18px;
+		font-size: 15px;
 		font-family: Poppins;
 		font-weight: 700;
 		white-space: nowrap;

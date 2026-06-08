@@ -156,12 +156,9 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 
     private const string PlayerSaveFolder = "players";
     private const string InventorySaveFolder = "inv";
-    private const int DefaultStartingMoney = 500;
-    private const int InventorySlotCount = 20;
     private const float DiceOfferSendCooldownSeconds = 1f;
     private const float DiceOfferReceiveCooldownSeconds = 10f;
-    private static readonly string[] DefaultInventoryItemIds = { "hands", "physgun", "toolgun", "keys" };
-    public static IReadOnlyList<string> DefaultInventoryItemIdsReadonly => DefaultInventoryItemIds;
+    public static IReadOnlyList<string> DefaultInventoryItemIdsReadonly => PlayerSaveData.DefaultInventoryItemIds;
 
     // Host-only gate. Until the save is loaded on the host, Money writes
     // must not overwrite the file on disk.
@@ -231,7 +228,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
     }
     public int CactusCount { get; set; } = 0;
     public bool IsAlive => Health > 0 && !IsDead;
-    public Inventory Inventory { get; set; } = new(InventorySlotCount);
+    public Inventory Inventory { get; set; } = new(PlayerSaveData.InventorySlotCount);
 
     public Weapon CurrentWeapon { get; private set; }
     public int CurrentInventorySlotIndex { get; private set; } = -1;
@@ -275,13 +272,6 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
     private Vector3 _localPhysgunBeamOverrideBend;
     private bool _localPhysgunBeamOverrideGrabbed;
 
-
-    public sealed class PlayerSaveData
-    {
-        [JsonPropertyName( "steamId" )] public long SteamId { get; set; }
-        [JsonPropertyName( "money" )] public int Money { get; set; }
-        [JsonPropertyName( "moneyAtm" )] public int MoneyAtm { get; set; }
-    }
 
     public void Spawn()
     {
@@ -2273,12 +2263,12 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 
         EnsurePlayerSaveFolder();
 
-        PlayerSaveData data = null;
+        PlayerMoneySaveData data = null;
         try
         {
             var path = GetPlayerSavePath( steamId );
             if ( FileSystem.Data.FileExists( path ) )
-                data = FileSystem.Data.ReadJsonOrDefault<PlayerSaveData>( path );
+                data = FileSystem.Data.ReadJsonOrDefault<PlayerMoneySaveData>( path );
         }
         catch ( Exception ex )
         {
@@ -2287,10 +2277,10 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 
         if ( data is null )
         {
-            data = new PlayerSaveData
+            data = new PlayerMoneySaveData
             {
                 SteamId = steamId,
-                Money = DefaultStartingMoney,
+                Money = PlayerSaveData.DefaultStartingMoney,
                 MoneyAtm = 0
             };
         }
@@ -2345,11 +2335,13 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         else
         {
             Inventory.ClearAll();
-            Inventory.SetSlotCount(InventorySlotCount);
+            Inventory.SetSlotCount(PlayerSaveData.InventorySlotCount);
         }
 
+        Inventory.EnsureMinimumSlotCount(PlayerSaveData.InventorySlotCount);
+
         // Ensure all default items are present, even if loading from an existing save
-        foreach (var itemId in DefaultInventoryItemIds)
+        foreach (var itemId in PlayerSaveData.DefaultInventoryItemIds)
         {
             if (Inventory.GetTotalCount(itemId) == 0)
                 Inventory.AddItem(Item.Create(itemId, 1, canDrop: false, isJobItem: false, canSave: true));
@@ -2378,7 +2370,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         try
         {
             EnsurePlayerSaveFolder();
-            var data = new PlayerSaveData
+            var data = new PlayerMoneySaveData
             {
                 SteamId = steamId,
                 Money = _money,
@@ -2422,7 +2414,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
             return 0;
 
         var removed = 0;
-        var defaults = new HashSet<string>(DefaultInventoryItemIds, StringComparer.OrdinalIgnoreCase);
+        var defaults = new HashSet<string>(PlayerSaveData.DefaultInventoryItemIds, StringComparer.OrdinalIgnoreCase);
 
         foreach (var slot in Inventory.Slots)
         {
@@ -2436,7 +2428,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
             slot.Clear();
         }
 
-        foreach (var itemId in DefaultInventoryItemIds)
+        foreach (var itemId in PlayerSaveData.DefaultInventoryItemIds)
         {
             if (Inventory.GetTotalCount(itemId) == 0)
                 Inventory.AddItem(Item.Create(itemId, 1, canDrop: false, isJobItem: false, canSave: true));
@@ -2468,8 +2460,9 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
             return;
 
         if (Inventory is null)
-            Inventory = new Inventory(InventorySlotCount);
+            Inventory = new Inventory(PlayerSaveData.InventorySlotCount);
         Inventory.ApplySnapshotJson(snapshotJson);
+        Inventory.EnsureMinimumSlotCount(PlayerSaveData.InventorySlotCount);
         ValidateCurrentWeaponInventoryState();
     }
 

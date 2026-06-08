@@ -47,6 +47,12 @@ public sealed class Inventory
         OnChanged?.Invoke();
     }
 
+    public void EnsureMinimumSlotCount(int minimum)
+    {
+        if (minimum > _slots.Count)
+            SetSlotCount(minimum);
+    }
+
     public bool AddItem(Item item)
     {
         if (item is null || item.Count <= 0)

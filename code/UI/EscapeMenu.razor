@@ -232,7 +232,38 @@
 
 	private void OnReviewClicked()
 	{
-		Game.Overlay.ShowReviewModal(Project.Current.Package);
+		_ = ShowReviewAsync();
+	}
+
+	private static async System.Threading.Tasks.Task ShowReviewAsync()
+	{
+		try
+		{
+			Package package = null;
+
+			// На хосте/в редакторе можно взять пакет из текущего проекта напрямую.
+			var project = Project.Current;
+			if ( project is not null )
+				package = project.Package;
+
+			// На клиенте Project.Current == null — тянем пакет по идентификатору игры.
+			if ( package is null )
+			{
+				package = await Package.FetchAsync( "minimalinc.mrp", false );
+			}
+
+			if ( package is null )
+			{
+				Log.Warning( "EscapeMenu: не удалось получить Package для Review modal." );
+				return;
+			}
+
+			Game.Overlay.ShowReviewModal( package );
+		}
+		catch ( System.Exception ex )
+		{
+			Log.Warning( $"EscapeMenu: ошибка открытия Review modal: {ex.Message}" );
+		}
 	}
 
 	private void OnPlayersClicked()

@@ -227,9 +227,18 @@ public sealed partial class PropsMenu
 			gameObj.WorldPosition = position;
 			gameObj.WorldRotation = rotation;
 
-			var propComponent = gameObj.Components.Create<Sandbox.Prop>();
-			propComponent.Model = model;
-			propComponent.Health = 999999f;
+			// Build the prop from explicit primitives instead of Sandbox.Prop.
+			// Sandbox.Prop manages its own physics body and conflicts with manual
+			// Rigidbody.MotionEnabled toggling (breaks collision in initial-spawn
+			// and held states). The Renderer + ModelCollider + Rigidbody pattern is
+			// what MoneyPrinter uses and behaves correctly with physgun freeze/grab.
+			var renderer = gameObj.Components.Create<ModelRenderer>();
+			renderer.Model = model;
+
+			var modelCollider = gameObj.Components.Create<ModelCollider>();
+			modelCollider.Model = model;
+
+			gameObj.Components.Create<Rigidbody>();
 
 			var propCustom = gameObj.Components.Create<PropCustom>();
 			propCustom.SetOwner( player );

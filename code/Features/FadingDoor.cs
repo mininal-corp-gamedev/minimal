@@ -24,6 +24,7 @@ public sealed class FadingDoor : Component, IDoorHackable
 
 	private bool _collisionApplied;
 	private bool _lastAppliedOpen;
+	private bool _pendingFrozenPhysicsSync;
 
 	public void SetOwner( Player owner )
 	{
@@ -61,56 +62,12 @@ public sealed class FadingDoor : Component, IDoorHackable
 	{
 		if ( !_collisionApplied || _lastAppliedOpen != IsOpen )
 			ApplyCollisionState();
-	}
-
-	protected override void OnFixedUpdate()
-	{
-		if ( Player.Local != EffectiveOwner )
-			return;
-		if ( !Input.Pressed( "FadingDoorOpenClose" ) )
-			return;
-
-		if ( Networking.IsHost )
-		{
-#if SERVER
-			HostToggle( Player.Local );
-#endif
-			return;
-		}
-
-		RpcRequestToggle();
-	}
-
-	[Rpc.Host]
-	private void RpcRequestToggle()
-	{
-#if SERVER
-		if ( !Networking.IsHost )
-			return;
-
-		var caller = Rpc.Caller;
-		if ( caller is null )
-			return;
-
-		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
-		HostToggle( player );
-#endif
-	}
 
 #if SERVER
-	private void HostToggle( Player player )
-	{
-		if ( !Networking.IsHost )
-			return;
-		if ( !player.IsValid() || player != EffectiveOwner )
-			return;
-
-		if ( IsOpen )
-			Close();
-		else
-			Open();
-	}
+		if ( _pendingFrozenPhysicsSync )
+			TryCompleteFrozenPhysicsSync();
 #endif
+	}
 
 	[Rpc.Host]
 	public void RpcRequestLockpick()
@@ -161,5 +118,53 @@ public sealed class FadingDoor : Component, IDoorHackable
 
 		_lastAppliedOpen = IsOpen;
 		_collisionApplied = true;
+
+#if SERVER
+		SyncFrozenPhysicsAfterCollisionChange();
+#endif
 	}
+
+#if SERVER
+	private void SyncFrozenPhysicsAfterCollisionChange()
+	{
+		if ( !Networking.IsHost )
+			return;
+
+		var rb = GameObject.Components.Get<Rigidbody>( FindMode.EverythingInSelfAndDescendants );
+		if ( !rb.IsValid() || rb.IsProxy )
+			return;
+
+		if ( rb.MotionEnabled )
+		{
+			PropCollisionTags.RefreshPhysicsShapeTags( GameObject );
+			return;
+		}
+
+		rb.MotionEnabled = true;
+		_pendingFrozenPhysicsSync = true;
+		TryCompleteFrozenPhysicsSync();
+	}
+
+	private bool TryCompleteFrozenPhysicsSync()
+	{
+		if ( !Networking.IsHost )
+			return false;
+
+		var rb = GameObject.Components.Get<Rigidbody>( FindMode.EverythingInSelfAndDescendants );
+		if ( !rb.IsValid() || rb.IsProxy )
+			return false;
+
+		if ( !IsOpen && !PropCollisionTags.TryRefreshPhysicsShapeTags( GameObject ) )
+			return false;
+
+		if ( IsOpen )
+			PropCollisionTags.RefreshPhysicsShapeTags( GameObject );
+
+		rb.Velocity = Vector3.Zero;
+		rb.AngularVelocity = Vector3.Zero;
+		rb.MotionEnabled = false;
+		_pendingFrozenPhysicsSync = false;
+		return true;
+	}
+#endif
 }

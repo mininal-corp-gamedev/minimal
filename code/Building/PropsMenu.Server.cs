@@ -13,6 +13,7 @@ public sealed partial class PropsMenu
 	private const float FallbackSpawnDistance = 120f;
 	private const float SpawnSurfaceOffset = 24f;
 	private const string PropFavoritesFolder = "props_favorites";
+	private const string PropPhysicsDebugPrefix = "[PropPhysicsDebug]";
 
 	public sealed class PropFavoritesSaveData
 	{
@@ -226,25 +227,28 @@ public sealed partial class PropsMenu
 			var gameObj = new GameObject( true, GetPropHeader( prop ) );
 			gameObj.WorldPosition = position;
 			gameObj.WorldRotation = rotation;
+			gameObj.Tags.Add( PropCollisionTags.PropTag );
 
-			// Build the prop from explicit primitives instead of Sandbox.Prop.
-			// Sandbox.Prop manages its own physics body and conflicts with manual
-			// Rigidbody.MotionEnabled toggling (breaks collision in initial-spawn
-			// and held states). The Renderer + ModelCollider + Rigidbody pattern is
-			// what MoneyPrinter uses and behaves correctly with physgun freeze/grab.
 			var renderer = gameObj.Components.Create<ModelRenderer>();
 			renderer.Model = model;
 
 			var modelCollider = gameObj.Components.Create<ModelCollider>();
 			modelCollider.Model = model;
+			modelCollider.Static = false;
 
-			gameObj.Components.Create<Rigidbody>();
+			var rb = gameObj.Components.Create<Rigidbody>();
+			rb.MotionEnabled = true;
+			rb.StartAsleep = false;
+			rb.EnhancedCcd = true;
+
+			var bodyValid = rb.PhysicsBody is not null && rb.PhysicsBody.IsValid();
+			PropCollisionTags.TryRefreshPhysicsShapeTags( gameObj, out var shapeCount );
+			Log.Info( $"{PropPhysicsDebugPrefix} spawn object='{gameObj.Name}' model='{primaryAsset}' colliderValid={modelCollider.IsValid()} rbValid={rb.IsValid()} bodyValid={bodyValid} shapes={shapeCount} motion={rb.MotionEnabled} startAsleep={rb.StartAsleep} ccd={rb.EnhancedCcd}" );
 
 			var propCustom = gameObj.Components.Create<PropCustom>();
 			propCustom.SetOwner( player );
 			player.RegisterSpawnedProp( propCustom );
 
-			gameObj.Tags.Add( "prop" );
 			gameObj.NetworkSpawn();
 			OwnedPropNetwork.ConfigurePropCustom( gameObj );
 

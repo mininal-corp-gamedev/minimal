@@ -15,7 +15,8 @@ namespace Minimal.Weapons;
 /// </summary>
 public sealed class WeaponPhysgun : Weapon
 {
-    private const string HeldCollisionTag = "physgun_held";
+    private const string HeldCollisionTag = global::PropCollisionTags.PhysgunHeldTag;
+    private const string PropPhysicsDebugPrefix = "[PropPhysicsDebug]";
     private const float HostMaxRangeLimit = 1024f;
     private const float HostMaxHoldDistanceLimit = 1024;
     private const float HostMaxLinearSpeedLimit = 24000f;
@@ -90,6 +91,7 @@ public sealed class WeaponPhysgun : Weapon
     private int _grabInputSequence;
     private int _beamInputSequence;
     private bool _preventReselect;
+    private bool _loggedSkippedLocalPropPrediction;
 
     private Angles _spinSavedEyeAngles;
     private bool _spinCameraLocked;
@@ -533,6 +535,7 @@ public sealed class WeaponPhysgun : Weapon
         _localNormal = Vector3.Up;
         _beamSeekActive = false;
         _pullHoverActive = false;
+        _loggedSkippedLocalPropPrediction = false;
         ResetBeamState();
         UnlockSpinCamera();
         SetSpinSoundActive(false);
@@ -708,6 +711,17 @@ public sealed class WeaponPhysgun : Weapon
         if (!player.IsValid() || !player.Controller.IsValid())
             return;
 
+        if (TryGetPropCustom(_grabbed, out _))
+        {
+            if (!_loggedSkippedLocalPropPrediction)
+            {
+                Log.Info($"{PropPhysicsDebugPrefix} client skipped local transform prediction object='{_grabbed.GameObject.Name}'");
+                _loggedSkippedLocalPropPrediction = true;
+            }
+
+            return;
+        }
+
         var eye = player.Controller.EyeTransform;
         var grabDistance = HostClampGrabDistance(_grabbed, GetBeamEndPosition(), eye,
             _grabDistance, MinHoldDistance, MaxHoldDistance);
@@ -730,6 +744,9 @@ public sealed class WeaponPhysgun : Weapon
             return;
 
         if (_grabbed.IsProxy)
+            return;
+
+        if (TryGetPropCustom(_grabbed, out _))
             return;
 
         var player = Player.Local;
@@ -1078,6 +1095,16 @@ public sealed class WeaponPhysgun : Weapon
             rb.MotionEnabled = true;
         }
 
+        var isPropCustom = TryGetPropCustom(rb, out _);
+        var hadHeldCollisionTag = rb.GameObject.Tags.Has(HeldCollisionTag);
+        if (!hadHeldCollisionTag)
+            rb.GameObject.Tags.Add(HeldCollisionTag);
+
+        PropCollisionTags.RefreshPhysicsShapeTags(rb.GameObject);
+
+        if (isPropCustom && rb.GameObject.Network.Owner is not null)
+            rb.GameObject.Network.DropOwnership();
+
         var bodyTransform = GetTraceBodyTransform(tr, rb);
         var state = new HostGrabState
         {
@@ -1088,7 +1115,7 @@ public sealed class WeaponPhysgun : Weapon
             Body = rb,
             SessionId = sessionId,
             LastInputSequence = 0,
-            HadHeldCollisionTag = rb.GameObject.Tags.Has(HeldCollisionTag),
+            HadHeldCollisionTag = hadHeldCollisionTag,
             LocalNormal = bodyTransform.NormalToLocal(tr.Normal),
             AimPosition = aim.Position,
             AimForward = aim.Forward,
@@ -1122,10 +1149,9 @@ public sealed class WeaponPhysgun : Weapon
             state.GrabOffset = Rotation.FromYaw(aim.Rotation.Yaw()).Inverse * bodyTransform.Rotation;
         }
 
-        rb.GameObject.Tags.Add(HeldCollisionTag);
-        rb.GameObject.Network.AssignOwnership(caller);
         HostRegisterHeldObject(rb.GameObject, caller.SteamId.Value);
         HostGrabStates[state.SteamId] = state;
+        Log.Info($"{PropPhysicsDebugPrefix} grab start object='{rb.GameObject.Name}' steamId={caller.SteamId.Value} hostKeptAuthority={isPropCustom} hadHeldTag={hadHeldCollisionTag} heldTagNow={rb.GameObject.Tags.Has(HeldCollisionTag)} rbProxy={rb.IsProxy} motion={rb.MotionEnabled}");
         RpcBroadcastPhysgunSound(attachSound, tr.HitPosition);
     }
 
@@ -1205,11 +1231,10 @@ public sealed class WeaponPhysgun : Weapon
         state.Player.SetPhysgunBeam(false);
         HostGrabStates.Remove(state.SteamId);
 
-        if (state.Body.IsValid() && !state.Body.IsProxy && TryGetPropCustom(state.Body, out _))
+        if (state.Body.IsValid() && !state.Body.IsProxy && TryGetPropCustom(state.Body, out var prop))
         {
-            state.Body.Velocity = Vector3.Zero;
-            state.Body.AngularVelocity = Vector3.Zero;
-            state.Body.MotionEnabled = false;
+            var freezeApplied = prop.TryFreezePhysics(force: true);
+            Log.Info($"{PropPhysicsDebugPrefix} grab end object='{state.GameObject.Name}' steamId={state.SteamId} freezeApplied={freezeApplied} heldTagNow={state.GameObject.Tags.Has(HeldCollisionTag)} rbProxy={state.Body.IsProxy} motion={state.Body.MotionEnabled}");
         }
     }
 
@@ -1227,9 +1252,15 @@ public sealed class WeaponPhysgun : Weapon
         if (!body.IsValid() || body.IsProxy)
             return;
 
-        body.Velocity = Vector3.Zero;
-        body.AngularVelocity = Vector3.Zero;
-        body.MotionEnabled = false;
+        if (TryGetPropCustom(body, out var prop))
+            prop.TryFreezePhysics(force: true);
+        else
+        {
+            body.Velocity = Vector3.Zero;
+            body.AngularVelocity = Vector3.Zero;
+            body.MotionEnabled = false;
+        }
+
         HostBroadcastPhysgunEffect(freezeEffectPrefab, body.GameObject, body.WorldTransform);
 
         if (!freezeEffectPrefab.IsValid())
@@ -1623,6 +1654,7 @@ public sealed class WeaponPhysgun : Weapon
             : Rotation.FromYaw(state.AimYaw) * state.GrabOffset;
 
         var desiredBodyPos = targetPos - targetRot * state.LocalOffset;
+        desiredBodyPos = HostResolveHeldSolidObstacles(state, desiredBodyPos);
         desiredBodyPos = HostResolveHeldPlayerOverlaps(state, desiredBodyPos,
             state.PlayerPadding, state.MaxResolveIterations);
         targetPos = desiredBodyPos + targetRot * state.LocalOffset;
@@ -1810,6 +1842,44 @@ public sealed class WeaponPhysgun : Weapon
         return rb.WorldPosition + resolvedOffset;
     }
 
+    private static Vector3 HostResolveHeldSolidObstacles(HostGrabState state, Vector3 desiredBodyPos)
+    {
+        var rb = state.Body;
+        if (!rb.IsValid() || !rb.GameObject.IsValid() || !state.Player.IsValid())
+            return desiredBodyPos;
+
+        var from = rb.WorldPosition;
+        var delta = desiredBodyPos - from;
+        if (delta.LengthSquared <= 0.001f)
+            return desiredBodyPos;
+
+        var sweepRadius = HostGetHeldSweepRadius(rb);
+        var tr = state.Player.Scene.Trace
+            .Ray(from, desiredBodyPos)
+            .Radius(sweepRadius)
+            .IgnoreGameObjectHierarchy(rb.GameObject)
+            .IgnoreGameObjectHierarchy(state.Player.GameObject)
+            .WithoutTags("bullet", "trigger", "player", "prop")
+            .Run();
+
+        if (!tr.Hit)
+            return desiredBodyPos;
+
+        var direction = delta.Normal;
+        return tr.HitPosition - direction * MathF.Max(2f, sweepRadius);
+    }
+
+    private static float HostGetHeldSweepRadius(Rigidbody rb)
+    {
+        var bounds = HostGetRigidBodyBounds(rb);
+        var size = bounds.Maxs - bounds.Mins;
+        var smallestAxis = MathF.Min(MathF.Abs(size.x), MathF.Min(MathF.Abs(size.y), MathF.Abs(size.z)));
+        if (smallestAxis <= 0.001f)
+            return 8f;
+
+        return Clamp(smallestAxis * 0.5f, 4f, 32f);
+    }
+
     private static bool HostTryFindPlayerReleaseOffset(HostGrabState state, float padding, out Vector3 offset)
     {
         offset = Vector3.Zero;
@@ -1918,7 +1988,11 @@ public sealed class WeaponPhysgun : Weapon
     private static void HostDisableHeldCollisionMode(HostGrabState state)
     {
         if (state.Body.IsValid() && state.Body.GameObject.IsValid() && !state.HadHeldCollisionTag)
+        {
             state.Body.GameObject.Tags.Remove(HeldCollisionTag);
+            PropCollisionTags.RefreshPhysicsShapeTags(state.Body.GameObject);
+            Log.Info($"{PropPhysicsDebugPrefix} held tag removed object='{state.Body.GameObject.Name}' heldTagNow={state.Body.GameObject.Tags.Has(HeldCollisionTag)}");
+        }
     }
 
     private static void HostRejectGrab(Connection caller, GameObject target)

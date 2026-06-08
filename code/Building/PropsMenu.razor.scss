@@ -790,9 +790,8 @@ PropsMenu {
 		border: 1px solid rgba(255, 255, 255, 0.24);
 
 		&.active {
-			border-color: #ffffff;
-			border-width: 2px;
-			box-shadow: 0 0 0 2px rgba(255, 67, 108, 0.85);
+			border: 1px solid rgba(255, 255, 255, 0.24);
+			border-bottom: 3px solid #ffffff;
 		}
 	}
 

@@ -6,23 +6,20 @@ public sealed class FadingDoorTool : ToolMode
 	public override string Title => "Fading Door";
 	public override string Description => "Adds or removes Fading Door on your prop.";
 
-	public override ToolUseResult Use(ToolUseContext context)
+	public override ToolUseResult Use( ToolUseContext context )
 	{
 #if SERVER
-		var gameObject = context.TargetProp.GameObject;
-		if (!gameObject.Components.TryGet<global::FadingDoor>(out var door))
+		var prop = context.TargetProp;
+		if ( !prop.HasFadingDoor )
 		{
-			door = gameObject.Components.Create<global::FadingDoor>();
-			door.SetOwner(context.Player);
-			door.Close();
-			return ToolUseResult.Ok(GameLocalization.Phrase( "notify.toolgun.fading_door_added", "Fading Door added." ));
+			prop.EnableFadingDoor( context.Player );
+			return ToolUseResult.Ok( GameLocalization.Phrase( "notify.toolgun.fading_door_added", "Fading Door added." ) );
 		}
 
-		door.Close();
-		door.Destroy();
-		return ToolUseResult.Ok(GameLocalization.Phrase( "notify.toolgun.fading_door_removed", "Fading Door removed." ));
+		prop.DisableFadingDoor();
+		return ToolUseResult.Ok( GameLocalization.Phrase( "notify.toolgun.fading_door_removed", "Fading Door removed." ) );
 #else
-		return ToolUseResult.Fail(null);
+		return ToolUseResult.Fail( null );
 #endif
 	}
 }

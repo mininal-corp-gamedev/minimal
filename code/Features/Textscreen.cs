@@ -6,7 +6,10 @@ using System.Text.Json;
 public sealed class Textscreen : Component
 {
 	public const int LineCount = 6;
-	public const int DefaultSize = 14;
+	public const int MinSize = 16;
+	public const int MaxSize = 64;
+	public const int DefaultSize = 32;
+	public const string DefaultLineText = "Text here";
 	public const string DefaultColor = "white";
 
 	[Sync( SyncFlags.FromHost )] public Player PlayerOwner { get; private set; }
@@ -63,10 +66,14 @@ public sealed class Textscreen : Component
 		for ( var i = 0; i < LineCount; i++ )
 		{
 			var source = lines is not null && i < lines.Count ? lines[i] : null;
+			var text = source?.Text ?? string.Empty;
+			if ( i == 0 && string.IsNullOrWhiteSpace( text ) )
+				text = DefaultLineText;
+
 			result.Add( new TextscreenLine
 			{
-				Text = source?.Text ?? string.Empty,
-				Size = Math.Clamp( source?.Size ?? DefaultSize, 1, 40 ),
+				Text = text,
+				Size = Math.Clamp( source?.Size ?? DefaultSize, MinSize, MaxSize ),
 				Color = NormalizeColorId( source?.Color )
 			} );
 		}

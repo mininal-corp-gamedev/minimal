@@ -26,6 +26,11 @@
     "StartupScene": "scenes/titan_test.scene",
     "LaunchMode": "DedicatedServerOnly",
     "DedicatedServerStartupScene": "scenes/titan_test.scene",
-    "ParentPackage": null
+    "ParentPackage": null,
+    "ControlModes": {
+      "Keyboard": true,
+      "VR": false,
+      "Gamepad": false
+    }
   }
 }

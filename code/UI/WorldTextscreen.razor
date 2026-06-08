@@ -37,7 +37,7 @@
 
 	private static string GetLineStyle( global::TextscreenLine line )
 	{
-		var size = Math.Clamp( line?.Size ?? global::Textscreen.DefaultSize, 1, 40 );
+		var size = Math.Clamp( line?.Size ?? global::Textscreen.DefaultSize, global::Textscreen.MinSize, global::Textscreen.MaxSize );
 		var color = GetColorHex( line?.Color );
 		var opacity = string.IsNullOrWhiteSpace( line?.Text ) ? "0" : "1";
 		return $"font-size: {size}px; color: {color}; opacity: {opacity};";

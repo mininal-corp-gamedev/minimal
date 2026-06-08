@@ -54,11 +54,14 @@ public sealed class PushTool : ToolMode
 
 		var propObject = context.TargetProp.GameObject;
 		var rotation = propObject.WorldRotation;
-		var direction = context.Trace.Direction.LengthSquared > 0.001f
-			? context.Trace.Direction.Normal
-			: Vector3.Forward;
+		var direction = context.Trace.Hit && context.Trace.Normal.LengthSquared > 0.001f
+			? context.Trace.Normal.Normal
+			: context.Trace.Direction.LengthSquared > 0.001f
+				? context.Trace.Direction.Normal
+				: Vector3.Forward;
+		var sign = awayFromPlayer ? -1f : 1f;
 
-		propObject.WorldPosition += direction * units * (awayFromPlayer ? 1f : -1f);
+		propObject.WorldPosition += direction * units * sign;
 		propObject.WorldRotation = rotation;
 		FreezeProp(propObject);
 

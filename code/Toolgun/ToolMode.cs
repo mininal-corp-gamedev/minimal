@@ -127,6 +127,7 @@ public abstract class ToolMode
 public static class ToolgunClientState
 {
 	private static readonly Dictionary<string, string> Config = new(StringComparer.Ordinal);
+	private static bool _textscreenBulkSizeMigrated;
 
 	public static string SelectedToolId { get; private set; }
 	public static int Version { get; private set; }
@@ -186,8 +187,54 @@ public static class ToolgunClientState
 			changed = true;
 		}
 
+		if (tool is TextscreenTool)
+			MigrateTextscreenConfig();
+
 		if (changed)
 			Version++;
+	}
+
+	private static void MigrateTextscreenConfig()
+	{
+		var line0TextKey = TextscreenTool.TextKey(0);
+		if (string.IsNullOrWhiteSpace(GetConfigValue(line0TextKey)))
+			SetConfigValue(line0TextKey, TextscreenTool.DefaultLineText);
+
+		for (var i = 0; i < TextscreenTool.LineCount; i++)
+		{
+			var sizeKey = TextscreenTool.SizeKey(i);
+			if (!Config.TryGetValue(sizeKey, out var existing))
+				continue;
+
+			if (string.Equals(existing, "14", StringComparison.Ordinal))
+				SetConfigValue(sizeKey, TextscreenTool.DefaultSize.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture));
+		}
+
+		if (_textscreenBulkSizeMigrated)
+			return;
+
+		var allLinesAtMin = true;
+		for (var i = 0; i < TextscreenTool.LineCount; i++)
+		{
+			var raw = GetConfigValue(TextscreenTool.SizeKey(i));
+			if (!string.Equals(raw, TextscreenTool.MinSize.ToString(System.Globalization.CultureInfo.InvariantCulture), StringComparison.Ordinal))
+			{
+				allLinesAtMin = false;
+				break;
+			}
+		}
+
+		if (!allLinesAtMin)
+			return;
+
+		_textscreenBulkSizeMigrated = true;
+
+		for (var i = 0; i < TextscreenTool.LineCount; i++)
+		{
+			SetConfigValue(
+				TextscreenTool.SizeKey(i),
+				TextscreenTool.DefaultSize.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture));
+		}
 	}
 
 	public static string GetConfigValue(string key)

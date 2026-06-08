@@ -9,7 +9,10 @@ public sealed class TextscreenTool : ToolMode
 {
 	public const string BackgroundConfigKey = "background";
 	public const int LineCount = global::Textscreen.LineCount;
+	public const int MinSize = global::Textscreen.MinSize;
+	public const int MaxSize = global::Textscreen.MaxSize;
 	public const int DefaultSize = global::Textscreen.DefaultSize;
+	public const string DefaultLineText = global::Textscreen.DefaultLineText;
 	public const string DefaultColor = global::Textscreen.DefaultColor;
 	private const float FallbackSpawnDistance = 120f;
 	private const float SpawnSurfaceOffset = 6f;
@@ -81,7 +84,10 @@ public sealed class TextscreenTool : ToolMode
 		if (!textscreenObject.Components.TryGet<Rigidbody>(out _))
 			textscreenObject.Components.Create<Rigidbody>();
 
+		propCustom.TryFreezePhysics();
+
 		textscreenObject.NetworkSpawn(context.Caller);
+		OwnedPropNetwork.ConfigurePropCustom(textscreenObject);
 		return ToolUseResult.Ok(GameLocalization.Phrase("notify.toolgun.textscreen_spawned", "Textscreen spawned."));
 #else
 		return ToolUseResult.Fail(null);
@@ -120,15 +126,15 @@ public sealed class TextscreenTool : ToolMode
 				Id = TextKey(i),
 				Label = $"Line {i + 1}",
 				Type = ToolConfigType.String,
-				DefaultValue = string.Empty
+				DefaultValue = i == 0 ? DefaultLineText : string.Empty
 			});
 			fields.Add(new ToolConfigField
 			{
 				Id = SizeKey(i),
 				Label = "Size",
 				Type = ToolConfigType.Number,
-				Min = 1f,
-				Max = 40f,
+				Min = MinSize,
+				Max = MaxSize,
 				Step = 1f,
 				DefaultValue = DefaultSize.ToString(CultureInfo.InvariantCulture)
 			});
@@ -157,11 +163,13 @@ public sealed class TextscreenTool : ToolMode
 		for (var i = 0; i < LineCount; i++)
 		{
 			var text = config.TryGetValue(TextKey(i), out var textValue) ? textValue ?? string.Empty : string.Empty;
+			if (i == 0 && string.IsNullOrWhiteSpace(text))
+				text = DefaultLineText;
 			var size = DefaultSize;
 			if (config.TryGetValue(SizeKey(i), out var rawSize)
 				&& int.TryParse(rawSize, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedSize))
 			{
-				size = Math.Clamp(parsedSize, 1, 40);
+				size = Math.Clamp(parsedSize, MinSize, MaxSize);
 			}
 
 			var color = config.TryGetValue(ColorKey(i), out var colorValue)

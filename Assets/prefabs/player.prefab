@@ -20,6 +20,9 @@
         "__guid": "15b93fa3-e192-4f36-a3c5-682e48227985",
         "__enabled": true,
         "Flags": 0,
+        "AlcoholBloodDecayPerSecond": 0.025,
+        "ArmorDamageAbsorbFraction": 0.8,
+        "ArmorProtectsFallDamage": false,
         "Controller": {
           "_type": "component",
           "component_id": "188a7c51-221c-4f73-b9c4-c78b60ded3fa",
@@ -50,6 +53,7 @@
           "go": "70709696-00d3-4b3a-a540-a7da2fcf0471",
           "component_type": "PlayerJob"
         },
+        "MaxAlcoholBlood": 1,
         "MaxDoors": 4,
         "MaxProps": 20,
         "MoneyDropPrefab": {
@@ -206,6 +210,7 @@
         "OnComponentUpdate": null,
         "OverrideMassCenter": true,
         "RigidbodyFlags": "DisableCollisionSounds",
+        "SleepThreshold": 2,
         "StartAsleep": false
       },
       {
@@ -294,7 +299,7 @@
             "mode": "Mirrored"
           }
         ],
-        "LipSync": false,
+        "LipSync": true,
         "Loopback": false,
         "Mode": "PushToTalk",
         "MorphScale": 3,
@@ -306,10 +311,15 @@
         "OnComponentStart": null,
         "OnComponentUpdate": null,
         "PushToTalkInput": "voice",
-        "Renderer": null,
+        "Renderer": {
+          "_type": "component",
+          "component_id": "5a0e0ab6-7965-4d83-97e7-f8d9bce09def",
+          "go": "f907b6cc-697d-4a0e-aa04-9d3cb163e166",
+          "component_type": "SkinnedModelRenderer"
+        },
         "VoiceMixer": {
-          "Name": "game",
-          "Id": "899b1484-c304-4a12-923b-78ed556bca29"
+          "Name": "voice",
+          "Id": "d9c4666f-1a91-4d38-bd36-b51444aca0c9"
         },
         "Volume": 1.5,
         "WorldspacePlayback": true
@@ -3025,7 +3035,7 @@
             "Children": []
           },
           {
-            "__guid": "88156a72-2d71-429a-b305-9f451d6a17fe",
+            "__guid": "b4ff5db1-4fcc-49ca-abb5-2bdd435caf8d",
             "__version": 2,
             "Flags": 0,
             "Name": "Clothing - y_front_pants_white",
@@ -3042,7 +3052,7 @@
             "Components": [
               {
                 "__type": "Sandbox.SkinnedModelRenderer",
-                "__guid": "60888c35-d807-44dd-acba-e3d07c3c45dc",
+                "__guid": "484991a1-a0c1-4ced-a0df-5e59d1f630e0",
                 "__enabled": true,
                 "Flags": 0,
                 "AnimationGraph": null,

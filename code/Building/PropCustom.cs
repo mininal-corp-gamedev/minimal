@@ -4,25 +4,24 @@ public sealed class PropCustom : Component, Component.INetworkListener
 {
 	[Sync( SyncFlags.FromHost )] public Player PlayerOwner { get; private set; }
 	[Sync( SyncFlags.FromHost )] public Color PropTint { get; private set; } = Color.White;
+	[Sync( SyncFlags.FromHost ), Change( nameof( OnNoCollidePlayersChanged ) )] public bool NoCollidePlayers { get; private set; }
+	[Sync( SyncFlags.FromHost ), Change( nameof( OnHasFadingDoorChanged ) )] public bool HasFadingDoor { get; private set; }
 	public TriggerBuilding TriggerBuilding { get; private set; }
 	private bool _registeredLocally;
 	private bool _tintApplied;
 	private Color _lastAppliedTint;
+	private bool _physicsFrozen;
+	private bool _physicsReadyForFreeze;
+	private int _physicsReadyFixedTicks;
+	private bool _freezeReadyLogged;
+	private bool _freezeCompleteLogged;
+
+	private const int FreezeDelayFixedTicks = 1;
+	private const string PropPhysicsDebugPrefix = "[PropPhysicsDebug]";
 
 	protected override void OnStart()
 	{
-#if SERVER
-		if ( !Networking.IsHost )
-			return;
-
-		var rb = GameObject.Components.Get<Rigidbody>( FindMode.EverythingInSelfAndDescendants );
-		if ( rb.IsValid() )
-		{
-			rb.Velocity = Vector3.Zero;
-			rb.AngularVelocity = Vector3.Zero;
-			rb.MotionEnabled = false;
-		}
-#endif
+		TryFreezePhysics();
 	}
 
 	public void SetOwner( Player owner )
@@ -68,8 +67,95 @@ public sealed class PropCustom : Component, Component.INetworkListener
 #endif
 	}
 
+	public void SetNoCollidePlayers( bool enabled )
+	{
+#if SERVER
+		if ( !Networking.IsHost )
+			return;
+
+		NoCollidePlayers = enabled;
+#endif
+	}
+
+	public void EnableFadingDoor( Player owner )
+	{
+#if SERVER
+		if ( !Networking.IsHost )
+			return;
+		if ( HasFadingDoor )
+			return;
+
+		HasFadingDoor = true;
+
+		if ( !GameObject.Components.TryGet<FadingDoor>( out var door ) )
+			door = GameObject.Components.Create<FadingDoor>();
+
+		if ( !door.IsValid() )
+			return;
+
+		door.SetOwner( owner );
+		door.Close();
+#endif
+	}
+
+	public void DisableFadingDoor()
+	{
+#if SERVER
+		if ( !Networking.IsHost )
+			return;
+
+		HasFadingDoor = false;
+#endif
+	}
+
+	private void OnNoCollidePlayersChanged( bool oldValue, bool newValue )
+	{
+		PropCollisionTags.ApplyNoCollideTag( GameObject, newValue );
+	}
+
+	private void OnHasFadingDoorChanged( bool oldValue, bool newValue )
+	{
+		if ( newValue )
+		{
+			if ( !GameObject.Components.TryGet<FadingDoor>( out _ ) )
+				GameObject.Components.Create<FadingDoor>();
+
+			return;
+		}
+
+		if ( !GameObject.Components.TryGet<FadingDoor>( out var door ) || !door.IsValid() )
+			return;
+
+		door.Close();
+		door.Destroy();
+	}
+
+	protected override void OnFixedUpdate()
+	{
+		TryFreezePhysics( fromFixedUpdate: true );
+
+		if ( !HasFadingDoor )
+			return;
+		if ( Player.Local != PlayerOwner )
+			return;
+		if ( !Input.Pressed( "FadingDoorOpenClose" ) )
+			return;
+
+		if ( Networking.IsHost )
+		{
+#if SERVER
+			HostToggleFadingDoor( Player.Local );
+#endif
+			return;
+		}
+
+		RpcRequestFadingDoorToggle();
+	}
+
 	protected override void OnUpdate()
 	{
+		TryFreezePhysics();
+
 		if ( !_tintApplied || _lastAppliedTint != PropTint )
 			ApplyTint();
 
@@ -81,6 +167,108 @@ public sealed class PropCustom : Component, Component.INetworkListener
 		PlayerOwner.RegisterSpawnedProp( this );
 		_registeredLocally = true;
 	}
+
+	[Rpc.Host]
+	private void RpcRequestFadingDoorToggle()
+	{
+#if SERVER
+		if ( !Networking.IsHost )
+			return;
+
+		var caller = Rpc.Caller;
+		if ( caller is null )
+			return;
+
+		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
+		HostToggleFadingDoor( player );
+#endif
+	}
+
+#if SERVER
+	private void HostToggleFadingDoor( Player player )
+	{
+		if ( !Networking.IsHost || !HasFadingDoor )
+			return;
+		if ( !player.IsValid() || player != PlayerOwner )
+			return;
+		if ( !GameObject.Components.TryGet<FadingDoor>( out var door ) || !door.IsValid() )
+			return;
+
+		if ( door.IsOpen )
+			door.Close();
+		else
+			door.Open();
+	}
+#endif
+
+	public bool TryFreezePhysics( bool force = false, bool fromFixedUpdate = false )
+	{
+#if SERVER
+		if ( _physicsFrozen && !force )
+			return true;
+		if ( !Networking.IsHost )
+			return false;
+		if ( GameObject.Tags.Has( PropCollisionTags.PhysgunHeldTag ) && !force )
+			return false;
+
+		var rb = GameObject.Components.Get<Rigidbody>( FindMode.EverythingInSelfAndDescendants );
+		if ( !rb.IsValid() || rb.IsProxy )
+			return false;
+		if ( rb.PhysicsBody is null || !rb.PhysicsBody.IsValid() )
+			return false;
+		if ( !PropCollisionTags.TryRefreshPhysicsShapeTags( GameObject, out var shapeCount ) )
+			return false;
+
+		if ( force )
+			return FreezeReadyBody( rb, shapeCount, true );
+
+		if ( !_physicsReadyForFreeze )
+		{
+			_physicsReadyForFreeze = true;
+			_physicsReadyFixedTicks = 0;
+
+			if ( !_freezeReadyLogged )
+			{
+				Log.Info( $"{PropPhysicsDebugPrefix} freeze ready object='{GameObject.Name}' shapes={shapeCount} motion={rb.MotionEnabled}" );
+				_freezeReadyLogged = true;
+			}
+
+			return false;
+		}
+
+		if ( fromFixedUpdate )
+			_physicsReadyFixedTicks++;
+
+		if ( _physicsReadyFixedTicks < FreezeDelayFixedTicks )
+			return false;
+
+		return FreezeReadyBody( rb, shapeCount, false );
+#else
+		return false;
+#endif
+	}
+
+#if SERVER
+	private bool FreezeReadyBody( Rigidbody rb, int shapeCount, bool force )
+	{
+		var readyTicks = _physicsReadyFixedTicks;
+		PropCollisionTags.RefreshPhysicsShapeTags( GameObject );
+		rb.Velocity = Vector3.Zero;
+		rb.AngularVelocity = Vector3.Zero;
+		rb.MotionEnabled = false;
+		_physicsFrozen = true;
+		_physicsReadyForFreeze = false;
+		_physicsReadyFixedTicks = 0;
+
+		if ( !_freezeCompleteLogged || force )
+		{
+			Log.Info( $"{PropPhysicsDebugPrefix} freeze applied object='{GameObject.Name}' force={force} readyTicks={readyTicks} shapes={shapeCount} motion={rb.MotionEnabled}" );
+			_freezeCompleteLogged = true;
+		}
+
+		return true;
+	}
+#endif
 
 	protected override void OnDestroy()
 	{

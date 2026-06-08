@@ -82,7 +82,7 @@
 						else
 						{
 							<div class="props-scroll-area" onmouseup=@ClearTextFocus>
-								<div class="props-list" @ref="PropsListRef" onmouseup=@ClearTextFocus onwheel=@OnPropsListWheel>
+								<div class="props-list" @ref="PropsListRef" onmouseup=@ClearTextFocus onwheel=@((Vector2 value) => OnPropsListWheel( value ))>
 									<div class="props-grid">
 										@foreach ( var prop in visibleProps )
 										{
@@ -159,7 +159,7 @@
 											<div class="tool-config-label">@GameLocalization.Format( "tool.textscreen.line", "Line {0}", lineIndex + 1 )</div>
 											<button class="line-reset-btn" onclick=@(() => ResetTextscreenLine( lineIndex ))>@GameLocalization.Phrase( "ui.common.reset", "Reset" )</button>
 										</div>
-										<TextEntry class="tool-input textscreen-text-input" Value="@GetToolConfigValue( TextscreenTool.TextKey( lineIndex ) )" Placeholder="@GameLocalization.Phrase( "tool.textscreen.placeholder", "Text..." )" OnTextEdited=@( (string text) => SetToolConfigValue( TextscreenTool.TextKey( lineIndex ), text ) ) />
+										<TextEntry class="tool-input textscreen-text-input" Value="@GetTextscreenTextValue( lineIndex )" Placeholder="@GameLocalization.Phrase( "tool.textscreen.placeholder", "Text..." )" OnTextEdited=@( (string text) => SetToolConfigValue( TextscreenTool.TextKey( lineIndex ), text ) ) />
 										<div class="textscreen-row">
 											<div class="textscreen-size-controls">
 												<button class="textscreen-size-step" onclick=@(() => StepTextscreenSize( lineIndex, -1 ))>-</button>
@@ -484,9 +484,22 @@
 
 	private void ResetTextscreenLine( int lineIndex )
 	{
-		ToolgunClientState.SetConfigValue( TextscreenTool.TextKey( lineIndex ), string.Empty );
+		ToolgunClientState.SetConfigValue( TextscreenTool.TextKey( lineIndex ), lineIndex == 0 ? TextscreenTool.DefaultLineText : string.Empty );
 		ToolgunClientState.SetConfigValue( TextscreenTool.SizeKey( lineIndex ), TextscreenTool.DefaultSize.ToString( CultureInfo.InvariantCulture ) );
 		ToolgunClientState.SetConfigValue( TextscreenTool.ColorKey( lineIndex ), TextscreenTool.DefaultColor );
+	}
+
+	private string GetTextscreenTextValue( int lineIndex )
+	{
+		var key = TextscreenTool.TextKey( lineIndex );
+		var value = ToolgunClientState.GetConfigValue( key );
+		if ( lineIndex == 0 && string.IsNullOrWhiteSpace( value ) )
+		{
+			ToolgunClientState.SetConfigValue( key, TextscreenTool.DefaultLineText );
+			return TextscreenTool.DefaultLineText;
+		}
+
+		return value ?? string.Empty;
 	}
 
 	private void StepTextscreenSize( int lineIndex, int direction )
@@ -495,7 +508,7 @@
 			return;
 
 		var size = GetTextscreenSize( lineIndex );
-		size = Math.Clamp( size + direction, 1, 40 );
+		size = Math.Clamp( size + direction, TextscreenTool.MinSize, TextscreenTool.MaxSize );
 		ToolgunClientState.SetConfigValue( TextscreenTool.SizeKey( lineIndex ), size.ToString( CultureInfo.InvariantCulture ) );
 	}
 
@@ -517,7 +530,7 @@
 		if ( !int.TryParse( raw, NumberStyles.Integer, CultureInfo.InvariantCulture, out var size ) )
 			size = TextscreenTool.DefaultSize;
 
-		return Math.Clamp( size, 1, 40 );
+		return Math.Clamp( size, TextscreenTool.MinSize, TextscreenTool.MaxSize );
 	}
 
 	private static bool IsValidTextscreenLineIndex( int lineIndex )
@@ -872,7 +885,7 @@
 
 		LookedPropName = string.IsNullOrWhiteSpace( trace.GameObject.Name ) ? GameLocalization.Phrase( "ui.props.prop", "Prop" ) : trace.GameObject.Name;
 		LookedPropOwnerName = GetOwnerName( prop.PlayerOwner );
-		LookedPropIsFadingDoor = trace.GameObject.Components.Get<global::FadingDoor>( FindMode.EverythingInSelfAndAncestors ).IsValid();
+		LookedPropIsFadingDoor = prop.HasFadingDoor;
 		LookedPropIsTextscreen = trace.GameObject.Components.Get<global::Textscreen>( FindMode.EverythingInSelfAndAncestors ).IsValid();
 	}
 

@@ -105,6 +105,18 @@ public sealed class PropCustom : Component, Component.INetworkListener
 #endif
 	}
 
+	public void NotifyPhysgunGrabbed()
+	{
+#if SERVER
+		if ( !Networking.IsHost )
+			return;
+
+		_physicsFrozen = false;
+		_physicsReadyForFreeze = false;
+		_physicsReadyFixedTicks = 0;
+#endif
+	}
+
 	private void OnNoCollidePlayersChanged( bool oldValue, bool newValue )
 	{
 		PropCollisionTags.ApplyNoCollideTag( GameObject, newValue );
@@ -201,12 +213,14 @@ public sealed class PropCustom : Component, Component.INetworkListener
 	public bool TryFreezePhysics( bool force = false, bool fromFixedUpdate = false )
 	{
 #if SERVER
-		if ( _physicsFrozen && !force )
-			return true;
 		if ( !Networking.IsHost )
 			return false;
+
 		if ( GameObject.Tags.Has( PropCollisionTags.PhysgunHeldTag ) && !force )
 			return false;
+
+		if ( _physicsFrozen && !force )
+			return true;
 
 		var rb = GameObject.Components.Get<Rigidbody>( FindMode.EverythingInSelfAndDescendants );
 		if ( !rb.IsValid() || rb.IsProxy )

@@ -15,7 +15,7 @@ namespace Minimal.Weapons;
 /// </summary>
 public sealed class WeaponPhysgun : Weapon
 {
-    private const string HeldCollisionTag = "physgun_held";
+    private const string HeldCollisionTag = global::PropCollisionTags.PhysgunHeldTag;
     private const float HostMaxRangeLimit = 1024f;
     private const float HostMaxHoldDistanceLimit = 1024;
     private const float HostMaxLinearSpeedLimit = 24000f;
@@ -708,6 +708,9 @@ public sealed class WeaponPhysgun : Weapon
         if (!player.IsValid() || !player.Controller.IsValid())
             return;
 
+        if (TryGetPropCustom(_grabbed, out _))
+            return;
+
         var eye = player.Controller.EyeTransform;
         var grabDistance = HostClampGrabDistance(_grabbed, GetBeamEndPosition(), eye,
             _grabDistance, MinHoldDistance, MaxHoldDistance);
@@ -730,6 +733,9 @@ public sealed class WeaponPhysgun : Weapon
             return;
 
         if (_grabbed.IsProxy)
+            return;
+
+        if (TryGetPropCustom(_grabbed, out _))
             return;
 
         var player = Player.Local;
@@ -1075,7 +1081,25 @@ public sealed class WeaponPhysgun : Weapon
         if (!rb.MotionEnabled)
         {
             HostBroadcastPhysgunEffect(unfreezeEffectPrefab, rb.GameObject, rb.WorldTransform);
+            rb.Velocity = Vector3.Zero;
+            rb.AngularVelocity = Vector3.Zero;
             rb.MotionEnabled = true;
+            PropCollisionTags.RefreshPhysicsShapeTags(rb.GameObject);
+        }
+
+        var isPropCustom = TryGetPropCustom(rb, out var propCustom);
+        var hadHeldCollisionTag = rb.GameObject.Tags.Has(HeldCollisionTag);
+        if (!hadHeldCollisionTag)
+            rb.GameObject.Tags.Add(HeldCollisionTag);
+
+        PropCollisionTags.RefreshPhysicsShapeTags(rb.GameObject);
+
+        if (isPropCustom)
+        {
+            propCustom.NotifyPhysgunGrabbed();
+
+            if (rb.GameObject.Network.Owner is not null)
+                rb.GameObject.Network.DropOwnership();
         }
 
         var bodyTransform = GetTraceBodyTransform(tr, rb);
@@ -1088,7 +1112,7 @@ public sealed class WeaponPhysgun : Weapon
             Body = rb,
             SessionId = sessionId,
             LastInputSequence = 0,
-            HadHeldCollisionTag = rb.GameObject.Tags.Has(HeldCollisionTag),
+            HadHeldCollisionTag = hadHeldCollisionTag,
             LocalNormal = bodyTransform.NormalToLocal(tr.Normal),
             AimPosition = aim.Position,
             AimForward = aim.Forward,
@@ -1122,8 +1146,6 @@ public sealed class WeaponPhysgun : Weapon
             state.GrabOffset = Rotation.FromYaw(aim.Rotation.Yaw()).Inverse * bodyTransform.Rotation;
         }
 
-        rb.GameObject.Tags.Add(HeldCollisionTag);
-        rb.GameObject.Network.AssignOwnership(caller);
         HostRegisterHeldObject(rb.GameObject, caller.SteamId.Value);
         HostGrabStates[state.SteamId] = state;
         RpcBroadcastPhysgunSound(attachSound, tr.HitPosition);
@@ -1204,6 +1226,9 @@ public sealed class WeaponPhysgun : Weapon
         HostDisableHeldCollisionMode(state);
         state.Player.SetPhysgunBeam(false);
         HostGrabStates.Remove(state.SteamId);
+
+        if (state.Body.IsValid() && !state.Body.IsProxy && TryGetPropCustom(state.Body, out var prop))
+            prop.TryFreezePhysics(force: true);
     }
 
     private static void HostFreezeGrab(Connection caller, GameObject target,
@@ -1220,9 +1245,15 @@ public sealed class WeaponPhysgun : Weapon
         if (!body.IsValid() || body.IsProxy)
             return;
 
-        body.Velocity = Vector3.Zero;
-        body.AngularVelocity = Vector3.Zero;
-        body.MotionEnabled = false;
+        if (TryGetPropCustom(body, out var prop))
+            prop.TryFreezePhysics(force: true);
+        else
+        {
+            body.Velocity = Vector3.Zero;
+            body.AngularVelocity = Vector3.Zero;
+            body.MotionEnabled = false;
+        }
+
         HostBroadcastPhysgunEffect(freezeEffectPrefab, body.GameObject, body.WorldTransform);
 
         if (!freezeEffectPrefab.IsValid())
@@ -1831,6 +1862,9 @@ public sealed class WeaponPhysgun : Weapon
             if (!player.IsValid() || !player.Controller.IsValid())
                 continue;
 
+            if (player == state.Player)
+                continue;
+
             var playerBounds = player.Controller.BodyBox().Grow(padding);
             if (!propBounds.Overlaps(playerBounds))
                 continue;
@@ -1899,7 +1933,10 @@ public sealed class WeaponPhysgun : Weapon
     private static void HostDisableHeldCollisionMode(HostGrabState state)
     {
         if (state.Body.IsValid() && state.Body.GameObject.IsValid() && !state.HadHeldCollisionTag)
+        {
             state.Body.GameObject.Tags.Remove(HeldCollisionTag);
+            PropCollisionTags.RefreshPhysicsShapeTags(state.Body.GameObject);
+        }
     }
 
     private static void HostRejectGrab(Connection caller, GameObject target)

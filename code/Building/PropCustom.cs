@@ -6,6 +6,7 @@ public sealed class PropCustom : Component, Component.INetworkListener
 	[Sync( SyncFlags.FromHost )] public Color PropTint { get; private set; } = Color.White;
 	[Sync( SyncFlags.FromHost ), Change( nameof( OnNoCollidePlayersChanged ) )] public bool NoCollidePlayers { get; private set; }
 	[Sync( SyncFlags.FromHost ), Change( nameof( OnHasFadingDoorChanged ) )] public bool HasFadingDoor { get; private set; }
+	[Sync( SyncFlags.FromHost ), Change( nameof( OnFadingDoorIsOpenChanged ) )] public bool FadingDoorIsOpen { get; private set; }
 	public TriggerBuilding TriggerBuilding { get; private set; }
 	private bool _registeredLocally;
 	private bool _tintApplied;
@@ -91,7 +92,7 @@ public sealed class PropCustom : Component, Component.INetworkListener
 			return;
 
 		door.SetOwner( owner );
-		door.Close();
+		HostSetFadingDoorOpen( false );
 #endif
 	}
 
@@ -101,7 +102,33 @@ public sealed class PropCustom : Component, Component.INetworkListener
 		if ( !Networking.IsHost )
 			return;
 
+		HostSetFadingDoorOpen( false );
 		HasFadingDoor = false;
+#endif
+	}
+
+	public void HostSetFadingDoorOpen( bool isOpen )
+	{
+#if SERVER
+		if ( !Networking.IsHost || !HasFadingDoor )
+			return;
+
+		FadingDoorIsOpen = isOpen;
+#endif
+	}
+
+	public bool HostToggleFadingDoor( Player player )
+	{
+#if SERVER
+		if ( !Networking.IsHost || !HasFadingDoor )
+			return FadingDoorIsOpen;
+		if ( !player.IsValid() || PlayerOwner != player )
+			return FadingDoorIsOpen;
+
+		HostSetFadingDoorOpen( !FadingDoorIsOpen );
+		return FadingDoorIsOpen;
+#else
+		return false;
 #endif
 	}
 
@@ -129,41 +156,54 @@ public sealed class PropCustom : Component, Component.INetworkListener
 			if ( !GameObject.Components.TryGet<FadingDoor>( out _ ) )
 				GameObject.Components.Create<FadingDoor>();
 
+			PropCollisionTags.ApplyFadingDoorOpenState( GameObject, FadingDoorIsOpen );
 			return;
 		}
 
 		if ( !GameObject.Components.TryGet<FadingDoor>( out var door ) || !door.IsValid() )
 			return;
 
-		door.Close();
+		PropCollisionTags.ApplyFadingDoorOpenState( GameObject, false );
+		_fadingDoorCollisionApplied = false;
 		door.Destroy();
+	}
+
+	private void OnFadingDoorIsOpenChanged( bool oldValue, bool newValue )
+	{
+		if ( !HasFadingDoor )
+			return;
+
+		PropCollisionTags.ApplyFadingDoorOpenState( GameObject, newValue );
+
+#if SERVER
+		if ( !Networking.IsHost )
+			return;
+
+		if ( newValue )
+			return;
+
+		TryFreezePhysics( force: true );
+#endif
 	}
 
 	protected override void OnFixedUpdate()
 	{
 		TryFreezePhysics( fromFixedUpdate: true );
-
-		if ( !HasFadingDoor )
-			return;
-		if ( Player.Local != PlayerOwner )
-			return;
-		if ( !Input.Pressed( "FadingDoorOpenClose" ) )
-			return;
-
-		if ( Networking.IsHost )
-		{
-#if SERVER
-			HostToggleFadingDoor( Player.Local );
-#endif
-			return;
-		}
-
-		RpcRequestFadingDoorToggle();
 	}
+
+	private bool _fadingDoorCollisionApplied;
+	private bool _lastAppliedFadingDoorOpen;
 
 	protected override void OnUpdate()
 	{
 		TryFreezePhysics();
+
+		if ( HasFadingDoor && ( !_fadingDoorCollisionApplied || _lastAppliedFadingDoorOpen != FadingDoorIsOpen ) )
+		{
+			PropCollisionTags.ApplyFadingDoorOpenState( GameObject, FadingDoorIsOpen );
+			_lastAppliedFadingDoorOpen = FadingDoorIsOpen;
+			_fadingDoorCollisionApplied = true;
+		}
 
 		if ( !_tintApplied || _lastAppliedTint != PropTint )
 			ApplyTint();
@@ -177,43 +217,13 @@ public sealed class PropCustom : Component, Component.INetworkListener
 		_registeredLocally = true;
 	}
 
-	[Rpc.Host]
-	private void RpcRequestFadingDoorToggle()
-	{
-#if SERVER
-		if ( !Networking.IsHost )
-			return;
-
-		var caller = Rpc.Caller;
-		if ( caller is null )
-			return;
-
-		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
-		HostToggleFadingDoor( player );
-#endif
-	}
-
-#if SERVER
-	private void HostToggleFadingDoor( Player player )
-	{
-		if ( !Networking.IsHost || !HasFadingDoor )
-			return;
-		if ( !player.IsValid() || player != PlayerOwner )
-			return;
-		if ( !GameObject.Components.TryGet<FadingDoor>( out var door ) || !door.IsValid() )
-			return;
-
-		if ( door.IsOpen )
-			door.Close();
-		else
-			door.Open();
-	}
-#endif
-
 	public bool TryFreezePhysics( bool force = false, bool fromFixedUpdate = false )
 	{
 #if SERVER
 		if ( !Networking.IsHost )
+			return false;
+
+		if ( HasFadingDoor && FadingDoorIsOpen )
 			return false;
 
 		if ( GameObject.Tags.Has( PropCollisionTags.PhysgunHeldTag ) && !force )
@@ -255,6 +265,9 @@ public sealed class PropCustom : Component, Component.INetworkListener
 #if SERVER
 	private bool FreezeReadyBody( Rigidbody rb )
 	{
+		if ( HasFadingDoor && FadingDoorIsOpen )
+			return false;
+
 		PropCollisionTags.RefreshPhysicsShapeTags( GameObject );
 		rb.Velocity = Vector3.Zero;
 		rb.AngularVelocity = Vector3.Zero;

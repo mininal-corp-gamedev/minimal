@@ -2913,6 +2913,84 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         UpdateRemotePhysgunIdleSound();
         UpdateLocalAlcoholEffect();
         DrawPhysgunBeam();
+        TryToggleOwnedFadingDoors();
+    }
+
+    private void TryToggleOwnedFadingDoors()
+    {
+        if ( IsProxy )
+            return;
+        if ( !Input.Pressed( "FadingDoorOpenClose" ) )
+            return;
+
+#if SERVER
+        if ( Networking.IsHost )
+        {
+            HostToggleOwnedFadingDoors();
+            return;
+        }
+#endif
+
+        RpcRequestToggleOwnedFadingDoors();
+    }
+
+    [Rpc.Host]
+    private void RpcRequestToggleOwnedFadingDoors()
+    {
+#if SERVER
+        if ( !Networking.IsHost )
+            return;
+
+        var caller = Rpc.Caller;
+        if ( caller is null )
+            return;
+
+        var player = FindPlayerBySteamId( caller.SteamId.Value );
+        if ( !player.IsValid() || player != this )
+            return;
+
+        player.HostToggleOwnedFadingDoors();
+#endif
+    }
+
+    private void HostToggleOwnedFadingDoors()
+    {
+#if SERVER
+        if ( !Networking.IsHost )
+            return;
+
+        var anyClosed = false;
+        var found = false;
+
+        foreach ( var go in Scene.GetAllObjects( true ) )
+        {
+            if ( !go.Components.TryGet<PropCustom>( out var prop ) )
+                continue;
+            if ( !prop.IsValid() || prop.PlayerOwner != this || !prop.HasFadingDoor )
+                continue;
+
+            found = true;
+            if ( !prop.FadingDoorIsOpen )
+                anyClosed = true;
+        }
+
+        if ( !found )
+            return;
+
+        var targetOpen = anyClosed;
+
+        foreach ( var go in Scene.GetAllObjects( true ) )
+        {
+            if ( !go.Components.TryGet<PropCustom>( out var prop ) )
+                continue;
+            if ( !prop.IsValid() || prop.PlayerOwner != this || !prop.HasFadingDoor )
+                continue;
+
+            prop.HostSetFadingDoorOpen( targetOpen );
+        }
+
+        FadingDoor.NotifyPlayerToggle( this, targetOpen );
+#endif
     }
 
     protected override void OnDestroy()

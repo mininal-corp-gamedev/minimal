@@ -18,7 +18,7 @@
 			<div class="prop-look-owner">@GameLocalization.Format( "ui.props.owner", "Owner: {0}", LookedPropOwnerName )</div>
 			@if ( LookedPropIsFadingDoor )
 			{
-				<div class="prop-look-fading-door">Fading Door</div>
+				<div class="prop-look-fading-door">@GetFadingDoorLabel()</div>
 			}
 			@if ( LookedPropIsTextscreen )
 			{
@@ -271,6 +271,7 @@
 	string LookedPropName { get; set; }
 	string LookedPropOwnerName { get; set; }
 	bool LookedPropIsFadingDoor { get; set; }
+	bool LookedPropFadingDoorIsOpen { get; set; }
 	bool LookedPropIsTextscreen { get; set; }
 
 	private void LoadProps()
@@ -850,6 +851,7 @@
 		LookedPropName = null;
 		LookedPropOwnerName = null;
 		LookedPropIsFadingDoor = false;
+		LookedPropFadingDoorIsOpen = false;
 		LookedPropIsTextscreen = false;
 
 		var local = Player.Local;
@@ -872,8 +874,18 @@
 
 		LookedPropName = string.IsNullOrWhiteSpace( trace.GameObject.Name ) ? GameLocalization.Phrase( "ui.props.prop", "Prop" ) : trace.GameObject.Name;
 		LookedPropOwnerName = GetOwnerName( prop.PlayerOwner );
-		LookedPropIsFadingDoor = trace.GameObject.Components.Get<global::FadingDoor>( FindMode.EverythingInSelfAndAncestors ).IsValid();
+		LookedPropIsFadingDoor = prop.HasFadingDoor;
+		LookedPropFadingDoorIsOpen = prop.HasFadingDoor && prop.FadingDoorIsOpen;
 		LookedPropIsTextscreen = trace.GameObject.Components.Get<global::Textscreen>( FindMode.EverythingInSelfAndAncestors ).IsValid();
+	}
+
+	private string GetFadingDoorLabel()
+	{
+		var state = LookedPropFadingDoorIsOpen
+			? GameLocalization.Phrase( "ui.props.fading_door_open", "open" )
+			: GameLocalization.Phrase( "ui.props.fading_door_closed", "closed" );
+
+		return GameLocalization.Format( "ui.props.fading_door_status", "Fading Door ({0})", state );
 	}
 
 	private static string GetOwnerName( Player owner )
@@ -908,6 +920,7 @@
 		hash.Add( LookedPropName );
 		hash.Add( LookedPropOwnerName );
 		hash.Add( LookedPropIsFadingDoor );
+		hash.Add( LookedPropFadingDoorIsOpen );
 		hash.Add( LookedPropIsTextscreen );
 
 		foreach ( var favoriteId in FavoritePropIds.OrderBy( id => id, StringComparer.Ordinal ) )

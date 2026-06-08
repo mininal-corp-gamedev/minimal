@@ -5,6 +5,7 @@ public static class PropCollisionTags
 {
 	public const string PropTag = "prop";
 	public const string PhysgunHeldTag = "physgun_held";
+	public const string FadingDoorOpenTag = "fading_door_open";
 
 	public static void ApplyNoCollideTag( GameObject gameObject, bool enabled )
 	{
@@ -55,5 +56,43 @@ public static class PropCollisionTags
 		}
 
 		return shapeCount > 0;
+	}
+
+	public static void ApplyFadingDoorOpenState( GameObject gameObject, bool isOpen )
+	{
+		if ( !gameObject.IsValid() )
+			return;
+
+		var solidCollisions = !isOpen;
+
+		if ( isOpen )
+			gameObject.Tags.Add( FadingDoorOpenTag );
+		else
+			gameObject.Tags.Remove( FadingDoorOpenTag );
+
+		foreach ( var collider in gameObject.Components.GetAll<Collider>( FindMode.EverythingInSelfAndDescendants ) )
+		{
+			if ( collider.IsValid() )
+				collider.Enabled = solidCollisions;
+		}
+
+		RefreshPhysicsShapeTags( gameObject );
+
+		var rb = gameObject.Components.Get<Rigidbody>( FindMode.EverythingInSelfAndDescendants );
+		if ( !rb.IsValid() || rb.PhysicsBody is null || !rb.PhysicsBody.IsValid() )
+			return;
+
+		rb.PhysicsBody.EnableSolidCollisions = solidCollisions;
+
+		foreach ( var shape in rb.PhysicsBody.Shapes )
+		{
+			if ( !shape.IsValid() )
+				continue;
+
+			if ( solidCollisions )
+				shape.EnableAllCollision();
+			else
+				shape.DisableAllCollision();
+		}
 	}
 }

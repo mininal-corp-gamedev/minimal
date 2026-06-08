@@ -22,6 +22,11 @@
         "Flags": 0,
         "Ammo": 0,
         "AttackRange": 80,
+        "BulletPassThroughLimit": 8,
+        "BulletPassThroughTags": [
+          "bullet_passthrough"
+        ],
+        "BulletPenetrationStep": 1,
         "BulletPrefab": null,
         "CanAttackWithoutAmmo": true,
         "ClipSize": 30,
@@ -31,6 +36,7 @@
         "HasHipFire": false,
         "HasReload": false,
         "HoldType": "None",
+        "HoldTypeHandedness": "BothHands",
         "IsIronSight": false,
         "IsMelee": true,
         "OnComponentDestroy": null,
@@ -51,7 +57,8 @@
           "component_id": "bea1b2ad-fcf1-40ea-8321-d4bad25bcc84",
           "go": "68b89e63-5363-4d7b-8d81-55d61a0b7106",
           "component_type": "SkinnedModelRenderer"
-        }
+        },
+        "WorldModelPrefab": null
       }
     ],
     "Children": [
@@ -106,7 +113,7 @@
             "PlaybackRate": 1,
             "RenderOptions": {
               "GameLayer": true,
-              "OverlayLayer": false,
+              "OverlayLayer": true,
               "BloomLayer": false,
               "AfterUILayer": false
             },
@@ -225,7 +232,7 @@
                                 "OnComponentUpdate": null,
                                 "RenderOptions": {
                                   "GameLayer": true,
-                                  "OverlayLayer": false,
+                                  "OverlayLayer": true,
                                   "BloomLayer": false,
                                   "AfterUILayer": false
                                 },
@@ -1530,7 +1537,7 @@
             "PlaybackRate": 1,
             "RenderOptions": {
               "GameLayer": true,
-              "OverlayLayer": false,
+              "OverlayLayer": true,
               "BloomLayer": false,
               "AfterUILayer": false
             },

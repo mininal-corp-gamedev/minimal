@@ -22,6 +22,11 @@
         "Flags": 0,
         "Ammo": 0,
         "AttackRange": 2048,
+        "BulletPassThroughLimit": 8,
+        "BulletPassThroughTags": [
+          "bullet_passthrough"
+        ],
+        "BulletPenetrationStep": 1,
         "BulletPrefab": {
           "_type": "gameobject",
           "prefab": "prefabs/bullets/bullet.prefab"
@@ -119,7 +124,7 @@
             "PlaybackRate": 1,
             "RenderOptions": {
               "GameLayer": true,
-              "OverlayLayer": false,
+              "OverlayLayer": true,
               "BloomLayer": false,
               "AfterUILayer": false
             },
@@ -243,7 +248,7 @@
             "PlaybackRate": 1,
             "RenderOptions": {
               "GameLayer": true,
-              "OverlayLayer": false,
+              "OverlayLayer": true,
               "BloomLayer": false,
               "AfterUILayer": false
             },

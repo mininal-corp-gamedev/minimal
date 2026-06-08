@@ -21,6 +21,12 @@
         "__enabled": true,
         "Flags": 0,
         "Ammo": 0,
+        "AttackRange": 2048,
+        "BulletPassThroughLimit": 8,
+        "BulletPassThroughTags": [
+          "bullet_passthrough"
+        ],
+        "BulletPenetrationStep": 1,
         "BulletPrefab": {
           "_type": "gameobject",
           "prefab": "prefabs/bullets/bullet.prefab"
@@ -35,6 +41,7 @@
         "HoldType": "Rifle",
         "HoldTypeHandedness": "BothHands",
         "IsIronSight": false,
+        "IsMelee": false,
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
@@ -120,7 +127,7 @@
             "PlaybackRate": 1,
             "RenderOptions": {
               "GameLayer": true,
-              "OverlayLayer": false,
+              "OverlayLayer": true,
               "BloomLayer": false,
               "AfterUILayer": false
             },
@@ -140,9 +147,9 @@
             "__version": 2,
             "Flags": 0,
             "Name": "ShotPos",
-            "Position": "36.94164,-4.803466,-4.813882",
+            "Position": "36.9416389,-4.80346584,-4.81388187",
             "Rotation": "0,0,0,1",
-            "Scale": "0.1,0.1,0.1",
+            "Scale": "0.100000001,0.100000001,0.100000001",
             "Tags": "",
             "Enabled": true,
             "NetworkMode": 0,
@@ -244,7 +251,7 @@
             "PlaybackRate": 1,
             "RenderOptions": {
               "GameLayer": true,
-              "OverlayLayer": false,
+              "OverlayLayer": true,
               "BloomLayer": false,
               "AfterUILayer": false
             },
@@ -277,11 +284,8 @@
         "AgentMaxSlope": 40,
         "ExcludedBodies": "",
         "IncludedBodies": "",
-        "CustomBounds": false,
-        "Bounds": {
-          "Mins": "0,0,0",
-          "Maxs": "0,0,0"
-        }
+        "DeferGeneration": false,
+        "CustomBounds": false
       }
     },
     "__variables": []
@@ -292,7 +296,6 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "drakefruit.m4a1_shot#91284",
     "drakefruit.rifle_reload#91283",
     "facepunch.v_first_person_arms_human#205798",
     "facepunch.v_spaghellim4#150536"

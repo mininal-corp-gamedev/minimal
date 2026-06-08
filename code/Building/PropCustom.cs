@@ -13,11 +13,8 @@ public sealed class PropCustom : Component, Component.INetworkListener
 	private bool _physicsFrozen;
 	private bool _physicsReadyForFreeze;
 	private int _physicsReadyFixedTicks;
-	private bool _freezeReadyLogged;
-	private bool _freezeCompleteLogged;
 
 	private const int FreezeDelayFixedTicks = 1;
-	private const string PropPhysicsDebugPrefix = "[PropPhysicsDebug]";
 
 	protected override void OnStart()
 	{
@@ -216,23 +213,16 @@ public sealed class PropCustom : Component, Component.INetworkListener
 			return false;
 		if ( rb.PhysicsBody is null || !rb.PhysicsBody.IsValid() )
 			return false;
-		if ( !PropCollisionTags.TryRefreshPhysicsShapeTags( GameObject, out var shapeCount ) )
+		if ( !PropCollisionTags.TryRefreshPhysicsShapeTags( GameObject, out _ ) )
 			return false;
 
 		if ( force )
-			return FreezeReadyBody( rb, shapeCount, true );
+			return FreezeReadyBody( rb );
 
 		if ( !_physicsReadyForFreeze )
 		{
 			_physicsReadyForFreeze = true;
 			_physicsReadyFixedTicks = 0;
-
-			if ( !_freezeReadyLogged )
-			{
-				Log.Info( $"{PropPhysicsDebugPrefix} freeze ready object='{GameObject.Name}' shapes={shapeCount} motion={rb.MotionEnabled}" );
-				_freezeReadyLogged = true;
-			}
-
 			return false;
 		}
 
@@ -242,16 +232,15 @@ public sealed class PropCustom : Component, Component.INetworkListener
 		if ( _physicsReadyFixedTicks < FreezeDelayFixedTicks )
 			return false;
 
-		return FreezeReadyBody( rb, shapeCount, false );
+		return FreezeReadyBody( rb );
 #else
 		return false;
 #endif
 	}
 
 #if SERVER
-	private bool FreezeReadyBody( Rigidbody rb, int shapeCount, bool force )
+	private bool FreezeReadyBody( Rigidbody rb )
 	{
-		var readyTicks = _physicsReadyFixedTicks;
 		PropCollisionTags.RefreshPhysicsShapeTags( GameObject );
 		rb.Velocity = Vector3.Zero;
 		rb.AngularVelocity = Vector3.Zero;
@@ -259,13 +248,6 @@ public sealed class PropCustom : Component, Component.INetworkListener
 		_physicsFrozen = true;
 		_physicsReadyForFreeze = false;
 		_physicsReadyFixedTicks = 0;
-
-		if ( !_freezeCompleteLogged || force )
-		{
-			Log.Info( $"{PropPhysicsDebugPrefix} freeze applied object='{GameObject.Name}' force={force} readyTicks={readyTicks} shapes={shapeCount} motion={rb.MotionEnabled}" );
-			_freezeCompleteLogged = true;
-		}
-
 		return true;
 	}
 #endif

@@ -1,4 +1,4 @@
-﻿﻿using Sandbox;
+﻿using Sandbox;
 using Sandbox.Citizen;
 using Sandbox.Physics;
 using System;
@@ -1464,6 +1464,9 @@ public sealed class WeaponPhysgun : Weapon
             if (shopObject)
                 return true;
 
+            if (TryGetMoneyDropped(rb, out _))
+                return true;
+
             return HasGravityGunShopTarget(rb.GameObject);
         }
 
@@ -1490,6 +1493,12 @@ public sealed class WeaponPhysgun : Weapon
     {
         shopObject = rb.GameObject.Components.Get<ShopObject>(FindMode.EverythingInSelfAndAncestors);
         return shopObject.IsValid();
+    }
+
+    private static bool TryGetMoneyDropped(Rigidbody rb, out MoneyDropped moneyDropped)
+    {
+        moneyDropped = rb.GameObject.Components.Get<MoneyDropped>(FindMode.EverythingInSelfAndAncestors);
+        return moneyDropped.IsValid();
     }
 
     private static bool HasGravityGunShopTarget(GameObject target)

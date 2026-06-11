@@ -96,6 +96,9 @@ public sealed class WeaponPhysgun : Weapon
     private bool _spinLookControlsOverridden;
     private bool _spinPreviousUseLookControls;
     private bool _spinSoundActive;
+    private bool _spinSnapActive;
+    private float _spinSnapAngle;
+    private Angles _spinSnapAccumulatedLook;
 
     private Vector3 _beamLastEnd;
     private Vector3 _beamBend;
@@ -605,6 +608,7 @@ public sealed class WeaponPhysgun : Weapon
         if (!canSpin)
         {
             UnlockSpinCamera();
+            ResetSpinSnap();
             return;
         }
 
@@ -620,28 +624,71 @@ public sealed class WeaponPhysgun : Weapon
             Input.Clear("use");
 
         bool snapping = Input.Down("Run") || Input.Down("Walk") || Input.Down("walk");
-        var snapAngle = Input.Down("Walk") || Input.Down("walk") ? 15f : SnapAngleDegrees;
+        var snapAngle = MathF.Max(1f, Input.Down("Walk") || Input.Down("walk") ? 15f : SnapAngleDegrees);
         var look = Input.AnalogLook * -1f;
 
         if (snapping)
         {
-            if (MathF.Abs(look.yaw) > MathF.Abs(look.pitch)) look.pitch = 0;
-            else look.yaw = 0;
+            if (!_spinSnapActive || !Nearly(_spinSnapAngle, snapAngle))
+            {
+                ResetSpinSnap();
+                _spinSnapActive = true;
+                _spinSnapAngle = snapAngle;
+                _grabOffset = SnapGrabOffsetToSpinGrid(_grabOffset, snapAngle);
+            }
+
+            var spinDelta = GetSnappedSpinDelta(look, snapAngle);
+            if (!Nearly(spinDelta.pitch, 0f) || !Nearly(spinDelta.yaw, 0f))
+                _grabOffset = SnapGrabOffsetToSpinGrid(Rotation.From(spinDelta) * _grabOffset, snapAngle);
         }
-
-        var spinRotation = Rotation.From(look) * _grabOffset;
-
-        if (snapping)
+        else
         {
-            var eyeYaw = Rotation.FromYaw(_spinSavedEyeAngles.yaw);
-            var spinWorld = eyeYaw * spinRotation;
-            var snapped = spinWorld.Angles().SnapToGrid(snapAngle);
-            spinRotation = eyeYaw.Inverse * Rotation.From(snapped);
+            ResetSpinSnap();
+            _grabOffset = Rotation.From(look) * _grabOffset;
         }
 
-        _grabOffset = spinRotation;
         controller.EyeAngles = _spinSavedEyeAngles;
         Input.AnalogLook = default;
+    }
+
+    private Angles GetSnappedSpinDelta(Angles look, float snapAngle)
+    {
+        if (MathF.Abs(look.yaw) > MathF.Abs(look.pitch))
+        {
+            _spinSnapAccumulatedLook.yaw += look.yaw;
+            _spinSnapAccumulatedLook.pitch = 0f;
+        }
+        else
+        {
+            _spinSnapAccumulatedLook.pitch += look.pitch;
+            _spinSnapAccumulatedLook.yaw = 0f;
+        }
+
+        var pitchSteps = ExtractSnapSteps(_spinSnapAccumulatedLook.pitch, snapAngle, out var pitchRemainder);
+        var yawSteps = ExtractSnapSteps(_spinSnapAccumulatedLook.yaw, snapAngle, out var yawRemainder);
+        _spinSnapAccumulatedLook.pitch = pitchRemainder;
+        _spinSnapAccumulatedLook.yaw = yawRemainder;
+        return new Angles(pitchSteps * snapAngle, yawSteps * snapAngle, 0f);
+    }
+
+    private static int ExtractSnapSteps(float accumulated, float snapAngle, out float remainder)
+    {
+        var steps = (int)(accumulated / snapAngle);
+        if (steps == 0)
+        {
+            remainder = accumulated;
+            return 0;
+        }
+
+        remainder = accumulated - steps * snapAngle;
+        return steps;
+    }
+
+    private Rotation SnapGrabOffsetToSpinGrid(Rotation grabOffset, float snapAngle)
+    {
+        var eyeYaw = Rotation.FromYaw(_spinSavedEyeAngles.yaw);
+        var spinWorld = eyeYaw * grabOffset;
+        return eyeYaw.Inverse * Rotation.From(spinWorld.Angles().SnapToGrid(snapAngle));
     }
 
     private void LockSpinCamera(PlayerController controller)
@@ -660,6 +707,14 @@ public sealed class WeaponPhysgun : Weapon
 
         _spinLookControlsOverridden = false;
         _spinCameraLocked = false;
+        ResetSpinSnap();
+    }
+
+    private void ResetSpinSnap()
+    {
+        _spinSnapActive = false;
+        _spinSnapAngle = 0f;
+        _spinSnapAccumulatedLook = default;
     }
 
     private void SetSpinSoundActive(bool active)

@@ -119,6 +119,18 @@
         "OnComponentUpdate": null
       },
       {
+        "__type": "PlayerClan",
+        "__guid": "a4dc77ff-cac9-401b-8a7b-1b3813d4d04e",
+        "__enabled": true,
+        "Flags": 0,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
+      },
+      {
         "__type": "Sandbox.PlayerController",
         "__guid": "188a7c51-221c-4f73-b9c4-c78b60ded3fa",
         "__enabled": true,

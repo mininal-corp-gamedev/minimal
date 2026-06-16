@@ -322,6 +322,37 @@
         "Children": []
       },
       {
+        "__guid": "9f0c6c6e-046e-4abc-81ab-200f0fd637e1",
+        "__version": 2,
+        "Flags": 0,
+        "Name": "Clan Manager",
+        "Position": "0,0,0",
+        "Rotation": "0,0,0,1",
+        "Scale": "1,1,1",
+        "Tags": "",
+        "Enabled": true,
+        "NetworkMode": 2,
+        "NetworkFlags": 0,
+        "NetworkOrphaned": 0,
+        "NetworkTransmit": true,
+        "OwnerTransfer": 1,
+        "Components": [
+          {
+            "__type": "Minimal.Clan.ClanManager",
+            "__guid": "59508a21-d539-4e12-9b5d-387ebbf78f34",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          }
+        ],
+        "Children": []
+      },
+      {
         "__guid": "1eb7475f-1c69-4490-90c5-e0137be5e753",
         "__version": 2,
         "Flags": 0,
@@ -652,19 +683,6 @@
             "__guid": "b4de8248-1b6c-48c9-b244-6fee873d30c5",
             "__enabled": true,
             "Flags": 0,
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null
-          },
-          {
-            "__type": "Sandbox.QuestHud",
-            "__guid": "1dcedf5e-8b17-4d98-841c-878a8fc82158",
-            "__enabled": true,
-            "Flags": 0,
-            "MyStringValue": "Hello World!",
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,

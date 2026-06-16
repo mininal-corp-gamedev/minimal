@@ -1,20 +1,81 @@
-QuestHud
-{
+QuestHud {
 	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: #444;
-	justify-content: center;
-	align-items: center;
-	font-weight: bold;
-	border-radius: 20px;
+	top: 10px;
+	left: 10px;
+	pointer-events: none;
+	flex-direction: column;
 
-	.title
-	{
-		font-size: 25px;
-		font-family: Poppins;
-		color: #fff;
+	.qh-panel {
+		flex-direction: column;
+		padding: 12px 14px;
+		min-width: 280px;
+		max-width: 380px;
+		background-color: rgba(28, 39, 47, 0.88);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 10px;
+		box-shadow: 0 7px 20px rgba(0, 0, 0, 0.34);
+	}
+
+	.qh-row-top {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 18px;
+	}
+
+	.qh-header {
+		flex-grow: 1;
+		font-family: Montserrat;
+		font-size: 16px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.95);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		margin-right: 12px;
+	}
+
+	.qh-task-meta {
+		flex-shrink: 0;
+		font-family: Montserrat;
+		font-size: 13px;
+		font-weight: 700;
+		color: #ff436c;
+	}
+
+	.qh-row-body {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.qh-desc {
+		flex-direction: column;
+		flex-grow: 1;
+		min-width: 0;
+		margin-right: 12px;
+	}
+
+	.qh-task-header {
+		font-family: Montserrat;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.92);
+		margin-bottom: 2px;
+	}
+
+	.qh-task-desc {
+		font-family: Montserrat;
+		font-size: 12px;
+		font-weight: 400;
+		color: rgba(255, 255, 255, 0.72);
+	}
+
+	.qh-count {
+		flex-shrink: 0;
+		font-family: Montserrat;
+		font-size: 18px;
+		font-weight: 800;
+		color: #ffd7e2;
 	}
 }

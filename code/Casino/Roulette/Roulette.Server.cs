@@ -312,6 +312,9 @@ public sealed partial class Roulette
 			if ( player.IsValid() && payout > 0 )
 				player.Money += payout;
 
+			if ( player.IsValid() )
+				TryAdvanceFirstQuest( player );
+
 			if ( connection is not null )
 			{
 				using ( Rpc.FilterInclude( c => c.SteamId.Value == steamId ) )
@@ -324,6 +327,23 @@ public sealed partial class Roulette
 		}
 
 		_betsBySteamId.Clear();
+	}
+
+	private static void TryAdvanceFirstQuest( Player player )
+	{
+		if ( !player.IsValid() ) return;
+
+		var pq = player.Components.Get<PlayerQuest>();
+		if ( !pq.IsValid() ) return;
+
+		var def = QuestDatabase.FindQuestById( "q1" );
+		if ( def == null ) return;
+
+		var active = pq.GetActiveQuest( def );
+		if ( active == null ) return;
+		if ( active.CurrentQuestTask == null || active.CurrentQuestTask.Id != "q1t1" ) return;
+
+		QuestManager.Instance?.AdvanceCount( pq, def );
 	}
 
 	private bool DoesBetWin( RouletteBet bet, int number )

@@ -2298,8 +2298,28 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         // Гарантируем файл на диске даже если значение совпало с дефолтом
         // (тогда сеттер не вызвал бы SavePlayerData).
         SavePlayerData();
+
+        TryGiveStarterQuest();
 #endif
     }
+
+#if SERVER
+    private void TryGiveStarterQuest()
+    {
+        if ( !Networking.IsHost ) return;
+
+        var pq = Components.Get<PlayerQuest>();
+        if ( !pq.IsValid() ) return;
+
+        var def = QuestDatabase.FindQuestById( "q1" );
+        if ( def == null ) return;
+
+        if ( pq.HasActiveQuest( def ) ) return;
+        if ( pq.HasFinishedQuest( def ) ) return;
+
+        QuestManager.Instance?.GiveQuest( pq, def );
+    }
+#endif
 
     private void HostInitInventorySave()
     {

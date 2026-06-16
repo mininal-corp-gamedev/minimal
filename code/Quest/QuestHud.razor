@@ -1,19 +1,54 @@
 @using Sandbox;
 @using Sandbox.UI;
+@using System.Linq;
 @inherits PanelComponent
 @namespace Sandbox
 
-<root>
-	<div class="title">@MyStringValue</div>
-</root>
+@{
+	var pq = PlayerQuest.Local;
+	var quest = pq?.ClientCurrentQuests?.FirstOrDefault( q => q != null && !q.IsFinish && q.QuestDefinition != null && q.CurrentQuestTask != null );
+}
+
+@if ( quest != null )
+{
+	var def = quest.QuestDefinition;
+	var task = quest.CurrentQuestTask;
+	var tasks = def.QuestTasks;
+	var idx = tasks != null ? tasks.IndexOf( task ) : -1;
+	var currentNumber = (idx >= 0 ? idx : 0) + 1;
+	var tasksTotal = tasks != null ? System.Math.Max( 1, tasks.Count ) : 1;
+
+	<root>
+		<div class="qh-panel">
+			<div class="qh-row-top">
+				<div class="qh-header">@def.Header</div>
+				<div class="qh-task-meta">@currentNumber / @tasksTotal</div>
+			</div>
+			<div class="qh-row-body">
+				<div class="qh-desc">
+					<div class="qh-task-header">@task.Header</div>
+					<div class="qh-task-desc">@task.Description</div>
+				</div>
+				@if ( task.Count > 1 )
+				{
+					<div class="qh-count">@quest.CurrentCount/@task.Count</div>
+				}
+			</div>
+		</div>
+	</root>
+}
 
 @code
 {
+	protected override int BuildHash()
+	{
+		var pq = PlayerQuest.Local;
+		var list = pq?.ClientCurrentQuests;
+		if ( list == null || list.Count == 0 ) return 0;
 
-	[Property, TextArea] public string MyStringValue { get; set; } = "Hello World!";
+		var q = list.FirstOrDefault( x => x != null && !x.IsFinish && x.QuestDefinition != null && x.CurrentQuestTask != null );
+		if ( q == null ) return 0;
 
-	/// <summary>
-	/// the hash determines if the system should be rebuilt. If it changes, it will be rebuilt
-	/// </summary>
-	protected override int BuildHash() => System.HashCode.Combine( MyStringValue );
+		return System.HashCode.Combine( q.QuestDefinition.Id, q.CurrentQuestTask.Id, q.CurrentCount, q.IsFinish, list.Count );
+	}
 }

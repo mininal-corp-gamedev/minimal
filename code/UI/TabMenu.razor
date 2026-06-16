@@ -164,33 +164,6 @@
 								</div>
 							}
 
-							@if ( (Player.Local?.AdminRank ?? 0) >= ClanManager.AdminDeleteRank )
-							{
-								<div class="clan-invite">
-									<div class="clan-section-title">Admin clans</div>
-									@foreach ( var clan in GetClanSummariesForUi() )
-									{
-										<div class="clan-member-row">
-											<div class="clan-logo-preview" style="@GetClanLogoStyle( clan.Logo, clan.ColorId )">
-												@foreach ( var paneStyle in GetClanLogoPaneStyles( clan.Logo ) )
-												{
-													<div class="clan-logo-pane" style="@paneStyle"></div>
-												}
-												@if ( !string.IsNullOrWhiteSpace( clan.Logo?.IconPath ) )
-												{
-													<div class="clan-logo-icon" style="@GetClanIconStyle( clan.Logo.IconPath, clan.ColorId )"></div>
-												}
-											</div>
-											<div class="clan-member-info">
-												<div class="clan-member-name">@clan.Header</div>
-												<div class="clan-muted">@clan.MemberCount members</div>
-											</div>
-											<button class="clan-mini-btn danger" onclick=@(() => AdminDeleteClan( clan.Id ))>Delete</button>
-										</div>
-									}
-								</div>
-							}
-
 							@if ( hasClan )
 							{
 								<div class="clan-layout">
@@ -214,6 +187,7 @@
 										</div>
 
 										<div class="clan-stats">
+											<div class="clan-stat"><div class="clan-stat-label">Id</div><div class="clan-stat-value">#@localClan.Id</div></div>
 											<div class="clan-stat"><div class="clan-stat-label">Balance</div><div class="clan-stat-value">$@localClan.Balance</div></div>
 											<div class="clan-stat"><div class="clan-stat-label">Members</div><div class="clan-stat-value">@localClan.MemberCount</div></div>
 											<div class="clan-stat"><div class="clan-stat-label">Kills</div><div class="clan-stat-value">@localClan.Kills</div></div>
@@ -222,7 +196,7 @@
 
 										<div class="clan-meta">
 											<div>Leader SteamID: @localClan.LeaderSteamId</div>
-											<div>Leader last seen raw: @localClan.LeaderLastSeenRaw</div>
+											<div>Leader last seen: @FormatClanDate( localClan.LeaderLastSeenRaw )</div>
 										</div>
 
 										<div class="clan-section-title">Online clanmates</div>
@@ -313,6 +287,7 @@
 								<div class="clan-create">
 									<div class="clan-create-form">
 										<div class="clan-muted">Create a clan for $@ClanManager.CreatePrice. Header cannot be changed later.</div>
+										<div class="clan-warning">Warning: Header is permanent after creation.</div>
 										<TextEntry class="clan-input" Value="@CreateClanHeader" Placeholder="Header" OnTextEdited=@SetCreateClanHeader />
 										<TextEntry class="clan-input" Value="@CreateClanDescription" Placeholder="Description" OnTextEdited=@SetCreateClanDescription />
 										<div class="clan-section-title small">Clan color</div>
@@ -731,11 +706,6 @@
 		};
 	}
 
-	private IReadOnlyList<ClanSummary> GetClanSummariesForUi()
-	{
-		return ClanManager.Instance?.GetClanSummaries() ?? new List<ClanSummary>();
-	}
-
 	private void SyncEditClanState()
 	{
 		var clan = GetLocalClanSummary();
@@ -755,17 +725,35 @@
 
 	private void CreateClan()
 	{
+		if ( ClanText.NormalizeHeader( CreateClanHeader ).Length <= 0 )
+		{
+			Notification.Error( "Clan header is empty.", 3f );
+			return;
+		}
+
+		if ( CreateClanHeader.Length > ClanText.HeaderMaxLength )
+		{
+			Notification.Error( $"Clan header limit is {ClanText.HeaderMaxLength} characters.", 3f );
+			return;
+		}
+
+		if ( CreateClanDescription.Length > ClanText.DescriptionMaxLength )
+		{
+			Notification.Error( $"Clan description limit is {ClanText.DescriptionMaxLength} characters.", 3f );
+			return;
+		}
+
 		ClanManager.RpcRequestCreateClan( CreateClanHeader, CreateClanDescription, CreateClanColorId, CreateClanIconPath, CreateClanBackgroundType.ToString(), CreateClanBackgroundColor1, CreateClanBackgroundColor2, CreateClanBackgroundColor3, CreateClanBackgroundColor4 );
 	}
 
 	private void SetCreateClanHeader( string text )
 	{
-		CreateClanHeader = text;
+		CreateClanHeader = ClampText( text, ClanText.HeaderMaxLength );
 	}
 
 	private void SetCreateClanDescription( string text )
 	{
-		CreateClanDescription = text;
+		CreateClanDescription = ClampText( text, ClanText.DescriptionMaxLength );
 	}
 
 	private void SetCreateClanColor( string value )
@@ -790,7 +778,7 @@
 
 	private void UpdateEditDescription( string text )
 	{
-		EditClanDescription = text;
+		EditClanDescription = ClampText( text, ClanText.DescriptionMaxLength );
 		SendClanSettingsUpdate();
 	}
 
@@ -851,7 +839,6 @@
 	private void DeclineClanInvite() => ClanManager.RpcRequestDeclineInvite();
 	private void LeaveClan() => ClanManager.RpcRequestLeaveClan();
 	private void DeleteClan() => ClanManager.RpcRequestDeleteClan();
-	private void AdminDeleteClan( int clanId ) => ClanManager.RpcRequestAdminDeleteClan( clanId );
 	private void KickClanMember( long steamId ) => ClanManager.RpcRequestKickMember( steamId );
 
 	private void PromoteClanMember( ClanMemberSummary member )
@@ -905,6 +892,20 @@
 		ClanRank.Officer => "Officer",
 		_ => "Soldier"
 	};
+
+	private static string ClampText( string value, int maxLength )
+	{
+		var text = value ?? string.Empty;
+		return text.Length <= maxLength ? text : text[..maxLength];
+	}
+
+	private static string FormatClanDate( string rawDate )
+	{
+		if ( DateTimeOffset.TryParse( rawDate, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var value ) )
+			return value.LocalDateTime.ToString( "dd-MM-yyyy HH:mm", CultureInfo.InvariantCulture );
+
+		return string.IsNullOrWhiteSpace( rawDate ) ? "-" : rawDate;
+	}
 
 	private string GetPreviewHeader()
 	{

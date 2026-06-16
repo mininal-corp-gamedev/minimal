@@ -94,14 +94,6 @@ public sealed partial class ClanManager : Component
 	}
 
 	[Rpc.Host]
-	public static void RpcRequestAdminDeleteClan( int clanId )
-	{
-#if SERVER
-		Instance?.HostAdminDeleteClan( clanId );
-#endif
-	}
-
-	[Rpc.Host]
 	public static void RpcRequestLeaveClan()
 	{
 #if SERVER

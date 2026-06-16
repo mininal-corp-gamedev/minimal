@@ -2305,6 +2305,8 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 
         if ( data is null )
         {
+            var owner = GameObject.Network.Owner;
+            Log.Info( $"[PlayerSave] {(string.IsNullOrWhiteSpace( owner?.DisplayName ) ? "Unknown" : owner.DisplayName)} ({steamId}) created account." );
             data = new PlayerMoneySaveData
             {
                 SteamId = steamId,

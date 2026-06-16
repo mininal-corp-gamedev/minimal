@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using Minimal.Clan;
 
 public sealed class AdminManager : Component, Component.INetworkListener
 {
@@ -173,6 +174,13 @@ public sealed class AdminManager : Component, Component.INetworkListener
 	{
 #if SERVER
 		ClearInventory( Rpc.Caller, steamId );
+#endif
+	}
+
+	[Rpc.Host] public static void RpcRequestRemoveClan( int clanId )
+	{
+#if SERVER
+		RemoveClan( Rpc.Caller, clanId );
 #endif
 	}
 
@@ -705,6 +713,30 @@ public sealed class AdminManager : Component, Component.INetworkListener
 
 		var removed = target.HostClearInventoryExceptDefaultItems();
 		NotifyCaller( caller, GameLocalization.Format( "notify.admin.inventory_cleared", "Cleared {0}'s inventory. Removed {1} item(s).", GetPlayerName( target ), removed ), AdminNotifyType.Info );
+	}
+
+	private static void RemoveClan( Connection caller, int clanId )
+	{
+		if ( !HasAccess( caller, AdministratorRank, out var error ) )
+		{
+			NotifyCaller( caller, error, AdminNotifyType.Error );
+			return;
+		}
+
+		if ( clanId < 0 )
+		{
+			NotifyCaller( caller, "Invalid clan id.", AdminNotifyType.Error );
+			return;
+		}
+
+		if ( ClanManager.Instance is null )
+		{
+			NotifyCaller( caller, "Clan manager is not ready.", AdminNotifyType.Error );
+			return;
+		}
+
+		var success = ClanManager.Instance.HostAdminDeleteClan( caller, clanId, out var message );
+		NotifyCaller( caller, message, success ? AdminNotifyType.Info : AdminNotifyType.Error );
 	}
 
 	private static bool HasAccess( Connection caller, int requiredRank, out string error )

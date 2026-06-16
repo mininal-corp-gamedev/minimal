@@ -2,8 +2,8 @@ namespace Minimal.Clan;
 
 public static class ClanText
 {
-	public const int HeaderMaxLength = 28;
-	public const int DescriptionMaxLength = 160;
+	public const int HeaderMaxLength = 32;
+	public const int DescriptionMaxLength = 64;
 
 	public static string NormalizeHeader( string value )
 	{

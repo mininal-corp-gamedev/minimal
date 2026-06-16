@@ -61,6 +61,7 @@ AdminPanel {
 	.sidebar {
 		width: 240px;
 		flex-shrink: 0;
+		min-height: 0;
 		background-color: $sidebar-bg;
 		border-radius: 14px 0 0 14px;
 		flex-direction: column;
@@ -94,9 +95,11 @@ AdminPanel {
 
 	.sidebar-nav {
 		flex-direction: column;
-		flex-shrink: 0;
+		flex-grow: 1;
+		min-height: 0;
 		padding-top: 6px;
 		overflow-y: scroll;
+		overflow-x: hidden;
 	}
 
 	.tab-btn {
@@ -125,6 +128,7 @@ AdminPanel {
 
 	.content-area {
 		flex-grow: 1;
+		min-height: 0;
 		flex-direction: column;
 		padding: 38px 44px;
 		overflow: hidden;
@@ -132,7 +136,10 @@ AdminPanel {
 
 	.page {
 		flex-grow: 1;
+		min-height: 0;
 		flex-direction: column;
+		overflow-y: scroll;
+		overflow-x: hidden;
 	}
 
 	.page-title {

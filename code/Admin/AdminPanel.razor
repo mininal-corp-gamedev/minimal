@@ -111,7 +111,8 @@
 		new( "return", "Return", "Return a teleported player to the saved position.", 1, true, false, false, false, "", "" ),
 		new( "giverank", "Give Rank", "Give an admin rank to a SteamId.", 3, false, true, true, false, "Rank", "0-3" ),
 		new( "inventory", "Inventory", "Print an online player's inventory to the console.", 2, true, false, false, false, "", "" ),
-		new( "clearinventory", "Clear Inventory", "Clear an online player's inventory except default items.", 2, true, false, false, false, "", "" )
+		new( "clearinventory", "Clear Inventory", "Clear an online player's inventory except default items.", 2, true, false, false, false, "", "" ),
+		new( "removeclan", "Remove Clan", "Delete a clan by clan id.", 2, false, false, true, false, "Clan ID", "0" )
 	};
 
 	private bool IsOpen { get; set; }
@@ -293,6 +294,10 @@
 				break;
 			case "clearinventory":
 				AdminManager.RpcRequestClearInventory( steamId );
+				break;
+			case "removeclan":
+				if ( int.TryParse( ValueInput, out var clanId ) ) AdminManager.RpcRequestRemoveClan( clanId );
+				else Notification.Error( "Invalid clan id.", 3f );
 				break;
 		}
 	}

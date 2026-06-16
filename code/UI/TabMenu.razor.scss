@@ -634,6 +634,14 @@ TabMenu {
 		flex-shrink: 0;
 	}
 
+	.clan-settings {
+		max-height: 740px;
+		min-height: 0;
+		overflow-y: scroll;
+		overflow-x: hidden;
+		padding-right: 12px;
+	}
+
 	.clan-invite {
 		margin-bottom: 18px;
 	}
@@ -646,8 +654,8 @@ TabMenu {
 
 	.clan-logo-preview {
 		position: relative;
-		width: 92px;
-		height: 92px;
+		width: 256px;
+		height: 256px;
 		flex-shrink: 0;
 		margin-right: 16px;
 		border-radius: 8px;
@@ -658,8 +666,8 @@ TabMenu {
 		overflow: hidden;
 
 		&.large {
-			width: 170px;
-			height: 170px;
+			width: 256px;
+			height: 256px;
 			margin-right: 0;
 			margin-bottom: 14px;
 		}
@@ -673,16 +681,16 @@ TabMenu {
 	.clan-logo-icon {
 		position: relative;
 		z-index: 1;
-		width: 58px;
-		height: 58px;
+		width: 256px;
+		height: 256px;
 		background-repeat: no-repeat;
 		background-size: contain;
 		background-position: center;
 		background-image-tint: white;
 
 		&.large {
-			width: 106px;
-			height: 106px;
+			width: 256px;
+			height: 256px;
 		}
 	}
 
@@ -726,6 +734,7 @@ TabMenu {
 	}
 
 	.clan-muted,
+	.clan-warning,
 	.clan-meta {
 		font-family: Poppins;
 		font-size: 12px;
@@ -741,6 +750,12 @@ TabMenu {
 	.clan-meta {
 		flex-direction: column;
 		margin-bottom: 16px;
+	}
+
+	.clan-warning {
+		color: rgba(255, 212, 96, 0.86);
+		margin-top: 8px;
+		margin-bottom: 10px;
 	}
 
 	.clan-stats {

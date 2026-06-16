@@ -57,6 +57,18 @@ public sealed partial class ClanManager
 			return;
 		}
 
+		if ( (header ?? string.Empty).Trim().Length > ClanText.HeaderMaxLength )
+		{
+			Notify( caller, false, $"Clan header limit is {ClanText.HeaderMaxLength} characters." );
+			return;
+		}
+
+		if ( (description ?? string.Empty).Trim().Length > ClanText.DescriptionMaxLength )
+		{
+			Notify( caller, false, $"Clan description limit is {ClanText.DescriptionMaxLength} characters." );
+			return;
+		}
+
 		if ( _clans.Any( x => string.Equals( x.Header, normalizedHeader, StringComparison.OrdinalIgnoreCase ) ) )
 		{
 			Notify( caller, false, "A clan with this header already exists." );
@@ -90,6 +102,7 @@ public sealed partial class ClanManager
 		ApplyClanToPlayer( player, clan, ClanRank.Leader );
 		_pendingInvites.Remove( steamId );
 		SaveAll();
+		Log.Info( $"[Clan] {PlayerLabel( caller )} created clan #{clan.Id} \"{clan.Header}\"." );
 		Notify( caller, true, $"Clan created: {clan.Header}." );
 	}
 
@@ -108,6 +121,12 @@ public sealed partial class ClanManager
 		if ( !CanEditSettingsRank( rank ) )
 		{
 			Notify( caller, false, "You cannot edit clan settings." );
+			return;
+		}
+
+		if ( (description ?? string.Empty).Trim().Length > ClanText.DescriptionMaxLength )
+		{
+			Notify( caller, false, $"Clan description limit is {ClanText.DescriptionMaxLength} characters." );
 			return;
 		}
 
@@ -140,25 +159,27 @@ public sealed partial class ClanManager
 		DeleteClan( clan, "Clan deleted." );
 	}
 
-	private void HostAdminDeleteClan( int clanId )
+	public bool HostAdminDeleteClan( Connection caller, int clanId, out string message )
 	{
-		var caller = Rpc.Caller;
 		var player = GetCallerPlayer( caller );
 		if ( !player.IsValid() || player.AdminRank < AdminDeleteRank )
 		{
-			Notify( caller, false, "You cannot delete clans as admin." );
-			return;
+			message = "You cannot delete clans as admin.";
+			return false;
 		}
 
 		var clan = FindClan( clanId );
 		if ( clan is null )
 		{
-			Notify( caller, false, "Clan not found." );
-			return;
+			message = "Clan not found.";
+			return false;
 		}
 
+		var header = clan.Header;
 		DeleteClan( clan, "Clan deleted by admin." );
-		Notify( caller, true, "Clan deleted by admin." );
+		Log.Info( $"[Clan] {PlayerLabel( caller )} removed clan #{clanId} \"{header}\"." );
+		message = $"Clan #{clanId} deleted.";
+		return true;
 	}
 
 	private void HostLeaveClan()
@@ -174,6 +195,7 @@ public sealed partial class ClanManager
 
 		if ( clan.LeaderSteamId == caller.SteamId.Value )
 		{
+			Log.Info( $"[Clan] {PlayerLabel( caller )} left clan #{clan.Id} \"{clan.Header}\" as leader." );
 			DeleteClan( clan, "Leader left. Clan deleted." );
 			return;
 		}
@@ -181,6 +203,7 @@ public sealed partial class ClanManager
 		RemoveMember( clan, caller.SteamId.Value );
 		ClearClanFromPlayer( player );
 		SaveAll();
+		Log.Info( $"[Clan] {PlayerLabel( caller )} left clan #{clan.Id} \"{clan.Header}\"." );
 		Notify( caller, true, "You left the clan." );
 	}
 
@@ -239,6 +262,7 @@ public sealed partial class ClanManager
 			RpcReceiveInvite( clan.Id, clan.Header, caller.SteamId.Value, caller.DisplayName ?? "" );
 		}
 
+		Log.Info( $"[Clan] {PlayerLabel( caller )} invited {PlayerLabel( target.GameObject.Network.Owner )} to clan #{clan.Id} \"{clan.Header}\"." );
 		Notify( caller, true, "Clan invite sent." );
 	}
 
@@ -281,6 +305,7 @@ public sealed partial class ClanManager
 		ApplyClanToPlayer( player, clan, ClanRank.Soldier );
 		SaveAll();
 		ClearInviteFor( caller, clan.Id );
+		Log.Info( $"[Clan] {PlayerLabel( caller )} joined clan #{clan.Id} \"{clan.Header}\"." );
 		Notify( caller, true, $"Joined clan: {clan.Header}." );
 	}
 
@@ -607,6 +632,15 @@ public sealed partial class ClanManager
 
 		var player = Player.FindPlayerBySteamId( caller.SteamId.Value );
 		return player.IsValid() && player.GameObject.Network.Owner == caller ? player : null;
+	}
+
+	private static string PlayerLabel( Connection connection )
+	{
+		if ( connection is null )
+			return "Server (0)";
+
+		var name = string.IsNullOrWhiteSpace( connection.DisplayName ) ? "Unknown" : connection.DisplayName;
+		return $"{name} ({connection.SteamId.Value})";
 	}
 
 	private void ClearInviteFor( Connection connection, int clanId )

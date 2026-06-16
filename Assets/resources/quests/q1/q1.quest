@@ -1,0 +1,15 @@
+{
+  "Id": "q1",
+  "Header": "Знакомство",
+  "Category": "beginner",
+  "Description": "Первый квест для знакомства",
+  "CanGetSameCategoryQuest": true,
+  "CanRepeat": false,
+  "QuestTasks": [
+    "resources/quests/q1/q1t1.qtask"
+  ],
+  "HasPostCompleted": true,
+  "HasPostCanceled": false,
+  "__references": [],
+  "__version": 0
+}

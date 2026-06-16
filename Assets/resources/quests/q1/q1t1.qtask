@@ -1,0 +1,9 @@
+{
+  "Id": "q1t1",
+  "Header": "Рулетка",
+  "Description": "Сыграть рулетку",
+  "Count": 3,
+  "HasPostCompleted": false,
+  "__references": [],
+  "__version": 0
+}

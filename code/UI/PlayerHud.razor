@@ -2,6 +2,7 @@
 @using Sandbox.UI;
 @using System;
 @using System.Globalization;
+@using Minimal.Clan;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -16,6 +17,10 @@
 
 				<div class="profile-content">
 					<div class="player-name">@PlayerName</div>
+					@if ( HasClan )
+					{
+						<div class="clan-name" style="color: @ClanColorCss;">@ClanName</div>
+					}
 
 					<div class="job-row">
 						<div class="job-icon"></div>
@@ -71,6 +76,9 @@
 		? GameLocalization.Phrase( "common.player", "Player" )
 		: Connection.Local.DisplayName;
 	string JobName => GameLocalization.JobHeader( LocalPlayer?.Job?.JobDefinition );
+	bool HasClan => LocalPlayer is not null && LocalPlayer.ClanId >= 0 && !string.IsNullOrWhiteSpace( LocalPlayer.ClanHeader );
+	string ClanName => LocalPlayer?.ClanHeader ?? "";
+	string ClanColorCss => ClanPalette.GetSwatch( LocalPlayer?.ClanColorId );
 
 	float HealthPercent => Percent( LocalPlayer?.Health ?? 0f, LocalPlayer?.MaxHealth ?? 1f );
 	float ArmorPercent => Percent( LocalPlayer?.Armor ?? 0f, LocalPlayer?.MaxArmor ?? 1f );
@@ -107,6 +115,9 @@
 		hash.Add( LocalSteamId );
 		hash.Add( PlayerName );
 		hash.Add( JobName );
+		hash.Add( HasClan );
+		hash.Add( ClanName );
+		hash.Add( ClanColorCss );
 		hash.Add( LocalPlayer?.Health ?? 0f );
 		hash.Add( LocalPlayer?.MaxHealth ?? 0f );
 		hash.Add( LocalPlayer?.Armor ?? 0f );

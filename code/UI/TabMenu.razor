@@ -2,9 +2,11 @@
 @using Sandbox.UI;
 @using System;
 @using System.Collections.Generic;
+@using System.Globalization;
 @using System.Linq;
 @using Minimal.Shop;
 @using Ambi.Storage;
+@using Minimal.Clan;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -26,9 +28,10 @@
 					</div>
 					<div class="sidebar-nav">
 						<button class="tab-btn @(ActiveTab == 0 ? "active" : "")" onclick=@(() => SelectJobsTab())>@GameLocalization.Phrase( "ui.tab.jobs" )</button>
-						<button class="tab-btn @(ActiveTab == 1 ? "active" : "")" onclick=@(() => ActiveTab = 1)>@GameLocalization.Phrase( "ui.tab.shop" )</button>
+						<button class="tab-btn @(ActiveTab == 1 ? "active" : "")" onclick=@SelectShopTab>@GameLocalization.Phrase( "ui.tab.shop" )</button>
 						<button class="tab-btn @(ActiveTab == 2 ? "active" : "")" onclick=@(() => SelectPlayersTab())>@GameLocalization.Phrase( "ui.tab.players" )</button>
-						<button class="tab-btn @(ActiveTab == 3 ? "active" : "")" onclick=@(() => ActiveTab = 3)>@GameLocalization.Phrase( "ui.tab.help" )</button>
+						<button class="tab-btn @(ActiveTab == 3 ? "active" : "")" onclick=@(() => SelectClanTab())>Clan</button>
+						<button class="tab-btn @(ActiveTab == 4 ? "active" : "")" onclick=@SelectHelpTab>@GameLocalization.Phrase( "ui.tab.help" )</button>
 					</div>
 					<div class="sidebar-spacer"></div>
 					<div class="sidebar-bottom">
@@ -142,6 +145,240 @@
 					}
 					else if ( ActiveTab == 3 )
 					{
+						var inviteClanId = ClanManager.Instance?.PendingInviteClanId ?? -1;
+						var localClan = GetLocalClanSummary();
+						var hasClan = (Player.Local?.ClanId ?? -1) >= 0;
+
+						<div class="page clan-page">
+							<div class="page-title">Clan</div>
+
+							@if ( inviteClanId >= 0 )
+							{
+								<div class="clan-invite">
+									<div class="clan-section-title">Invite</div>
+									<div class="clan-muted">@(ClanManager.Instance?.PendingInviteInviterName ?? "") invited you to @(ClanManager.Instance?.PendingInviteClanHeader ?? "a clan").</div>
+									<div class="clan-actions">
+										<button class="clan-btn primary" onclick=@AcceptClanInvite>Accept</button>
+										<button class="clan-btn" onclick=@DeclineClanInvite>Decline</button>
+									</div>
+								</div>
+							}
+
+							@if ( (Player.Local?.AdminRank ?? 0) >= ClanManager.AdminDeleteRank )
+							{
+								<div class="clan-invite">
+									<div class="clan-section-title">Admin clans</div>
+									@foreach ( var clan in GetClanSummariesForUi() )
+									{
+										<div class="clan-member-row">
+											<div class="clan-logo-preview" style="@GetClanLogoStyle( clan.Logo, clan.ColorId )">
+												@foreach ( var paneStyle in GetClanLogoPaneStyles( clan.Logo ) )
+												{
+													<div class="clan-logo-pane" style="@paneStyle"></div>
+												}
+												@if ( !string.IsNullOrWhiteSpace( clan.Logo?.IconPath ) )
+												{
+													<div class="clan-logo-icon" style="@GetClanIconStyle( clan.Logo.IconPath, clan.ColorId )"></div>
+												}
+											</div>
+											<div class="clan-member-info">
+												<div class="clan-member-name">@clan.Header</div>
+												<div class="clan-muted">@clan.MemberCount members</div>
+											</div>
+											<button class="clan-mini-btn danger" onclick=@(() => AdminDeleteClan( clan.Id ))>Delete</button>
+										</div>
+									}
+								</div>
+							}
+
+							@if ( hasClan )
+							{
+								<div class="clan-layout">
+									<div class="clan-main">
+										<div class="clan-header-row">
+											<div class="clan-logo-preview @GetClanLogoBackgroundClass( localClan.Logo )" style="@GetClanLogoStyle( localClan.Logo, localClan.ColorId )">
+												@foreach ( var paneStyle in GetClanLogoPaneStyles( localClan.Logo ) )
+												{
+													<div class="clan-logo-pane" style="@paneStyle"></div>
+												}
+												@if ( !string.IsNullOrWhiteSpace( localClan.Logo?.IconPath ) )
+												{
+													<div class="clan-logo-icon" style="@GetClanIconStyle( localClan.Logo.IconPath, localClan.ColorId )"></div>
+												}
+											</div>
+											<div class="clan-title-block">
+												<div class="clan-title" style="color: @ColorCss( localClan.ColorId );">@localClan.Header</div>
+												<div class="clan-muted">@GetRankName( Player.Local?.ClanRank ?? ClanRank.Soldier )</div>
+												<div class="clan-description">@localClan.Description</div>
+											</div>
+										</div>
+
+										<div class="clan-stats">
+											<div class="clan-stat"><div class="clan-stat-label">Balance</div><div class="clan-stat-value">$@localClan.Balance</div></div>
+											<div class="clan-stat"><div class="clan-stat-label">Members</div><div class="clan-stat-value">@localClan.MemberCount</div></div>
+											<div class="clan-stat"><div class="clan-stat-label">Kills</div><div class="clan-stat-value">@localClan.Kills</div></div>
+											<div class="clan-stat"><div class="clan-stat-label">Leader</div><div class="clan-stat-value">@(localClan.LeaderOnline ? "Online" : "Offline")</div></div>
+										</div>
+
+										<div class="clan-meta">
+											<div>Leader SteamID: @localClan.LeaderSteamId</div>
+											<div>Leader last seen raw: @localClan.LeaderLastSeenRaw</div>
+										</div>
+
+										<div class="clan-section-title">Online clanmates</div>
+										<div class="clan-member-list">
+											@foreach ( var member in localClan.OnlineMembers )
+											{
+												<div class="clan-member-row">
+													<div class="clan-member-avatar" style="background-image: url( avatar:@member.SteamId )"></div>
+													<div class="clan-member-info">
+														<div class="clan-member-name">@member.Name</div>
+														<div class="clan-muted">@GetRankName( member.Rank )</div>
+													</div>
+													@if ( CanManageClanMember( member ) )
+													{
+														<div class="clan-member-actions">
+															<button class="clan-mini-btn" onclick=@(() => PromoteClanMember( member )) disabled=@(!CanPromoteClanMember( member ))>+</button>
+															<button class="clan-mini-btn" onclick=@(() => DemoteClanMember( member )) disabled=@(!CanDemoteClanMember( member ))>-</button>
+															<button class="clan-mini-btn danger" onclick=@(() => KickClanMember( member.SteamId ))>Kick</button>
+														</div>
+													}
+												</div>
+											}
+										</div>
+
+										<div class="clan-actions">
+											<button class="clan-btn" onclick=@LeaveClan>Leave</button>
+											@if ( Player.Local?.ClanRank == ClanRank.Leader )
+											{
+												<button class="clan-btn danger" onclick=@DeleteClan>Delete Clan</button>
+											}
+										</div>
+									</div>
+
+									@if ( ClanManager.CanEditSettingsRank( Player.Local?.ClanRank ?? ClanRank.Soldier ) )
+									{
+										<div class="clan-settings">
+											<div class="clan-section-title">Settings</div>
+											<TextEntry class="clan-input" Value="@EditClanDescription" Placeholder="Description" OnTextEdited=@(( string text ) => UpdateEditDescription( text )) />
+											<div class="clan-section-title small">Clan color</div>
+											<div class="clan-color-row">
+												@foreach ( var color in ClanPalette.Colors )
+												{
+													<button class="clan-color-btn @(IsColorSelected( EditClanColorId, color.Value ) ? "active" : "")" style=@($"background-color: {color.Swatch};") onclick=@(() => SetEditClanColor( color.Value ))></button>
+												}
+											</div>
+											<div class="clan-section-title small">Logo</div>
+											<div class="clan-logo-grid">
+												@foreach ( var icon in ClanLogoCatalog.Icons )
+												{
+													<button class="clan-logo-option @(IsIconSelected( EditClanIconPath, icon.Path ) ? "active" : "")" onclick=@(() => SetEditClanIcon( icon.Path ))>
+														@if ( string.IsNullOrWhiteSpace( icon.Path ) )
+														{
+															<span>None</span>
+														}
+														else
+														{
+															<div class="clan-logo-option-icon" style=@($"background-image: url({icon.Path});")></div>
+														}
+													</button>
+												}
+											</div>
+											<div class="clan-section-title small">Background</div>
+											<div class="clan-bg-row">
+												@foreach ( var bgType in BackgroundTypes )
+												{
+													<button class="clan-bg-btn @(EditClanBackgroundType == bgType ? "active" : "")" onclick=@(() => SetEditClanBackgroundType( bgType ))>@bgType</button>
+												}
+											</div>
+											@for ( var i = 1; i <= 4; i++ )
+											{
+												var colorIndex = i;
+												<div class="clan-bg-color-line">
+													<div class="clan-muted narrow">BG @colorIndex</div>
+													<div class="clan-color-row small">
+														@foreach ( var color in ClanPalette.Colors )
+														{
+															<button class="clan-color-btn small @(IsColorSelected( GetEditBackgroundColor( colorIndex ), color.Value ) ? "active" : "")" style=@($"background-color: {color.Swatch};") onclick=@(() => SetEditBackgroundColor( colorIndex, color.Value ))></button>
+														}
+													</div>
+												</div>
+											}
+										</div>
+									}
+								</div>
+							}
+							else if ( inviteClanId < 0 )
+							{
+								<div class="clan-create">
+									<div class="clan-create-form">
+										<div class="clan-muted">Create a clan for $@ClanManager.CreatePrice. Header cannot be changed later.</div>
+										<TextEntry class="clan-input" Value="@CreateClanHeader" Placeholder="Header" OnTextEdited=@SetCreateClanHeader />
+										<TextEntry class="clan-input" Value="@CreateClanDescription" Placeholder="Description" OnTextEdited=@SetCreateClanDescription />
+										<div class="clan-section-title small">Clan color</div>
+										<div class="clan-color-row">
+											@foreach ( var color in ClanPalette.Colors )
+											{
+												<button class="clan-color-btn @(IsColorSelected( CreateClanColorId, color.Value ) ? "active" : "")" style=@($"background-color: {color.Swatch};") onclick=@(() => SetCreateClanColor( color.Value ))></button>
+											}
+										</div>
+										<div class="clan-section-title small">Logo</div>
+										<div class="clan-logo-grid">
+											@foreach ( var icon in ClanLogoCatalog.Icons )
+											{
+												<button class="clan-logo-option @(IsIconSelected( CreateClanIconPath, icon.Path ) ? "active" : "")" onclick=@(() => SetCreateClanIcon( icon.Path ))>
+													@if ( string.IsNullOrWhiteSpace( icon.Path ) )
+													{
+														<span>None</span>
+													}
+													else
+													{
+														<div class="clan-logo-option-icon" style=@($"background-image: url({icon.Path});")></div>
+													}
+												</button>
+											}
+										</div>
+										<div class="clan-section-title small">Background</div>
+										<div class="clan-bg-row">
+											@foreach ( var bgType in BackgroundTypes )
+											{
+												<button class="clan-bg-btn @(CreateClanBackgroundType == bgType ? "active" : "")" onclick=@(() => SetCreateClanBackgroundType( bgType ))>@bgType</button>
+											}
+										</div>
+										@for ( var i = 1; i <= 4; i++ )
+										{
+											var colorIndex = i;
+											<div class="clan-bg-color-line">
+												<div class="clan-muted narrow">BG @colorIndex</div>
+												<div class="clan-color-row small">
+													@foreach ( var color in ClanPalette.Colors )
+													{
+														<button class="clan-color-btn small @(IsColorSelected( GetCreateBackgroundColor( colorIndex ), color.Value ) ? "active" : "")" style=@($"background-color: {color.Swatch};") onclick=@(() => SetCreateBackgroundColor( colorIndex, color.Value ))></button>
+													}
+												</div>
+											</div>
+										}
+										<button class="clan-btn primary create" onclick=@CreateClan disabled=@((Player.Local?.Money ?? 0) < ClanManager.CreatePrice)>Create $@ClanManager.CreatePrice</button>
+									</div>
+									<div class="clan-create-preview">
+										<div class="clan-logo-preview large @GetClanLogoBackgroundClass( CreateClanBackgroundType )" style="@GetClanLogoStyle( CreateClanBackgroundType, CreateClanBackgroundColor1, CreateClanBackgroundColor2, CreateClanBackgroundColor3, CreateClanBackgroundColor4 )">
+											@foreach ( var paneStyle in GetClanLogoPaneStyles( CreateClanBackgroundType, CreateClanBackgroundColor1, CreateClanBackgroundColor2, CreateClanBackgroundColor3, CreateClanBackgroundColor4 ) )
+											{
+												<div class="clan-logo-pane" style="@paneStyle"></div>
+											}
+											@if ( !string.IsNullOrWhiteSpace( CreateClanIconPath ) )
+											{
+												<div class="clan-logo-icon large" style="@GetClanIconStyle( CreateClanIconPath, CreateClanColorId )"></div>
+											}
+										</div>
+										<div class="clan-title" style="color: @ColorCss( CreateClanColorId );">@GetPreviewHeader()</div>
+									</div>
+								</div>
+							}
+						</div>
+					}
+					else if ( ActiveTab == 4 )
+					{
 						<div class="page">
 							<div class="page-title">@GameLocalization.Phrase( "ui.tab.help" )</div>
 							<div class="help-list">
@@ -183,6 +420,33 @@
 	int PlayersVersion { get; set; } = 0;
 	int JobsVersion { get; set; } = 0;
 	int ShopVersion { get; set; } = 0;
+	static readonly ClanBackgroundType[] BackgroundTypes =
+	{
+		ClanBackgroundType.Mono,
+		ClanBackgroundType.VerticalTwo,
+		ClanBackgroundType.VerticalThree,
+		ClanBackgroundType.Quarter,
+		ClanBackgroundType.HorizontalTwo,
+		ClanBackgroundType.HorizontalThree
+	};
+	string CreateClanHeader { get; set; } = "";
+	string CreateClanDescription { get; set; } = "";
+	string CreateClanColorId { get; set; } = ClanPalette.DefaultColorId;
+	string CreateClanIconPath { get; set; } = "";
+	ClanBackgroundType CreateClanBackgroundType { get; set; } = ClanBackgroundType.Mono;
+	string CreateClanBackgroundColor1 { get; set; } = "black";
+	string CreateClanBackgroundColor2 { get; set; } = "black";
+	string CreateClanBackgroundColor3 { get; set; } = "black";
+	string CreateClanBackgroundColor4 { get; set; } = "black";
+	int LastEditClanId { get; set; } = -1;
+	string EditClanDescription { get; set; } = "";
+	string EditClanColorId { get; set; } = ClanPalette.DefaultColorId;
+	string EditClanIconPath { get; set; } = "";
+	ClanBackgroundType EditClanBackgroundType { get; set; } = ClanBackgroundType.Mono;
+	string EditClanBackgroundColor1 { get; set; } = "black";
+	string EditClanBackgroundColor2 { get; set; } = "black";
+	string EditClanBackgroundColor3 { get; set; } = "black";
+	string EditClanBackgroundColor4 { get; set; } = "black";
 
 	private bool IsLanguage( string code ) => string.Equals( GameLocalization.CurrentCode, code, StringComparison.OrdinalIgnoreCase );
 
@@ -202,6 +466,22 @@
 		ActiveTab = 2;
 		CachedPlayers = Connection.All.ToList();
 		PlayersVersion++;
+	}
+
+	void SelectShopTab()
+	{
+		ActiveTab = 1;
+	}
+
+	void SelectClanTab()
+	{
+		ActiveTab = 3;
+		SyncEditClanState();
+	}
+
+	void SelectHelpTab()
+	{
+		ActiveTab = 4;
 	}
 
 	void SelectJobsTab()
@@ -419,6 +699,300 @@
 		ShopManager.RpcRequestPurchase( normalized );
 	}
 
+	private ClanSummary GetLocalClanSummary()
+	{
+		var clanId = Player.Local?.ClanId ?? -1;
+		if ( clanId < 0 )
+			return null;
+
+		var summary = ClanManager.Instance?.GetClanSummary( clanId );
+		if ( summary is not null )
+			return summary;
+
+		return new ClanSummary
+		{
+			Id = clanId,
+			Header = Player.Local?.ClanHeader ?? "",
+			ColorId = Player.Local?.ClanColorId ?? ClanPalette.DefaultColorId,
+			Description = "",
+			Logo = new ClanLogo(),
+			MemberCount = 1,
+			LeaderSteamId = Connection.Local?.SteamId.Value ?? 0L,
+			LeaderOnline = (Player.Local?.ClanRank ?? ClanRank.Soldier) == ClanRank.Leader,
+			OnlineMembers = new List<ClanMemberSummary>
+			{
+				new()
+				{
+					SteamId = Connection.Local?.SteamId.Value ?? 0L,
+					Name = Connection.Local?.DisplayName ?? "",
+					Rank = Player.Local?.ClanRank ?? ClanRank.Soldier
+				}
+			}
+		};
+	}
+
+	private IReadOnlyList<ClanSummary> GetClanSummariesForUi()
+	{
+		return ClanManager.Instance?.GetClanSummaries() ?? new List<ClanSummary>();
+	}
+
+	private void SyncEditClanState()
+	{
+		var clan = GetLocalClanSummary();
+		if ( clan is null || clan.Id == LastEditClanId )
+			return;
+
+		LastEditClanId = clan.Id;
+		EditClanDescription = clan.Description ?? "";
+		EditClanColorId = ClanPalette.NormalizeColorId( clan.ColorId );
+		EditClanIconPath = ClanLogoCatalog.NormalizeIconPath( clan.Logo?.IconPath );
+		EditClanBackgroundType = clan.Logo?.BackgroundType ?? ClanBackgroundType.Mono;
+		EditClanBackgroundColor1 = ClanPalette.NormalizeColorId( clan.Logo?.BackgroundColor1, "black" );
+		EditClanBackgroundColor2 = ClanPalette.NormalizeColorId( clan.Logo?.BackgroundColor2, "black" );
+		EditClanBackgroundColor3 = ClanPalette.NormalizeColorId( clan.Logo?.BackgroundColor3, "black" );
+		EditClanBackgroundColor4 = ClanPalette.NormalizeColorId( clan.Logo?.BackgroundColor4, "black" );
+	}
+
+	private void CreateClan()
+	{
+		ClanManager.RpcRequestCreateClan( CreateClanHeader, CreateClanDescription, CreateClanColorId, CreateClanIconPath, CreateClanBackgroundType.ToString(), CreateClanBackgroundColor1, CreateClanBackgroundColor2, CreateClanBackgroundColor3, CreateClanBackgroundColor4 );
+	}
+
+	private void SetCreateClanHeader( string text )
+	{
+		CreateClanHeader = text;
+	}
+
+	private void SetCreateClanDescription( string text )
+	{
+		CreateClanDescription = text;
+	}
+
+	private void SetCreateClanColor( string value )
+	{
+		CreateClanColorId = value;
+	}
+
+	private void SetCreateClanIcon( string value )
+	{
+		CreateClanIconPath = value;
+	}
+
+	private void SetCreateClanBackgroundType( ClanBackgroundType value )
+	{
+		CreateClanBackgroundType = value;
+	}
+
+	private void SendClanSettingsUpdate()
+	{
+		ClanManager.RpcRequestUpdateClanSettings( EditClanDescription, EditClanColorId, EditClanIconPath, EditClanBackgroundType.ToString(), EditClanBackgroundColor1, EditClanBackgroundColor2, EditClanBackgroundColor3, EditClanBackgroundColor4 );
+	}
+
+	private void UpdateEditDescription( string text )
+	{
+		EditClanDescription = text;
+		SendClanSettingsUpdate();
+	}
+
+	private void SetEditClanColor( string value )
+	{
+		EditClanColorId = value;
+		SendClanSettingsUpdate();
+	}
+
+	private void SetEditClanIcon( string value )
+	{
+		EditClanIconPath = value;
+		SendClanSettingsUpdate();
+	}
+
+	private void SetEditClanBackgroundType( ClanBackgroundType value )
+	{
+		EditClanBackgroundType = value;
+		SendClanSettingsUpdate();
+	}
+
+	private void SetEditBackgroundColor( int index, string value )
+	{
+		if ( index == 1 ) EditClanBackgroundColor1 = value;
+		if ( index == 2 ) EditClanBackgroundColor2 = value;
+		if ( index == 3 ) EditClanBackgroundColor3 = value;
+		if ( index == 4 ) EditClanBackgroundColor4 = value;
+		SendClanSettingsUpdate();
+	}
+
+	private void SetCreateBackgroundColor( int index, string value )
+	{
+		if ( index == 1 ) CreateClanBackgroundColor1 = value;
+		if ( index == 2 ) CreateClanBackgroundColor2 = value;
+		if ( index == 3 ) CreateClanBackgroundColor3 = value;
+		if ( index == 4 ) CreateClanBackgroundColor4 = value;
+	}
+
+	private string GetEditBackgroundColor( int index ) => index switch
+	{
+		1 => EditClanBackgroundColor1,
+		2 => EditClanBackgroundColor2,
+		3 => EditClanBackgroundColor3,
+		4 => EditClanBackgroundColor4,
+		_ => "black"
+	};
+
+	private string GetCreateBackgroundColor( int index ) => index switch
+	{
+		1 => CreateClanBackgroundColor1,
+		2 => CreateClanBackgroundColor2,
+		3 => CreateClanBackgroundColor3,
+		4 => CreateClanBackgroundColor4,
+		_ => "black"
+	};
+
+	private void AcceptClanInvite() => ClanManager.RpcRequestAcceptInvite();
+	private void DeclineClanInvite() => ClanManager.RpcRequestDeclineInvite();
+	private void LeaveClan() => ClanManager.RpcRequestLeaveClan();
+	private void DeleteClan() => ClanManager.RpcRequestDeleteClan();
+	private void AdminDeleteClan( int clanId ) => ClanManager.RpcRequestAdminDeleteClan( clanId );
+	private void KickClanMember( long steamId ) => ClanManager.RpcRequestKickMember( steamId );
+
+	private void PromoteClanMember( ClanMemberSummary member )
+	{
+		if ( member is null || !CanPromoteClanMember( member ) )
+			return;
+
+		ClanManager.RpcRequestSetMemberRank( member.SteamId, Math.Clamp( (int)member.Rank + 1, 0, (int)ClanRank.DeputyLeader ) );
+	}
+
+	private void DemoteClanMember( ClanMemberSummary member )
+	{
+		if ( member is null || !CanDemoteClanMember( member ) )
+			return;
+
+		ClanManager.RpcRequestSetMemberRank( member.SteamId, Math.Clamp( (int)member.Rank - 1, 0, (int)ClanRank.DeputyLeader ) );
+	}
+
+	private bool CanManageClanMember( ClanMemberSummary member )
+	{
+		if ( member is null || member.SteamId == LocalSteamId() || member.Rank == ClanRank.Leader )
+			return false;
+
+		var rank = Player.Local?.ClanRank ?? ClanRank.Soldier;
+		return rank == ClanRank.Leader || (rank == ClanRank.DeputyLeader && member.Rank < ClanRank.DeputyLeader);
+	}
+
+	private bool CanPromoteClanMember( ClanMemberSummary member )
+	{
+		if ( !CanManageClanMember( member ) )
+			return false;
+
+		var rank = Player.Local?.ClanRank ?? ClanRank.Soldier;
+		if ( rank == ClanRank.DeputyLeader )
+			return member.Rank < ClanRank.Officer;
+
+		return member.Rank < ClanRank.DeputyLeader;
+	}
+
+	private bool CanDemoteClanMember( ClanMemberSummary member )
+	{
+		return CanManageClanMember( member ) && member.Rank > ClanRank.Soldier;
+	}
+
+	private long LocalSteamId() => Connection.Local?.SteamId.Value ?? 0L;
+
+	private static string GetRankName( ClanRank rank ) => rank switch
+	{
+		ClanRank.Leader => "Leader",
+		ClanRank.DeputyLeader => "Deputy Leader",
+		ClanRank.Officer => "Officer",
+		_ => "Soldier"
+	};
+
+	private string GetPreviewHeader()
+	{
+		var header = ClanText.NormalizeHeader( CreateClanHeader );
+		return string.IsNullOrWhiteSpace( header ) ? "New Clan" : header;
+	}
+
+	private static string ColorCss( string colorId ) => ClanPalette.GetSwatch( colorId );
+	private static bool IsColorSelected( string a, string b ) => string.Equals( a, b, StringComparison.OrdinalIgnoreCase );
+	private static bool IsIconSelected( string a, string b ) => string.Equals( a ?? "", b ?? "", StringComparison.OrdinalIgnoreCase );
+
+	private static string GetClanIconStyle( string iconPath, string colorId )
+	{
+		return $"background-image: url({ClanLogoCatalog.NormalizeIconPath( iconPath )}); background-image-tint: {ColorCss( colorId )};";
+	}
+
+	private static string GetClanLogoStyle( ClanLogo logo, string colorId )
+	{
+		return GetClanLogoStyle( logo?.BackgroundType ?? ClanBackgroundType.Mono, logo?.BackgroundColor1, logo?.BackgroundColor2, logo?.BackgroundColor3, logo?.BackgroundColor4 );
+	}
+
+	private static string GetClanLogoStyle( ClanBackgroundType type, string color1, string color2, string color3, string color4 )
+	{
+		var c1 = ColorCss( ClanPalette.NormalizeColorId( color1, "black" ) );
+		return $"background-color: {c1};";
+	}
+
+	private static IReadOnlyList<string> GetClanLogoPaneStyles( ClanLogo logo )
+	{
+		return GetClanLogoPaneStyles( logo?.BackgroundType ?? ClanBackgroundType.Mono, logo?.BackgroundColor1, logo?.BackgroundColor2, logo?.BackgroundColor3, logo?.BackgroundColor4 );
+	}
+
+	private static IReadOnlyList<string> GetClanLogoPaneStyles( ClanBackgroundType type, string color1, string color2, string color3, string color4 )
+	{
+		var c1 = ColorCss( ClanPalette.NormalizeColorId( color1, "black" ) );
+		var c2 = ColorCss( ClanPalette.NormalizeColorId( color2, "black" ) );
+		var c3 = ColorCss( ClanPalette.NormalizeColorId( color3, "black" ) );
+		var c4 = ColorCss( ClanPalette.NormalizeColorId( color4, "black" ) );
+
+		return type switch
+		{
+			ClanBackgroundType.VerticalTwo => new[]
+			{
+				PaneStyle( 0, 0, 50, 100, c1 ),
+				PaneStyle( 50, 0, 50, 100, c2 )
+			},
+			ClanBackgroundType.VerticalThree => new[]
+			{
+				PaneStyle( 0, 0, 33.34f, 100, c1 ),
+				PaneStyle( 33.34f, 0, 33.33f, 100, c2 ),
+				PaneStyle( 66.67f, 0, 33.33f, 100, c3 )
+			},
+			ClanBackgroundType.HorizontalTwo => new[]
+			{
+				PaneStyle( 0, 0, 100, 50, c1 ),
+				PaneStyle( 0, 50, 100, 50, c2 )
+			},
+			ClanBackgroundType.HorizontalThree => new[]
+			{
+				PaneStyle( 0, 0, 100, 33.34f, c1 ),
+				PaneStyle( 0, 33.34f, 100, 33.33f, c2 ),
+				PaneStyle( 0, 66.67f, 100, 33.33f, c3 )
+			},
+			ClanBackgroundType.Quarter => new[]
+			{
+				PaneStyle( 0, 0, 50, 50, c1 ),
+				PaneStyle( 50, 0, 50, 50, c2 ),
+				PaneStyle( 0, 50, 50, 50, c3 ),
+				PaneStyle( 50, 50, 50, 50, c4 )
+			},
+			_ => new[]
+			{
+				PaneStyle( 0, 0, 100, 100, c1 )
+			}
+		};
+	}
+
+	private static string PaneStyle( float left, float top, float width, float height, string color )
+	{
+		return $"left: {CssNumber( left )}%; top: {CssNumber( top )}%; width: {CssNumber( width )}%; height: {CssNumber( height )}%; background-color: {color};";
+	}
+
+	private static string CssNumber( float value ) => value.ToString( "0.##", CultureInfo.InvariantCulture );
+
+	private static string GetClanLogoBackgroundClass( ClanLogo logo ) => GetClanLogoBackgroundClass( logo?.BackgroundType ?? ClanBackgroundType.Mono );
+	private static string GetClanLogoBackgroundClass( ClanBackgroundType type ) => $"bg-{type.ToString().ToLowerInvariant()}";
+
+
 	private static Player FindPlayerBySteamId( long steamId )
 	{
 		var scene = Game.ActiveScene;
@@ -508,6 +1082,30 @@
 		hash.Add( IsOpen );
 		hash.Add( UiModalManager.Version );
 		hash.Add( ActiveTab );
+		hash.Add( Player.Local?.ClanId ?? -1 );
+		hash.Add( Player.Local?.ClanHeader );
+		hash.Add( Player.Local?.ClanColorId );
+		hash.Add( Player.Local?.ClanRank );
+		hash.Add( ClanManager.Instance?.ClanVersion ?? 0 );
+		hash.Add( ClanManager.Instance?.PendingInviteVersion ?? 0 );
+		hash.Add( ClanManager.Instance?.PendingInviteClanId ?? -1 );
+		hash.Add( CreateClanHeader );
+		hash.Add( CreateClanDescription );
+		hash.Add( CreateClanColorId );
+		hash.Add( CreateClanIconPath );
+		hash.Add( CreateClanBackgroundType );
+		hash.Add( CreateClanBackgroundColor1 );
+		hash.Add( CreateClanBackgroundColor2 );
+		hash.Add( CreateClanBackgroundColor3 );
+		hash.Add( CreateClanBackgroundColor4 );
+		hash.Add( EditClanDescription );
+		hash.Add( EditClanColorId );
+		hash.Add( EditClanIconPath );
+		hash.Add( EditClanBackgroundType );
+		hash.Add( EditClanBackgroundColor1 );
+		hash.Add( EditClanBackgroundColor2 );
+		hash.Add( EditClanBackgroundColor3 );
+		hash.Add( EditClanBackgroundColor4 );
 		hash.Add( GameLocalization.CurrentCode );
 		hash.Add( Player.Local?.Money ?? 0 );
 		hash.Add( Player.Local?.Job?.JobId );

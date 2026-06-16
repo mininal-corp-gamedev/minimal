@@ -120,6 +120,11 @@ ContextMenu {
 		top: $action-side-v;
 	}
 
+	.pos-clan {
+		right: 94px;
+		top: 110px;
+	}
+
 	.action-icon {
 		width: 28px;
 		height: 28px;
@@ -142,6 +147,10 @@ ContextMenu {
 
 		&.dice {
 			background-image: url("icons/dice.vtex");
+		}
+
+		&.clan {
+			background-image: url("materials/icons/clan/flag.vtex");
 		}
 	}
 
@@ -209,6 +218,75 @@ ContextMenu {
 		border-radius: 8px;
 		padding: 9px 18px;
 		box-shadow: 0 5px 20px rgba(0, 0, 0, 0.42);
+	}
+
+	.clan-context-panel {
+		position: absolute;
+		right: 90px;
+		top: 90px;
+		z-index: 103;
+		width: 300px;
+		max-height: 430px;
+		flex-direction: column;
+		padding: 14px;
+		background-color: rgba(5, 8, 20, 0.96);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 8px;
+		box-shadow: 0 10px 48px rgba(0, 0, 0, 0.62);
+		overflow-y: scroll;
+	}
+
+	.clan-context-title {
+		font-family: Poppins;
+		font-size: 15px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.94);
+		margin-bottom: 10px;
+	}
+
+	.clan-context-player {
+		width: 100%;
+		height: 46px;
+		flex-direction: row;
+		align-items: center;
+		margin-bottom: 6px;
+		padding: 6px 8px;
+		background-color: rgba(255, 255, 255, 0.05);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 7px;
+
+		&:hover {
+			background-color: rgba(255, 67, 108, 0.20);
+			border-color: rgba(255, 67, 108, 0.42);
+		}
+	}
+
+	.clan-context-avatar {
+		width: 32px;
+		height: 32px;
+		flex-shrink: 0;
+		margin-right: 10px;
+		border-radius: 999px;
+		background-repeat: no-repeat;
+		background-size: cover;
+		background-position: center;
+		background-color: rgba(255, 255, 255, 0.08);
+	}
+
+	.clan-context-name,
+	.clan-context-empty {
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.84);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.clan-context-empty {
+		color: rgba(255, 255, 255, 0.46);
+		padding: 8px 0;
 	}
 
 	.context-vote-panel {

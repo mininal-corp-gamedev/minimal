@@ -12,4 +12,6 @@ public sealed class PlayerMoneySaveData
 	[JsonPropertyName( "steamId" )] public long SteamId { get; set; }
 	[JsonPropertyName( "money" )] public int Money { get; set; }
 	[JsonPropertyName( "moneyAtm" )] public int MoneyAtm { get; set; }
+	[JsonPropertyName( "clanId" )] public int? ClanId { get; set; }
+	[JsonPropertyName( "clanRank" )] public string ClanRank { get; set; }
 }

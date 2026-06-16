@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text.Json.Serialization;
+using Minimal.Clan;
 
 public sealed partial class Player : Component, ICustomDamagable, PlayerController.IEvents, Component.INetworkListener
 {
@@ -111,6 +112,10 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
     }
 
     [Sync(SyncFlags.FromHost)] public int AdminRank { get; set; } = 0;
+    [Sync(SyncFlags.FromHost)] public int ClanId { get; private set; } = -1;
+    [Sync(SyncFlags.FromHost)] public string ClanHeader { get; private set; } = "";
+    [Sync(SyncFlags.FromHost)] public string ClanColorId { get; private set; } = ClanPalette.DefaultColorId;
+    [Sync(SyncFlags.FromHost)] public Minimal.Clan.ClanRank ClanRank { get; private set; } = Minimal.Clan.ClanRank.Soldier;
 
     /// <summary>Арестован ли игрок. Меняется только хостом.</summary>
     [Sync(SyncFlags.FromHost)] public bool IsArrested { get; set; }
@@ -597,7 +602,13 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         RpcOwnerDamageTaken(MathF.Max(healthDamage, armorDamage * 0.35f));
 
         if (Health <= 0f)
+        {
+            var attackerPlayer = GetAttackerPlayer(attacker);
+            if (attackerPlayer.IsValid() && attackerPlayer != this)
+                ClanManager.Instance?.HostRecordKill(attackerPlayer);
+
             HostDie(BuildDeathMessage(attacker, deathMessage), launchRagdoll ? CreateDeathLaunchVelocity(damageOrigin) : Vector3.Zero, damageOrigin);
+        }
 #endif
     }
 
@@ -812,6 +823,23 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
                 if (!string.IsNullOrWhiteSpace(ownerName))
                     return ownerName;
             }
+
+            go = go.Parent;
+        }
+
+        return null;
+    }
+
+    private static Player GetAttackerPlayer(GameObject attacker)
+    {
+        if (!attacker.IsValid())
+            return null;
+
+        var go = attacker;
+        while (go.IsValid())
+        {
+            if (go.Components.TryGet<Player>(out var player, FindMode.EverythingInSelfAndParent))
+                return player;
 
             go = go.Parent;
         }
@@ -2281,8 +2309,18 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
             {
                 SteamId = steamId,
                 Money = PlayerSaveData.DefaultStartingMoney,
-                MoneyAtm = 0
+                MoneyAtm = 0,
+                ClanId = null,
+                ClanRank = null
             };
+        }
+
+        if ( data.ClanId is not null && data.ClanId.Value >= 0 )
+        {
+            ClanId = data.ClanId.Value;
+            ClanRank = Enum.TryParse<Minimal.Clan.ClanRank>( data.ClanRank ?? "", true, out var savedRank )
+                ? savedRank
+                : Minimal.Clan.ClanRank.Soldier;
         }
 
         // Сначала разрешаем персист, чтобы сеттер мог сохранять при изменениях.
@@ -2294,6 +2332,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         // загруженное значение после инициализации.
         Money = data.Money;
         MoneyAtm = data.MoneyAtm;
+        ClanManager.Instance?.HostApplyLoadedPlayerClan( this, data.ClanId, data.ClanRank );
 
         // Гарантируем файл на диске даже если значение совпало с дефолтом
         // (тогда сеттер не вызвал бы SavePlayerData).
@@ -2394,7 +2433,9 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
             {
                 SteamId = steamId,
                 Money = _money,
-                MoneyAtm = _moneyAtm
+                MoneyAtm = _moneyAtm,
+                ClanId = ClanId >= 0 ? ClanId : null,
+                ClanRank = ClanId >= 0 ? ClanRank.ToString() : null
             };
             FileSystem.Data.WriteJson( GetPlayerSavePath( steamId ), data );
         }
@@ -3872,6 +3913,65 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         return null;
     }
 
+    public void HostSetClanState( int clanId, string header, string colorId, Minimal.Clan.ClanRank rank )
+    {
+#if SERVER
+        if ( !Networking.IsHost )
+            return;
+
+        ClanId = clanId;
+        ClanHeader = header ?? "";
+        ClanColorId = ClanPalette.NormalizeColorId( colorId );
+        ClanRank = rank;
+
+        if ( IsProxy )
+            RpcOwnerApplyClanState( ClanId, ClanHeader, ClanColorId, (int)ClanRank );
+#endif
+    }
+
+    public void HostClearClanState()
+    {
+#if SERVER
+        if ( !Networking.IsHost )
+            return;
+
+        ClanId = -1;
+        ClanHeader = "";
+        ClanColorId = ClanPalette.DefaultColorId;
+        ClanRank = Minimal.Clan.ClanRank.Soldier;
+
+        if ( IsProxy )
+            RpcOwnerClearClanState();
+#endif
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerApplyClanState( int clanId, string header, string colorId, int rankValue )
+    {
+        ClanId = clanId;
+        ClanHeader = header ?? "";
+        ClanColorId = ClanPalette.NormalizeColorId( colorId );
+        ClanRank = Enum.IsDefined( typeof( Minimal.Clan.ClanRank ), rankValue )
+            ? (Minimal.Clan.ClanRank)rankValue
+            : Minimal.Clan.ClanRank.Soldier;
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerClearClanState()
+    {
+        ClanId = -1;
+        ClanHeader = "";
+        ClanColorId = ClanPalette.DefaultColorId;
+        ClanRank = Minimal.Clan.ClanRank.Soldier;
+    }
+
+    public void HostSavePlayerData()
+    {
+#if SERVER
+        SavePlayerData();
+#endif
+    }
+
     public IEnumerable<long> PropProtectionIds
     {
         get
@@ -3977,6 +4077,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
             return;
 
         var player = FindPlayerBySteamId( channel.SteamId.Value );
+        ClanManager.Instance?.HostNotifyPlayerDisconnected( channel.SteamId.Value );
         if ( !player.IsValid() )
             return;
 

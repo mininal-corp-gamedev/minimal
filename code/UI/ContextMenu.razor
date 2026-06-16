@@ -1,6 +1,8 @@
 ﻿@using Sandbox;
 @using Sandbox.UI;
 @using System;
+@using System.Linq;
+@using Minimal.Clan;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -28,6 +30,24 @@
 			</div>
 
 			<div class="context-hint">@GameLocalization.Phrase( "ui.context.hint" )</div>
+
+			@if ( ShowClanInviteMenu )
+			{
+				<div class="clan-context-panel">
+					<div class="clan-context-title">Clan Invite</div>
+					@foreach ( var conn in GetClanInviteCandidates() )
+					{
+						<button class="clan-context-player" onclick=@(() => InviteToClan( conn.SteamId.Value ))>
+							<div class="clan-context-avatar" style="background-image: url( avatar:@conn.SteamId.Value )"></div>
+							<div class="clan-context-name">@conn.DisplayName</div>
+						</button>
+					}
+					@if ( !GetClanInviteCandidates().Any() )
+					{
+						<div class="clan-context-empty">No available players</div>
+					}
+				</div>
+			}
 		</div>
 
 		@if ( VotePanel.HasOpenVote )
@@ -52,13 +72,15 @@
 	const string ModalId = nameof( ContextMenu );
 	bool IsOpen { get; set; }
 	string ActiveAction { get; set; } = "drop_money";
+	bool ShowClanInviteMenu { get; set; }
 
 	static readonly ContextAction[] Actions =
 	{
 		new( "drop_money", "pos-left", "money" ),
 		new( "transfer_money", "pos-right", "money" ),
 		new( "dice", "pos-top", "dice" ),
-		new( "demote", "pos-bottom", "job" )
+		new( "demote", "pos-bottom", "job" ),
+		new( "clan_invite", "pos-clan", "clan" )
 	};
 
 	static string GetActionTitle( string id ) => id switch
@@ -67,6 +89,7 @@
 		"transfer_money" => GameLocalization.Phrase( "ui.context.transfer_money", "Transfer Money" ),
 		"dice" => GameLocalization.Phrase( "ui.context.dice", "Dice" ),
 		"demote" => GameLocalization.Phrase( "ui.context.demote", "Demote" ),
+		"clan_invite" => "Clan",
 		_ => string.Empty
 	};
 
@@ -76,17 +99,32 @@
 		"transfer_money" => GameLocalization.Phrase( "ui.context.player_ahead", "Player ahead" ),
 		"dice" => GameLocalization.Phrase( "ui.context.casino", "Casino" ),
 		"demote" => GameLocalization.Phrase( "ui.context.vote", "Vote" ),
+		"clan_invite" => "Invite",
 		_ => string.Empty
 	};
 
 	bool IsActionVisible( ContextAction action )
 	{
-		return action.Id != "dice" || (Player.Local?.IsCasino ?? false);
+		if ( action.Id == "dice" )
+			return Player.Local?.IsCasino ?? false;
+
+		if ( action.Id == "clan_invite" )
+			return ClanManager.CanInviteRank( Player.Local?.ClanRank ?? ClanRank.Soldier );
+
+		return true;
 	}
 
 	void RunAction( string id )
 	{
 		ActiveAction = id;
+
+		if ( id == "clan_invite" )
+		{
+			ShowClanInviteMenu = !ShowClanInviteMenu;
+			StateHasChanged();
+			return;
+		}
+
 		Close();
 
 		if ( id == "drop_money" )
@@ -107,6 +145,7 @@
 
 	void Close()
 	{
+		ShowClanInviteMenu = false;
 		SetOpen( false );
 	}
 
@@ -120,6 +159,8 @@
 		IsOpen = open;
 
 		Crosshair.SetBlocked( ModalId, open );
+		if ( !open )
+			ShowClanInviteMenu = false;
 
 		UiModalManager.UpdateMouseVisibility();
 		StateHasChanged();
@@ -130,9 +171,29 @@
 		if ( activeModal == ModalId || !IsOpen )
 			return;
 
-		IsOpen = false;
-		Crosshair.SetBlocked( ModalId, false );
-		StateHasChanged();
+			IsOpen = false;
+			ShowClanInviteMenu = false;
+			Crosshair.SetBlocked( ModalId, false );
+			StateHasChanged();
+	}
+
+	private Connection[] GetClanInviteCandidates()
+	{
+		var localSteamId = Connection.Local?.SteamId.Value ?? 0L;
+		return Connection.All
+			.Where( x => x is not null && x.SteamId.Value != localSteamId )
+			.Where( x =>
+			{
+				var player = Player.FindPlayerBySteamId( x.SteamId.Value );
+				return player.IsValid() && player.ClanId < 0;
+			} )
+			.ToArray();
+	}
+
+	private void InviteToClan( long steamId )
+	{
+		ClanManager.RpcRequestInvite( steamId );
+		Close();
 	}
 
 	protected override void OnUpdate()
@@ -183,6 +244,10 @@
 		hash.Add( GameLocalization.Version );
 		hash.Add( Player.Local?.Health ?? 0f );
 		hash.Add( Player.Local?.IsCasino ?? false );
+		hash.Add( Player.Local?.ClanId ?? -1 );
+		hash.Add( Player.Local?.ClanRank );
+		hash.Add( ShowClanInviteMenu );
+		hash.Add( Connection.All.Count );
 		hash.Add( VotePanel.HasOpenVote );
 		hash.Add( VotePanel.CanAnswer );
 		hash.Add( VotePanel.CurrentHeader );

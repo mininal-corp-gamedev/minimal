@@ -2094,6 +2094,14 @@
             },
             "Property": "Position",
             "Value": "550.786743,102.981934,39.0939713"
+          },
+          {
+            "Target": {
+              "Type": "GameObject",
+              "IdValue": "2f4002f7-caec-4744-bf66-bea0487fd985"
+            },
+            "Property": "Scale",
+            "Value": "0.0270000007,0.0274351686,0.0274351686"
           }
         ],
         "MovedObjects": []

@@ -60,6 +60,7 @@
           "__guid": "a005489a-734e-443b-8168-17995309fca0",
           "__enabled": true,
           "Flags": 0,
+          "Contribution": "Diffuse, Specular, Transmissive",
           "FogMode": "Enabled",
           "FogStrength": 1,
           "LightColor": "0.91373,0.98039,1,1",
@@ -88,7 +89,7 @@
       "Position": "0,0,0",
       "Rotation": "0,0,0,1",
       "Scale": "1,1,1",
-      "Tags": "hidden",
+      "Tags": "",
       "Enabled": true,
       "NetworkMode": 2,
       "NetworkFlags": 0,
@@ -126,7 +127,7 @@
       "Position": "541.291748,222.185303,0.0274581909",
       "Rotation": "0,0,-0.923879504,0.382683396",
       "Scale": "1,1,1",
-      "Tags": "hidden",
+      "Tags": "",
       "Enabled": true,
       "NetworkMode": 2,
       "NetworkFlags": 0,
@@ -12662,21 +12663,12 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,2.84217094E-14,1"
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
-                      "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
                   }
                 ],
                 "MovedObjects": []
               },
               "__PrefabIdToInstanceId": {
                 "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "6448417b-7e74-40a2-b34d-86c215df7d32",
-                "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "b658d9c6-06bd-46b7-8fa3-43f59c09030d",
                 "183d408b-ef59-4367-82d6-152fb4caf265": "90b1f243-6359-4279-a5f0-4799689322d6",
                 "7f912fb9-0e68-4b5a-8e84-572dfe594555": "ce375fa1-d2c8-47fc-b70c-bb18415ebb23",
                 "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "584a782c-c281-487b-8d9a-93f61f3ff846",
@@ -12761,21 +12753,12 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
-                      "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
                   }
                 ],
                 "MovedObjects": []
               },
               "__PrefabIdToInstanceId": {
                 "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "9ab2b0f0-e339-492e-84b7-2cfa03c7415c",
-                "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "b32c4e2a-7262-4b5f-bbb2-d9ead2b4076b",
                 "183d408b-ef59-4367-82d6-152fb4caf265": "37ffc65f-a752-46c9-bb98-d8e7c8a70d19",
                 "7f912fb9-0e68-4b5a-8e84-572dfe594555": "6abb99e9-4af0-4ffb-ac67-70bad6726828",
                 "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "8be96f0c-f032-4777-a674-3120c060801b",
@@ -12860,21 +12843,12 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
-                      "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
                   }
                 ],
                 "MovedObjects": []
               },
               "__PrefabIdToInstanceId": {
                 "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "6bd4f49b-ceae-4c9e-9a53-01cc3e7c0b0f",
-                "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "43316322-2c28-4367-b266-e91511986145",
                 "183d408b-ef59-4367-82d6-152fb4caf265": "0b6c66eb-5b21-46f6-ab72-a158d8817afd",
                 "7f912fb9-0e68-4b5a-8e84-572dfe594555": "7750aa60-96ed-4f60-983c-214cfa76742c",
                 "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "d83c2133-7d0a-4f6c-bf4c-ce138ada05b3",
@@ -12959,21 +12933,12 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
-                      "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
                   }
                 ],
                 "MovedObjects": []
               },
               "__PrefabIdToInstanceId": {
                 "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "8c95c2e1-2af7-48bb-8ce2-d7aa8308010f",
-                "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "a3528af4-60b4-4785-a745-49c4117f1e14",
                 "183d408b-ef59-4367-82d6-152fb4caf265": "8dcece2c-37a4-4d7f-9ef0-42bdfa75b1c0",
                 "7f912fb9-0e68-4b5a-8e84-572dfe594555": "1296e67d-b3d0-45cd-8b16-560770924a06",
                 "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "899f90de-0d32-44ad-b26f-030d228c57de",
@@ -13058,21 +13023,12 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
-                      "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
                   }
                 ],
                 "MovedObjects": []
               },
               "__PrefabIdToInstanceId": {
                 "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "a578c854-0da3-4db9-94c5-6846b4a7a458",
-                "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "d57cdff9-534d-4309-9630-2230e880c809",
                 "183d408b-ef59-4367-82d6-152fb4caf265": "1552c99c-aa23-4955-a112-5389e75adb21",
                 "7f912fb9-0e68-4b5a-8e84-572dfe594555": "2860d709-74e0-4615-81e7-be091e4e74c2",
                 "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "a527f25a-52ed-4e65-9d2d-dbdfa134c818",
@@ -13157,21 +13113,12 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
-                      "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
                   }
                 ],
                 "MovedObjects": []
               },
               "__PrefabIdToInstanceId": {
                 "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "0248cd46-2241-41c9-bec9-9c8393caf09f",
-                "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "6dafa712-9a2d-4ed5-b381-13c00ebacfed",
                 "183d408b-ef59-4367-82d6-152fb4caf265": "32fefb46-dbdd-497f-99ac-c7401ca4a549",
                 "7f912fb9-0e68-4b5a-8e84-572dfe594555": "d7a604d6-800a-4148-b1a5-8dffce520ff6",
                 "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "c70c8c1b-f670-40b2-af94-0eac40a27242",
@@ -13256,21 +13203,12 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
-                      "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
                   }
                 ],
                 "MovedObjects": []
               },
               "__PrefabIdToInstanceId": {
                 "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "8ce228e7-3f8e-47dc-8188-5c1d3e0fd33c",
-                "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "f5b7c017-2a52-4475-9f4f-de202d42a945",
                 "183d408b-ef59-4367-82d6-152fb4caf265": "6e3ba06d-07fd-41c7-b053-7bcca01ef77d",
                 "7f912fb9-0e68-4b5a-8e84-572dfe594555": "f9f271c7-bb92-4cbb-9cd1-e73e447de9c0",
                 "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "7c429c56-70bc-47fc-984d-2bf1a649f2b3",
@@ -13355,21 +13293,12 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.707106769,0.707106888"
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
-                      "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
                   }
                 ],
                 "MovedObjects": []
               },
               "__PrefabIdToInstanceId": {
                 "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "037cd8e7-73f0-48c2-b168-6582846d16b2",
-                "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "a6034ba2-9ad6-450d-a66c-4381aecd7c18",
                 "183d408b-ef59-4367-82d6-152fb4caf265": "ca219720-2b0a-4213-9dbc-112f81628da1",
                 "7f912fb9-0e68-4b5a-8e84-572dfe594555": "65c76ffa-f433-45de-bd61-b2220974912f",
                 "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "26275123-f7dc-4375-b4f9-906d8cc925e7",
@@ -13832,14 +13761,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
                         },
@@ -13856,7 +13777,6 @@
                   },
                   "__PrefabIdToInstanceId": {
                     "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "0f6be8aa-2e0f-42ae-8648-7f0065a71e90",
-                    "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "7336673f-3274-454b-8973-8cbff34a8896",
                     "183d408b-ef59-4367-82d6-152fb4caf265": "6b1de3db-f694-48e4-ab1c-12af842b9653",
                     "7f912fb9-0e68-4b5a-8e84-572dfe594555": "c43b6d32-8811-415c-b43d-d0098c11a317",
                     "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "8fbc1db5-ad27-46b9-9e6d-0b3f31239e8e",
@@ -13944,14 +13864,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
                         },
@@ -13968,7 +13880,6 @@
                   },
                   "__PrefabIdToInstanceId": {
                     "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "dfcb97bb-1185-432f-8917-a15fc720182f",
-                    "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "70a7d110-9409-4c42-b219-5652d03cbdec",
                     "183d408b-ef59-4367-82d6-152fb4caf265": "ecb00676-41f4-4487-91d8-b7bbdadb3158",
                     "7f912fb9-0e68-4b5a-8e84-572dfe594555": "f805fae0-cf59-4961-b639-1270ea6eaee5",
                     "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "b0ff93ed-f68e-43e2-b9e8-0fb9175c7b55",
@@ -14482,6 +14393,47 @@
                           "RenderType": "On",
                           "Tint": "0.06512,0.02998,0.02998,1"
                         }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "b990cb09-efa8-468a-8f9f-0a61342308df"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "6675ebfa-8b69-4d2d-84ee-2bd4346a9d67"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelCollider",
+                          "__guid": "b990cb09-efa8-468a-8f9f-0a61342308df",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "ColliderFlags": 0,
+                          "Elasticity": null,
+                          "Friction": null,
+                          "IsTrigger": false,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "OnObjectTriggerEnter": null,
+                          "OnObjectTriggerExit": null,
+                          "OnTriggerEnter": null,
+                          "OnTriggerExit": null,
+                          "RollingResistance": null,
+                          "Static": true,
+                          "Surface": null,
+                          "SurfaceVelocity": "0,0,0"
+                        }
                       }
                     ],
                     "RemovedObjects": [
@@ -14636,6 +14588,47 @@
                           },
                           "RenderType": "On",
                           "Tint": "0.06512,0.02998,0.02998,1"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "dfbb06e4-26e9-4e37-8152-44437eebd11d"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "6675ebfa-8b69-4d2d-84ee-2bd4346a9d67"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelCollider",
+                          "__guid": "dfbb06e4-26e9-4e37-8152-44437eebd11d",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "ColliderFlags": 0,
+                          "Elasticity": null,
+                          "Friction": null,
+                          "IsTrigger": false,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "OnObjectTriggerEnter": null,
+                          "OnObjectTriggerExit": null,
+                          "OnTriggerEnter": null,
+                          "OnTriggerExit": null,
+                          "RollingResistance": null,
+                          "Static": true,
+                          "Surface": null,
+                          "SurfaceVelocity": "0,0,0"
                         }
                       }
                     ],
@@ -14819,6 +14812,47 @@
                           "RenderType": "On",
                           "Tint": "0.06512,0.02998,0.02998,1"
                         }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "ce883613-7d93-4522-811b-5ca22d1c42b0"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "6675ebfa-8b69-4d2d-84ee-2bd4346a9d67"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelCollider",
+                          "__guid": "ce883613-7d93-4522-811b-5ca22d1c42b0",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "ColliderFlags": 0,
+                          "Elasticity": null,
+                          "Friction": null,
+                          "IsTrigger": false,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "OnObjectTriggerEnter": null,
+                          "OnObjectTriggerExit": null,
+                          "OnTriggerEnter": null,
+                          "OnTriggerExit": null,
+                          "RollingResistance": null,
+                          "Static": true,
+                          "Surface": null,
+                          "SurfaceVelocity": "0,0,0"
+                        }
                       }
                     ],
                     "RemovedObjects": [
@@ -14973,6 +15007,47 @@
                           },
                           "RenderType": "On",
                           "Tint": "0.06512,0.02998,0.02998,1"
+                        }
+                      },
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "16ae62e6-646b-405a-98b7-312d2e79958f"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "1a32e9e9-0ad9-4c35-9977-694f32effa28"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "6675ebfa-8b69-4d2d-84ee-2bd4346a9d67"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelCollider",
+                          "__guid": "16ae62e6-646b-405a-98b7-312d2e79958f",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "ColliderFlags": 0,
+                          "Elasticity": null,
+                          "Friction": null,
+                          "IsTrigger": false,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "OnObjectTriggerEnter": null,
+                          "OnObjectTriggerExit": null,
+                          "OnTriggerEnter": null,
+                          "OnTriggerExit": null,
+                          "RollingResistance": null,
+                          "Static": true,
+                          "Surface": null,
+                          "SurfaceVelocity": "0,0,0"
                         }
                       }
                     ],
@@ -15176,14 +15251,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
                         },
@@ -15200,7 +15267,6 @@
                   },
                   "__PrefabIdToInstanceId": {
                     "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "9177ecc4-183b-4ded-be53-f71a3609ed12",
-                    "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "315e78e0-11de-45df-90d6-e3bebc5e45e6",
                     "183d408b-ef59-4367-82d6-152fb4caf265": "3072359c-473e-42f8-9dcc-7990cf8c3f9f",
                     "7f912fb9-0e68-4b5a-8e84-572dfe594555": "cbbad280-d071-495a-8cf4-fa9c5a70343b",
                     "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "37e169aa-c54a-4d2a-83b6-c417e26bb670",
@@ -15288,14 +15354,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
                         },
@@ -15312,7 +15370,6 @@
                   },
                   "__PrefabIdToInstanceId": {
                     "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "d44c0153-5910-47fa-a8ea-093a261bd2bc",
-                    "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "2939a264-8d5c-4894-991d-17c04bdb3b23",
                     "183d408b-ef59-4367-82d6-152fb4caf265": "98e33b00-45e1-4295-9a4d-31d3bc3ed461",
                     "7f912fb9-0e68-4b5a-8e84-572dfe594555": "d463b0c6-c8ff-428e-a5aa-11afed5c4169",
                     "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "55ab8251-5802-4bd5-bc9c-e673704450ea",
@@ -15411,14 +15468,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
                         },
@@ -15435,7 +15484,6 @@
                   },
                   "__PrefabIdToInstanceId": {
                     "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "c77304e3-58a9-48a4-97b7-7aa84cbcf978",
-                    "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "74d2b707-328f-410d-b40f-9741c121658c",
                     "183d408b-ef59-4367-82d6-152fb4caf265": "9e82cb06-41e5-4655-bdcc-6a504fb9c121",
                     "7f912fb9-0e68-4b5a-8e84-572dfe594555": "ecfb9cb2-eb92-4f5b-a741-c4161a11e345",
                     "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "108d9628-fe3d-44c2-8cfc-51bfe35180e4",
@@ -15523,14 +15571,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
                         },
@@ -15547,7 +15587,6 @@
                   },
                   "__PrefabIdToInstanceId": {
                     "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "8fd075cc-7ee8-4331-b2a5-afa9a5f6e08d",
-                    "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "94e24f02-3852-44d7-aa75-6dfe29e1f75a",
                     "183d408b-ef59-4367-82d6-152fb4caf265": "93dc4a71-3ff2-48a2-8253-21c9e694576b",
                     "7f912fb9-0e68-4b5a-8e84-572dfe594555": "bb533063-62be-4284-8d8c-a28968195723",
                     "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "82b33f7d-cdaf-4485-ac30-bacb6fe92238",
@@ -15604,14 +15643,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
                         },
@@ -15628,7 +15659,6 @@
                   },
                   "__PrefabIdToInstanceId": {
                     "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "f1a3d9d0-f29e-4959-be26-a22291c28caa",
-                    "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "c64c45ba-d8a5-41ad-87c6-2c9053a25d5f",
                     "183d408b-ef59-4367-82d6-152fb4caf265": "91026ccd-7df2-4591-a9b4-99d981931bb4",
                     "7f912fb9-0e68-4b5a-8e84-572dfe594555": "c58d2722-4a5d-4114-b84c-e6333881f949",
                     "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "43016e04-bbad-43a3-bf1e-52a3932b198e",
@@ -15674,14 +15704,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "7f8d4099-f4a7-4a84-8093-72abfcf46b73"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "183d408b-ef59-4367-82d6-152fb4caf265"
                         },
@@ -15698,7 +15720,6 @@
                   },
                   "__PrefabIdToInstanceId": {
                     "7f8d4099-f4a7-4a84-8093-72abfcf46b73": "881af30b-d3d3-48c2-a4bd-6daa2256cdb0",
-                    "e0949324-dfee-413c-b8c8-2b3c9a1d8fdf": "f4793480-697c-40fc-8c94-daee0b198484",
                     "183d408b-ef59-4367-82d6-152fb4caf265": "3dc497c0-6c45-4d61-9d85-b03ab9ac5464",
                     "7f912fb9-0e68-4b5a-8e84-572dfe594555": "d445c88a-17c0-4cd9-b739-14d6b886e932",
                     "8d98c90c-6e4b-4593-89c1-0c0ad0fc6a22": "304ae8d1-9745-49f4-a1d8-ce306c5efa8c",
@@ -15818,10 +15839,7 @@
                       "Type": "GameObject",
                       "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
                     },
-                    "PreviousElement": {
-                      "Type": "Component",
-                      "IdValue": "b043f311-082b-4a6d-9efb-73bc6d3c4eee"
-                    },
+                    "PreviousElement": null,
                     "ContainerProperty": "Components",
                     "IsContainerArray": true,
                     "Data": {
@@ -15870,14 +15888,30 @@
                     "Value": 50
                   }
                 ],
-                "MovedObjects": []
+                "MovedObjects": [
+                  {
+                    "Id": {
+                      "Type": "Component",
+                      "IdValue": "0b069202-cd15-4034-902a-636e50f5d9c9"
+                    },
+                    "NewParent": {
+                      "Type": "GameObject",
+                      "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
+                    },
+                    "NewContainerProperty": "Components",
+                    "IsNewContainerArray": true,
+                    "NewPreviousElement": {
+                      "Type": "Component",
+                      "IdValue": "80cc26d9-36ea-4276-96e8-42f3d3516206"
+                    }
+                  }
+                ]
               },
               "__PrefabIdToInstanceId": {
                 "f414584d-dd6a-49d1-bd4d-3a12c441a454": "5cd92717-aec8-4b7f-8b2f-884793377af7",
-                "5b9ab1f0-f9ad-49f8-858f-b077726d43b7": "6e1d624a-e6b7-4da1-be06-c65a050428fb",
                 "0b069202-cd15-4034-902a-636e50f5d9c9": "27de6687-a41a-44ae-8df4-00f3b15ed3f6",
                 "7714a03f-ad4a-404d-a598-22b3521e52fb": "03036db4-5fdc-46d5-959c-c6bb4b3b045d",
-                "b043f311-082b-4a6d-9efb-73bc6d3c4eee": "106d1ff8-f68c-4f1a-8be1-86e4cf8d1953",
+                "455315ff-242e-45d3-9105-e2e6b3e15f25": "73ba41e5-e1d2-47a9-a4f3-59ccf05218a1",
                 "a22d3f96-c251-4396-a573-a47b5f334262": "e18d87b8-d3ce-4237-8353-18d2d54ea242",
                 "51493d27-4bd8-47bf-8876-1b105e0c3e25": "ed5ad00c-43ce-4d3f-b429-561279b83cb7",
                 "d3256511-bebd-49aa-adb8-57cdfe29ffed": "8bf2fd48-3ced-4a79-b43b-00d1c0abc5b5"
@@ -15898,10 +15932,7 @@
                       "Type": "GameObject",
                       "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
                     },
-                    "PreviousElement": {
-                      "Type": "Component",
-                      "IdValue": "b043f311-082b-4a6d-9efb-73bc6d3c4eee"
-                    },
+                    "PreviousElement": null,
                     "ContainerProperty": "Components",
                     "IsContainerArray": true,
                     "Data": {
@@ -15958,14 +15989,30 @@
                     "Value": 50
                   }
                 ],
-                "MovedObjects": []
+                "MovedObjects": [
+                  {
+                    "Id": {
+                      "Type": "Component",
+                      "IdValue": "0b069202-cd15-4034-902a-636e50f5d9c9"
+                    },
+                    "NewParent": {
+                      "Type": "GameObject",
+                      "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
+                    },
+                    "NewContainerProperty": "Components",
+                    "IsNewContainerArray": true,
+                    "NewPreviousElement": {
+                      "Type": "Component",
+                      "IdValue": "ce5575c4-17c3-4d84-b294-8b35cd018381"
+                    }
+                  }
+                ]
               },
               "__PrefabIdToInstanceId": {
                 "f414584d-dd6a-49d1-bd4d-3a12c441a454": "04729728-9bc7-4af0-b52e-627fe5584378",
-                "5b9ab1f0-f9ad-49f8-858f-b077726d43b7": "134ccc32-dfb6-472f-af4c-342398641718",
                 "0b069202-cd15-4034-902a-636e50f5d9c9": "8dc02e1f-56d7-4e81-a219-9c1945662cb2",
                 "7714a03f-ad4a-404d-a598-22b3521e52fb": "ae42998b-5d77-42ec-bd0c-3497966c26fa",
-                "b043f311-082b-4a6d-9efb-73bc6d3c4eee": "25d7e644-50e3-465d-a7e5-4eb33436f841",
+                "455315ff-242e-45d3-9105-e2e6b3e15f25": "350caea6-28f6-4e88-b152-cb957536db73",
                 "a22d3f96-c251-4396-a573-a47b5f334262": "459e08e7-6cc9-45d3-8115-fcde42dcbe58",
                 "51493d27-4bd8-47bf-8876-1b105e0c3e25": "2a354096-8a0e-497f-8d96-95ce045528d3",
                 "d3256511-bebd-49aa-adb8-57cdfe29ffed": "f37dbb9b-68a8-4c64-b213-eaebdfc89262"
@@ -15986,10 +16033,7 @@
                       "Type": "GameObject",
                       "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
                     },
-                    "PreviousElement": {
-                      "Type": "Component",
-                      "IdValue": "b043f311-082b-4a6d-9efb-73bc6d3c4eee"
-                    },
+                    "PreviousElement": null,
                     "ContainerProperty": "Components",
                     "IsContainerArray": true,
                     "Data": {
@@ -16046,14 +16090,30 @@
                     "Value": 50
                   }
                 ],
-                "MovedObjects": []
+                "MovedObjects": [
+                  {
+                    "Id": {
+                      "Type": "Component",
+                      "IdValue": "0b069202-cd15-4034-902a-636e50f5d9c9"
+                    },
+                    "NewParent": {
+                      "Type": "GameObject",
+                      "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
+                    },
+                    "NewContainerProperty": "Components",
+                    "IsNewContainerArray": true,
+                    "NewPreviousElement": {
+                      "Type": "Component",
+                      "IdValue": "9ffbe877-a8d5-4563-8db9-b5e7542d6af2"
+                    }
+                  }
+                ]
               },
               "__PrefabIdToInstanceId": {
                 "f414584d-dd6a-49d1-bd4d-3a12c441a454": "30e73b35-25a8-4103-99cd-aa3da381378d",
-                "5b9ab1f0-f9ad-49f8-858f-b077726d43b7": "f41b57c8-687b-4e4b-8cb3-616981c3bf4d",
                 "0b069202-cd15-4034-902a-636e50f5d9c9": "129b3541-1270-46c4-89eb-1d33f36c9892",
                 "7714a03f-ad4a-404d-a598-22b3521e52fb": "c2c0ff06-e525-4e99-9619-7e2ed5bf4c2f",
-                "b043f311-082b-4a6d-9efb-73bc6d3c4eee": "4933cb45-a0f6-4909-afa5-c34758c8ff6b",
+                "455315ff-242e-45d3-9105-e2e6b3e15f25": "2c3b64db-93d3-4693-9d6d-2f5b74e73792",
                 "a22d3f96-c251-4396-a573-a47b5f334262": "9c6c302b-c13c-45b1-9bd3-0737aacbd088",
                 "51493d27-4bd8-47bf-8876-1b105e0c3e25": "8e431a9d-3a23-4677-8a77-bd97a83efd7a",
                 "d3256511-bebd-49aa-adb8-57cdfe29ffed": "e3a29009-8b63-49bb-95e2-8c28bb483493"
@@ -16074,10 +16134,7 @@
                       "Type": "GameObject",
                       "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
                     },
-                    "PreviousElement": {
-                      "Type": "Component",
-                      "IdValue": "b043f311-082b-4a6d-9efb-73bc6d3c4eee"
-                    },
+                    "PreviousElement": null,
                     "ContainerProperty": "Components",
                     "IsContainerArray": true,
                     "Data": {
@@ -16142,14 +16199,30 @@
                     "Value": 50
                   }
                 ],
-                "MovedObjects": []
+                "MovedObjects": [
+                  {
+                    "Id": {
+                      "Type": "Component",
+                      "IdValue": "0b069202-cd15-4034-902a-636e50f5d9c9"
+                    },
+                    "NewParent": {
+                      "Type": "GameObject",
+                      "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
+                    },
+                    "NewContainerProperty": "Components",
+                    "IsNewContainerArray": true,
+                    "NewPreviousElement": {
+                      "Type": "Component",
+                      "IdValue": "f90caead-8f32-4ea7-bb0b-58fd446ef683"
+                    }
+                  }
+                ]
               },
               "__PrefabIdToInstanceId": {
                 "f414584d-dd6a-49d1-bd4d-3a12c441a454": "fc7f2c92-6d3e-4a67-98a1-ac0100e87e91",
-                "5b9ab1f0-f9ad-49f8-858f-b077726d43b7": "dc131a18-9377-45b9-a908-427afa1b991f",
                 "0b069202-cd15-4034-902a-636e50f5d9c9": "5cacec0a-73c6-416f-b85b-ee1f8a71361c",
                 "7714a03f-ad4a-404d-a598-22b3521e52fb": "f1fb717e-a7d7-4275-b429-42cfebdc4f02",
-                "b043f311-082b-4a6d-9efb-73bc6d3c4eee": "bd359bf0-df7f-46c6-b801-9514ef09cb75",
+                "455315ff-242e-45d3-9105-e2e6b3e15f25": "a20df1c0-d209-44a5-bee2-4a50a25b2712",
                 "a22d3f96-c251-4396-a573-a47b5f334262": "61ccaf8d-e799-481e-9461-c14c217a958e",
                 "51493d27-4bd8-47bf-8876-1b105e0c3e25": "9e6c3b75-12af-4e94-a98f-6e563d04d320",
                 "d3256511-bebd-49aa-adb8-57cdfe29ffed": "66dc1104-0f4b-47e4-894b-3e8d98f35966"
@@ -16170,10 +16243,7 @@
                       "Type": "GameObject",
                       "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
                     },
-                    "PreviousElement": {
-                      "Type": "Component",
-                      "IdValue": "b043f311-082b-4a6d-9efb-73bc6d3c4eee"
-                    },
+                    "PreviousElement": null,
                     "ContainerProperty": "Components",
                     "IsContainerArray": true,
                     "Data": {
@@ -16238,14 +16308,30 @@
                     "Value": 50
                   }
                 ],
-                "MovedObjects": []
+                "MovedObjects": [
+                  {
+                    "Id": {
+                      "Type": "Component",
+                      "IdValue": "0b069202-cd15-4034-902a-636e50f5d9c9"
+                    },
+                    "NewParent": {
+                      "Type": "GameObject",
+                      "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
+                    },
+                    "NewContainerProperty": "Components",
+                    "IsNewContainerArray": true,
+                    "NewPreviousElement": {
+                      "Type": "Component",
+                      "IdValue": "7303ea94-1dfb-4c70-bc01-4a4935bb6c6c"
+                    }
+                  }
+                ]
               },
               "__PrefabIdToInstanceId": {
                 "f414584d-dd6a-49d1-bd4d-3a12c441a454": "8f06c2fb-eb85-4076-8239-31d32435b2af",
-                "5b9ab1f0-f9ad-49f8-858f-b077726d43b7": "bb8cc6d6-23f7-4801-a641-046929342330",
                 "0b069202-cd15-4034-902a-636e50f5d9c9": "663cb5f9-127e-4081-9a33-20ba39052ae7",
                 "7714a03f-ad4a-404d-a598-22b3521e52fb": "f3766db2-6a9c-4f1a-a679-262360197dff",
-                "b043f311-082b-4a6d-9efb-73bc6d3c4eee": "19b76dbf-aa8d-4aed-8edf-045bb731a7bc",
+                "455315ff-242e-45d3-9105-e2e6b3e15f25": "40470ef5-6877-425e-9d25-9028f05ec639",
                 "a22d3f96-c251-4396-a573-a47b5f334262": "8c45003f-686c-4b40-9081-9436f56bfbe6",
                 "51493d27-4bd8-47bf-8876-1b105e0c3e25": "dfa58047-c7bd-437b-b8ab-4395e1143a43",
                 "d3256511-bebd-49aa-adb8-57cdfe29ffed": "432d8f0b-0504-41b4-ad0d-9abdcb1a7f4c"
@@ -16266,10 +16352,7 @@
                       "Type": "GameObject",
                       "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
                     },
-                    "PreviousElement": {
-                      "Type": "Component",
-                      "IdValue": "b043f311-082b-4a6d-9efb-73bc6d3c4eee"
-                    },
+                    "PreviousElement": null,
                     "ContainerProperty": "Components",
                     "IsContainerArray": true,
                     "Data": {
@@ -16326,14 +16409,30 @@
                     "Value": 50
                   }
                 ],
-                "MovedObjects": []
+                "MovedObjects": [
+                  {
+                    "Id": {
+                      "Type": "Component",
+                      "IdValue": "0b069202-cd15-4034-902a-636e50f5d9c9"
+                    },
+                    "NewParent": {
+                      "Type": "GameObject",
+                      "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
+                    },
+                    "NewContainerProperty": "Components",
+                    "IsNewContainerArray": true,
+                    "NewPreviousElement": {
+                      "Type": "Component",
+                      "IdValue": "4eb56ffd-37cd-4bff-b52f-e4194b8013d8"
+                    }
+                  }
+                ]
               },
               "__PrefabIdToInstanceId": {
                 "f414584d-dd6a-49d1-bd4d-3a12c441a454": "5531ff8e-4f2b-4184-9aa4-9135df1b5e32",
-                "5b9ab1f0-f9ad-49f8-858f-b077726d43b7": "4c1626a0-bcd1-4101-8691-62bb2be7f7e1",
                 "0b069202-cd15-4034-902a-636e50f5d9c9": "230954b3-09d0-4b11-b9b4-7a9edd4344f2",
                 "7714a03f-ad4a-404d-a598-22b3521e52fb": "446cbf7c-8914-42a0-bc49-e608c999f0bb",
-                "b043f311-082b-4a6d-9efb-73bc6d3c4eee": "b09bdbf6-86e1-474c-8a3c-606e4ae1240b",
+                "455315ff-242e-45d3-9105-e2e6b3e15f25": "739a3daf-9179-463a-b5f6-77539ca78e17",
                 "a22d3f96-c251-4396-a573-a47b5f334262": "1862a7e3-eaa6-44bc-a8f2-542fcc1c27cf",
                 "51493d27-4bd8-47bf-8876-1b105e0c3e25": "0115abfe-4ce2-461e-940c-cb4966c0f568",
                 "d3256511-bebd-49aa-adb8-57cdfe29ffed": "663d76d9-bd4b-45fa-8168-967a3625c398"
@@ -16354,10 +16453,7 @@
                       "Type": "GameObject",
                       "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
                     },
-                    "PreviousElement": {
-                      "Type": "Component",
-                      "IdValue": "b043f311-082b-4a6d-9efb-73bc6d3c4eee"
-                    },
+                    "PreviousElement": null,
                     "ContainerProperty": "Components",
                     "IsContainerArray": true,
                     "Data": {
@@ -16414,14 +16510,30 @@
                     "Value": 50
                   }
                 ],
-                "MovedObjects": []
+                "MovedObjects": [
+                  {
+                    "Id": {
+                      "Type": "Component",
+                      "IdValue": "0b069202-cd15-4034-902a-636e50f5d9c9"
+                    },
+                    "NewParent": {
+                      "Type": "GameObject",
+                      "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
+                    },
+                    "NewContainerProperty": "Components",
+                    "IsNewContainerArray": true,
+                    "NewPreviousElement": {
+                      "Type": "Component",
+                      "IdValue": "cdd17741-2623-4d0e-aec1-6a7b24d83e4f"
+                    }
+                  }
+                ]
               },
               "__PrefabIdToInstanceId": {
                 "f414584d-dd6a-49d1-bd4d-3a12c441a454": "b0d13b73-8c58-4142-8fc8-c3884fb48818",
-                "5b9ab1f0-f9ad-49f8-858f-b077726d43b7": "61c496c0-f2e5-49e2-b6b4-8c76f93ee22b",
                 "0b069202-cd15-4034-902a-636e50f5d9c9": "f287d200-0cef-4bb4-b218-830eeebb7738",
                 "7714a03f-ad4a-404d-a598-22b3521e52fb": "c63b12e1-d6a1-44f9-81fb-ce0232c2c0cf",
-                "b043f311-082b-4a6d-9efb-73bc6d3c4eee": "3132a0e0-53a6-4ffd-8582-d9f84c7081af",
+                "455315ff-242e-45d3-9105-e2e6b3e15f25": "d7eb7684-026c-4453-a7b2-d4d9317ddb87",
                 "a22d3f96-c251-4396-a573-a47b5f334262": "a88ab565-1b7a-4c0a-8fcb-c6fca988ece5",
                 "51493d27-4bd8-47bf-8876-1b105e0c3e25": "7904a1d5-b451-4251-ab51-bc2d990e9dc4",
                 "d3256511-bebd-49aa-adb8-57cdfe29ffed": "1babed61-315c-443a-9fab-b3e56d7530b5"
@@ -16442,10 +16554,7 @@
                       "Type": "GameObject",
                       "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
                     },
-                    "PreviousElement": {
-                      "Type": "Component",
-                      "IdValue": "b043f311-082b-4a6d-9efb-73bc6d3c4eee"
-                    },
+                    "PreviousElement": null,
                     "ContainerProperty": "Components",
                     "IsContainerArray": true,
                     "Data": {
@@ -16510,14 +16619,30 @@
                     "Value": 50
                   }
                 ],
-                "MovedObjects": []
+                "MovedObjects": [
+                  {
+                    "Id": {
+                      "Type": "Component",
+                      "IdValue": "0b069202-cd15-4034-902a-636e50f5d9c9"
+                    },
+                    "NewParent": {
+                      "Type": "GameObject",
+                      "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
+                    },
+                    "NewContainerProperty": "Components",
+                    "IsNewContainerArray": true,
+                    "NewPreviousElement": {
+                      "Type": "Component",
+                      "IdValue": "d1a64bb6-fe5d-408d-999c-d968a17de069"
+                    }
+                  }
+                ]
               },
               "__PrefabIdToInstanceId": {
                 "f414584d-dd6a-49d1-bd4d-3a12c441a454": "1d6c0adc-b38f-4e7a-af66-f88682442f44",
-                "5b9ab1f0-f9ad-49f8-858f-b077726d43b7": "77ef76cb-0bd4-4212-b6a9-ca8403772c2b",
                 "0b069202-cd15-4034-902a-636e50f5d9c9": "fa063492-f9b5-4f5d-b9e3-06797ba63bd9",
                 "7714a03f-ad4a-404d-a598-22b3521e52fb": "e7668330-c92b-4309-aca1-bcc8d053c9f3",
-                "b043f311-082b-4a6d-9efb-73bc6d3c4eee": "3f70b974-f5aa-47c2-af62-4e62cf1872c4",
+                "455315ff-242e-45d3-9105-e2e6b3e15f25": "97374ee5-2c2b-43b2-aa25-935dc4e77589",
                 "a22d3f96-c251-4396-a573-a47b5f334262": "e048b3f5-db85-4c91-998b-c9610b72e149",
                 "51493d27-4bd8-47bf-8876-1b105e0c3e25": "591afbf3-7fac-4c39-a060-ee585f3eabe7",
                 "d3256511-bebd-49aa-adb8-57cdfe29ffed": "fac66472-1a1e-4500-b5bd-5b3939220c68"
@@ -16538,10 +16663,7 @@
                       "Type": "GameObject",
                       "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
                     },
-                    "PreviousElement": {
-                      "Type": "Component",
-                      "IdValue": "b043f311-082b-4a6d-9efb-73bc6d3c4eee"
-                    },
+                    "PreviousElement": null,
                     "ContainerProperty": "Components",
                     "IsContainerArray": true,
                     "Data": {
@@ -16606,14 +16728,30 @@
                     "Value": 50
                   }
                 ],
-                "MovedObjects": []
+                "MovedObjects": [
+                  {
+                    "Id": {
+                      "Type": "Component",
+                      "IdValue": "0b069202-cd15-4034-902a-636e50f5d9c9"
+                    },
+                    "NewParent": {
+                      "Type": "GameObject",
+                      "IdValue": "f414584d-dd6a-49d1-bd4d-3a12c441a454"
+                    },
+                    "NewContainerProperty": "Components",
+                    "IsNewContainerArray": true,
+                    "NewPreviousElement": {
+                      "Type": "Component",
+                      "IdValue": "b7c19724-98e0-420b-9fcf-295dd8914719"
+                    }
+                  }
+                ]
               },
               "__PrefabIdToInstanceId": {
                 "f414584d-dd6a-49d1-bd4d-3a12c441a454": "8ccc0884-c0d8-4b98-acea-97b4ad67c750",
-                "5b9ab1f0-f9ad-49f8-858f-b077726d43b7": "aec0371a-e356-450b-8ba8-43cc388b2de3",
                 "0b069202-cd15-4034-902a-636e50f5d9c9": "49ac21e5-58a2-49ef-9064-164dc5900ecc",
                 "7714a03f-ad4a-404d-a598-22b3521e52fb": "45d82678-e449-4d49-9edc-a1e0075e9222",
-                "b043f311-082b-4a6d-9efb-73bc6d3c4eee": "a378406b-f16d-449c-a448-814355e2089e",
+                "455315ff-242e-45d3-9105-e2e6b3e15f25": "a18bb817-f22c-4bf7-8b1e-c07bd76fb7fc",
                 "a22d3f96-c251-4396-a573-a47b5f334262": "0e2c6383-1ee5-46b0-bb83-c45dcdc06198",
                 "51493d27-4bd8-47bf-8876-1b105e0c3e25": "b702a572-b7a5-4c59-975e-09b37659c4ed",
                 "d3256511-bebd-49aa-adb8-57cdfe29ffed": "0ef76d08-3791-4e7e-9a56-5cad8d4eacd7"
@@ -16883,14 +17021,6 @@
                   {
                     "Target": {
                       "Type": "GameObject",
-                      "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
                       "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                     },
                     "Property": "Rotation",
@@ -16901,7 +17031,7 @@
                   {
                     "Id": {
                       "Type": "Component",
-                      "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                      "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                     },
                     "NewParent": {
                       "Type": "GameObject",
@@ -16927,7 +17057,6 @@
                 "99d6ce33-d6a1-4814-88b7-813e95afc016": "233115da-8598-4ad2-9084-f96302e72116",
                 "b25faba1-750f-40cc-8dcf-514f5db4d567": "680fcb88-d341-4e14-9b2b-5b1028677c04",
                 "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "b8f71079-118d-4fda-b9f6-ccef52f171ed",
-                "876306dc-b294-465e-9ed0-16ddda908237": "2dc067a7-265e-4a78-96fb-862c4b168155",
                 "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "564525bb-52b1-4502-8dbe-2ae065718394",
                 "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "7738fcc7-6637-4177-9fc2-169aefafb6cb"
               }
@@ -17049,14 +17178,6 @@
                   {
                     "Target": {
                       "Type": "GameObject",
-                      "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
                       "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                     },
                     "Property": "Rotation",
@@ -17067,7 +17188,7 @@
                   {
                     "Id": {
                       "Type": "Component",
-                      "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                      "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                     },
                     "NewParent": {
                       "Type": "GameObject",
@@ -17093,7 +17214,6 @@
                 "99d6ce33-d6a1-4814-88b7-813e95afc016": "0db1e7b4-882e-4d3b-aa7c-a07dde5723c2",
                 "b25faba1-750f-40cc-8dcf-514f5db4d567": "4fb4f0fd-19f0-4f21-8cbf-8b35fef4aeb6",
                 "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "a82d04cb-7038-4537-b567-99d65cf84211",
-                "876306dc-b294-465e-9ed0-16ddda908237": "5e0c6e1d-4f0a-42bc-85da-f0364ad696d9",
                 "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "edabf188-2213-4730-8770-a8b5a3d4ada0",
                 "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "65e4d075-99e5-48af-a192-e68e8986b868"
               }
@@ -19401,14 +19521,6 @@
                   {
                     "Target": {
                       "Type": "GameObject",
-                      "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
                       "IdValue": "800becb0-14a6-4e67-b25c-f60c064e1ecc"
                     },
                     "Property": "Rotation",
@@ -19419,7 +19531,7 @@
                   {
                     "Id": {
                       "Type": "Component",
-                      "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                      "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                     },
                     "NewParent": {
                       "Type": "GameObject",
@@ -19445,7 +19557,6 @@
                 "99d6ce33-d6a1-4814-88b7-813e95afc016": "e5115970-8854-46f4-98b5-00a5546fbc9a",
                 "b25faba1-750f-40cc-8dcf-514f5db4d567": "5c9ef1bd-3378-4090-8f88-1e51bc2daf41",
                 "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "733cfbca-faa2-4383-a8c2-400d72b158c5",
-                "876306dc-b294-465e-9ed0-16ddda908237": "8d1265bf-50e1-4dcc-94f4-de79a1b0ba69",
                 "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "090174cf-334f-4638-823a-b394f5bdd004",
                 "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "ab62532d-05bc-4ef7-8140-4abc9fcae900"
               }
@@ -20786,38 +20897,12 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,0.382683545,0.923879504"
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
-                      "IdValue": "5178935c-6ab4-415c-a86a-c654cb377fda"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
                   }
                 ],
-                "MovedObjects": [
-                  {
-                    "Id": {
-                      "Type": "Component",
-                      "IdValue": "b7b3cfd2-19a2-4547-b09c-b726d69e3aed"
-                    },
-                    "NewParent": {
-                      "Type": "GameObject",
-                      "IdValue": "5178935c-6ab4-415c-a86a-c654cb377fda"
-                    },
-                    "NewContainerProperty": "Components",
-                    "IsNewContainerArray": true,
-                    "NewPreviousElement": {
-                      "Type": "Component",
-                      "IdValue": "7b957922-d6d3-4d18-9239-f7bf8ed634ad"
-                    }
-                  }
-                ]
+                "MovedObjects": []
               },
               "__PrefabIdToInstanceId": {
                 "5178935c-6ab4-415c-a86a-c654cb377fda": "1cfc8ada-47d9-4114-b030-fed715d11d9e",
-                "7ad734c3-f5c6-4b81-a2a2-2427adbf144d": "ecf66823-8c0e-4508-804f-e1b224d09cd0",
                 "cd91b72e-f09b-4054-a36a-4acfbad541b8": "42ba4332-b7a1-41ed-b80c-a7fe89003b21",
                 "f1dcbcc7-ed3a-477d-8b0c-8a6f51da407b": "4dbaaee0-5564-42d2-960b-ef177e85b117",
                 "8f6e28fc-9a84-4c86-97e2-ca5af2d55c9f": "de66a37f-5d80-4853-a302-d1ec0e5957ab",
@@ -20828,8 +20913,7 @@
                 "02ff4d3d-3450-4f81-913b-4018196ee1c5": "f39ebbb9-6026-47c5-a718-390423e31ef1",
                 "1c4bd146-6513-4af3-88e2-f4bfb85a28ef": "7d317890-f46e-4b9c-ab50-60b6acd7e9bd",
                 "21a3d70c-6b29-40b2-b413-03af61a591f4": "577b9586-7202-4b94-848a-3ffde7fe85c0",
-                "396e6d04-6a32-477d-8566-d6311f6f9cd2": "8d9d155e-70a0-4b27-9f4f-593cfe39d27a",
-                "b7b3cfd2-19a2-4547-b09c-b726d69e3aed": "ae5f824e-f83e-4083-8787-b947fca303f3"
+                "396e6d04-6a32-477d-8566-d6311f6f9cd2": "8d9d155e-70a0-4b27-9f4f-593cfe39d27a"
               }
             },
             {
@@ -21016,38 +21100,12 @@
                     },
                     "Property": "Position",
                     "Value": "-450.412415,1686.02271,-816.188904"
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
-                      "IdValue": "5178935c-6ab4-415c-a86a-c654cb377fda"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
                   }
                 ],
-                "MovedObjects": [
-                  {
-                    "Id": {
-                      "Type": "Component",
-                      "IdValue": "b7b3cfd2-19a2-4547-b09c-b726d69e3aed"
-                    },
-                    "NewParent": {
-                      "Type": "GameObject",
-                      "IdValue": "5178935c-6ab4-415c-a86a-c654cb377fda"
-                    },
-                    "NewContainerProperty": "Components",
-                    "IsNewContainerArray": true,
-                    "NewPreviousElement": {
-                      "Type": "Component",
-                      "IdValue": "de29d2c1-bd94-4593-98ef-0b89b1b5c1f0"
-                    }
-                  }
-                ]
+                "MovedObjects": []
               },
               "__PrefabIdToInstanceId": {
                 "5178935c-6ab4-415c-a86a-c654cb377fda": "4b1562c7-49b2-41ec-a679-341489369cf6",
-                "7ad734c3-f5c6-4b81-a2a2-2427adbf144d": "509b84e2-65d5-4df6-9948-46c34f23bd00",
                 "cd91b72e-f09b-4054-a36a-4acfbad541b8": "7115f0a4-d8b9-4717-8b3e-42ff822e28f0",
                 "f1dcbcc7-ed3a-477d-8b0c-8a6f51da407b": "7ff58932-6d73-4504-b3d4-cb67cc4e6bc5",
                 "8f6e28fc-9a84-4c86-97e2-ca5af2d55c9f": "fe7c6ac0-0f49-4563-b72b-d5dc13b55241",
@@ -21058,8 +21116,7 @@
                 "02ff4d3d-3450-4f81-913b-4018196ee1c5": "57bb1a8b-5d4f-4041-b64d-ad474d3bce94",
                 "1c4bd146-6513-4af3-88e2-f4bfb85a28ef": "a952776d-bbfd-41d4-809f-e8e96d3c35a3",
                 "21a3d70c-6b29-40b2-b413-03af61a591f4": "a4e66019-5313-4e40-bb15-835105c2220d",
-                "396e6d04-6a32-477d-8566-d6311f6f9cd2": "fa3452e8-b359-431f-81fb-acd038aa0559",
-                "b7b3cfd2-19a2-4547-b09c-b726d69e3aed": "6bbccb1a-947d-4809-b299-da9077ff7b6e"
+                "396e6d04-6a32-477d-8566-d6311f6f9cd2": "fa3452e8-b359-431f-81fb-acd038aa0559"
               }
             },
             {
@@ -21653,7 +21710,49 @@
                   "__version": 2,
                   "__Prefab": "prefabs/doors/door tier 2.prefab",
                   "__PrefabInstancePatch": {
-                    "AddedObjects": [],
+                    "AddedObjects": [
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "d018fe19-326b-428d-b9dc-6758915d6272"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "4695bf31-6d9d-4737-b9dc-c7ccf79a1a0a"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "9fc3b3b9-d9a1-43d1-a1a1-cd10357aa7a1"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelCollider",
+                          "__guid": "d018fe19-326b-428d-b9dc-6758915d6272",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "ColliderFlags": 0,
+                          "Elasticity": null,
+                          "Friction": null,
+                          "IsTrigger": false,
+                          "Model": "models/doors/door_2.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "OnObjectTriggerEnter": null,
+                          "OnObjectTriggerExit": null,
+                          "OnTriggerEnter": null,
+                          "OnTriggerExit": null,
+                          "RollingResistance": null,
+                          "Static": true,
+                          "Surface": null,
+                          "SurfaceVelocity": "0,0,0"
+                        }
+                      }
+                    ],
                     "RemovedObjects": [
                       {
                         "Id": {
@@ -21731,7 +21830,49 @@
                   "__version": 2,
                   "__Prefab": "prefabs/doors/door tier 2.prefab",
                   "__PrefabInstancePatch": {
-                    "AddedObjects": [],
+                    "AddedObjects": [
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "d05188ae-bc46-4818-bea7-bfa6fb69484a"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "4695bf31-6d9d-4737-b9dc-c7ccf79a1a0a"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "9fc3b3b9-d9a1-43d1-a1a1-cd10357aa7a1"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelCollider",
+                          "__guid": "d05188ae-bc46-4818-bea7-bfa6fb69484a",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "ColliderFlags": 0,
+                          "Elasticity": null,
+                          "Friction": null,
+                          "IsTrigger": false,
+                          "Model": "models/doors/door_2.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "OnObjectTriggerEnter": null,
+                          "OnObjectTriggerExit": null,
+                          "OnTriggerEnter": null,
+                          "OnTriggerExit": null,
+                          "RollingResistance": null,
+                          "Static": true,
+                          "Surface": null,
+                          "SurfaceVelocity": "0,0,0"
+                        }
+                      }
+                    ],
                     "RemovedObjects": [
                       {
                         "Id": {
@@ -22107,7 +22248,49 @@
                   "__version": 2,
                   "__Prefab": "prefabs/doors/door shops.prefab",
                   "__PrefabInstancePatch": {
-                    "AddedObjects": [],
+                    "AddedObjects": [
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "4ef41c48-9029-4d70-b93c-40e8ac6caf0e"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "d96471b3-e654-45a6-a620-fe204f1aaae2"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "7f6dea42-98c3-4789-aef0-3c7abb130dab"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelCollider",
+                          "__guid": "4ef41c48-9029-4d70-b93c-40e8ac6caf0e",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "ColliderFlags": 0,
+                          "Elasticity": null,
+                          "Friction": null,
+                          "IsTrigger": false,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "OnObjectTriggerEnter": null,
+                          "OnObjectTriggerExit": null,
+                          "OnTriggerEnter": null,
+                          "OnTriggerExit": null,
+                          "RollingResistance": null,
+                          "Static": true,
+                          "Surface": null,
+                          "SurfaceVelocity": "0,0,0"
+                        }
+                      }
+                    ],
                     "RemovedObjects": [
                       {
                         "Id": {
@@ -22179,7 +22362,49 @@
                   "__version": 2,
                   "__Prefab": "prefabs/doors/door shops.prefab",
                   "__PrefabInstancePatch": {
-                    "AddedObjects": [],
+                    "AddedObjects": [
+                      {
+                        "Id": {
+                          "Type": "Component",
+                          "IdValue": "74b960ac-398a-4b85-9e31-1366f43d256d"
+                        },
+                        "Parent": {
+                          "Type": "GameObject",
+                          "IdValue": "d96471b3-e654-45a6-a620-fe204f1aaae2"
+                        },
+                        "PreviousElement": {
+                          "Type": "Component",
+                          "IdValue": "7f6dea42-98c3-4789-aef0-3c7abb130dab"
+                        },
+                        "ContainerProperty": "Components",
+                        "IsContainerArray": true,
+                        "Data": {
+                          "__type": "Sandbox.ModelCollider",
+                          "__guid": "74b960ac-398a-4b85-9e31-1366f43d256d",
+                          "__enabled": true,
+                          "Flags": 0,
+                          "ColliderFlags": 0,
+                          "Elasticity": null,
+                          "Friction": null,
+                          "IsTrigger": false,
+                          "Model": "models/doors/door_2_window_a.vmdl",
+                          "OnComponentDestroy": null,
+                          "OnComponentDisabled": null,
+                          "OnComponentEnabled": null,
+                          "OnComponentFixedUpdate": null,
+                          "OnComponentStart": null,
+                          "OnComponentUpdate": null,
+                          "OnObjectTriggerEnter": null,
+                          "OnObjectTriggerExit": null,
+                          "OnTriggerEnter": null,
+                          "OnTriggerExit": null,
+                          "RollingResistance": null,
+                          "Static": true,
+                          "Surface": null,
+                          "SurfaceVelocity": "0,0,0"
+                        }
+                      }
+                    ],
                     "RemovedObjects": [
                       {
                         "Id": {
@@ -22261,7 +22486,49 @@
               "__version": 2,
               "__Prefab": "prefabs/doors/door tier 2.prefab",
               "__PrefabInstancePatch": {
-                "AddedObjects": [],
+                "AddedObjects": [
+                  {
+                    "Id": {
+                      "Type": "Component",
+                      "IdValue": "bcc463a5-3291-4f32-9a6c-f70a511bb03a"
+                    },
+                    "Parent": {
+                      "Type": "GameObject",
+                      "IdValue": "4695bf31-6d9d-4737-b9dc-c7ccf79a1a0a"
+                    },
+                    "PreviousElement": {
+                      "Type": "Component",
+                      "IdValue": "9fc3b3b9-d9a1-43d1-a1a1-cd10357aa7a1"
+                    },
+                    "ContainerProperty": "Components",
+                    "IsContainerArray": true,
+                    "Data": {
+                      "__type": "Sandbox.ModelCollider",
+                      "__guid": "bcc463a5-3291-4f32-9a6c-f70a511bb03a",
+                      "__enabled": true,
+                      "Flags": 0,
+                      "ColliderFlags": 0,
+                      "Elasticity": null,
+                      "Friction": null,
+                      "IsTrigger": false,
+                      "Model": "models/doors/door_2.vmdl",
+                      "OnComponentDestroy": null,
+                      "OnComponentDisabled": null,
+                      "OnComponentEnabled": null,
+                      "OnComponentFixedUpdate": null,
+                      "OnComponentStart": null,
+                      "OnComponentUpdate": null,
+                      "OnObjectTriggerEnter": null,
+                      "OnObjectTriggerExit": null,
+                      "OnTriggerEnter": null,
+                      "OnTriggerExit": null,
+                      "RollingResistance": null,
+                      "Static": true,
+                      "Surface": null,
+                      "SurfaceVelocity": "0,0,0"
+                    }
+                  }
+                ],
                 "RemovedObjects": [
                   {
                     "Id": {
@@ -23439,7 +23706,49 @@
               "__version": 2,
               "__Prefab": "prefabs/doors/door shops.prefab",
               "__PrefabInstancePatch": {
-                "AddedObjects": [],
+                "AddedObjects": [
+                  {
+                    "Id": {
+                      "Type": "Component",
+                      "IdValue": "debaa484-f87c-4acd-bd42-0496865c59d6"
+                    },
+                    "Parent": {
+                      "Type": "GameObject",
+                      "IdValue": "d96471b3-e654-45a6-a620-fe204f1aaae2"
+                    },
+                    "PreviousElement": {
+                      "Type": "Component",
+                      "IdValue": "7f6dea42-98c3-4789-aef0-3c7abb130dab"
+                    },
+                    "ContainerProperty": "Components",
+                    "IsContainerArray": true,
+                    "Data": {
+                      "__type": "Sandbox.ModelCollider",
+                      "__guid": "debaa484-f87c-4acd-bd42-0496865c59d6",
+                      "__enabled": true,
+                      "Flags": 0,
+                      "ColliderFlags": 0,
+                      "Elasticity": null,
+                      "Friction": null,
+                      "IsTrigger": false,
+                      "Model": "models/doors/door_2_window_a.vmdl",
+                      "OnComponentDestroy": null,
+                      "OnComponentDisabled": null,
+                      "OnComponentEnabled": null,
+                      "OnComponentFixedUpdate": null,
+                      "OnComponentStart": null,
+                      "OnComponentUpdate": null,
+                      "OnObjectTriggerEnter": null,
+                      "OnObjectTriggerExit": null,
+                      "OnTriggerEnter": null,
+                      "OnTriggerExit": null,
+                      "RollingResistance": null,
+                      "Static": true,
+                      "Surface": null,
+                      "SurfaceVelocity": "0,0,0"
+                    }
+                  }
+                ],
                 "RemovedObjects": [
                   {
                     "Id": {
@@ -23507,14 +23816,7 @@
               "__Prefab": "prefabs/doors/door shops 2.prefab",
               "__PrefabInstancePatch": {
                 "AddedObjects": [],
-                "RemovedObjects": [
-                  {
-                    "Id": {
-                      "Type": "Component",
-                      "IdValue": "b7b3cfd2-19a2-4547-b09c-b726d69e3aed"
-                    }
-                  }
-                ],
+                "RemovedObjects": [],
                 "PropertyOverrides": [
                   {
                     "Target": {
@@ -23539,21 +23841,12 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.70710665,0.707106829"
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
-                      "IdValue": "5178935c-6ab4-415c-a86a-c654cb377fda"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
                   }
                 ],
                 "MovedObjects": []
               },
               "__PrefabIdToInstanceId": {
                 "5178935c-6ab4-415c-a86a-c654cb377fda": "03f8978b-c7a3-412a-a4a3-3c4f52c84abb",
-                "7ad734c3-f5c6-4b81-a2a2-2427adbf144d": "f1a43954-0155-42d7-922c-1522e0a57eb6",
                 "cd91b72e-f09b-4054-a36a-4acfbad541b8": "5df7da26-35c6-4b7a-bfac-a6a98dd69cc4",
                 "f1dcbcc7-ed3a-477d-8b0c-8a6f51da407b": "1e3c00b6-0505-4e18-971c-aa2cd9470b9c",
                 "8f6e28fc-9a84-4c86-97e2-ca5af2d55c9f": "1e30937d-9783-4569-aa0e-bdac3c56291a",
@@ -23564,8 +23857,7 @@
                 "02ff4d3d-3450-4f81-913b-4018196ee1c5": "6048160c-1b83-416e-b209-bf428ebfe6a4",
                 "1c4bd146-6513-4af3-88e2-f4bfb85a28ef": "b69307d9-0343-43b7-a79a-277cbacdcef4",
                 "21a3d70c-6b29-40b2-b413-03af61a591f4": "6423e649-e271-441e-9971-e92ec27a5251",
-                "396e6d04-6a32-477d-8566-d6311f6f9cd2": "5e02d810-f8a5-4979-8711-52cac6a18461",
-                "b7b3cfd2-19a2-4547-b09c-b726d69e3aed": "05a39310-cc9c-4bef-b2ca-99b868ff8f8b"
+                "396e6d04-6a32-477d-8566-d6311f6f9cd2": "5e02d810-f8a5-4979-8711-52cac6a18461"
               }
             },
             {
@@ -27391,46 +27683,12 @@
                     },
                     "Property": "Rotation",
                     "Value": "0,0,-0.382683307,0.923879623"
-                  },
-                  {
-                    "Target": {
-                      "Type": "GameObject",
-                      "IdValue": "5178935c-6ab4-415c-a86a-c654cb377fda"
-                    },
-                    "Property": "NetworkMode",
-                    "Value": 1
-                  },
-                  {
-                    "Target": {
-                      "Type": "Component",
-                      "IdValue": "b7b3cfd2-19a2-4547-b09c-b726d69e3aed"
-                    },
-                    "Property": "__enabled",
-                    "Value": false
                   }
                 ],
-                "MovedObjects": [
-                  {
-                    "Id": {
-                      "Type": "Component",
-                      "IdValue": "b7b3cfd2-19a2-4547-b09c-b726d69e3aed"
-                    },
-                    "NewParent": {
-                      "Type": "GameObject",
-                      "IdValue": "5178935c-6ab4-415c-a86a-c654cb377fda"
-                    },
-                    "NewContainerProperty": "Components",
-                    "IsNewContainerArray": true,
-                    "NewPreviousElement": {
-                      "Type": "Component",
-                      "IdValue": "62a7bfab-d66d-40ac-ac09-edb5621342d6"
-                    }
-                  }
-                ]
+                "MovedObjects": []
               },
               "__PrefabIdToInstanceId": {
                 "5178935c-6ab4-415c-a86a-c654cb377fda": "ebabbe91-5722-4465-87ff-d775a0a2fc30",
-                "7ad734c3-f5c6-4b81-a2a2-2427adbf144d": "35fe2792-4b01-4d95-a7e7-ef63ef7fe2e1",
                 "cd91b72e-f09b-4054-a36a-4acfbad541b8": "1b666181-446d-413d-bef4-72bc1010b293",
                 "f1dcbcc7-ed3a-477d-8b0c-8a6f51da407b": "e122277a-81e0-403e-a71c-93e340fb06b6",
                 "8f6e28fc-9a84-4c86-97e2-ca5af2d55c9f": "bb3bb82a-0916-417e-82aa-79c5e4744945",
@@ -27441,8 +27699,7 @@
                 "02ff4d3d-3450-4f81-913b-4018196ee1c5": "b38d9083-93ec-4705-a6fb-9657d98607d3",
                 "1c4bd146-6513-4af3-88e2-f4bfb85a28ef": "dba84073-421e-489c-8e20-f45a13114e0d",
                 "21a3d70c-6b29-40b2-b413-03af61a591f4": "a1f92928-fcb4-4a6f-8ca9-66323f092a74",
-                "396e6d04-6a32-477d-8566-d6311f6f9cd2": "6c550f64-6233-4d59-9fff-ff6cb3d84ff5",
-                "b7b3cfd2-19a2-4547-b09c-b726d69e3aed": "b2b220ec-c92a-4c92-aead-956db2e8ffce"
+                "396e6d04-6a32-477d-8566-d6311f6f9cd2": "6c550f64-6233-4d59-9fff-ff6cb3d84ff5"
               }
             }
           ]
@@ -27589,14 +27846,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
@@ -27621,7 +27870,7 @@
                       {
                         "Id": {
                           "Type": "Component",
-                          "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
                         "NewParent": {
                           "Type": "GameObject",
@@ -27647,7 +27896,6 @@
                     "99d6ce33-d6a1-4814-88b7-813e95afc016": "c7760ada-0a92-4720-a94a-3771e9ba7706",
                     "b25faba1-750f-40cc-8dcf-514f5db4d567": "1cf40eba-93b0-45c7-ad3b-890d44a30f28",
                     "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "3310d35b-67ae-490a-8fdf-3bed17893ac4",
-                    "876306dc-b294-465e-9ed0-16ddda908237": "e2f5821f-7deb-48a8-89f7-ba09529e7e58",
                     "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "1767e82c-4877-473b-ae98-6a3175fb9808",
                     "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "d104a863-f3d8-4e96-b214-94929930088e"
                   }
@@ -27768,14 +28016,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
@@ -27800,7 +28040,7 @@
                       {
                         "Id": {
                           "Type": "Component",
-                          "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
                         "NewParent": {
                           "Type": "GameObject",
@@ -27826,7 +28066,6 @@
                     "99d6ce33-d6a1-4814-88b7-813e95afc016": "981754a4-56d0-4131-b70e-d26529eedcaa",
                     "b25faba1-750f-40cc-8dcf-514f5db4d567": "14c7507f-f42f-4bab-8b25-36bb8f285369",
                     "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "0fefeecf-c3a3-4f88-b96c-89ac8694ffa7",
-                    "876306dc-b294-465e-9ed0-16ddda908237": "06343fbf-4e8a-4248-9794-34af34bed8f7",
                     "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "0d7ec965-bf18-4e62-b501-ca0c14045c21",
                     "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "28a1a569-2de2-4ee9-b129-fe168096eddf"
                   }
@@ -27966,14 +28205,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
@@ -27998,7 +28229,7 @@
                       {
                         "Id": {
                           "Type": "Component",
-                          "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
                         "NewParent": {
                           "Type": "GameObject",
@@ -28024,7 +28255,6 @@
                     "99d6ce33-d6a1-4814-88b7-813e95afc016": "7604e286-1eaa-4486-a6ae-04facd07220d",
                     "b25faba1-750f-40cc-8dcf-514f5db4d567": "d7cae72a-5a1f-4d02-9572-d5e074e54d4e",
                     "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "bbf9b8c1-ea1f-4ee5-93b4-0e4d65d8573d",
-                    "876306dc-b294-465e-9ed0-16ddda908237": "ceb722ac-e219-443c-8418-81dfef768fab",
                     "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "525ced78-2079-4e8e-8b5b-353db418e81a",
                     "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "62474bc5-1695-456b-8a8a-1bd99c23d791"
                   }
@@ -28145,14 +28375,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
@@ -28177,7 +28399,7 @@
                       {
                         "Id": {
                           "Type": "Component",
-                          "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
                         "NewParent": {
                           "Type": "GameObject",
@@ -28203,7 +28425,6 @@
                     "99d6ce33-d6a1-4814-88b7-813e95afc016": "e41a6a62-b168-4771-9d23-a455c417465f",
                     "b25faba1-750f-40cc-8dcf-514f5db4d567": "d82f3260-d48b-4981-be8d-feb8b330274f",
                     "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "9dc0cc0b-3cba-43ab-975a-fe902157d9f1",
-                    "876306dc-b294-465e-9ed0-16ddda908237": "b120d5a6-c7d0-4352-b7f8-850e7c20baca",
                     "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "4353355b-0b49-43cb-a23a-563608441f4d",
                     "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "0cd7452e-3e93-4ef7-a6a9-754f3c662bca"
                   }
@@ -28343,14 +28564,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
@@ -28375,7 +28588,7 @@
                       {
                         "Id": {
                           "Type": "Component",
-                          "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
                         "NewParent": {
                           "Type": "GameObject",
@@ -28401,7 +28614,6 @@
                     "99d6ce33-d6a1-4814-88b7-813e95afc016": "51fc7472-77e9-4260-a508-042747d8d9cd",
                     "b25faba1-750f-40cc-8dcf-514f5db4d567": "62a998f2-28cf-4279-ad3b-0130785097f7",
                     "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "1c4f5ddd-b8bc-4f78-a3e4-5da81fd684b7",
-                    "876306dc-b294-465e-9ed0-16ddda908237": "8312bcdd-b561-4839-9896-2cb7baede1e7",
                     "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "b07b2da8-e0e7-4d95-a490-f63a102002e8",
                     "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "2486aac0-be30-452d-b6e5-3571d4963d36"
                   }
@@ -28522,14 +28734,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
@@ -28554,7 +28758,7 @@
                       {
                         "Id": {
                           "Type": "Component",
-                          "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
                         "NewParent": {
                           "Type": "GameObject",
@@ -28580,7 +28784,6 @@
                     "99d6ce33-d6a1-4814-88b7-813e95afc016": "39c2ac58-e07c-47ea-9950-e4b1ea2f2b77",
                     "b25faba1-750f-40cc-8dcf-514f5db4d567": "b21cebf1-47bf-4dc2-8a30-ed3db4e95a7a",
                     "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "a4f8a2bb-fcc2-4fe9-9e14-ba845c0dcf55",
-                    "876306dc-b294-465e-9ed0-16ddda908237": "6d611f0a-7cf6-4847-8d5a-a5ef55a355a7",
                     "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "a5312b69-1801-4217-98a5-fea7820e55c5",
                     "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "14f04f6a-1d55-4bbb-9fc3-b529f7282774"
                   }
@@ -28720,14 +28923,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
@@ -28752,7 +28947,7 @@
                       {
                         "Id": {
                           "Type": "Component",
-                          "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
                         "NewParent": {
                           "Type": "GameObject",
@@ -28778,7 +28973,6 @@
                     "99d6ce33-d6a1-4814-88b7-813e95afc016": "442330d7-fcdf-458d-ba9e-2b2c5df9ff4e",
                     "b25faba1-750f-40cc-8dcf-514f5db4d567": "4a9cb803-0aa9-4b20-868e-b4438f1c851e",
                     "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "a9467e7e-6342-4c33-bc2d-0c3345152945",
-                    "876306dc-b294-465e-9ed0-16ddda908237": "97e4590c-4b87-4682-b002-7552c5e564de",
                     "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "f5d92dcd-9176-4f7c-91b6-da755d2871ff",
                     "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "6ad51d61-df2e-4b30-b246-82d49d09ec11"
                   }
@@ -28899,14 +29093,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
@@ -28931,7 +29117,7 @@
                       {
                         "Id": {
                           "Type": "Component",
-                          "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
                         "NewParent": {
                           "Type": "GameObject",
@@ -28957,7 +29143,6 @@
                     "99d6ce33-d6a1-4814-88b7-813e95afc016": "ebd5e8b2-4d74-4316-bf85-4e5d9ff17488",
                     "b25faba1-750f-40cc-8dcf-514f5db4d567": "2dc2c065-e0f6-4842-ae8c-5e20cb543c6e",
                     "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "9c1a174e-a1a6-4a79-9a2a-ac898ccd8b9d",
-                    "876306dc-b294-465e-9ed0-16ddda908237": "8333ae5b-c931-481a-a2b2-cdbdb773a8cd",
                     "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "35430a96-63a0-4c72-8d49-5a5169cc6232",
                     "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "44056996-3a09-470a-ac1e-ea2089a04e36"
                   }
@@ -30205,14 +30390,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
@@ -30237,7 +30414,7 @@
                       {
                         "Id": {
                           "Type": "Component",
-                          "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
                         "NewParent": {
                           "Type": "GameObject",
@@ -30263,7 +30440,6 @@
                     "99d6ce33-d6a1-4814-88b7-813e95afc016": "feb63843-c30a-45a5-b933-65c0a6326515",
                     "b25faba1-750f-40cc-8dcf-514f5db4d567": "c0956013-9648-41e2-999b-2bcff2106e18",
                     "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "97b57484-1b2f-4323-8f85-344535c97e7b",
-                    "876306dc-b294-465e-9ed0-16ddda908237": "8cf78802-3af5-4a1c-868c-2fbda489633f",
                     "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "843be727-38ac-41eb-ab72-8f6d913735ed",
                     "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "47565f84-1aa1-4a1f-8aa6-29f969018ef0"
                   }
@@ -30384,14 +30560,6 @@
                       },
                       {
                         "Target": {
-                          "Type": "GameObject",
-                          "IdValue": "40bd5a35-cadc-4908-ae99-03f710adceff"
-                        },
-                        "Property": "NetworkMode",
-                        "Value": 1
-                      },
-                      {
-                        "Target": {
                           "Type": "Component",
                           "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
@@ -30416,7 +30584,7 @@
                       {
                         "Id": {
                           "Type": "Component",
-                          "IdValue": "876306dc-b294-465e-9ed0-16ddda908237"
+                          "IdValue": "ee699862-32ba-4ec6-8bc6-f922fc263704"
                         },
                         "NewParent": {
                           "Type": "GameObject",
@@ -30442,7 +30610,6 @@
                     "99d6ce33-d6a1-4814-88b7-813e95afc016": "c8f61696-074e-45f1-923f-a18846ba51d1",
                     "b25faba1-750f-40cc-8dcf-514f5db4d567": "291058ab-33a3-45b0-b4c9-b7f8e3ac0d49",
                     "c213adc6-0428-4dae-a4e1-967a9fc5e1a9": "5447efd5-117d-463c-a8a0-3db65553884f",
-                    "876306dc-b294-465e-9ed0-16ddda908237": "9218694b-96a2-4ee9-b391-1e41c43577e8",
                     "0f6f372f-e30b-4f17-93f8-91419f96e5e2": "eb22478d-a9d0-4c74-9d53-2e3b52c1db63",
                     "9ef26ec6-8d31-4d4f-a752-37e9ac1f4ee8": "bcb78f47-4a57-4ce2-8dc7-29b89ab1e4a7"
                   }
@@ -34149,6 +34316,7 @@
                   "__enabled": true,
                   "Flags": 0,
                   "Attenuation": 1,
+                  "Contribution": "Diffuse, Specular, Transmissive",
                   "FogMode": "Enabled",
                   "FogStrength": 1,
                   "LightColor": "0.91373,0.98039,1,1",
@@ -34190,6 +34358,7 @@
                   "Attenuation": 1.3714285,
                   "ConeInner": 0,
                   "ConeOuter": 56.057144,
+                  "Contribution": "Diffuse, Specular, Transmissive",
                   "Cookie": null,
                   "FogMode": "Enabled",
                   "FogStrength": 0.5337423,
@@ -34322,6 +34491,7 @@
                   "__enabled": true,
                   "Flags": 0,
                   "Attenuation": 1,
+                  "Contribution": "Diffuse, Specular, Transmissive",
                   "FogMode": "Enabled",
                   "FogStrength": 1,
                   "LightColor": "0.91373,0.98039,1,1",
@@ -34363,6 +34533,7 @@
                   "Attenuation": 1.3714285,
                   "ConeInner": 0,
                   "ConeOuter": 56.057144,
+                  "Contribution": "Diffuse, Specular, Transmissive",
                   "Cookie": null,
                   "FogMode": "Enabled",
                   "FogStrength": 0.5337423,
@@ -34495,6 +34666,7 @@
                   "__enabled": true,
                   "Flags": 0,
                   "Attenuation": 1,
+                  "Contribution": "Diffuse, Specular, Transmissive",
                   "FogMode": "Enabled",
                   "FogStrength": 1,
                   "LightColor": "0.91373,0.98039,1,1",
@@ -34536,6 +34708,7 @@
                   "Attenuation": 1.3714285,
                   "ConeInner": 0,
                   "ConeOuter": 56.057144,
+                  "Contribution": "Diffuse, Specular, Transmissive",
                   "Cookie": null,
                   "FogMode": "Enabled",
                   "FogStrength": 0.5337423,
@@ -36031,6 +36204,7 @@
           "__guid": "40526202-1f9d-4f7f-9671-7a5982c8a6df",
           "__enabled": true,
           "Flags": 0,
+          "Contribution": "Diffuse, Specular, Transmissive",
           "FogMode": "Enabled",
           "FogStrength": 1,
           "LightColor": "0.94419,0.97767,1,1",
@@ -36072,6 +36246,7 @@
           "__guid": "af954a51-85d4-43f3-b46f-811966a1b34a",
           "__enabled": true,
           "Flags": 0,
+          "Contribution": "Diffuse, Specular, Transmissive",
           "FogMode": "Enabled",
           "FogStrength": 1,
           "LightColor": "0.91373,0.98039,1,1",
@@ -36691,7 +36866,11 @@
         "b61c3c47-4fdb-4f89-9baa-69d1997d0b15": "aab4e4ce-3985-42bc-b943-9a4badd6131c",
         "e2af179e-9f12-4c4b-a921-0f62bd16d754": "7f81561f-12f6-43c1-82b7-8ff5e455fb0a",
         "5ed77e1b-34fd-4c69-97c0-7e4bdd4b70eb": "a766e661-0bab-4b03-83ab-89002f698dee",
-        "b4de8248-1b6c-48c9-b244-6fee873d30c5": "0fbf9ec7-6ff1-4036-8f05-50b8cdb24735"
+        "b4de8248-1b6c-48c9-b244-6fee873d30c5": "0fbf9ec7-6ff1-4036-8f05-50b8cdb24735",
+        "12d18d6b-c632-4d66-9644-af8ca74da4e4": "209b1f1e-280f-49f3-a399-41689e949506",
+        "9f0c6c6e-046e-4abc-81ab-200f0fd637e1": "f604bed7-2e12-482e-ae7b-8fad1c23ed1e",
+        "b245acd0-c34b-4a10-a05b-8da4a395a219": "938930e7-07b8-4fac-bbba-0c210a3faab4",
+        "59508a21-d539-4e12-9b5d-387ebbf78f34": "0079b5bf-388f-4965-8e3e-da339869ae1f"
       }
     },
     {
@@ -38165,7 +38344,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "ee015d31-be82-4570-b82a-97912378a7c0"
+              "IdValue": "48109724-d769-4c30-bb93-71db83894ceb"
             },
             "Parent": {
               "Type": "GameObject",
@@ -38175,7 +38354,7 @@
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "ee015d31-be82-4570-b82a-97912378a7c0",
+              "__guid": "48109724-d769-4c30-bb93-71db83894ceb",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - braids_hair",
@@ -38196,18 +38375,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "d45f6bba-0630-4d03-abca-1b8ba28c7a44"
+              "IdValue": "7fdace4c-50d8-4839-8b1c-5e2fd8223515"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "ee015d31-be82-4570-b82a-97912378a7c0"
+              "IdValue": "48109724-d769-4c30-bb93-71db83894ceb"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "d45f6bba-0630-4d03-abca-1b8ba28c7a44",
+              "__guid": "7fdace4c-50d8-4839-8b1c-5e2fd8223515",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -38259,7 +38438,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "b7aabb85-f9b3-43d2-b87c-bab4baa74b41"
+              "IdValue": "7bf9fded-d281-4b4f-977a-657dba015bdb"
             },
             "Parent": {
               "Type": "GameObject",
@@ -38267,12 +38446,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "ee015d31-be82-4570-b82a-97912378a7c0"
+              "IdValue": "48109724-d769-4c30-bb93-71db83894ceb"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "b7aabb85-f9b3-43d2-b87c-bab4baa74b41",
+              "__guid": "7bf9fded-d281-4b4f-977a-657dba015bdb",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - gold earrings",
@@ -38293,18 +38472,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "641efeb1-b201-4b27-b9b2-0fbf64d3cccb"
+              "IdValue": "506067df-37ea-4127-8257-93d2a2b2a0b6"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "b7aabb85-f9b3-43d2-b87c-bab4baa74b41"
+              "IdValue": "7bf9fded-d281-4b4f-977a-657dba015bdb"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "641efeb1-b201-4b27-b9b2-0fbf64d3cccb",
+              "__guid": "506067df-37ea-4127-8257-93d2a2b2a0b6",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -38356,7 +38535,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "ec1d65fd-a65e-40b5-804b-c73859f86dea"
+              "IdValue": "e1f44ecd-df65-4f30-ba5f-31f23734a8bb"
             },
             "Parent": {
               "Type": "GameObject",
@@ -38364,12 +38543,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "b7aabb85-f9b3-43d2-b87c-bab4baa74b41"
+              "IdValue": "7bf9fded-d281-4b4f-977a-657dba015bdb"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "ec1d65fd-a65e-40b5-804b-c73859f86dea",
+              "__guid": "e1f44ecd-df65-4f30-ba5f-31f23734a8bb",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - grillz",
@@ -38390,18 +38569,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "0d232dd9-4102-4c6a-8665-23a8f6240567"
+              "IdValue": "389a27c0-e1a0-459b-bbba-54635e7d4c5e"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "ec1d65fd-a65e-40b5-804b-c73859f86dea"
+              "IdValue": "e1f44ecd-df65-4f30-ba5f-31f23734a8bb"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "0d232dd9-4102-4c6a-8665-23a8f6240567",
+              "__guid": "389a27c0-e1a0-459b-bbba-54635e7d4c5e",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -38453,7 +38632,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "7c850109-be27-4d9c-976f-ef7b68d5e9ad"
+              "IdValue": "7aa623b8-0b7c-48d3-80df-d9e6ac14fccb"
             },
             "Parent": {
               "Type": "GameObject",
@@ -38461,12 +38640,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "ec1d65fd-a65e-40b5-804b-c73859f86dea"
+              "IdValue": "e1f44ecd-df65-4f30-ba5f-31f23734a8bb"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "7c850109-be27-4d9c-976f-ef7b68d5e9ad",
+              "__guid": "7aa623b8-0b7c-48d3-80df-d9e6ac14fccb",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - cigar",
@@ -38487,18 +38666,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "a6df6905-2b27-4eb0-a7f2-191746368c22"
+              "IdValue": "c5988905-4076-400b-9fd3-f59e8789b748"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "7c850109-be27-4d9c-976f-ef7b68d5e9ad"
+              "IdValue": "7aa623b8-0b7c-48d3-80df-d9e6ac14fccb"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "a6df6905-2b27-4eb0-a7f2-191746368c22",
+              "__guid": "c5988905-4076-400b-9fd3-f59e8789b748",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -38550,7 +38729,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "fa66ea55-a439-4c2c-bace-ca6dc78e575b"
+              "IdValue": "ba3cedf7-d2e4-4778-9130-a5b5fd1a2c2f"
             },
             "Parent": {
               "Type": "GameObject",
@@ -38558,12 +38737,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "7c850109-be27-4d9c-976f-ef7b68d5e9ad"
+              "IdValue": "7aa623b8-0b7c-48d3-80df-d9e6ac14fccb"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "fa66ea55-a439-4c2c-bace-ca6dc78e575b",
+              "__guid": "ba3cedf7-d2e4-4778-9130-a5b5fd1a2c2f",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - boss_shades",
@@ -38584,18 +38763,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "f6de0093-1cab-4eeb-8bd8-a15bc5d4e3b9"
+              "IdValue": "6df4816f-cf10-4679-8fed-9cbd0ce1bafa"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "fa66ea55-a439-4c2c-bace-ca6dc78e575b"
+              "IdValue": "ba3cedf7-d2e4-4778-9130-a5b5fd1a2c2f"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "f6de0093-1cab-4eeb-8bd8-a15bc5d4e3b9",
+              "__guid": "6df4816f-cf10-4679-8fed-9cbd0ce1bafa",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -38647,7 +38826,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "041f97ef-9193-42b6-a2e8-0e4a7444a9e7"
+              "IdValue": "5f66b3fc-2a1d-42aa-9a35-2c8d05c7fbb6"
             },
             "Parent": {
               "Type": "GameObject",
@@ -38655,12 +38834,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "fa66ea55-a439-4c2c-bace-ca6dc78e575b"
+              "IdValue": "ba3cedf7-d2e4-4778-9130-a5b5fd1a2c2f"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "041f97ef-9193-42b6-a2e8-0e4a7444a9e7",
+              "__guid": "5f66b3fc-2a1d-42aa-9a35-2c8d05c7fbb6",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - tattoo_triabal",
@@ -38681,18 +38860,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "05679291-ca37-4c24-ac0e-5ad7d6f076a0"
+              "IdValue": "454cf953-2b35-4bdc-baf0-6e29c0bdbf20"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "041f97ef-9193-42b6-a2e8-0e4a7444a9e7"
+              "IdValue": "5f66b3fc-2a1d-42aa-9a35-2c8d05c7fbb6"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "05679291-ca37-4c24-ac0e-5ad7d6f076a0",
+              "__guid": "454cf953-2b35-4bdc-baf0-6e29c0bdbf20",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -38744,7 +38923,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "73feb1cb-72b7-457a-92e1-5519447d2f13"
+              "IdValue": "53f59899-977f-4b69-ba5d-561d095bcd8c"
             },
             "Parent": {
               "Type": "GameObject",
@@ -38752,12 +38931,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "041f97ef-9193-42b6-a2e8-0e4a7444a9e7"
+              "IdValue": "5f66b3fc-2a1d-42aa-9a35-2c8d05c7fbb6"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "73feb1cb-72b7-457a-92e1-5519447d2f13",
+              "__guid": "53f59899-977f-4b69-ba5d-561d095bcd8c",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - charm_bracelet_mat_clean.vmat",
@@ -38778,18 +38957,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "2bc4a727-71e6-4a63-a55d-e00da9e6e7e2"
+              "IdValue": "63efd6e0-2874-42ba-9b23-d39b634d7743"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "73feb1cb-72b7-457a-92e1-5519447d2f13"
+              "IdValue": "53f59899-977f-4b69-ba5d-561d095bcd8c"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "2bc4a727-71e6-4a63-a55d-e00da9e6e7e2",
+              "__guid": "63efd6e0-2874-42ba-9b23-d39b634d7743",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -38841,7 +39020,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "a58e75c4-44d7-49ae-84b8-13ad3aa036d9"
+              "IdValue": "f0ba8f55-9a0d-48bd-9f3d-4a51e09633ae"
             },
             "Parent": {
               "Type": "GameObject",
@@ -38849,12 +39028,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "73feb1cb-72b7-457a-92e1-5519447d2f13"
+              "IdValue": "53f59899-977f-4b69-ba5d-561d095bcd8c"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "a58e75c4-44d7-49ae-84b8-13ad3aa036d9",
+              "__guid": "f0ba8f55-9a0d-48bd-9f3d-4a51e09633ae",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - sneakers gravity",
@@ -38875,18 +39054,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "1748da99-d9fd-4a6b-98fe-740218ea8c3f"
+              "IdValue": "69489cef-1fb1-461b-9b51-da62e33fe8fb"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "a58e75c4-44d7-49ae-84b8-13ad3aa036d9"
+              "IdValue": "f0ba8f55-9a0d-48bd-9f3d-4a51e09633ae"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "1748da99-d9fd-4a6b-98fe-740218ea8c3f",
+              "__guid": "69489cef-1fb1-461b-9b51-da62e33fe8fb",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -38938,7 +39117,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "6884aaad-8302-48df-9133-a6ef0c0e033a"
+              "IdValue": "ea347ecb-844d-4ef7-b686-c8564db560c2"
             },
             "Parent": {
               "Type": "GameObject",
@@ -38946,12 +39125,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "a58e75c4-44d7-49ae-84b8-13ad3aa036d9"
+              "IdValue": "f0ba8f55-9a0d-48bd-9f3d-4a51e09633ae"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "6884aaad-8302-48df-9133-a6ef0c0e033a",
+              "__guid": "ea347ecb-844d-4ef7-b686-c8564db560c2",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - baggy pants blue",
@@ -38972,18 +39151,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "4dd2ddea-58bf-4c2f-9394-49d645fb277c"
+              "IdValue": "3c975e17-ee40-490f-ad0f-723a8839e89c"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "6884aaad-8302-48df-9133-a6ef0c0e033a"
+              "IdValue": "ea347ecb-844d-4ef7-b686-c8564db560c2"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "4dd2ddea-58bf-4c2f-9394-49d645fb277c",
+              "__guid": "3c975e17-ee40-490f-ad0f-723a8839e89c",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -39035,7 +39214,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "63251914-0156-480c-b15e-ba7c5976e228"
+              "IdValue": "f72fbb9b-8179-44ce-8889-77983c7a7034"
             },
             "Parent": {
               "Type": "GameObject",
@@ -39043,12 +39222,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "6884aaad-8302-48df-9133-a6ef0c0e033a"
+              "IdValue": "ea347ecb-844d-4ef7-b686-c8564db560c2"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "63251914-0156-480c-b15e-ba7c5976e228",
+              "__guid": "f72fbb9b-8179-44ce-8889-77983c7a7034",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - og_tshirt",
@@ -39069,18 +39248,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "44ca1d84-cef0-47a3-9e1f-52cd0597ab1b"
+              "IdValue": "b9184251-18e7-40ae-b275-dfeac5872870"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "63251914-0156-480c-b15e-ba7c5976e228"
+              "IdValue": "f72fbb9b-8179-44ce-8889-77983c7a7034"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "44ca1d84-cef0-47a3-9e1f-52cd0597ab1b",
+              "__guid": "b9184251-18e7-40ae-b275-dfeac5872870",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -39132,7 +39311,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "872fea0f-046d-43c7-9c18-2291769a80da"
+              "IdValue": "c4d81d5d-dd20-40cb-bd5c-259d1668007e"
             },
             "Parent": {
               "Type": "GameObject",
@@ -39140,12 +39319,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "63251914-0156-480c-b15e-ba7c5976e228"
+              "IdValue": "f72fbb9b-8179-44ce-8889-77983c7a7034"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "872fea0f-046d-43c7-9c18-2291769a80da",
+              "__guid": "c4d81d5d-dd20-40cb-bd5c-259d1668007e",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - swag_ring",
@@ -39166,18 +39345,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "77c7bd0a-485e-4540-8d98-58ff8221ffae"
+              "IdValue": "aa5e651e-9ebf-4fd4-9961-f0915c0050d1"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "872fea0f-046d-43c7-9c18-2291769a80da"
+              "IdValue": "c4d81d5d-dd20-40cb-bd5c-259d1668007e"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "77c7bd0a-485e-4540-8d98-58ff8221ffae",
+              "__guid": "aa5e651e-9ebf-4fd4-9961-f0915c0050d1",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -39369,6 +39548,14 @@
             },
             "Property": "Position",
             "Value": "-357.634399,3035.05615,-0.063411653"
+          },
+          {
+            "Target": {
+              "Type": "Component",
+              "IdValue": "52c8931b-ab54-41fd-8158-931dd71aa3bd"
+            },
+            "Property": "BodyGroups",
+            "Value": 1281
           }
         ],
         "MovedObjects": []
@@ -39693,7 +39880,7 @@
           "ImpactSound": null,
           "ImpactSoundCooldown": 0.08,
           "IncludeDescendantBounds": false,
-          "Material": null,
+          "Material": "materials/glass.vmat",
           "OnComponentDestroy": null,
           "OnComponentDisabled": null,
           "OnComponentEnabled": null,
@@ -39712,7 +39899,7 @@
           "ShardLifeTime": 1,
           "ShatterSound": null,
           "SourceRenderer": null,
-          "Surface": null,
+          "Surface": "surfaces/glass.surface",
           "TextureAxisU": "1,0,0",
           "TextureAxisV": "0,-1,0",
           "TextureOffset": "0,0",
@@ -39746,14 +39933,14 @@
       "CustomBounds": false
     },
     "GameObjectSystems": {
-      "Sandbox.SelectionSetsSystem": {
-        "Data": {
-          "SelectionSets": []
-        }
-      },
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
           "$blob": "135f3985-5141-4fc3-864d-216b95674cfd"
+        }
+      },
+      "Sandbox.SelectionSetsSystem": {
+        "Data": {
+          "SelectionSets": []
         }
       }
     }

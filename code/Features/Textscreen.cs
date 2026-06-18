@@ -11,10 +11,18 @@ public sealed class Textscreen : Component
 	public const int DefaultSize = 32;
 	public const string DefaultLineText = "Text here";
 	public const string DefaultColor = "white";
+	public const string TextscreenTag = "textscreen";
 
 	[Sync( SyncFlags.FromHost )] public Player PlayerOwner { get; private set; }
 	[Sync( SyncFlags.FromHost )] public string LinesJson { get; private set; } = "[]";
 	[Sync( SyncFlags.FromHost )] public bool HasBackground { get; private set; }
+
+	protected override void OnStart()
+	{
+#if SERVER
+		ConfigurePhysicsShell( GameObject );
+#endif
+	}
 
 	public void SetOwner( Player owner )
 	{
@@ -95,6 +103,38 @@ public sealed class Textscreen : Component
 			"magenta" => "magenta",
 			_ => DefaultColor
 		};
+	}
+
+	public static PropCustom ConfigurePhysicsShell( GameObject gameObject, Player owner = null, bool freeze = false )
+	{
+#if SERVER
+		if ( !Networking.IsHost || !gameObject.IsValid() )
+			return null;
+
+		gameObject.Tags.Add( PropCollisionTags.PropTag );
+		gameObject.Tags.Add( TextscreenTag );
+
+		if ( !gameObject.Components.TryGet<Rigidbody>( out _ ) )
+			gameObject.Components.Create<Rigidbody>();
+
+		if ( !gameObject.Components.TryGet<PropCustom>( out var propCustom ) )
+			propCustom = gameObject.Components.Create<PropCustom>();
+
+		if ( owner.IsValid() )
+			propCustom.SetOwner( owner );
+
+		if ( !gameObject.Components.TryGet<WorldTextscreen>( out _ ) )
+			gameObject.Components.Create<WorldTextscreen>();
+
+		PropCollisionTags.RefreshPhysicsShapeTags( gameObject );
+
+		if ( freeze )
+			propCustom.TryFreezePhysics();
+
+		return propCustom;
+#else
+		return null;
+#endif
 	}
 }
 

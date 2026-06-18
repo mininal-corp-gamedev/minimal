@@ -64,30 +64,25 @@ public sealed class TextscreenTool : ToolMode
 		if (!textscreenObject.IsValid())
 			return ToolUseResult.Fail(GameLocalization.Phrase("notify.toolgun.textscreen_failed", "Failed to spawn Textscreen."));
 
-		textscreenObject.Tags.Add("prop");
-		textscreenObject.Tags.Add("textscreen");
-
-		if (!textscreenObject.Components.TryGet<global::PropCustom>(out var propCustom))
-			propCustom = textscreenObject.Components.Create<global::PropCustom>();
-		propCustom.SetOwner(player);
-		player.RegisterSpawnedProp(propCustom);
-
 		if (!textscreenObject.Components.TryGet<global::Textscreen>(out var textscreen))
 			textscreen = textscreenObject.Components.Create<global::Textscreen>();
+
+		var propCustom = global::Textscreen.ConfigurePhysicsShell(textscreenObject, player);
+		if (!propCustom.IsValid())
+			return ToolUseResult.Fail(GameLocalization.Phrase("notify.toolgun.textscreen_failed", "Failed to spawn Textscreen."));
+
+		player.RegisterSpawnedProp(propCustom);
+
 		textscreen.SetOwner(player);
 		textscreen.SetLines(BuildLines(context.Config));
 		textscreen.SetBackground(GetBackground(context.Config));
 
-		if (!textscreenObject.Components.TryGet<WorldTextscreen>(out _))
-			textscreenObject.Components.Create<WorldTextscreen>();
-
-		if (!textscreenObject.Components.TryGet<Rigidbody>(out _))
-			textscreenObject.Components.Create<Rigidbody>();
-
+		global::PropCollisionTags.RefreshPhysicsShapeTags(textscreenObject);
 		propCustom.TryFreezePhysics();
 
-		textscreenObject.NetworkSpawn(context.Caller);
+		textscreenObject.NetworkSpawn();
 		OwnedPropNetwork.ConfigurePropCustom(textscreenObject);
+		global::PropCollisionTags.RefreshPhysicsShapeTags(textscreenObject);
 		return ToolUseResult.Ok(GameLocalization.Phrase("notify.toolgun.textscreen_spawned", "Textscreen spawned."));
 #else
 		return ToolUseResult.Fail(null);

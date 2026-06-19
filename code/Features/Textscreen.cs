@@ -120,6 +120,9 @@ public sealed class Textscreen : Component
 		if ( !gameObject.Components.TryGet<PropCustom>( out var propCustom ) )
 			propCustom = gameObject.Components.Create<PropCustom>();
 
+		propCustom.SetNoCollidePlayers( true );
+		PropCollisionTags.ApplyNoCollideTag( gameObject, true );
+
 		if ( owner.IsValid() )
 			propCustom.SetOwner( owner );
 

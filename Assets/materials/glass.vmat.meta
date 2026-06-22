@@ -10,7 +10,9 @@
       "IncludeSourceFiles": false,
       "Resources": null,
       "PackageReferences": null,
-      "EditorReferences": [],
+      "EditorReferences": [
+        "prayandplay.compactprinter#111644"
+      ],
       "Mounts": null,
       "IsStandaloneOnly": false,
       "Metadata": {

@@ -109,24 +109,24 @@ public sealed class Glass : Component, Component.ExecuteInEditor, Component.IDam
 	private bool HasFittedWorldTransform;
 	private TimeUntil NextImpactSoundAllowed;
 
-	[Property, MakeDirty] public Material Material { get; set; }
-	[Property, MakeDirty] public Surface Surface { get; set; }
-	[Property, MakeDirty] public float Thickness { get; set; } = 1;
-	[Property, MakeDirty] public Vector3 TextureAxisU { get; set; } = Vector3.Forward;
-	[Property, MakeDirty] public Vector3 TextureAxisV { get; set; } = Vector3.Right;
-	[Property, MakeDirty] public Vector2 TextureScale { get; set; } = 1;
-	[Property, MakeDirty] public Vector2 TextureOffset { get; set; } = 0;
-	[Property, MakeDirty] public Vector2 TextureSize { get; set; } = 512;
-	[Property, MakeDirty] public bool AutoFitToObjectBounds { get; set; } = true;
-	[Property, MakeDirty] public ModelRenderer SourceRenderer { get; set; }
-	[Property, MakeDirty] public bool IncludeDescendantBounds { get; set; } = false;
-	[Property, MakeDirty] public bool AutoDetectPanelPlane { get; set; } = true;
-	[Property, MakeDirty] public bool HideSourceComponents { get; set; } = true;
-	[Property, MakeDirty] public bool AutoGeneratePoints { get; set; } = true;
-	[Property, MakeDirty] public GlassPanelPlane PanelPlane { get; set; } = GlassPanelPlane.XY;
-	[Property, MakeDirty] public Vector3 PanelLocalOrigin { get; set; } = Vector3.Zero;
-	[Property, MakeDirty] public Vector2 PanelSize { get; set; } = new( 128, 128 );
-	[Property, MakeDirty] public List<Vector2> Points { get; set; }
+	[Property] public Material Material { get; set; }
+	[Property] public Surface Surface { get; set; }
+	[Property] public float Thickness { get; set; } = 1;
+	[Property] public Vector3 TextureAxisU { get; set; } = Vector3.Forward;
+	[Property] public Vector3 TextureAxisV { get; set; } = Vector3.Right;
+	[Property] public Vector2 TextureScale { get; set; } = 1;
+	[Property] public Vector2 TextureOffset { get; set; } = 0;
+	[Property] public Vector2 TextureSize { get; set; } = 512;
+	[Property] public bool AutoFitToObjectBounds { get; set; } = true;
+	[Property] public ModelRenderer SourceRenderer { get; set; }
+	[Property] public bool IncludeDescendantBounds { get; set; } = false;
+	[Property] public bool AutoDetectPanelPlane { get; set; } = true;
+	[Property] public bool HideSourceComponents { get; set; } = true;
+	[Property] public bool AutoGeneratePoints { get; set; } = true;
+	[Property] public GlassPanelPlane PanelPlane { get; set; } = GlassPanelPlane.XY;
+	[Property] public Vector3 PanelLocalOrigin { get; set; } = Vector3.Zero;
+	[Property] public Vector2 PanelSize { get; set; } = new( 128, 128 );
+	[Property] public List<Vector2> Points { get; set; }
 	[Property] public float ShardLifeTime { get; set; } = 1.0f;
 	[Property, Category( "Bullet Penetration" )] public bool AllowBulletPassThrough { get; set; } = true;
 	[Property, Category( "Sounds" )] public SoundEvent ImpactSound { get; set; }
@@ -197,14 +197,6 @@ public sealed class Glass : Component, Component.ExecuteInEditor, Component.IDam
 		base.OnDisabled();
 
 		DestroyShards();
-	}
-
-	protected override void OnDirty()
-	{
-		base.OnDirty();
-
-		DestroyShards();
-		CreatePrimaryShard();
 	}
 
 	protected override void OnValidate()
@@ -458,7 +450,6 @@ public sealed class Glass : Component, Component.ExecuteInEditor, Component.IDam
 		shape.Tags.SetFrom( GameObject.Tags );
 		shape.Surface = Surface;
 
-		body.SetComponentSource( this );
 		body.EnableCollisionSounds = false;
 		body.OnIntersectionStart += OnPhysicsTouchStart;
 		body.BodyType = PhysicsBodyType.Keyframed;
@@ -466,7 +457,6 @@ public sealed class Glass : Component, Component.ExecuteInEditor, Component.IDam
 
 		var model = CreateModel( points );
 		var sceneObject = new SceneObject( Scene.SceneWorld, model, transform );
-		sceneObject.SetComponentSource( this );
 		sceneObject.Tags.SetFrom( GameObject.Tags );
 		sceneObject.Batchable = false;
 
@@ -1116,7 +1106,7 @@ public sealed class Glass : Component, Component.ExecuteInEditor, Component.IDam
 		}
 
 		var mesh = new Mesh( Material ?? Material.Load( "materials/glass.vmat" ) );
-		mesh.CreateVertexBuffer<Vertex>( vertices.Length, Vertex.Layout, vertices );
+		//mesh.CreateVertexBuffer<Vertex>( vertices.Length, Vertex.Layout, vertices );
 		mesh.CreateIndexBuffer( indices.Length, indices );
 		mesh.Bounds = bounds;
 

@@ -28,7 +28,7 @@
         "DoorSecond": null,
         "HasOnlyJobs": false,
         "Header": "",
-        "InteractRange": 100,
+        "InteractRange": 220,
         "IsBlocked": false,
         "LockpickInteractRange": 80,
         "MovementMode": "Swing",

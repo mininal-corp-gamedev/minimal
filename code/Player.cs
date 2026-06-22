@@ -605,7 +605,13 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         {
             var attackerPlayer = GetAttackerPlayer(attacker);
             if (attackerPlayer.IsValid() && attackerPlayer != this)
-                ClanManager.Instance?.HostRecordKill(attackerPlayer);
+            {
+                var clanManager = ClanManager.Instance;
+                if ( !clanManager.IsValid() )
+                    Log.Error( "[Clan] ClanManager is missing from the scene. Add prefabs/managers.prefab or a ClanManager component to every playable scene." );
+                else
+                    clanManager.HostRecordKill(attackerPlayer);
+            }
 
             HostDie(BuildDeathMessage(attacker, deathMessage), launchRagdoll ? CreateDeathLaunchVelocity(damageOrigin) : Vector3.Zero, damageOrigin);
         }
@@ -2334,7 +2340,12 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         // загруженное значение после инициализации.
         Money = data.Money;
         MoneyAtm = data.MoneyAtm;
-        ClanManager.Instance?.HostApplyLoadedPlayerClan( this, data.ClanId, data.ClanRank );
+
+        var clanManager = ClanManager.Instance;
+        if ( !clanManager.IsValid() )
+            Log.Error( "[PlayerSave] ClanManager is missing from the scene. Add prefabs/managers.prefab or a ClanManager component to every playable scene." );
+        else
+            clanManager.HostApplyLoadedPlayerClan( this, data.ClanId, data.ClanRank );
 
         // Гарантируем файл на диске даже если значение совпало с дефолтом
         // (тогда сеттер не вызвал бы SavePlayerData).
@@ -2350,15 +2361,37 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         if ( !Networking.IsHost ) return;
 
         var pq = Components.Get<PlayerQuest>();
-        if ( !pq.IsValid() ) return;
+        if ( !pq.IsValid() )
+        {
+            Log.Error( $"[StarterQuest] PlayerQuest component is missing on player {GameObject.Network.Owner?.DisplayName ?? GameObject.Name}." );
+            return;
+        }
+
+        if ( !pq.EnsureLoadedFromDisk() )
+        {
+            Log.Error( $"[StarterQuest] Could not load PlayerQuest save for {GameObject.Network.Owner?.DisplayName ?? GameObject.Name}." );
+            return;
+        }
 
         var def = QuestDatabase.FindQuestById( "q1" );
-        if ( def == null ) return;
+        if ( def == null )
+        {
+            Log.Error( "[StarterQuest] q1 quest definition was not found. Expected Assets/resources/quests/q1/q1.quest." );
+            return;
+        }
+
+        var questManager = QuestManager.Instance;
+        if ( !questManager.IsValid() )
+        {
+            Log.Error( "[StarterQuest] QuestManager is missing from the scene. Add prefabs/managers.prefab or a QuestManager component to every playable scene." );
+            return;
+        }
 
         if ( pq.HasActiveQuest( def ) ) return;
         if ( pq.HasFinishedQuest( def ) ) return;
 
-        QuestManager.Instance?.GiveQuest( pq, def );
+        if ( !questManager.GiveQuest( pq, def ) )
+            Log.Error( $"[StarterQuest] QuestManager failed to give q1 to {GameObject.Network.Owner?.DisplayName ?? GameObject.Name}." );
     }
 #endif
 
@@ -4079,7 +4112,11 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
             return;
 
         var player = FindPlayerBySteamId( channel.SteamId.Value );
-        ClanManager.Instance?.HostNotifyPlayerDisconnected( channel.SteamId.Value );
+        var clanManager = ClanManager.Instance;
+        if ( !clanManager.IsValid() )
+            Log.Error( "[Clan] ClanManager is missing from the scene. Add prefabs/managers.prefab or a ClanManager component to every playable scene." );
+        else
+            clanManager.HostNotifyPlayerDisconnected( channel.SteamId.Value );
         if ( !player.IsValid() )
             return;
 

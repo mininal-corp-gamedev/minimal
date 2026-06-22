@@ -10,8 +10,10 @@ public sealed partial class ClanManager : Component
 	public const int CreatePrice = 5000;
 	public const float InviteCooldownSeconds = 10f;
 	public const int AdminDeleteRank = 2;
+	public const string CreateClanResultContext = "create";
 
 	public static ClanManager Instance { get; private set; }
+	public static event Action<string, bool, string> ClanResultReceived;
 
 	[Sync( SyncFlags.FromHost )] public string ClanSummariesJson { get; private set; } = "[]";
 	[Sync( SyncFlags.FromHost )] public int ClanVersion { get; private set; }
@@ -24,7 +26,7 @@ public sealed partial class ClanManager : Component
 
 	protected override void OnAwake()
 	{
-		if ( Instance is null )
+		if ( !Instance.IsValid() )
 			Instance = this;
 
 #if SERVER
@@ -73,7 +75,12 @@ public sealed partial class ClanManager : Component
 	public static void RpcRequestCreateClan( string header, string description, string colorId, string iconPath, string backgroundType, string backgroundColor1, string backgroundColor2, string backgroundColor3, string backgroundColor4 )
 	{
 #if SERVER
-		Instance?.HostCreateClan( header, description, colorId, iconPath, backgroundType, backgroundColor1, backgroundColor2, backgroundColor3, backgroundColor4 );
+		var caller = GetRequestCaller();
+		var manager = GetRequiredInstance( caller, CreateClanResultContext );
+		if ( manager is null )
+			return;
+
+		manager.HostCreateClan( caller, header, description, colorId, iconPath, backgroundType, backgroundColor1, backgroundColor2, backgroundColor3, backgroundColor4 );
 #endif
 	}
 
@@ -81,7 +88,7 @@ public sealed partial class ClanManager : Component
 	public static void RpcRequestUpdateClanSettings( string description, string colorId, string iconPath, string backgroundType, string backgroundColor1, string backgroundColor2, string backgroundColor3, string backgroundColor4 )
 	{
 #if SERVER
-		Instance?.HostUpdateClanSettings( description, colorId, iconPath, backgroundType, backgroundColor1, backgroundColor2, backgroundColor3, backgroundColor4 );
+		GetRequiredInstance( Rpc.Caller )?.HostUpdateClanSettings( description, colorId, iconPath, backgroundType, backgroundColor1, backgroundColor2, backgroundColor3, backgroundColor4 );
 #endif
 	}
 
@@ -89,7 +96,7 @@ public sealed partial class ClanManager : Component
 	public static void RpcRequestDeleteClan()
 	{
 #if SERVER
-		Instance?.HostDeleteOwnClan();
+		GetRequiredInstance( Rpc.Caller )?.HostDeleteOwnClan();
 #endif
 	}
 
@@ -97,7 +104,7 @@ public sealed partial class ClanManager : Component
 	public static void RpcRequestLeaveClan()
 	{
 #if SERVER
-		Instance?.HostLeaveClan();
+		GetRequiredInstance( Rpc.Caller )?.HostLeaveClan();
 #endif
 	}
 
@@ -105,7 +112,7 @@ public sealed partial class ClanManager : Component
 	public static void RpcRequestInvite( long targetSteamId )
 	{
 #if SERVER
-		Instance?.HostInvite( targetSteamId );
+		GetRequiredInstance( Rpc.Caller )?.HostInvite( targetSteamId );
 #endif
 	}
 
@@ -113,7 +120,7 @@ public sealed partial class ClanManager : Component
 	public static void RpcRequestAcceptInvite()
 	{
 #if SERVER
-		Instance?.HostAcceptInvite();
+		GetRequiredInstance( Rpc.Caller )?.HostAcceptInvite();
 #endif
 	}
 
@@ -121,7 +128,7 @@ public sealed partial class ClanManager : Component
 	public static void RpcRequestDeclineInvite()
 	{
 #if SERVER
-		Instance?.HostDeclineInvite();
+		GetRequiredInstance( Rpc.Caller )?.HostDeclineInvite();
 #endif
 	}
 
@@ -129,7 +136,7 @@ public sealed partial class ClanManager : Component
 	public static void RpcRequestKickMember( long targetSteamId )
 	{
 #if SERVER
-		Instance?.HostKickMember( targetSteamId );
+		GetRequiredInstance( Rpc.Caller )?.HostKickMember( targetSteamId );
 #endif
 	}
 
@@ -137,7 +144,7 @@ public sealed partial class ClanManager : Component
 	public static void RpcRequestSetMemberRank( long targetSteamId, int rankValue )
 	{
 #if SERVER
-		Instance?.HostSetMemberRank( targetSteamId, rankValue );
+		GetRequiredInstance( Rpc.Caller )?.HostSetMemberRank( targetSteamId, rankValue );
 #endif
 	}
 
@@ -197,10 +204,12 @@ public sealed partial class ClanManager : Component
 	}
 
 	[Rpc.Broadcast]
-	private static void RpcReceiveClanResult( string message, bool success )
+	private static void RpcReceiveClanResult( string message, bool success, string context )
 	{
 		if ( string.IsNullOrWhiteSpace( message ) )
 			return;
+
+		ClanResultReceived?.Invoke( message, success, context ?? "" );
 
 		if ( success )
 			Notification.Info( message, 3.5f );

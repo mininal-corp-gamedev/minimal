@@ -6,7 +6,7 @@ public sealed partial class QuestManager : Component
 
 	protected override void OnStart()
 	{
-		if ( Instance == null )
+		if ( !Instance.IsValid() )
 			Instance = this;
 
 		OnStartHost();

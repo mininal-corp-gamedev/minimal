@@ -758,6 +758,14 @@ TabMenu {
 		margin-bottom: 10px;
 	}
 
+	.clan-create-error {
+		margin-top: 8px;
+		font-family: Poppins;
+		font-size: 12px;
+		font-weight: 800;
+		color: rgba(255, 120, 140, 0.96);
+	}
+
 	.clan-stats {
 		flex-direction: row;
 		gap: 10px;

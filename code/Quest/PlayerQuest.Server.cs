@@ -13,7 +13,7 @@ public sealed partial class PlayerQuest
 	{
 		if ( !Networking.IsHost ) return;
 
-		LoadFromDisk();
+		EnsureLoadedFromDisk();
 		OnHostStateChangedServer();
 	}
 
@@ -30,6 +30,14 @@ public sealed partial class PlayerQuest
 		if ( !Networking.IsHost ) return;
 		SyncToOwner();
 		SaveToDisk();
+	}
+
+	public bool EnsureLoadedFromDisk()
+	{
+		if ( !Networking.IsHost ) return false;
+		if ( loadedFromDisk ) return true;
+
+		return LoadFromDisk();
 	}
 
 	private void SyncToOwner()
@@ -85,21 +93,22 @@ public sealed partial class PlayerQuest
 		}
 	}
 
-	private void LoadFromDisk()
+	private bool LoadFromDisk()
 	{
-		if ( !Networking.IsHost ) return;
-		if ( loadedFromDisk ) return;
-		loadedFromDisk = true;
+		if ( !Networking.IsHost ) return false;
+		if ( loadedFromDisk ) return true;
 
 		var owner = Network.Owner;
-		if ( owner == null || owner.SteamId == 0 ) return;
+		if ( owner == null || owner.SteamId == 0 ) return false;
+
+		loadedFromDisk = true;
 
 		try
 		{
-			if ( !FileSystem.Data.FileExists( SavePath ) ) return;
+			if ( !FileSystem.Data.FileExists( SavePath ) ) return true;
 			var json = FileSystem.Data.ReadAllText( SavePath );
 			var data = Json.Deserialize<SaveData>( json );
-			if ( data == null ) return;
+			if ( data == null ) return true;
 
 			CurrentQuests = data.Current
 				.Select( Quest.FromSnapshot )
@@ -120,5 +129,7 @@ public sealed partial class PlayerQuest
 		{
 			Logger.Warning( $"LoadFromDisk failed: {ex.Message}" );
 		}
+
+		return true;
 	}
 }

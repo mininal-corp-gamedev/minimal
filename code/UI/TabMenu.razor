@@ -334,6 +334,10 @@
 											</div>
 										}
 										<button class="clan-btn primary create" onclick=@CreateClan disabled=@((Player.Local?.Money ?? 0) < ClanManager.CreatePrice)>Create $@ClanManager.CreatePrice</button>
+										@if ( !string.IsNullOrWhiteSpace( CreateClanError ) )
+										{
+											<div class="clan-create-error">@CreateClanError</div>
+										}
 									</div>
 									<div class="clan-create-preview">
 										<div class="clan-logo-preview large @GetClanLogoBackgroundClass( CreateClanBackgroundType )" style="@GetClanLogoStyle( CreateClanBackgroundType, CreateClanBackgroundColor1, CreateClanBackgroundColor2, CreateClanBackgroundColor3, CreateClanBackgroundColor4 )">
@@ -413,6 +417,7 @@
 	string CreateClanBackgroundColor2 { get; set; } = "black";
 	string CreateClanBackgroundColor3 { get; set; } = "black";
 	string CreateClanBackgroundColor4 { get; set; } = "black";
+	string CreateClanError { get; set; } = "";
 	int LastEditClanId { get; set; } = -1;
 	string EditClanDescription { get; set; } = "";
 	string EditClanColorId { get; set; } = ClanPalette.DefaultColorId;
@@ -725,20 +730,25 @@
 
 	private void CreateClan()
 	{
+		ClearCreateClanError();
+
 		if ( ClanText.NormalizeHeader( CreateClanHeader ).Length <= 0 )
 		{
+			SetCreateClanError( "Clan header is empty." );
 			Notification.Error( "Clan header is empty.", 3f );
 			return;
 		}
 
 		if ( CreateClanHeader.Length > ClanText.HeaderMaxLength )
 		{
+			SetCreateClanError( $"Clan header limit is {ClanText.HeaderMaxLength} characters." );
 			Notification.Error( $"Clan header limit is {ClanText.HeaderMaxLength} characters.", 3f );
 			return;
 		}
 
 		if ( CreateClanDescription.Length > ClanText.DescriptionMaxLength )
 		{
+			SetCreateClanError( $"Clan description limit is {ClanText.DescriptionMaxLength} characters." );
 			Notification.Error( $"Clan description limit is {ClanText.DescriptionMaxLength} characters.", 3f );
 			return;
 		}
@@ -748,27 +758,47 @@
 
 	private void SetCreateClanHeader( string text )
 	{
+		ClearCreateClanError();
 		CreateClanHeader = ClampText( text, ClanText.HeaderMaxLength );
 	}
 
 	private void SetCreateClanDescription( string text )
 	{
+		ClearCreateClanError();
 		CreateClanDescription = ClampText( text, ClanText.DescriptionMaxLength );
 	}
 
 	private void SetCreateClanColor( string value )
 	{
+		ClearCreateClanError();
 		CreateClanColorId = value;
 	}
 
 	private void SetCreateClanIcon( string value )
 	{
+		ClearCreateClanError();
 		CreateClanIconPath = value;
 	}
 
 	private void SetCreateClanBackgroundType( ClanBackgroundType value )
 	{
+		ClearCreateClanError();
 		CreateClanBackgroundType = value;
+	}
+
+	private void SetCreateClanError( string message )
+	{
+		CreateClanError = message ?? "";
+		StateHasChanged();
+	}
+
+	private void ClearCreateClanError()
+	{
+		if ( string.IsNullOrWhiteSpace( CreateClanError ) )
+			return;
+
+		CreateClanError = "";
+		StateHasChanged();
 	}
 
 	private void SendClanSettingsUpdate()
@@ -811,6 +841,7 @@
 
 	private void SetCreateBackgroundColor( int index, string value )
 	{
+		ClearCreateClanError();
 		if ( index == 1 ) CreateClanBackgroundColor1 = value;
 		if ( index == 2 ) CreateClanBackgroundColor2 = value;
 		if ( index == 3 ) CreateClanBackgroundColor3 = value;
@@ -1012,6 +1043,7 @@
 	protected override void OnStart()
 	{
 		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
+		ClanManager.ClanResultReceived += OnClanResultReceived;
 		LoadJobs();
 		LoadShop();
 	}
@@ -1024,6 +1056,7 @@
 	protected override void OnDestroy()
 	{
 		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
+		ClanManager.ClanResultReceived -= OnClanResultReceived;
 		ReleaseCrosshairBlock();
 	}
 
@@ -1063,7 +1096,18 @@
 		StateHasChanged();
 	}
 
-		protected override void OnUpdate()
+	private void OnClanResultReceived( string message, bool success, string context )
+	{
+		if ( !string.Equals( context, ClanManager.CreateClanResultContext, StringComparison.Ordinal ) )
+			return;
+
+		if ( success )
+			ClearCreateClanError();
+		else
+			SetCreateClanError( message );
+	}
+
+	protected override void OnUpdate()
 	{
 		if ( Input.Pressed( "Score" ) )
 			SetOpen( !IsOpen );
@@ -1090,6 +1134,7 @@
 		hash.Add( ClanManager.Instance?.ClanVersion ?? 0 );
 		hash.Add( ClanManager.Instance?.PendingInviteVersion ?? 0 );
 		hash.Add( ClanManager.Instance?.PendingInviteClanId ?? -1 );
+		hash.Add( CreateClanError );
 		hash.Add( CreateClanHeader );
 		hash.Add( CreateClanDescription );
 		hash.Add( CreateClanColorId );

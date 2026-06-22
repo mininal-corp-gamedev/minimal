@@ -34,50 +34,49 @@ public sealed partial class ClanManager
 		HostPublishSummaries();
 	}
 
-	private void HostCreateClan( string header, string description, string colorId, string iconPath, string backgroundType, string backgroundColor1, string backgroundColor2, string backgroundColor3, string backgroundColor4 )
+	private void HostCreateClan( Connection caller, string header, string description, string colorId, string iconPath, string backgroundType, string backgroundColor1, string backgroundColor2, string backgroundColor3, string backgroundColor4 )
 	{
-		var caller = Rpc.Caller;
 		var player = GetCallerPlayer( caller );
 		if ( !player.IsValid() )
 		{
-			Notify( caller, false, "Your player is not ready." );
+			Notify( caller, false, "Your player is not ready.", CreateClanResultContext );
 			return;
 		}
 
 		if ( player.ClanId >= 0 )
 		{
-			Notify( caller, false, "You are already in a clan." );
+			Notify( caller, false, "You are already in a clan.", CreateClanResultContext );
 			return;
 		}
 
 		var normalizedHeader = ClanText.NormalizeHeader( header );
 		if ( string.IsNullOrWhiteSpace( normalizedHeader ) )
 		{
-			Notify( caller, false, "Clan header is empty." );
+			Notify( caller, false, "Clan header is empty.", CreateClanResultContext );
 			return;
 		}
 
 		if ( (header ?? string.Empty).Trim().Length > ClanText.HeaderMaxLength )
 		{
-			Notify( caller, false, $"Clan header limit is {ClanText.HeaderMaxLength} characters." );
+			Notify( caller, false, $"Clan header limit is {ClanText.HeaderMaxLength} characters.", CreateClanResultContext );
 			return;
 		}
 
 		if ( (description ?? string.Empty).Trim().Length > ClanText.DescriptionMaxLength )
 		{
-			Notify( caller, false, $"Clan description limit is {ClanText.DescriptionMaxLength} characters." );
+			Notify( caller, false, $"Clan description limit is {ClanText.DescriptionMaxLength} characters.", CreateClanResultContext );
 			return;
 		}
 
 		if ( _clans.Any( x => string.Equals( x.Header, normalizedHeader, StringComparison.OrdinalIgnoreCase ) ) )
 		{
-			Notify( caller, false, "A clan with this header already exists." );
+			Notify( caller, false, "A clan with this header already exists.", CreateClanResultContext );
 			return;
 		}
 
 		if ( player.Money < CreatePrice )
 		{
-			Notify( caller, false, $"Need ${CreatePrice} to create a clan." );
+			Notify( caller, false, $"Need ${CreatePrice} to create a clan.", CreateClanResultContext );
 			return;
 		}
 
@@ -103,7 +102,7 @@ public sealed partial class ClanManager
 		_pendingInvites.Remove( steamId );
 		SaveAll();
 		Log.Info( $"[Clan] {PlayerLabel( caller )} created clan #{clan.Id} \"{clan.Header}\"." );
-		Notify( caller, true, $"Clan created: {clan.Header}." );
+		Notify( caller, true, $"Clan created: {clan.Header}.", CreateClanResultContext );
 	}
 
 	private void HostUpdateClanSettings( string description, string colorId, string iconPath, string backgroundType, string backgroundColor1, string backgroundColor2, string backgroundColor3, string backgroundColor4 )
@@ -634,6 +633,27 @@ public sealed partial class ClanManager
 		return player.IsValid() && player.GameObject.Network.Owner == caller ? player : null;
 	}
 
+	private static Connection GetRequestCaller()
+	{
+		if ( Rpc.Caller is not null )
+			return Rpc.Caller;
+
+		if ( Connection.Local is not null && Connection.Local.IsHost )
+			return Connection.Local;
+
+		return Connection.All.FirstOrDefault( x => x.IsHost );
+	}
+
+	private static ClanManager GetRequiredInstance( Connection caller, string context = "" )
+	{
+		if ( Instance.IsValid() )
+			return Instance;
+
+		Log.Error( "[Clan] ClanManager is missing from the scene. Add prefabs/managers.prefab or a ClanManager component to every playable scene." );
+		NotifyConnection( caller, false, "Clan manager is missing from the scene.", context );
+		return null;
+	}
+
 	private static string PlayerLabel( Connection connection )
 	{
 		if ( connection is null )
@@ -654,14 +674,19 @@ public sealed partial class ClanManager
 		}
 	}
 
-	private void Notify( Connection connection, bool success, string message )
+	private void Notify( Connection connection, bool success, string message, string context = "" )
+	{
+		NotifyConnection( connection, success, message, context );
+	}
+
+	private static void NotifyConnection( Connection connection, bool success, string message, string context = "" )
 	{
 		if ( connection is null )
 			return;
 
 		using ( Rpc.FilterInclude( c => c.SteamId.Value == connection.SteamId.Value ) )
 		{
-			RpcReceiveClanResult( message, success );
+			RpcReceiveClanResult( message, success, context ?? "" );
 		}
 	}
 
@@ -673,7 +698,7 @@ public sealed partial class ClanManager
 		var set = new HashSet<long>( steamIds );
 		using ( Rpc.FilterInclude( c => set.Contains( c.SteamId.Value ) ) )
 		{
-			RpcReceiveClanResult( message, success );
+			RpcReceiveClanResult( message, success, "" );
 			RpcClearInvite( -1 );
 		}
 	}

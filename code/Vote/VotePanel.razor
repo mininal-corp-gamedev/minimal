@@ -17,6 +17,11 @@
 					<button class="no" onclick=@(() => Submit( false ))>@GameLocalization.Phrase( "ui.common.no" )</button>
 				</div>
 			}
+
+			@if ( ShowMouseHint )
+			{
+				<div class="vote-hint">@GameLocalization.Phrase( "ui.vote.mouse_hint", "You can enable the mouse through C Menu." )</div>
+			}
 		</div>
 	}
 </root>
@@ -33,6 +38,8 @@
 	private bool HasAnswered { get; set; }
 	private int VoteId { get; set; }
 	private string Header { get; set; } = "";
+	private bool HasShownMouseHint { get; set; }
+	private bool ShowMouseHint { get; set; }
 
 	public static void Open( int voteId, string header )
 	{
@@ -56,6 +63,7 @@
 		Instance.IsOpen = false;
 		Instance.HasAnswered = false;
 		Instance.Header = "";
+		Instance.ShowMouseHint = false;
 		Instance.VoteId = 0;
 	}
 
@@ -84,6 +92,8 @@
 		Header = string.IsNullOrWhiteSpace( header ) ? GameLocalization.Phrase( "ui.context.vote", "Vote" ) : header;
 		HasAnswered = false;
 		IsOpen = true;
+		ShowMouseHint = !HasShownMouseHint;
+		HasShownMouseHint = true;
 	}
 
 	private void Submit( bool yes )
@@ -121,5 +131,5 @@
 			Instance = null;
 	}
 
-	protected override int BuildHash() => HashCode.Combine( IsOpen, HasAnswered, VoteId, Header, GameLocalization.CurrentCode );
+	protected override int BuildHash() => HashCode.Combine( IsOpen, HasAnswered, VoteId, Header, ShowMouseHint, GameLocalization.CurrentCode );
 }

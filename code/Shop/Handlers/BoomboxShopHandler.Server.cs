@@ -3,7 +3,7 @@ public sealed class BoomboxShopHandler : IShopPurchaseHandler
 	public string ShopId => "boombox";
 
 	private const float SpawnDistance = 60f;
-	private const float SpawnHeight   = 24f;
+	private const float SpawnHeight   = 34f;
 
 	public bool PostPurchased( ShopPurchaseContext context )
 	{

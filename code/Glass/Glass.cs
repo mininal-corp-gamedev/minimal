@@ -1106,7 +1106,7 @@ public sealed class Glass : Component, Component.ExecuteInEditor, Component.IDam
 		}
 
 		var mesh = new Mesh( Material ?? Material.Load( "materials/glass.vmat" ) );
-		//mesh.CreateVertexBuffer<Vertex>( vertices.Length, Vertex.Layout, vertices );
+		mesh.CreateVertexBuffer<Vertex>( vertices.Length, Vertex.Layout, vertices );
 		mesh.CreateIndexBuffer( indices.Length, indices );
 		mesh.Bounds = bounds;
 

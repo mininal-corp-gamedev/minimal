@@ -25,7 +25,7 @@
     "CsProjName": "",
     "StartupScene": "scenes/titan_test.scene",
     "LaunchMode": "DedicatedServerOnly",
-    "DedicatedServerStartupScene": "scenes/minimalver3.scene",
+    "DedicatedServerStartupScene": "scenes/titan_test.scene",
     "ParentPackage": null,
     "ControlModes": {
       "Keyboard": true,

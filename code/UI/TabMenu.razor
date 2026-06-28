@@ -89,11 +89,13 @@
 									var canAfford = (Player.Local?.Money ?? 0) >= shop.Price;
 									var canFitItem = CanFitShopItem( shop );
 									var hasPurchaseAction = HasShopPurchaseAction( shop );
-									var disabled = !canAfford || !canFitItem || !hasPurchaseAction;
+									var canUseShop = CanLocalBuyShop();
+									var isArrested = IsLocalArrested;
+									var disabled = isArrested || !canUseShop || !canAfford || !canFitItem || !hasPurchaseAction;
 									var shopHeader = GameLocalization.ShopHeader( shop );
 									var shopCategory = GameLocalization.Category( shop.Category );
 									var shortDescription = GetShortDescription( GameLocalization.ShopDescription( shop ) );
-									var status = GetShopStatus( shop, canAfford, canFitItem, hasPurchaseAction );
+									var status = GetShopStatus( shop, isArrested, canUseShop, canAfford, canFitItem, hasPurchaseAction );
 
 									<div class="shop-card @(disabled ? "locked" : "")">
 										<div class="shop-card-main">
@@ -427,6 +429,7 @@
 	string EditClanBackgroundColor2 { get; set; } = "black";
 	string EditClanBackgroundColor3 { get; set; } = "black";
 	string EditClanBackgroundColor4 { get; set; } = "black";
+	bool IsLocalArrested => Player.Local?.IsArrested == true;
 
 	private bool IsLanguage( string code ) => string.Equals( GameLocalization.CurrentCode, code, StringComparison.OrdinalIgnoreCase );
 
@@ -569,6 +572,12 @@
 		if ( normalized.Length <= 0 )
 			return;
 
+		if ( IsLocalArrested )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.player.arrested", "You are arrested." ), 3.5f );
+			return;
+		}
+
 		var job = AvailableJobs.FirstOrDefault( x => x is not null && string.Equals( x.Id, normalized, StringComparison.Ordinal ) );
 		if ( job is not null && !CanLocalSeeJob( job ) )
 		{
@@ -603,13 +612,24 @@
 		return Player.Local?.Inventory?.CanAddItem( itemId, 1 ) ?? false;
 	}
 
+	private bool CanLocalBuyShop()
+	{
+		return Player.Local?.Job?.JobDefinition?.CanBuyShop ?? false;
+	}
+
 	private bool HasShopPurchaseAction( ShopDefinition shop )
 	{
 		return shop is not null && (shop.ItemDefinition is not null || shop.HasPostPurchased);
 	}
 
-	private string GetShopStatus( ShopDefinition shop, bool canAfford, bool canFitItem, bool hasPurchaseAction )
+	private string GetShopStatus( ShopDefinition shop, bool isArrested, bool canUseShop, bool canAfford, bool canFitItem, bool hasPurchaseAction )
 	{
+		if ( isArrested )
+			return GameLocalization.Phrase( "ui.jobs.arrested", "Arrested" );
+
+		if ( !canUseShop )
+			return GameLocalization.Phrase( "ui.shop.job_locked", "Job restricted" );
+
 		if ( !canAfford )
 			return GameLocalization.Phrase( "ui.shop.not_enough_money", "Not enough money" );
 
@@ -651,6 +671,18 @@
 		var normalized = (shop?.Id ?? string.Empty).Trim();
 		if ( normalized.Length <= 0 )
 			return;
+
+		if ( IsLocalArrested )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.player.arrested", "You are arrested." ), 3.5f );
+			return;
+		}
+
+		if ( !CanLocalBuyShop() )
+		{
+			Notification.Error( GameLocalization.Phrase( "notify.shop.job_cannot_buy_anything", "Your job cannot use the shop." ), 3.5f );
+			return;
+		}
 
 		if ( !IsShopAllowed( shop ) )
 		{
@@ -1154,8 +1186,10 @@
 		hash.Add( EditClanBackgroundColor4 );
 		hash.Add( GameLocalization.CurrentCode );
 		hash.Add( Player.Local?.Money ?? 0 );
+		hash.Add( IsLocalArrested );
 		hash.Add( Player.Local?.Job?.JobId );
 		hash.Add( Player.Local?.Job?.JobDefinition?.Header );
+		hash.Add( Player.Local?.Job?.JobDefinition?.CanBuyShop ?? false );
 		hash.Add( GetInventoryHash() );
 		hash.Add( Connection.Local?.DisplayName );
 		hash.Add( Connection.All.Count );

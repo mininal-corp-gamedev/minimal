@@ -9,6 +9,9 @@ public sealed class JobDefinition : GameResource
     [Property] public int Salary { get; set; } = 0;
     [Property] public bool Vote { get; set; } = false;
     [Property] public bool CanDemote { get; set; } = true;
+    [Property] public bool CanArrest { get; set; } = true;
+    [Property] public bool CanBuyShop { get; set; } = true;
+    [Property] public bool CanSpawnProp { get; set; } = true;
     [Property] public Color Color { get; set; } = Color.White;
     [Property] public List<JobDefinition> FromJobs { get; set; } = new();
     [Property] public List<string> WorkshopClothing { get; set; } = new();

@@ -709,7 +709,19 @@
 			&& !string.IsNullOrWhiteSpace( prop.Id )
 			&& !string.IsNullOrWhiteSpace(prop.Ident)
 			&& Player.Local.IsValid()
+			&& CanLocalSpawnProps()
+			&& Player.Local.IsArrested != true
 			&& GetOwnedPropsCount() < GetMaxProps();
+	}
+
+	private bool CanLocalSpawnProps()
+	{
+		return Player.Local?.Job?.JobDefinition?.CanSpawnProp ?? false;
+	}
+
+	private bool CanUsePropsMenu()
+	{
+		return Player.Local?.IsArrested != true;
 	}
 
 	private int GetOwnedPropsCount()
@@ -774,6 +786,14 @@
 
 	private void SetOpen( bool open )
 	{
+		if ( open && !CanUsePropsMenu() )
+		{
+			IsOpen = false;
+			Crosshair.SetBlocked( ModalId, false );
+			UiModalManager.Close( ModalId );
+			return;
+		}
+
 		if ( open )
 			UiModalManager.Open( ModalId );
 		else
@@ -811,6 +831,12 @@
 
 	protected override void OnUpdate()
 	{
+		if ( IsOpen && !CanUsePropsMenu() )
+		{
+			SetOpen( false );
+			return;
+		}
+
 		UpdateSliderDrag();
 		UpdatePropsListWheelScroll();
 		UpdateLookedPropInfo();
@@ -917,6 +943,9 @@
 		hash.Add( PropsVersion );
 		hash.Add( Player.Local?.OwnedPropsCount ?? 0 );
 		hash.Add( Player.Local?.MaxProps ?? 0 );
+		hash.Add( Player.Local?.IsArrested ?? false );
+		hash.Add( Player.Local?.Job?.JobId );
+		hash.Add( Player.Local?.Job?.JobDefinition?.CanSpawnProp ?? false );
 		hash.Add( LookedPropName );
 		hash.Add( LookedPropOwnerName );
 		hash.Add( LookedPropIsFadingDoor );

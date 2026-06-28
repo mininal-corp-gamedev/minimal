@@ -1090,7 +1090,6 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 	private bool CanPlayerInteract( Player player )
 	{
 		if ( !player.IsValid() ) return false;
-		if ( player.IsArrested ) return false;
 
 		var maxDistance = MathF.Max( 1f, InteractRange );
 		return Vector3.DistanceBetween( GetPlayerInteractionPosition( player ), WorldPosition ) <= maxDistance;

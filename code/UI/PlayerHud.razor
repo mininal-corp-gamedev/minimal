@@ -27,6 +27,14 @@
 						<div class="job-name">@JobName</div>
 					</div>
 
+					@if ( IsArrested )
+					{
+						<div class="arrest-row">
+							<div class="arrest-label">@GameLocalization.Phrase( "ui.hud.arrested", "ARRESTED" )</div>
+							<div class="arrest-timer">@ArrestTimerText</div>
+						</div>
+					}
+
 					<div class="stat-row health">
 						<div class="stat-icon"></div>
 						<div class="stat-track">
@@ -79,6 +87,9 @@
 	bool HasClan => LocalPlayer is not null && LocalPlayer.ClanId >= 0 && !string.IsNullOrWhiteSpace( LocalPlayer.ClanHeader );
 	string ClanName => LocalPlayer?.ClanHeader ?? "";
 	string ClanColorCss => ClanPalette.GetSwatch( LocalPlayer?.ClanColorId );
+	bool IsArrested => LocalPlayer?.IsArrested == true;
+	int ArrestRemainingSeconds => Math.Max( 0, (int)MathF.Ceiling( LocalPlayer is null ? 0f : (float)LocalPlayer.ArrestTimeUntilRelease ) );
+	string ArrestTimerText => GameLocalization.Format( "ui.hud.release_in", "Release in {0}", FormatSeconds( ArrestRemainingSeconds ) );
 
 	float HealthPercent => Percent( LocalPlayer?.Health ?? 0f, LocalPlayer?.MaxHealth ?? 1f );
 	float ArmorPercent => Percent( LocalPlayer?.Armor ?? 0f, LocalPlayer?.MaxArmor ?? 1f );
@@ -108,6 +119,20 @@
 		return $"${value.ToString( "N0", CultureInfo.InvariantCulture )}";
 	}
 
+	private static string FormatSeconds( int totalSeconds )
+	{
+		totalSeconds = Math.Max( 0, totalSeconds );
+		var minutes = totalSeconds / 60;
+		var seconds = totalSeconds % 60;
+		return $"{minutes:00}:{seconds:00}";
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( IsArrested )
+			StateHasChanged();
+	}
+
 	protected override int BuildHash()
 	{
 		var hash = new HashCode();
@@ -118,6 +143,9 @@
 		hash.Add( HasClan );
 		hash.Add( ClanName );
 		hash.Add( ClanColorCss );
+		hash.Add( IsArrested );
+		hash.Add( ArrestRemainingSeconds );
+		hash.Add( ArrestTimerText );
 		hash.Add( LocalPlayer?.Health ?? 0f );
 		hash.Add( LocalPlayer?.MaxHealth ?? 0f );
 		hash.Add( LocalPlayer?.Armor ?? 0f );

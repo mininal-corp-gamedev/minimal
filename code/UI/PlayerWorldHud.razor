@@ -12,6 +12,10 @@
 		{
 			<div class="job" style="@JobColorStyle">@JobName</div>
 		}
+		@if ( IsArrested )
+		{
+			<div class="status arrested">@ArrestedLabel</div>
+		}
 		<div class="health-bar">
 			<div class="health-fill" style="width: @(HealthPercent)%;"></div>
 			<div class="health-text">@HealthDisplay / @MaxHealthDisplay</div>
@@ -31,6 +35,8 @@
 	float MaxHealthValue => TargetPlayer is { MaxHealth: > 0f } p ? p.MaxHealth : 1f;
 	string JobName => TargetPlayer?.Job?.JobDefinition is null ? "" : GameLocalization.JobHeader( TargetPlayer.Job.JobDefinition );
 	string JobColorStyle => $"color: {ColorToCss( TargetPlayer?.Job?.JobDefinition?.Color ?? Color.White )};";
+	bool IsArrested => TargetPlayer?.IsArrested == true;
+	string ArrestedLabel => GameLocalization.Phrase( "ui.hud.arrested", "ARRESTED" );
 
 	float HealthPercent => Math.Clamp( HealthValue / MaxHealthValue * 100f, 0f, 100f );
 
@@ -48,5 +54,18 @@
 		return $"rgb({r}, {g}, {b})";
 	}
 
-	protected override int BuildHash() => System.HashCode.Combine( ShouldShow, Name, JobName, JobColorStyle, HealthValue, MaxHealthValue, GameLocalization.CurrentCode );
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( ShouldShow );
+		hash.Add( Name );
+		hash.Add( JobName );
+		hash.Add( JobColorStyle );
+		hash.Add( IsArrested );
+		hash.Add( ArrestedLabel );
+		hash.Add( HealthValue );
+		hash.Add( MaxHealthValue );
+		hash.Add( GameLocalization.CurrentCode );
+		return hash.ToHashCode();
+	}
 }

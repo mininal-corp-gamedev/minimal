@@ -37,6 +37,18 @@ public sealed partial class ShopManager
 			return;
 		}
 
+		if ( buyer.IsArrested )
+		{
+			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.player.arrested", "You are arrested." ), null );
+			return;
+		}
+
+		if ( buyer.Job?.JobDefinition?.CanBuyShop == false )
+		{
+			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.shop.job_cannot_buy_anything", "Your job cannot use the shop." ), null );
+			return;
+		}
+
 		if ( !CanBuyByJob( buyer, shop ) )
 		{
 			NotifyBuyer( caller, false, GameLocalization.Phrase( "notify.shop.job_cannot_buy", "Your job cannot buy this." ), null );
@@ -161,11 +173,14 @@ public sealed partial class ShopManager
 		if ( shop is null )
 			return false;
 
-		if ( shop.IsAllowEveryone )
-			return true;
-
 		if ( !buyer.IsValid() || !buyer.Job.IsValid() || buyer.Job.JobDefinition is null )
 			return false;
+
+		if ( buyer.Job.JobDefinition.CanBuyShop == false )
+			return false;
+
+		if ( shop.IsAllowEveryone )
+			return true;
 
 		if ( shop.JobsAllow is null || shop.JobsAllow.Count == 0 )
 			return false;

@@ -86,6 +86,18 @@ public sealed partial class PropsMenu
 			return;
 		}
 
+		if ( player.IsArrested )
+		{
+			NotifySpawnCaller( caller, GameLocalization.Phrase( "notify.player.arrested", "You are arrested." ), false );
+			return;
+		}
+
+		if ( player.Job?.JobDefinition?.CanSpawnProp == false )
+		{
+			NotifySpawnCaller( caller, GameLocalization.Phrase( "notify.props.job_cannot_spawn", "Your job cannot spawn props." ), false );
+			return;
+		}
+
 		if ( player.OwnedPropsCount >= player.MaxProps )
 		{
 			NotifySpawnCaller( caller, GameLocalization.Format( "notify.props.limit_reached", "Prop limit reached ({0}).", player.MaxProps ), false );
@@ -216,6 +228,18 @@ public sealed partial class PropsMenu
 
 			if ( !player.IsValid() )
 				return;
+
+			if ( player.IsArrested )
+			{
+				NotifySpawnCaller( caller, GameLocalization.Phrase( "notify.player.arrested", "You are arrested." ), false );
+				return;
+			}
+
+			if ( player.Job?.JobDefinition?.CanSpawnProp == false )
+			{
+				NotifySpawnCaller( caller, GameLocalization.Phrase( "notify.props.job_cannot_spawn", "Your job cannot spawn props." ), false );
+				return;
+			}
 
 			if ( player.OwnedPropsCount >= player.MaxProps )
 			{

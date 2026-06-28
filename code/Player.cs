@@ -477,6 +477,17 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 
     private bool TryGetSpawnTransform(out Vector3 position, out Rotation rotation)
     {
+        if (IsArrested)
+        {
+            var arrestSpawn = JobManager.Instance?.GetRandomArrestSpawn();
+            if (arrestSpawn.IsValid())
+            {
+                position = arrestSpawn.WorldPosition;
+                rotation = arrestSpawn.WorldRotation;
+                return true;
+            }
+        }
+
         var spawnPoint = SpawnManager.Instance?.GetRandomPlayerSpawn();
         if (spawnPoint.IsValid())
         {
@@ -494,7 +505,6 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
     {
 #if SERVER
         // Server (host) authority: урон применяет ТОЛЬКО хост; клиент только просит.
-        if (IsArrested) return;
         if (IsSafezone) return;
 
         TakeDamageFromWeapon(dmgInfo.Damage, dmgInfo.Attacker, damagePosition: dmgInfo.Position, damageOrigin: dmgInfo.Origin, launchRagdoll: dmgInfo.Tags.Contains("explosion"));
@@ -585,7 +595,6 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
     {
 #if SERVER
         if (!Networking.IsHost) return;
-        if (IsArrested) return;
         if (IsSafezone) return;
         if (damage <= 0f) return;
         if (Health <= 0f || IsDead) return;
@@ -1089,7 +1098,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 
     public void OnLanded(float distance, Vector3 impactVelocity)
     {
-        if (IsArrested || IsDead || Health <= 0f) return;
+        if (IsDead || Health <= 0f) return;
         if (distance <= SafeFallDistance) return;
         if (!Networking.IsHost && IsProxy) return;
 
@@ -1125,7 +1134,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 #if SERVER
         if (!Networking.IsHost) return;
         if (!_nextFallDamageAllowed) return;
-        if (IsArrested || IsDead || Health <= 0f) return;
+        if (IsDead || Health <= 0f) return;
         if (ShouldIgnoreFallDamage()) return;
 
         var damage = CalculateFallDamage(distance);
@@ -4331,6 +4340,28 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
             Notification.Error( message, 3.5f );
     }
 
+    private static void NotifyArrestResult( Connection connection, string message, bool success )
+    {
+#if SERVER
+        if ( connection is null )
+            return;
+
+        using ( Rpc.FilterInclude( c => c.SteamId.Value == connection.SteamId.Value ) )
+        {
+            RpcReceiveArrestResult( message, success );
+        }
+#endif
+    }
+
+    [Rpc.Broadcast]
+    private static void RpcReceiveArrestResult( string message, bool success )
+    {
+        if ( success )
+            Notification.Info( message, 3.5f );
+        else
+            Notification.Error( message, 3.5f );
+    }
+
     // ===================== ARREST SYSTEM =====================
 
     /// <summary>
@@ -4419,6 +4450,15 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         if (!targetObj.Components.TryGet<Player>(out var target, FindMode.EverythingInSelfAndParent)) return;
         if (target == attacker) return;
         if (target.IsArrested) return;
+
+        if (target.Job?.JobDefinition?.CanArrest == false)
+        {
+            NotifyArrestResult(
+                caller,
+                GameLocalization.Phrase("notify.player.job_cannot_be_arrested", "This player's job cannot be arrested."),
+                false);
+            return;
+        }
 
         if (Vector3.DistanceBetween(attacker.WorldPosition, target.WorldPosition) > JobManager.Instance.ArrestInteractRange)
             return;

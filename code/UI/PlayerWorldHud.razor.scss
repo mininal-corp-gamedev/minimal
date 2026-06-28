@@ -27,6 +27,20 @@ PlayerWorldHud {
 		margin-bottom: 6px;
 	}
 
+	.status {
+		padding: 5px 12px;
+		margin-bottom: 7px;
+		border-radius: 999px;
+		font-size: 11px;
+		font-family: Montserrat;
+		font-weight: 800;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: #ffffff;
+		background-color: rgba( 255, 67, 108, 0.92 );
+		box-shadow: 0 3px 12px rgba( 0, 0, 0, 0.34 );
+	}
+
 	.health-bar {
 		position: relative;
 		width: 160px;

@@ -93,6 +93,13 @@ public sealed class AdminManager : Component, Component.INetworkListener
 #endif
 	}
 
+	[Rpc.Host] public static void RpcRequestArrest( long steamId )
+	{
+#if SERVER
+		Arrest( Rpc.Caller, steamId );
+#endif
+	}
+
 	[Rpc.Host] public static void RpcRequestSetMoney( long steamId, int value )
 	{
 #if SERVER
@@ -209,6 +216,9 @@ public sealed class AdminManager : Component, Component.INetworkListener
 			case "spawn":
 				Respawn( caller, steamId );
 				break;
+			case "arrest":
+				Arrest( caller, steamId );
+				break;
 			case "setmoney":
 				if ( int.TryParse( value, out var money ) ) SetMoney( caller, steamId, money );
 				else NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.invalid_money", "Invalid money value." ), AdminNotifyType.Error );
@@ -248,7 +258,7 @@ public sealed class AdminManager : Component, Component.INetworkListener
 				ClearInventory( caller, steamId );
 				break;
 			default:
-				NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.usage", "Usage: adm <kick|ban|unban|spawn|setmoney|sethp|kill|setjob|selldoor|goto|tp|return|giverank|inv|clearinv> ..." ), AdminNotifyType.Warn );
+				NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.usage", "Usage: adm <kick|ban|unban|spawn|arrest|setmoney|sethp|kill|setjob|selldoor|goto|tp|return|giverank|inv|clearinv> ..." ), AdminNotifyType.Warn );
 				break;
 		}
 #endif
@@ -403,6 +413,27 @@ public sealed class AdminManager : Component, Component.INetworkListener
 
 		target.HostTriggerRespawn();
 		NotifyCaller( caller, GameLocalization.Format( "notify.admin.respawned", "Respawned {0}.", GetPlayerName( target ) ), AdminNotifyType.Info );
+	}
+
+	private static void Arrest( Connection caller, long steamId )
+	{
+		if ( !HasAccess( caller, ModeratorRank, out var error ) )
+		{
+			NotifyCaller( caller, error, AdminNotifyType.Error );
+			return;
+		}
+
+		var target = FindPlayerBySteamId( steamId );
+		if ( !target.IsValid() )
+		{
+			NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.player_offline", "Player is not online." ), AdminNotifyType.Error );
+			return;
+		}
+
+		var arrested = target.HostAdminToggleArrest();
+		var phraseKey = arrested ? "notify.admin.arrested" : "notify.admin.released";
+		var fallback = arrested ? "Arrested {0}." : "Released {0}.";
+		NotifyCaller( caller, GameLocalization.Format( phraseKey, fallback, GetPlayerName( target ) ), AdminNotifyType.Info );
 	}
 
 	private static void SetMoney( Connection caller, long steamId, int value )

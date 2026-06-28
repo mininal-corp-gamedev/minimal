@@ -101,6 +101,7 @@
 		new( "ban", "Ban", "Ban a SteamId permanently.", 2, false, true, false, true, "", "" ),
 		new( "unban", "Unban", "Remove a SteamId from the ban list.", 2, false, true, false, false, "", "" ),
 		new( "spawn", "Spawn", "Respawn an online player.", 1, true, false, false, false, "", "" ),
+		new( "arrest", "Arrest", "Arrest an online player or release them if they are already arrested.", 1, true, false, false, false, "", "" ),
 		new( "setmoney", "Set Money", "Set money for an online player.", 2, true, false, true, false, "Money", "Value" ),
 		new( "sethp", "Set HP", "Set health for an online player.", 2, true, false, true, false, "Health", "Value" ),
 		new( "kill", "Kill", "Kill an online player.", 2, true, false, false, false, "", "" ),
@@ -258,6 +259,9 @@
 				break;
 			case "spawn":
 				AdminManager.RpcRequestSpawn( steamId );
+				break;
+			case "arrest":
+				AdminManager.RpcRequestArrest( steamId );
 				break;
 			case "setmoney":
 				if ( int.TryParse( ValueInput, out var money ) ) AdminManager.RpcRequestSetMoney( steamId, money );

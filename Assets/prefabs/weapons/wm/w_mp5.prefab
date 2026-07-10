@@ -16,275 +16,50 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Minimal.Weapons.WeaponMp5",
-        "__guid": "aecc89bb-c398-446e-875f-4622fd7b291d",
+        "__type": "Sandbox.ModelRenderer",
+        "__guid": "d98b5ae7-e7f6-49ad-8247-5590f2fa7552",
         "__enabled": true,
         "Flags": 0,
-        "Ammo": 0,
-        "AttackRange": 2048,
-        "BulletPrefab": {
-          "_type": "gameobject",
-          "prefab": "prefabs/bullets/bullet.prefab"
-        },
-        "CanAttackWithoutAmmo": false,
-        "ClipSize": 35,
-        "Damage": 8,
-        "FireDelay": 0.06,
-        "FireSound": "sounds/m4a1 shot.sound",
-        "HasHipFire": true,
-        "HasReload": true,
-        "HoldType": "Rifle",
-        "HoldTypeHandedness": "BothHands",
-        "IsIronSight": false,
-        "IsMelee": false,
+        "BodyGroups": 11,
+        "CreateAttachments": false,
+        "LodOverride": null,
+        "MaterialGroup": null,
+        "MaterialOverride": null,
+        "Materials": null,
+        "Model": "models/weapons/sbox_smg_mp5/w_mp5.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "ReloadDurationSeconds": 2,
-        "ReloadSound": "sounds/m4 reload sequence.sound",
-        "SemiAuto": false,
-        "ShotPos": {
-          "_type": "gameobject",
-          "go": "36dbaa0a-2d9f-4782-8650-4c605e8dc2a9"
+        "RenderOptions": {
+          "GameLayer": true,
+          "OverlayLayer": false,
+          "BloomLayer": false,
+          "AfterUILayer": false
         },
-        "SpawnSpriteFireOnShot": true,
-        "SpriteFirePrefab": {
-          "_type": "gameobject",
-          "prefab": "prefabs/weapons/muzzleflash/pistol_muzzleflash.prefab"
-        },
-        "TotalReserveAmmo": 70,
-        "Viewmodel": {
-          "_type": "component",
-          "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
-          "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
-          "component_type": "SkinnedModelRenderer"
-        },
-        "WorldModelPrefab": {
-          "_type": "gameobject",
-          "prefab": "prefabs/weapons/wm/w_mp5.prefab"
-        }
-      }
-    ],
-    "Children": [
+        "RenderType": "On",
+        "Tint": "1,1,1,1"
+      },
       {
-        "__guid": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
-        "__version": 2,
+        "__type": "WeaponWorldModel",
+        "__guid": "e89f2c32-9ae7-4883-bff9-360b785a6794",
+        "__enabled": true,
         "Flags": 0,
-        "Name": "viewmodel",
-        "Position": "0,0,0",
-        "Rotation": "0,0,0,1",
-        "Scale": "1,1,1",
-        "Tags": "",
-        "Enabled": true,
-        "NetworkMode": 0,
-        "NetworkFlags": 0,
-        "NetworkOrphaned": 0,
-        "NetworkTransmit": true,
-        "OwnerTransfer": 1,
-        "Components": [
-          {
-            "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "c8ff336a-e934-4098-9c31-ba4f3d823703",
-            "__enabled": true,
-            "Flags": 0,
-            "AnimationGraph": null,
-            "BodyGroups": 19,
-            "BoneMergeTarget": null,
-            "CreateAttachments": true,
-            "CreateBoneObjects": false,
-            "LodOverride": null,
-            "MaterialGroup": null,
-            "MaterialOverride": null,
-            "Materials": null,
-            "Model": "models/weapons/sbox_smg_mp5/v_mp5.vmdl",
-            "Morphs": {},
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "Parameters": {
-              "bools": {
-                "b_deploy_skip": true
-              },
-              "ints": {},
-              "floats": {},
-              "vectors": {},
-              "rotations": {}
-            },
-            "PlaybackRate": 1,
-            "RenderOptions": {
-              "GameLayer": true,
-              "OverlayLayer": false,
-              "BloomLayer": false,
-              "AfterUILayer": false
-            },
-            "RenderType": "On",
-            "Sequence": {
-              "Name": null,
-              "Looping": true,
-              "Blending": false
-            },
-            "Tint": "1,1,1,1",
-            "UseAnimGraph": true
-          }
-        ],
-        "Children": [
-          {
-            "__guid": "36dbaa0a-2d9f-4782-8650-4c605e8dc2a9",
-            "__version": 2,
-            "Flags": 0,
-            "Name": "ShotPos",
-            "Position": "26.7882099,-4.60058594,-4.37472486",
-            "Rotation": "0,0,0,1",
-            "Scale": "0.100000001,0.100000001,0.100000001",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 0,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [],
-            "Children": []
-          },
-          {
-            "__guid": "5ac9b2bb-16a3-4cf5-a7f2-c30828b1d145",
-            "__version": 2,
-            "Flags": 8,
-            "Name": "muzzle",
-            "Position": "0,0,0",
-            "Rotation": "0,0,0,1",
-            "Scale": "1,1,1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 0,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [],
-            "Children": [
-              {
-                "__guid": "54d509de-72a1-4cfd-87c3-cf4689aa5f26",
-                "__version": 2,
-                "Flags": 0,
-                "Name": "suppressor_9mm",
-                "Position": "0,0,0",
-                "Rotation": "0,0,0,1",
-                "Scale": "1,1,1",
-                "Tags": "",
-                "Enabled": false,
-                "NetworkMode": 0,
-                "NetworkFlags": 0,
-                "NetworkOrphaned": 0,
-                "NetworkTransmit": true,
-                "OwnerTransfer": 1,
-                "Components": [
-                  {
-                    "__type": "Sandbox.ModelRenderer",
-                    "__guid": "f0d3e78c-0193-4ecd-992d-7da3f7a5d6d0",
-                    "__enabled": true,
-                    "Flags": 0,
-                    "BodyGroups": 18446744073709551615,
-                    "CreateAttachments": false,
-                    "LodOverride": null,
-                    "MaterialGroup": null,
-                    "MaterialOverride": null,
-                    "Materials": null,
-                    "Model": "models/weapons/sbox_attachments/silencer_9mm/suppressor_9mm.vmdl",
-                    "OnComponentDestroy": null,
-                    "OnComponentDisabled": null,
-                    "OnComponentEnabled": null,
-                    "OnComponentFixedUpdate": null,
-                    "OnComponentStart": null,
-                    "OnComponentUpdate": null,
-                    "RenderOptions": {
-                      "GameLayer": true,
-                      "OverlayLayer": false,
-                      "BloomLayer": false,
-                      "AfterUILayer": false
-                    },
-                    "RenderType": "On",
-                    "Tint": "1,1,1,1"
-                  }
-                ],
-                "Children": []
-              }
-            ]
-          },
-          {
-            "__guid": "5c17f7c7-be1a-40ed-9ada-bf5ee066833b",
-            "__version": 2,
-            "Flags": 8,
-            "Name": "eject",
-            "Position": "0,0,0",
-            "Rotation": "0,0,0,1",
-            "Scale": "1,1,1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 0,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [],
-            "Children": [
-              {
-                "__guid": "50d5b169-3fb8-4f75-acbf-813598cee1ac",
-                "__version": 2,
-                "Flags": 0,
-                "Name": "reddot_rmr",
-                "Position": "-0.209397107,0.0412207805,1.03737199",
-                "Rotation": "0.226560503,0.1045582,0.699141085,0.670029581",
-                "Scale": "1.39999998,1.39999998,1.39999998",
-                "Tags": "",
-                "Enabled": false,
-                "NetworkMode": 0,
-                "NetworkFlags": 0,
-                "NetworkOrphaned": 0,
-                "NetworkTransmit": true,
-                "OwnerTransfer": 1,
-                "Components": [
-                  {
-                    "__type": "Sandbox.ModelRenderer",
-                    "__guid": "898aa4da-a063-4b05-ba7b-a9026ae88638",
-                    "__enabled": true,
-                    "Flags": 0,
-                    "BodyGroups": 18446744073709551615,
-                    "CreateAttachments": false,
-                    "LodOverride": null,
-                    "MaterialGroup": null,
-                    "MaterialOverride": null,
-                    "Materials": null,
-                    "Model": "models/weapons/sbox_attachments/reddot_rmr/reddot_rmr.vmdl",
-                    "OnComponentDestroy": null,
-                    "OnComponentDisabled": null,
-                    "OnComponentEnabled": null,
-                    "OnComponentFixedUpdate": null,
-                    "OnComponentStart": null,
-                    "OnComponentUpdate": null,
-                    "RenderOptions": {
-                      "GameLayer": true,
-                      "OverlayLayer": false,
-                      "BloomLayer": false,
-                      "AfterUILayer": false
-                    },
-                    "RenderType": "On",
-                    "Tint": "1,1,1,1"
-                  }
-                ],
-                "Children": []
-              }
-            ]
-          }
-        ]
+        "BeamStartOffset": "0,0,0",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "PositionOffset": "0,0,0",
+        "RotationOffset": "0,0,0,1",
+        "Scale": 1
       }
     ],
+    "Children": [],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,
@@ -313,10 +88,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "drakefruit.rifle_reload#91283",
-    "facepunch.reddotrmr#145371",
-    "facepunch.suppressor9mm#145361",
-    "facepunch.v_mp5#150540"
+    "facepunch.w_mp5#279124"
   ],
   "__version": 2
 }

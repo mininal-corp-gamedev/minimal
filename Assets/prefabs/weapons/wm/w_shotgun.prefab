@@ -16,184 +16,50 @@
     "OwnerTransfer": 1,
     "Components": [
       {
-        "__type": "Minimal.Weapons.WeaponShotgun",
-        "__guid": "e3b1229e-3c95-4884-be75-5f7c45736561",
+        "__type": "Sandbox.ModelRenderer",
+        "__guid": "0a7768ff-61be-4f6e-8c50-c67ae15765be",
         "__enabled": true,
         "Flags": 0,
-        "Ammo": 0,
-        "AttackRange": 2048,
-        "BulletPrefab": {
-          "_type": "gameobject",
-          "prefab": "prefabs/bullets/bullet.prefab"
-        },
-        "CanAttackWithoutAmmo": false,
-        "ClipSize": 8,
-        "Damage": 5,
-        "FireDelay": 0.5,
-        "FireSound": "sounds/m4a1 shot.sound",
-        "HasHipFire": true,
-        "HasReload": true,
-        "HoldType": "Rifle",
-        "HoldTypeHandedness": "BothHands",
-        "IsIronSight": false,
-        "IsMelee": false,
+        "BodyGroups": 3,
+        "CreateAttachments": false,
+        "LodOverride": null,
+        "MaterialGroup": null,
+        "MaterialOverride": null,
+        "Materials": null,
+        "Model": "models/weapons/sbox_shotgun_spaghellim4/w_spaghellim4.vmdl",
         "OnComponentDestroy": null,
         "OnComponentDisabled": null,
         "OnComponentEnabled": null,
         "OnComponentFixedUpdate": null,
         "OnComponentStart": null,
         "OnComponentUpdate": null,
-        "PelletCount": 8,
-        "ReloadAnimClipDuration": 1,
-        "ReloadDurationSeconds": 3,
-        "ReloadSound": "sounds/m4 reload sequence.sound",
-        "SemiAuto": false,
-        "ShotPos": {
-          "_type": "gameobject",
-          "go": "36dbaa0a-2d9f-4782-8650-4c605e8dc2a9"
+        "RenderOptions": {
+          "GameLayer": true,
+          "OverlayLayer": false,
+          "BloomLayer": false,
+          "AfterUILayer": false
         },
-        "SpawnSpriteFireOnShot": true,
-        "SpreadDegrees": 4,
-        "SpriteFirePrefab": {
-          "_type": "gameobject",
-          "prefab": "prefabs/weapons/muzzleflash/pistol_muzzleflash.prefab"
-        },
-        "TotalReserveAmmo": 16,
-        "Viewmodel": {
-          "_type": "component",
-          "component_id": "c8ff336a-e934-4098-9c31-ba4f3d823703",
-          "go": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
-          "component_type": "SkinnedModelRenderer"
-        },
-        "WorldModelPrefab": {
-          "_type": "gameobject",
-          "prefab": "prefabs/weapons/wm/w_shotgun.prefab"
-        }
-      }
-    ],
-    "Children": [
+        "RenderType": "On",
+        "Tint": "1,1,1,1"
+      },
       {
-        "__guid": "9c4b081c-03b4-4054-88d1-269b54d5cf8f",
-        "__version": 2,
+        "__type": "WeaponWorldModel",
+        "__guid": "3b051dc8-a480-48fa-8ebd-51075f96a621",
+        "__enabled": true,
         "Flags": 0,
-        "Name": "viewmodel",
-        "Position": "0,0,0",
-        "Rotation": "0,0,0,1",
-        "Scale": "1,1,1",
-        "Tags": "",
-        "Enabled": true,
-        "NetworkMode": 0,
-        "NetworkFlags": 0,
-        "NetworkOrphaned": 0,
-        "NetworkTransmit": true,
-        "OwnerTransfer": 1,
-        "Components": [
-          {
-            "__type": "Sandbox.SkinnedModelRenderer",
-            "__guid": "c8ff336a-e934-4098-9c31-ba4f3d823703",
-            "__enabled": true,
-            "Flags": 0,
-            "AnimationGraph": null,
-            "BodyGroups": 11,
-            "BoneMergeTarget": null,
-            "CreateAttachments": true,
-            "CreateBoneObjects": false,
-            "LodOverride": null,
-            "MaterialGroup": null,
-            "MaterialOverride": null,
-            "Materials": null,
-            "Model": "models/weapons/sbox_shotgun_spaghellim4/v_spaghellim4.vmdl",
-            "Morphs": {},
-            "OnComponentDestroy": null,
-            "OnComponentDisabled": null,
-            "OnComponentEnabled": null,
-            "OnComponentFixedUpdate": null,
-            "OnComponentStart": null,
-            "OnComponentUpdate": null,
-            "Parameters": {
-              "bools": {
-                "b_deploy_skip": true
-              },
-              "ints": {},
-              "floats": {},
-              "vectors": {},
-              "rotations": {}
-            },
-            "PlaybackRate": 1,
-            "RenderOptions": {
-              "GameLayer": true,
-              "OverlayLayer": false,
-              "BloomLayer": false,
-              "AfterUILayer": false
-            },
-            "RenderType": "On",
-            "Sequence": {
-              "Name": null,
-              "Looping": true,
-              "Blending": false
-            },
-            "Tint": "1,1,1,1",
-            "UseAnimGraph": true
-          }
-        ],
-        "Children": [
-          {
-            "__guid": "36dbaa0a-2d9f-4782-8650-4c605e8dc2a9",
-            "__version": 2,
-            "Flags": 0,
-            "Name": "ShotPos",
-            "Position": "36.9416389,-4.80346584,-4.81388187",
-            "Rotation": "0,0,0,1",
-            "Scale": "0.100000001,0.100000001,0.100000001",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 0,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [],
-            "Children": []
-          },
-          {
-            "__guid": "6ad5eaea-fdeb-4345-bf66-09e3d3edfb7f",
-            "__version": 2,
-            "Flags": 8,
-            "Name": "muzzle",
-            "Position": "0,0,0",
-            "Rotation": "0,0,0,1",
-            "Scale": "1,1,1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 2,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [],
-            "Children": []
-          },
-          {
-            "__guid": "f79af86f-4875-4991-8e27-3e22ee270f48",
-            "__version": 2,
-            "Flags": 8,
-            "Name": "eject",
-            "Position": "0,0,0",
-            "Rotation": "0,0,0,1",
-            "Scale": "1,1,1",
-            "Tags": "",
-            "Enabled": true,
-            "NetworkMode": 2,
-            "NetworkFlags": 0,
-            "NetworkOrphaned": 0,
-            "NetworkTransmit": true,
-            "OwnerTransfer": 1,
-            "Components": [],
-            "Children": []
-          }
-        ]
+        "BeamStartOffset": "0,0,0",
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null,
+        "PositionOffset": "0,0,0",
+        "RotationOffset": "0,0,0,1",
+        "Scale": 1
       }
     ],
+    "Children": [],
     "__properties": {
       "NetworkInterpolation": true,
       "TimeScale": 1,
@@ -222,8 +88,7 @@
   "MenuIcon": null,
   "DontBreakAsTemplate": false,
   "__references": [
-    "drakefruit.rifle_reload#91283",
-    "facepunch.v_spaghellim4#150536"
+    "facepunch.w_spaghellim4#279114"
   ],
   "__version": 2
 }

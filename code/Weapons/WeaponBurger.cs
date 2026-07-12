@@ -53,11 +53,11 @@ public sealed class WeaponBurger : Weapon
 
         var itemId = player.CurrentWeaponItemId;
         if (string.IsNullOrWhiteSpace(itemId)) return;
+        if (!player.HostTryConsumeCurrentInventoryItem(itemId, 1)) return;
 
         var heal = Math.Clamp(healAmount, 0, (int)MathF.Ceiling(player.MaxHealth));
         player.Health = MathF.Min(player.Health + heal, player.MaxHealth);
         player.WorldHud?.WorldHudRefresh();
-        player.Inventory.RemoveItem(itemId, 1);
 #endif
     }
 }

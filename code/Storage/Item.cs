@@ -39,6 +39,11 @@ public sealed class Item
         Count = Math.Max(Count - amount, 0);
     }
 
+    internal void RestoreCount(int count)
+    {
+        Count = Math.Clamp(count, 0, MaxCount);
+    }
+
     public bool CanStackWith(Item other)
     {
         return other is not null

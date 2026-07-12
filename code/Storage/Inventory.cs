@@ -58,6 +58,11 @@ public sealed class Inventory
         if (item is null || item.Count <= 0)
             return false;
 
+        // AddItem is an all-or-nothing operation. Callers must never receive
+        // false after part of an item stack has already been inserted.
+        if (!CanAddItem(item))
+            return false;
+
         int remaining = item.Count;
         int addedTotal = 0;
 
@@ -232,7 +237,7 @@ public sealed class Inventory
 
     public bool TryUseItem(Slot slot, Player caller)
     {
-        if (slot.Item == null)
+        if (slot?.Item == null || caller is null)
             return false;
 
         var item = slot.Item;
@@ -242,24 +247,39 @@ public sealed class Inventory
         if (definition is null || !definition.CanUse)
             return false;
 
-        var successful = ItemUseRegistry.TryUse(item, caller);
+        bool successful;
+        try
+        {
+            successful = ItemUseRegistry.TryUse(item, caller);
+        }
+        catch (Exception ex)
+        {
+            item.RestoreCount(beforeCount);
+            Log.Error($"[Inventory] Item handler for '{item.Id}' failed: {ex.Message}");
+            return false;
+        }
+
+        if (!successful)
+        {
+            // A failed handler is not allowed to consume or add inventory items.
+            item.RestoreCount(beforeCount);
+            return false;
+        }
 
         var removed = Math.Max(0, beforeCount - item.Count);
+        var countChanged = item.Count != beforeCount;
         if (item.Count <= 0)
             slot.Clear();
 
-        if (successful)
-        {
-            if (removed > 0)
-                OnItemRemoved?.Invoke(item.CopyWithCount(removed), removed);
+        if (removed > 0)
+            OnItemRemoved?.Invoke(item.CopyWithCount(removed), removed);
 
-            OnUsed?.Invoke(slot);
+        OnUsed?.Invoke(slot);
 
-            if (removed > 0)
-                OnChanged?.Invoke();
-        }
+        if (countChanged)
+            OnChanged?.Invoke();
 
-        return successful;
+        return true;
     }
 
     public bool TrySwitchItem(Slot slot, Player caller)
@@ -269,7 +289,7 @@ public sealed class Inventory
 
         var item = slot.Item;
 
-        if (!item.Definition.CanUse)
+        if (item.Definition is null || !item.Definition.CanUse)
             return false;
 
         ItemUseRegistry.TrySwitch(item, caller);

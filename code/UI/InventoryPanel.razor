@@ -213,7 +213,6 @@
 
 	void OnDrop()
 	{
-		// TODO: implement drop logic
 		var slot = GetSlot( CtxSlotIndex );
 		if ( slot is not null && !slot.IsEmpty )
 		{
@@ -224,7 +223,6 @@
 
 	void OnDropAll()
 	{
-		// TODO: implement drop all logic
 		var slot = GetSlot( CtxSlotIndex );
 		if ( slot is not null && !slot.IsEmpty )
 		{
@@ -300,6 +298,7 @@
 		if ( !IsOpen ) return;
 		if ( IsDragging ) return;
 		if ( CtxVisible ) return;
+		if ( Player.Local?.InventoryMovePending == true ) return;
 
 		var slot = GetSlot( index );
 		if ( slot is null || slot.IsEmpty ) return;
@@ -345,6 +344,7 @@
 		if ( to < 0 ) return;
 		if ( from == to ) return;
 		if ( to >= SlotCount ) return;
+		if ( Player.Local?.InventoryMovePending == true ) return;
 
 		Player.Local?.MoveOrSwapInventorySlots( from, to );
 	}

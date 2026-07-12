@@ -91,27 +91,16 @@
 
 	protected override int BuildHash()
 	{
-		return System.HashCode.Combine(Time.Now, IsDead);
+		var hash = System.HashCode.Combine( IsDead, ActiveSlot );
+		if ( Inv is not null )
+		{
+			for ( int i = 0; i < HotbarCount && i < Inv.Slots.Count; i++ )
+			{
+				var item = Inv.Slots[i].Item;
+				hash = System.HashCode.Combine( hash, item?.Id, item?.Count ?? 0 );
+			}
+		}
 
-		// Раньше в hash шёл Time.Now — он меняется каждый кадр, и панель
-		// перестраивалась 60 раз в секунду без надобности. Это и создавало
-		// нагрузку, из-за которой хотбар выглядел «лагающим». Хеш считаем
-		// только по реально влияющим на отображение полям; они уже
-		// обновляются оптимистично в Player.UseInventorySlot.
-		// var hash = System.HashCode.Combine(
-		// 	Player.Local?.CurrentWeapon?.GetHashCode() ?? 0,
-		// 	Player.Local?.CurrentInventorySlotIndex ?? -1,
-		// 	Player.Local?.SelectedHotbarSlotIndex ?? -1 );
-
-		// if ( Inv is not null )
-		// {
-		// 	for ( int i = 0; i < HotbarCount && i < Inv.Slots.Count; i++ )
-		// 	{
-		// 		var slot = Inv.Slots[i];
-		// 		hash = System.HashCode.Combine( hash, slot.Item?.Id, slot.Item?.Count ?? 0 );
-		// 	}
-		// }
-
-		// return hash;
+		return hash;
 	}
 }

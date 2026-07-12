@@ -239,6 +239,9 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
     public int CurrentInventorySlotIndex { get; private set; } = -1;
     public int SelectedHotbarSlotIndex { get; private set; } = -1;
     public string CurrentWeaponItemId { get; private set; }
+    public bool InventoryMovePending { get; private set; }
+    private int _inventoryMoveRequestId;
+    private int _pendingInventoryMoveEquippedSlotIndex = -1;
     [Sync(SyncFlags.FromHost)] public string EquippedWeaponItemId { get; private set; } = "";
 
     public bool IsLocalPlayer => !IsProxy;
@@ -1312,6 +1315,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 #if SERVER
         if (!Networking.IsHost) return false;
         if (!_inventorySaveInitialized) return false;
+        if (!IsAlive) return false;
         if (IsArrested) return false;
         if (Inventory == null) return false;
         if (slotIndex < 0 || slotIndex >= Inventory.Slots.Count) return false;
@@ -1432,6 +1436,8 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         if (!IsAlive) return;
         if (IsArrested) return; // Арестованный не может переключать слоты/оружие
 
+        if (UiModalManager.HasActiveModal) return;
+
         if (Input.Pressed("Slot1"))
             UseInventorySlot(0);
         else if (Input.Pressed("Slot2"))
@@ -1456,6 +1462,14 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
     {
         if (CurrentWeaponItemId == null)
             return;
+
+        if (CurrentInventorySlotIndex >= 0 &&
+            CurrentInventorySlotIndex < (Inventory?.Slots.Count ?? 0))
+        {
+            var currentSlot = Inventory.Slots[CurrentInventorySlotIndex];
+            if (!currentSlot.IsEmpty && currentSlot.Item?.Id == CurrentWeaponItemId)
+                return;
+        }
 
         var matchingSlotIndex = FindInventorySlotIndex(CurrentWeaponItemId);
         if (matchingSlotIndex >= 0)
@@ -1488,18 +1502,25 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
     public bool MoveOrSwapInventorySlots(int fromIndex, int toIndex)
     {
         if (IsProxy) return false;
+        if (!IsAlive || IsArrested) return false;
 
 #if SERVER
         if (Networking.IsHost)
             return HostMoveOrSwapInventorySlots(fromIndex, toIndex);
 #endif
 
-        RpcRequestMoveOrSwapInventorySlots(fromIndex, toIndex);
+        if (InventoryMovePending)
+            return false;
+
+        InventoryMovePending = true;
+        _pendingInventoryMoveEquippedSlotIndex = CurrentInventorySlotIndex;
+        var requestId = unchecked(++_inventoryMoveRequestId);
+        RpcRequestMoveOrSwapInventorySlots(fromIndex, toIndex, requestId);
         return true;
     }
 
     [Rpc.Host]
-    private void RpcRequestMoveOrSwapInventorySlots(int fromIndex, int toIndex)
+    private void RpcRequestMoveOrSwapInventorySlots(int fromIndex, int toIndex, int requestId)
     {
 #if SERVER
         if (!Networking.IsHost)
@@ -1509,8 +1530,23 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         if (!player.IsValid() || player != this)
             return;
 
-        player.HostMoveOrSwapInventorySlots(fromIndex, toIndex);
+        var successful = player.HostMoveOrSwapInventorySlots(fromIndex, toIndex);
+        player.RpcOwnerInventoryMoveCompleted(requestId, fromIndex, toIndex, successful);
 #endif
+    }
+
+    [Rpc.Owner]
+    private void RpcOwnerInventoryMoveCompleted(int requestId, int fromIndex, int toIndex, bool successful)
+    {
+        if (Networking.IsHost || requestId != _inventoryMoveRequestId)
+            return;
+
+        InventoryMovePending = false;
+        if (successful)
+            CurrentInventorySlotIndex = RemapMovedSlotIndex(_pendingInventoryMoveEquippedSlotIndex, fromIndex, toIndex);
+
+        _pendingInventoryMoveEquippedSlotIndex = -1;
+        ValidateCurrentWeaponInventoryState();
     }
 
     private bool HostMoveOrSwapInventorySlots(int fromIndex, int toIndex)
@@ -1518,9 +1554,16 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 #if SERVER
         if (!Networking.IsHost) return false;
         if (!_inventorySaveInitialized) return false;
+        if (!IsAlive || IsArrested) return false;
         if (Inventory is null) return false;
 
+        var equippedSlotBeforeMove = CurrentInventorySlotIndex;
         var successful = Inventory.TryMoveOrSwap(fromIndex, toIndex);
+        if (successful)
+        {
+            CurrentInventorySlotIndex = RemapMovedSlotIndex(equippedSlotBeforeMove, fromIndex, toIndex);
+            ValidateCurrentWeaponInventoryState();
+        }
         if (!successful)
             SendInventorySnapshotToOwner();
 
@@ -1528,6 +1571,13 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 #else
         return false;
 #endif
+    }
+
+    private static int RemapMovedSlotIndex(int currentIndex, int fromIndex, int toIndex)
+    {
+        if (currentIndex == fromIndex) return toIndex;
+        if (currentIndex == toIndex) return fromIndex;
+        return currentIndex;
     }
 
     public void DropItem(Slot slot, int count = 1)
@@ -1542,6 +1592,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
     public void DropInventorySlot(int slotIndex, int count = 1)
     {
         if (IsProxy) return;
+        if (!IsAlive || IsArrested) return;
 
 #if SERVER
         if (Networking.IsHost)
@@ -1574,6 +1625,7 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 #if SERVER
         if (!Networking.IsHost) return false;
         if (!_inventorySaveInitialized) return false;
+        if (!IsAlive || IsArrested) return false;
         if (count <= 0) return false;
         if (Inventory == null) return false;
         if (slotIndex < 0 || slotIndex >= Inventory.Slots.Count) return false;
@@ -1620,6 +1672,25 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
 
         NotifyInventoryResult(GameObject.Network.Owner, GameLocalization.Format( "notify.inventory.dropped", "You dropped: {0}", GameLocalization.ItemHeader( item.Definition ) ), true);
         return true;
+#else
+        return false;
+#endif
+    }
+
+    public bool HostTryConsumeCurrentInventoryItem(string expectedItemId, int count = 1)
+    {
+#if SERVER
+        if (!Networking.IsHost || !_inventorySaveInitialized) return false;
+        if (!IsAlive || IsArrested) return false;
+        if (Inventory is null || count <= 0) return false;
+        if (CurrentInventorySlotIndex < 0 || CurrentInventorySlotIndex >= Inventory.Slots.Count) return false;
+
+        var slot = Inventory.Slots[CurrentInventorySlotIndex];
+        if (slot.IsEmpty || slot.Item is null) return false;
+        if (!string.Equals(slot.Item.Id, expectedItemId, StringComparison.Ordinal)) return false;
+        if (slot.Item.Count < count) return false;
+
+        return Inventory.RemoveItem(slot, count) == count;
 #else
         return false;
 #endif

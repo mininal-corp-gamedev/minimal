@@ -10,11 +10,15 @@
       "IncludeSourceFiles": false,
       "Resources": null,
       "PackageReferences": null,
-      "EditorReferences": [],
+      "EditorReferences": [
+        "mapperskai.wood1_512#12659",
+        "prayandplay.compactprinter#111644"
+      ],
       "Mounts": null,
       "IsStandaloneOnly": false,
       "Metadata": {
-        "SingleAssetSource": "weapons/physgun/effects/grab-ball.vmat"
+        "SingleAssetSource": "weapons/physgun/effects/grab-ball.vmat",
+        "ParentPackage": "minimalinc.mrp"
       }
     }
   }

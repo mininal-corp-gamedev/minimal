@@ -14,7 +14,22 @@
     "NetworkOrphaned": 0,
     "NetworkTransmit": true,
     "OwnerTransfer": 1,
-    "Components": [],
+    "Components": [
+      {
+        "__type": "PropCatalogSynchronizer",
+        "__guid": "f10b331f-1245-477a-96e8-8fd9f15a2df9",
+        "__enabled": true,
+        "Flags": 0,
+        "AutoSyncOnStart": true,
+        "MaximumPackages": 5000,
+        "OnComponentDestroy": null,
+        "OnComponentDisabled": null,
+        "OnComponentEnabled": null,
+        "OnComponentFixedUpdate": null,
+        "OnComponentStart": null,
+        "OnComponentUpdate": null
+      }
+    ],
     "Children": [
       {
         "__guid": "aa9461ff-8a4e-4be4-b3cf-4dc3d9be5c46",

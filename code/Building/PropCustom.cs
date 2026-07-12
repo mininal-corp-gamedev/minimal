@@ -12,15 +12,16 @@ public sealed class PropCustom : Component, Component.INetworkListener
 	private bool _tintApplied;
 	private Color _lastAppliedTint;
 	private bool _physicsFrozen;
+	private bool _freezeRequested;
 	private bool _physicsReadyForFreeze;
 	private int _physicsReadyFixedTicks;
+	private bool _initialPhysicsPending;
+	private int _initialPhysicsWaitTicks;
+	private PropPhysicsMode _initialPhysicsMode = PropPhysicsMode.Dynamic;
+	private float _initialMassOverride;
 
 	private const int FreezeDelayFixedTicks = 1;
-
-	protected override void OnStart()
-	{
-		TryFreezePhysics();
-	}
+	private const int InitialPhysicsMaxWaitTicks = 100;
 
 	public void SetOwner( Player owner )
 	{
@@ -93,6 +94,7 @@ public sealed class PropCustom : Component, Component.INetworkListener
 
 		door.SetOwner( owner );
 		HostSetFadingDoorOpen( false );
+		TryFreezePhysics( force: true );
 #endif
 	}
 
@@ -139,8 +141,25 @@ public sealed class PropCustom : Component, Component.INetworkListener
 			return;
 
 		_physicsFrozen = false;
+		_freezeRequested = false;
 		_physicsReadyForFreeze = false;
 		_physicsReadyFixedTicks = 0;
+#endif
+	}
+
+	public void ConfigureInitialPhysics( PropPhysicsMode mode, float massOverride = 0f )
+	{
+#if SERVER
+		if ( !Networking.IsHost )
+			return;
+
+		_initialPhysicsMode = mode;
+		_initialMassOverride = MathF.Max( 0f, massOverride );
+		_initialPhysicsPending = true;
+		_initialPhysicsWaitTicks = 0;
+		_physicsFrozen = false;
+		_freezeRequested = false;
+		TryApplyInitialPhysics();
 #endif
 	}
 
@@ -188,7 +207,12 @@ public sealed class PropCustom : Component, Component.INetworkListener
 
 	protected override void OnFixedUpdate()
 	{
-		TryFreezePhysics( fromFixedUpdate: true );
+#if SERVER
+		TryApplyInitialPhysics();
+
+		if ( _freezeRequested )
+			ProcessFreezeRequest( force: false, fromFixedUpdate: true );
+#endif
 	}
 
 	private bool _fadingDoorCollisionApplied;
@@ -196,8 +220,6 @@ public sealed class PropCustom : Component, Component.INetworkListener
 
 	protected override void OnUpdate()
 	{
-		TryFreezePhysics();
-
 		if ( HasFadingDoor && ( !_fadingDoorCollisionApplied || _lastAppliedFadingDoorOpen != FadingDoorIsOpen ) )
 		{
 			PropCollisionTags.ApplyFadingDoorOpenState( GameObject, FadingDoorIsOpen );
@@ -223,6 +245,17 @@ public sealed class PropCustom : Component, Component.INetworkListener
 		if ( !Networking.IsHost )
 			return false;
 
+		_freezeRequested = true;
+		return ProcessFreezeRequest( force, fromFixedUpdate );
+#else
+		return false;
+#endif
+	}
+
+#if SERVER
+	private bool ProcessFreezeRequest( bool force, bool fromFixedUpdate )
+	{
+
 		if ( HasFadingDoor && FadingDoorIsOpen )
 			return false;
 
@@ -230,7 +263,10 @@ public sealed class PropCustom : Component, Component.INetworkListener
 			return false;
 
 		if ( _physicsFrozen && !force )
+		{
+			_freezeRequested = false;
 			return true;
+		}
 
 		var rb = GameObject.Components.Get<Rigidbody>( FindMode.EverythingInSelfAndDescendants );
 		if ( !rb.IsValid() || rb.IsProxy )
@@ -257,12 +293,49 @@ public sealed class PropCustom : Component, Component.INetworkListener
 			return false;
 
 		return FreezeReadyBody( rb );
-#else
-		return false;
-#endif
 	}
 
-#if SERVER
+	private void TryApplyInitialPhysics()
+	{
+		if ( !_initialPhysicsPending || !Networking.IsHost )
+			return;
+
+		var rb = GameObject.Components.Get<Rigidbody>( FindMode.EverythingInSelfAndDescendants );
+		if ( !rb.IsValid() || rb.IsProxy || rb.PhysicsBody is null || !rb.PhysicsBody.IsValid() )
+		{
+			_initialPhysicsWaitTicks++;
+			if ( _initialPhysicsWaitTicks >= InitialPhysicsMaxWaitTicks )
+			{
+				_initialPhysicsPending = false;
+				Log.Warning( $"[PropCustom] Rigidbody was not ready for '{GameObject.Name}'." );
+			}
+			return;
+		}
+
+		rb.MassOverride = _initialMassOverride;
+		PropCollisionTags.RefreshPhysicsShapeTags( GameObject );
+		_initialPhysicsPending = false;
+
+		switch ( _initialPhysicsMode )
+		{
+			case PropPhysicsMode.Dynamic:
+				rb.Gravity = true;
+				rb.MotionEnabled = true;
+				_physicsFrozen = false;
+				break;
+
+			case PropPhysicsMode.Frozen:
+				_freezeRequested = true;
+				ProcessFreezeRequest( force: true, fromFixedUpdate: false );
+				break;
+
+			case PropPhysicsMode.Disabled:
+				rb.Enabled = false;
+				_physicsFrozen = true;
+				break;
+		}
+	}
+
 	private bool FreezeReadyBody( Rigidbody rb )
 	{
 		if ( HasFadingDoor && FadingDoorIsOpen )
@@ -273,6 +346,7 @@ public sealed class PropCustom : Component, Component.INetworkListener
 		rb.AngularVelocity = Vector3.Zero;
 		rb.MotionEnabled = false;
 		_physicsFrozen = true;
+		_freezeRequested = false;
 		_physicsReadyForFreeze = false;
 		_physicsReadyFixedTicks = 0;
 		return true;

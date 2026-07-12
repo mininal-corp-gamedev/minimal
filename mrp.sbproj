@@ -23,9 +23,9 @@
     "PerMapRanking": false,
     "LeaderboardType": "None",
     "CsProjName": "",
-    "StartupScene": "scenes/titan_test.scene",
+    "StartupScene": "scenes/minimalver3.scene",
     "LaunchMode": "DedicatedServerOnly",
-    "DedicatedServerStartupScene": "scenes/titan_test.scene",
+    "DedicatedServerStartupScene": "scenes/minimalver3.scene",
     "ParentPackage": null,
     "ControlModes": {
       "Keyboard": true,

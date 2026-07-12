@@ -240,7 +240,7 @@
 	public static PropsMenu Instance { get; private set; }
 
 	bool IsOpen { get; set; } = false;
-	List<PropDefinition> AvailableProps { get; set; } = new();
+	List<PropMenuEntry> AvailableProps { get; set; } = new();
 	List<string> AvailableCategories { get; set; } = new();
 	Dictionary<string, string> ThumbUrls { get; set; } = new();
 	HashSet<string> FavoritePropIds { get; set; } = new( StringComparer.Ordinal );
@@ -258,7 +258,7 @@
 	bool IsSliderDragging { get; set; }
 	ToolConfigField DragSliderField { get; set; }
 	float LastSliderMouseX { get; set; }
-	IEnumerable<PropDefinition> VisibleProps => GetVisibleProps();
+	IEnumerable<PropMenuEntry> VisibleProps => GetVisibleProps();
 
 	private const float LookTraceDistance = 200f;
 	private const float PropsWheelScrollStep = 74f;
@@ -276,18 +276,50 @@
 
 	private void LoadProps()
 	{
-		AvailableProps = ResourceLibrary
-			.GetAll<PropDefinition>()
-			.Where( x => x is not null )
-			.OrderBy( x => GetPropCategory( x ) )
-			.ThenBy( x => GetPropHeader( x ) )
+		RpcRequestPropCatalog();
+	}
+
+	private void ApplyCatalogEntries( IEnumerable<PropMenuEntry> entries )
+	{
+		AvailableProps = (entries ?? Enumerable.Empty<PropMenuEntry>())
+			.Where( entry => entry is not null && !string.IsNullOrWhiteSpace( entry.Id ) )
+			.GroupBy( entry => entry.Id, StringComparer.OrdinalIgnoreCase )
+			.Select( group => group.First() )
+			.OrderBy( entry => GetPropCategory( entry ) )
+			.ThenBy( entry => GetPropHeader( entry ) )
 			.ToList();
 
+		ThumbUrls = AvailableProps
+			.Where( entry => !string.IsNullOrWhiteSpace( entry.PackageIdent ) && !string.IsNullOrWhiteSpace( entry.ThumbnailUrl ) )
+			.GroupBy( entry => entry.PackageIdent, StringComparer.OrdinalIgnoreCase )
+			.ToDictionary( group => group.Key, group => group.First().ThumbnailUrl, StringComparer.OrdinalIgnoreCase );
+
 		RefreshCategories();
-
 		PropsVersion++;
+		_ = LoadMissingThumbnailsAsync();
+	}
 
-		_ = LoadThumbnailsAsync();
+	private async Task LoadMissingThumbnailsAsync()
+	{
+		foreach ( var prop in AvailableProps.ToList() )
+		{
+			if ( prop is null || string.IsNullOrWhiteSpace( prop.PackageIdent ) || ThumbUrls.ContainsKey( prop.PackageIdent ) )
+				continue;
+
+			try
+			{
+				var package = await Package.Fetch( prop.PackageIdent, false );
+				if ( package is null || string.IsNullOrWhiteSpace( package.Thumb ) )
+					continue;
+
+				ThumbUrls[prop.PackageIdent] = package.Thumb;
+				PropsVersion++;
+			}
+			catch ( Exception e )
+			{
+				Log.Warning( $"[PropsMenu] Failed to fetch thumbnail for '{prop.PackageIdent}': {e.Message}" );
+			}
+		}
 	}
 
 	private void RefreshProps()
@@ -591,9 +623,9 @@
 		return AvailableProps.Count( IsFavorite );
 	}
 
-	private IEnumerable<PropDefinition> GetVisibleProps()
+	private IEnumerable<PropMenuEntry> GetVisibleProps()
 	{
-		IEnumerable<PropDefinition> props = AvailableProps;
+		IEnumerable<PropMenuEntry> props = AvailableProps;
 
 		if ( SelectedFavoritesOnly )
 			props = props.Where( IsFavorite );
@@ -607,7 +639,7 @@
 		return props;
 	}
 
-	private static bool MatchesSearch( PropDefinition prop, string search )
+	private static bool MatchesSearch( PropMenuEntry prop, string search )
 	{
 		if ( prop is null || string.IsNullOrWhiteSpace( search ) )
 			return true;
@@ -615,7 +647,7 @@
 		return ContainsSearch( GetPropHeader( prop ), search )
 			|| ContainsSearch( GetPropCategory( prop ), search )
 			|| ContainsSearch( prop.Id, search )
-			|| ContainsSearch( prop.Ident, search );
+			|| ContainsSearch( prop.PackageIdent, search );
 	}
 
 	private static bool ContainsSearch( string value, string search )
@@ -623,13 +655,13 @@
 		return (value ?? string.Empty).IndexOf( search, StringComparison.OrdinalIgnoreCase ) >= 0;
 	}
 
-	private bool IsFavorite( PropDefinition prop )
+	private bool IsFavorite( PropMenuEntry prop )
 	{
 		var id = GetFavoriteId( prop );
 		return !string.IsNullOrWhiteSpace( id ) && FavoritePropIds.Contains( id );
 	}
 
-	private void ToggleFavorite( PropDefinition prop )
+	private void ToggleFavorite( PropMenuEntry prop )
 	{
 		ClearTextFocus();
 
@@ -658,39 +690,14 @@
 		PropsVersion++;
 	}
 
-	private async Task LoadThumbnailsAsync()
+	private string GetThumbUrl( PropMenuEntry prop )
 	{
-		foreach ( var prop in AvailableProps.ToList() )
-		{
-			if ( prop is null || string.IsNullOrWhiteSpace( prop.Ident ) )
-				continue;
-			if ( ThumbUrls.ContainsKey( prop.Ident ) )
-				continue;
-
-			try
-			{
-				var package = await Package.Fetch( prop.Ident, false );
-				if ( package is null )
-					continue;
-
-				ThumbUrls[prop.Ident] = package.Thumb;
-				PropsVersion++;
-			}
-			catch ( Exception e )
-			{
-				Log.Warning( $"[PropsMenu] Failed to fetch thumb for '{prop.Ident}': {e.Message}" );
-			}
-		}
-	}
-
-	private string GetThumbUrl( PropDefinition prop )
-	{
-		if ( prop is null || string.IsNullOrWhiteSpace( prop.Ident ) )
+		if ( prop is null || string.IsNullOrWhiteSpace( prop.PackageIdent ) )
 			return null;
-		return ThumbUrls.TryGetValue( prop.Ident, out var url ) ? url : null;
+		return ThumbUrls.TryGetValue( prop.PackageIdent, out var url ) ? url : prop.ThumbnailUrl;
 	}
 
-	private void RequestSpawn( PropDefinition prop )
+	private void RequestSpawn( PropMenuEntry prop )
 	{
 		ClearTextFocus();
 
@@ -703,11 +710,11 @@
 		RpcRequestSpawnProp( prop.Id, eye.Position, eye.Forward );
 	}
 
-	private bool CanRequestSpawn( PropDefinition prop )
+	private bool CanRequestSpawn( PropMenuEntry prop )
 	{
 		return prop is not null
 			&& !string.IsNullOrWhiteSpace( prop.Id )
-			&& !string.IsNullOrWhiteSpace(prop.Ident)
+			&& !string.IsNullOrWhiteSpace(prop.PackageIdent)
 			&& Player.Local.IsValid()
 			&& CanLocalSpawnProps()
 			&& Player.Local.IsArrested != true
@@ -734,7 +741,7 @@
 		return Math.Max( 0, Player.Local?.MaxProps ?? 0 );
 	}
 
-	private static string GetPropHeader( PropDefinition prop )
+	private static string GetPropHeader( PropMenuEntry prop )
 	{
 		if ( prop is null )
 			return GameLocalization.Phrase( "common.unknown", "Unknown" );
@@ -745,13 +752,13 @@
 		return string.IsNullOrWhiteSpace( prop.Id ) ? GameLocalization.Phrase( "common.unknown", "Unknown" ) : prop.Id;
 	}
 
-	private static string GetPropCategory( PropDefinition prop )
+	private static string GetPropCategory( PropMenuEntry prop )
 	{
 		var category = (prop?.Category ?? string.Empty).Trim();
 		return string.IsNullOrWhiteSpace( category ) ? GameLocalization.Phrase( "category.other", "Other" ) : GameLocalization.Category( category );
 	}
 
-	private static string GetFavoriteId( PropDefinition prop )
+	private static string GetFavoriteId( PropMenuEntry prop )
 	{
 		return (prop?.Id ?? string.Empty).Trim();
 	}
@@ -963,7 +970,7 @@
 			hash.Add( prop.Header );
 			hash.Add( prop.Category );
 			hash.Add( prop.Description );
-			hash.Add( prop.Ident );
+			hash.Add( prop.PackageIdent );
 			hash.Add( GetThumbUrl( prop ) );
 		}
 

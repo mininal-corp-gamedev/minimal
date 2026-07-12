@@ -1282,8 +1282,8 @@ public sealed class WeaponPhysgun : Weapon
         state.Player.SetPhysgunBeam(false);
         HostGrabStates.Remove(state.SteamId);
 
-        if (state.Body.IsValid() && !state.Body.IsProxy && TryGetPropCustom(state.Body, out var prop))
-            prop.TryFreezePhysics(force: true);
+        // A normal release keeps the body dynamic. HostFreezeGrab is the only
+        // release path that intentionally freezes it.
     }
 
     private static void HostFreezeGrab(Connection caller, GameObject target,

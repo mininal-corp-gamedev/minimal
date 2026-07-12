@@ -30,7 +30,7 @@
 						<button class="tab-btn @(ActiveTab == 0 ? "active" : "")" onclick=@(() => SelectJobsTab())>@GameLocalization.Phrase( "ui.tab.jobs" )</button>
 						<button class="tab-btn @(ActiveTab == 1 ? "active" : "")" onclick=@SelectShopTab>@GameLocalization.Phrase( "ui.tab.shop" )</button>
 						<button class="tab-btn @(ActiveTab == 2 ? "active" : "")" onclick=@(() => SelectPlayersTab())>@GameLocalization.Phrase( "ui.tab.players" )</button>
-						<button class="tab-btn @(ActiveTab == 3 ? "active" : "")" onclick=@(() => SelectClanTab())>Clan</button>
+						<button class="tab-btn @(ActiveTab == 3 ? "active" : "")" onclick=@(() => SelectClanTab())>@GameLocalization.Phrase( "ui.tab.clan", "Clan" )</button>
 						<button class="tab-btn @(ActiveTab == 4 ? "active" : "")" onclick=@SelectHelpTab>@GameLocalization.Phrase( "ui.tab.help" )</button>
 					</div>
 					<div class="sidebar-spacer"></div>
@@ -152,16 +152,16 @@
 						var hasClan = (Player.Local?.ClanId ?? -1) >= 0;
 
 						<div class="page clan-page">
-							<div class="page-title">Clan</div>
+							<div class="page-title">@GameLocalization.Phrase( "ui.clan.title", "Clan" )</div>
 
 							@if ( inviteClanId >= 0 )
 							{
 								<div class="clan-invite">
-									<div class="clan-section-title">Invite</div>
-									<div class="clan-muted">@(ClanManager.Instance?.PendingInviteInviterName ?? "") invited you to @(ClanManager.Instance?.PendingInviteClanHeader ?? "a clan").</div>
+								<div class="clan-section-title">@GameLocalization.Phrase( "ui.clan.invite", "Invite" )</div>
+								<div class="clan-muted">@GameLocalization.Format( "ui.clan.invited_you", "{0} invited you to {1}.", ClanManager.Instance?.PendingInviteInviterName ?? "", ClanManager.Instance?.PendingInviteClanHeader ?? GameLocalization.Phrase( "ui.clan.a_clan", "a clan" ) )</div>
 									<div class="clan-actions">
-										<button class="clan-btn primary" onclick=@AcceptClanInvite>Accept</button>
-										<button class="clan-btn" onclick=@DeclineClanInvite>Decline</button>
+									<button class="clan-btn primary" onclick=@AcceptClanInvite>@GameLocalization.Phrase( "ui.common.accept", "Accept" )</button>
+									<button class="clan-btn" onclick=@DeclineClanInvite>@GameLocalization.Phrase( "ui.common.decline", "Decline" )</button>
 									</div>
 								</div>
 							}
@@ -189,19 +189,19 @@
 										</div>
 
 										<div class="clan-stats">
-											<div class="clan-stat"><div class="clan-stat-label">Id</div><div class="clan-stat-value">#@localClan.Id</div></div>
-											<div class="clan-stat"><div class="clan-stat-label">Balance</div><div class="clan-stat-value">$@localClan.Balance</div></div>
-											<div class="clan-stat"><div class="clan-stat-label">Members</div><div class="clan-stat-value">@localClan.MemberCount</div></div>
-											<div class="clan-stat"><div class="clan-stat-label">Kills</div><div class="clan-stat-value">@localClan.Kills</div></div>
-											<div class="clan-stat"><div class="clan-stat-label">Leader</div><div class="clan-stat-value">@(localClan.LeaderOnline ? "Online" : "Offline")</div></div>
+											<div class="clan-stat"><div class="clan-stat-label">@GameLocalization.Phrase( "ui.clan.id", "Id" )</div><div class="clan-stat-value">#@localClan.Id</div></div>
+											<div class="clan-stat"><div class="clan-stat-label">@GameLocalization.Phrase( "ui.clan.balance", "Balance" )</div><div class="clan-stat-value">$@localClan.Balance</div></div>
+											<div class="clan-stat"><div class="clan-stat-label">@GameLocalization.Phrase( "ui.clan.members", "Members" )</div><div class="clan-stat-value">@localClan.MemberCount</div></div>
+											<div class="clan-stat"><div class="clan-stat-label">@GameLocalization.Phrase( "ui.clan.kills", "Kills" )</div><div class="clan-stat-value">@localClan.Kills</div></div>
+											<div class="clan-stat"><div class="clan-stat-label">@GameLocalization.Phrase( "ui.clan.leader", "Leader" )</div><div class="clan-stat-value">@(localClan.LeaderOnline ? GameLocalization.Phrase( "ui.common.online", "Online" ) : GameLocalization.Phrase( "ui.common.offline", "Offline" ))</div></div>
 										</div>
 
 										<div class="clan-meta">
-											<div>Leader SteamID: @localClan.LeaderSteamId</div>
-											<div>Leader last seen: @FormatClanDate( localClan.LeaderLastSeenRaw )</div>
+											<div>@GameLocalization.Format( "ui.clan.leader_steamid", "Leader SteamID: {0}", localClan.LeaderSteamId )</div>
+											<div>@GameLocalization.Format( "ui.clan.leader_last_seen", "Leader last seen: {0}", FormatClanDate( localClan.LeaderLastSeenRaw ) )</div>
 										</div>
 
-										<div class="clan-section-title">Online clanmates</div>
+										<div class="clan-section-title">@GameLocalization.Phrase( "ui.clan.online_members", "Online clanmates" )</div>
 										<div class="clan-member-list">
 											@foreach ( var member in localClan.OnlineMembers )
 											{
@@ -216,7 +216,7 @@
 														<div class="clan-member-actions">
 															<button class="clan-mini-btn" onclick=@(() => PromoteClanMember( member )) disabled=@(!CanPromoteClanMember( member ))>+</button>
 															<button class="clan-mini-btn" onclick=@(() => DemoteClanMember( member )) disabled=@(!CanDemoteClanMember( member ))>-</button>
-															<button class="clan-mini-btn danger" onclick=@(() => KickClanMember( member.SteamId ))>Kick</button>
+											<button class="clan-mini-btn danger" onclick=@(() => KickClanMember( member.SteamId ))>@GameLocalization.Phrase( "ui.clan.kick", "Kick" )</button>
 														</div>
 													}
 												</div>
@@ -224,10 +224,10 @@
 										</div>
 
 										<div class="clan-actions">
-											<button class="clan-btn" onclick=@LeaveClan>Leave</button>
+											<button class="clan-btn" onclick=@LeaveClan>@GameLocalization.Phrase( "ui.clan.leave", "Leave" )</button>
 											@if ( Player.Local?.ClanRank == ClanRank.Leader )
 											{
-												<button class="clan-btn danger" onclick=@DeleteClan>Delete Clan</button>
+												<button class="clan-btn danger" onclick=@DeleteClan>@GameLocalization.Phrase( "ui.clan.delete", "Delete Clan" )</button>
 											}
 										</div>
 									</div>
@@ -235,23 +235,23 @@
 									@if ( ClanManager.CanEditSettingsRank( Player.Local?.ClanRank ?? ClanRank.Soldier ) )
 									{
 										<div class="clan-settings">
-											<div class="clan-section-title">Settings</div>
-											<TextEntry class="clan-input" Value="@EditClanDescription" Placeholder="Description" OnTextEdited=@(( string text ) => UpdateEditDescription( text )) />
-											<div class="clan-section-title small">Clan color</div>
+											<div class="clan-section-title">@GameLocalization.Phrase( "ui.clan.settings", "Settings" )</div>
+											<TextEntry class="clan-input" Value="@EditClanDescription" Placeholder="@GameLocalization.Phrase( "ui.clan.description", "Description" )" OnTextEdited=@(( string text ) => UpdateEditDescription( text )) />
+											<div class="clan-section-title small">@GameLocalization.Phrase( "ui.clan.color", "Clan color" )</div>
 											<div class="clan-color-row">
 												@foreach ( var color in ClanPalette.Colors )
 												{
 													<button class="clan-color-btn @(IsColorSelected( EditClanColorId, color.Value ) ? "active" : "")" style=@($"background-color: {color.Swatch};") onclick=@(() => SetEditClanColor( color.Value ))></button>
 												}
 											</div>
-											<div class="clan-section-title small">Logo</div>
+											<div class="clan-section-title small">@GameLocalization.Phrase( "ui.clan.logo", "Logo" )</div>
 											<div class="clan-logo-grid">
 												@foreach ( var icon in ClanLogoCatalog.Icons )
 												{
 													<button class="clan-logo-option @(IsIconSelected( EditClanIconPath, icon.Path ) ? "active" : "")" onclick=@(() => SetEditClanIcon( icon.Path ))>
 														@if ( string.IsNullOrWhiteSpace( icon.Path ) )
 														{
-															<span>None</span>
+															<span>@GameLocalization.Phrase( "ui.common.none", "None" )</span>
 														}
 														else
 														{
@@ -260,11 +260,11 @@
 													</button>
 												}
 											</div>
-											<div class="clan-section-title small">Background</div>
+											<div class="clan-section-title small">@GameLocalization.Phrase( "ui.clan.background", "Background" )</div>
 											<div class="clan-bg-row">
 												@foreach ( var bgType in BackgroundTypes )
 												{
-													<button class="clan-bg-btn @(EditClanBackgroundType == bgType ? "active" : "")" onclick=@(() => SetEditClanBackgroundType( bgType ))>@bgType</button>
+														<button class="clan-bg-btn @(EditClanBackgroundType == bgType ? "active" : "")" onclick=@(() => SetEditClanBackgroundType( bgType ))>@GetBackgroundName( bgType )</button>
 												}
 											</div>
 											@for ( var i = 1; i <= 4; i++ )
@@ -288,25 +288,25 @@
 							{
 								<div class="clan-create">
 									<div class="clan-create-form">
-										<div class="clan-muted">Create a clan for $@ClanManager.CreatePrice. Header cannot be changed later.</div>
-										<div class="clan-warning">Warning: Header is permanent after creation.</div>
-										<TextEntry class="clan-input" Value="@CreateClanHeader" Placeholder="Header" OnTextEdited=@SetCreateClanHeader />
-										<TextEntry class="clan-input" Value="@CreateClanDescription" Placeholder="Description" OnTextEdited=@SetCreateClanDescription />
-										<div class="clan-section-title small">Clan color</div>
+										<div class="clan-muted">@GameLocalization.Format( "ui.clan.create_hint", "Create a clan for ${0}. Header cannot be changed later.", ClanManager.CreatePrice )</div>
+										<div class="clan-warning">@GameLocalization.Phrase( "ui.clan.header_warning", "Warning: Header is permanent after creation." )</div>
+										<TextEntry class="clan-input" Value="@CreateClanHeader" Placeholder="@GameLocalization.Phrase( "ui.clan.header", "Header" )" OnTextEdited=@SetCreateClanHeader />
+										<TextEntry class="clan-input" Value="@CreateClanDescription" Placeholder="@GameLocalization.Phrase( "ui.clan.description", "Description" )" OnTextEdited=@SetCreateClanDescription />
+										<div class="clan-section-title small">@GameLocalization.Phrase( "ui.clan.color", "Clan color" )</div>
 										<div class="clan-color-row">
 											@foreach ( var color in ClanPalette.Colors )
 											{
 												<button class="clan-color-btn @(IsColorSelected( CreateClanColorId, color.Value ) ? "active" : "")" style=@($"background-color: {color.Swatch};") onclick=@(() => SetCreateClanColor( color.Value ))></button>
 											}
 										</div>
-										<div class="clan-section-title small">Logo</div>
+										<div class="clan-section-title small">@GameLocalization.Phrase( "ui.clan.logo", "Logo" )</div>
 										<div class="clan-logo-grid">
 											@foreach ( var icon in ClanLogoCatalog.Icons )
 											{
 												<button class="clan-logo-option @(IsIconSelected( CreateClanIconPath, icon.Path ) ? "active" : "")" onclick=@(() => SetCreateClanIcon( icon.Path ))>
 													@if ( string.IsNullOrWhiteSpace( icon.Path ) )
 													{
-														<span>None</span>
+														<span>@GameLocalization.Phrase( "ui.common.none", "None" )</span>
 													}
 													else
 													{
@@ -315,11 +315,11 @@
 												</button>
 											}
 										</div>
-										<div class="clan-section-title small">Background</div>
+										<div class="clan-section-title small">@GameLocalization.Phrase( "ui.clan.background", "Background" )</div>
 										<div class="clan-bg-row">
 											@foreach ( var bgType in BackgroundTypes )
 											{
-												<button class="clan-bg-btn @(CreateClanBackgroundType == bgType ? "active" : "")" onclick=@(() => SetCreateClanBackgroundType( bgType ))>@bgType</button>
+														<button class="clan-bg-btn @(CreateClanBackgroundType == bgType ? "active" : "")" onclick=@(() => SetCreateClanBackgroundType( bgType ))>@GetBackgroundName( bgType )</button>
 											}
 										</div>
 										@for ( var i = 1; i <= 4; i++ )
@@ -335,7 +335,7 @@
 												</div>
 											</div>
 										}
-										<button class="clan-btn primary create" onclick=@CreateClan disabled=@((Player.Local?.Money ?? 0) < ClanManager.CreatePrice)>Create $@ClanManager.CreatePrice</button>
+										<button class="clan-btn primary create" onclick=@CreateClan disabled=@((Player.Local?.Money ?? 0) < ClanManager.CreatePrice)>@GameLocalization.Format( "ui.clan.create", "Create ${0}", ClanManager.CreatePrice )</button>
 										@if ( !string.IsNullOrWhiteSpace( CreateClanError ) )
 										{
 											<div class="clan-create-error">@CreateClanError</div>
@@ -950,10 +950,20 @@
 
 	private static string GetRankName( ClanRank rank ) => rank switch
 	{
-		ClanRank.Leader => "Leader",
-		ClanRank.DeputyLeader => "Deputy Leader",
-		ClanRank.Officer => "Officer",
-		_ => "Soldier"
+		ClanRank.Leader => GameLocalization.Phrase( "ui.clan.rank.leader", "Leader" ),
+		ClanRank.DeputyLeader => GameLocalization.Phrase( "ui.clan.rank.deputy", "Deputy Leader" ),
+		ClanRank.Officer => GameLocalization.Phrase( "ui.clan.rank.officer", "Officer" ),
+		_ => GameLocalization.Phrase( "ui.clan.rank.soldier", "Soldier" )
+	};
+
+	private static string GetBackgroundName( ClanBackgroundType type ) => type switch
+	{
+		ClanBackgroundType.VerticalTwo => GameLocalization.Phrase( "ui.clan.background.vertical_two", "Vertical 2" ),
+		ClanBackgroundType.VerticalThree => GameLocalization.Phrase( "ui.clan.background.vertical_three", "Vertical 3" ),
+		ClanBackgroundType.HorizontalTwo => GameLocalization.Phrase( "ui.clan.background.horizontal_two", "Horizontal 2" ),
+		ClanBackgroundType.HorizontalThree => GameLocalization.Phrase( "ui.clan.background.horizontal_three", "Horizontal 3" ),
+		ClanBackgroundType.Quarter => GameLocalization.Phrase( "ui.clan.background.quarter", "Quarter" ),
+		_ => GameLocalization.Phrase( "ui.clan.background.mono", "Single color" )
 	};
 
 	private static string ClampText( string value, int maxLength )

@@ -84,7 +84,7 @@
 											 onmouseout=@(() => { if ( HoverSlotIndex == globalIndex ) HoverSlotIndex = -1; })>
 											@if ( slot is not null && !slot.IsEmpty )
 											{
-												<div class="slot-icon" style="background-image: url(@slot.Item.Definition.IconPath);"></div>
+														<div class="slot-icon" style="background-image: url(@slot.Item.Definition.IconPath);"></div>
 												<div class="slot-name">@GameLocalization.ItemHeader( slot.Item.Definition )</div>
 												@if ( slot.Item.Count > 1 )
 												{
@@ -371,7 +371,7 @@
 
 		FocusedSlotIndex = index;
 		DragSourceIndex = index;
-		DragIconPath = slot.Item.Definition?.IconPath;
+					DragIconPath = slot.Item.Definition?.IconPath;
 		DragCount = slot.Item.Count;
 		IsDragging = true;
 		HoverSlotIndex = index;

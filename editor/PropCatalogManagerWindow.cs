@@ -65,15 +65,22 @@ public sealed class PropCatalogManagerWindow : Window
 		tabs.AddStretchCell();
 		UpdateTabButtons();
 
+		var searchRow = Canvas.Layout.AddRow();
+		searchRow.Spacing = 8;
+		searchRow.Add( new Label( "Search props:" ) );
+		_search = searchRow.Add( new LineEdit( this )
+		{
+			PlaceholderText = "Enter prop name, package ident, category or filter reason...",
+			MinimumWidth = 500
+		}, 1 );
+		_search.TextEdited += _ =>
+		{
+			RebuildRows();
+			_scroll.VerticalScrollbar.Value = 0;
+		};
+
 		var toolbar = Canvas.Layout.AddRow();
 		toolbar.Spacing = 8;
-
-		_search = toolbar.Add( new LineEdit( this )
-		{
-			PlaceholderText = "Search title, ident, category or filter reason...",
-			MinimumWidth = 360
-		}, 1 );
-		_search.TextEdited += _ => RebuildRows();
 
 		var reload = toolbar.Add( new Button( "Reload", "refresh", this ) );
 		reload.Clicked = LoadCatalog;
@@ -307,6 +314,19 @@ public sealed class PropCatalogManagerWindow : Window
 		_enabledTabButton.Enabled = !_showEnabledOnly;
 	}
 
+	private void UpdateVisibleCount()
+	{
+		if ( _catalog is null )
+			return;
+
+		var shown = GetFilteredEntries().Count();
+		var tabTotal = _showEnabledOnly
+			? _catalog.Entries.Count( entry => entry?.Enabled == true )
+			: _catalog.Entries.Count;
+		_count.Text = $"{shown} shown / {tabTotal} in tab";
+		UpdateTabButtons();
+	}
+
 	private IEnumerable<PropCatalogEntry> GetFilteredEntries()
 	{
 		if ( _catalog?.Entries is null )
@@ -388,6 +408,9 @@ public sealed class PropCatalogManagerWindow : Window
 		details.Add( new Label( $"{entry.Category} | {entry.FilterReason}" ) );
 
 		var enabled = row.Layout.Add( new Checkbox( "Enabled", row ) { Value = entry.Enabled } );
+		var visible = row.Layout.Add( new Checkbox( "In menu", row ) { Value = entry.VisibleInMenu } );
+		var spawnable = row.Layout.Add( new Checkbox( "Spawnable", row ) { Value = entry.Spawnable } );
+
 		enabled.Toggled += () =>
 		{
 			entry.PolicyMode = PropCatalogPolicyMode.Manual;
@@ -397,25 +420,28 @@ public sealed class PropCatalogManagerWindow : Window
 				entry.VisibleInMenu = false;
 				entry.Spawnable = false;
 			}
-			SaveCatalog();
+			SaveCatalog( rebuild: false );
+			if ( _showEnabledOnly && !entry.Enabled )
+				row.Destroy();
+			UpdateVisibleCount();
 		};
 
-		var visible = row.Layout.Add( new Checkbox( "In menu", row ) { Value = entry.VisibleInMenu } );
 		visible.Toggled += () =>
 		{
 			entry.PolicyMode = PropCatalogPolicyMode.Manual;
 			entry.VisibleInMenu = visible.Value;
 			if ( visible.Value ) entry.Enabled = true;
-			SaveCatalog();
+			SaveCatalog( rebuild: false );
+			UpdateVisibleCount();
 		};
 
-		var spawnable = row.Layout.Add( new Checkbox( "Spawnable", row ) { Value = entry.Spawnable } );
 		spawnable.Toggled += () =>
 		{
 			entry.PolicyMode = PropCatalogPolicyMode.Manual;
 			entry.Spawnable = spawnable.Value;
 			if ( spawnable.Value ) entry.Enabled = true;
-			SaveCatalog();
+			SaveCatalog( rebuild: false );
+			UpdateVisibleCount();
 		};
 
 		var automatic = row.Layout.Add( new Button( "Auto", "autorenew", row ) );
@@ -424,7 +450,10 @@ public sealed class PropCatalogManagerWindow : Window
 		{
 			entry.PolicyMode = PropCatalogPolicyMode.Automatic;
 			_catalog.ApplyFilters();
-			SaveCatalog();
+			SaveCatalog( rebuild: false );
+			if ( _showEnabledOnly && !entry.Enabled )
+				row.Destroy();
+			UpdateVisibleCount();
 		};
 
 		return row;

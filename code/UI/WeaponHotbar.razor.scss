@@ -1,5 +1,6 @@
-$slot-size: 64px;
-$slot-size-active: 76px;
+$brand-pink: #ff436c;
+$brand-pink-light: #ffd7e2;
+$slot-size: 56px;
 
 WeaponHotbar {
 	position: absolute;
@@ -10,60 +11,106 @@ WeaponHotbar {
 	z-index: 1;
 	justify-content: center;
 	align-items: flex-end;
-	padding-bottom: 32px;
+	padding-bottom: 28px;
 	pointer-events: none;
+	font-family: Montserrat;
+
+	.hotbar-wrap {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.active-item-name {
+		align-self: center;
+		padding: 5px 12px;
+		margin-bottom: 7px;
+		font-size: 9px;
+		font-weight: 750;
+		letter-spacing: 0.6px;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.86);
+		background-color: rgba(8, 11, 17, 0.78);
+		border: 1px solid rgba(255, 67, 108, 0.22);
+		border-radius: 8px;
+		box-shadow: none;
+	}
 
 	.hotbar {
+		position: relative;
 		flex-direction: row;
-		align-items: flex-end;
-		min-width: 630px;
+		align-items: center;
 		justify-content: center;
+		padding: 6px;
+		background-color: rgba(8, 11, 17, 0.82);
+		border: 1px solid rgba(255, 255, 255, 0.09);
+		border-radius: 15px;
+		box-shadow: none;
+		backdrop-filter: none;
 	}
 
 	.slot {
 		width: $slot-size;
 		height: $slot-size;
 		flex-shrink: 0;
-		margin: 0 3px;
-		background-color: rgba(12, 14, 18, 0.72);
-		border-radius: 10px;
-		box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+		margin: 0 2px;
+		position: relative;
 		align-items: center;
 		justify-content: center;
-		position: relative;
-	}
+		background-color: rgba(255, 255, 255, 0.035);
+		border: 1px solid rgba(255, 255, 255, 0.055);
+		border-radius: 10px;
+		overflow: hidden;
+		transition: all 0.12s ease-out;
 
-		.slot.active {
-			width: $slot-size-active;
-			height: $slot-size-active;
-			background-color: rgba(255, 67, 108, 0.42);
-			box-shadow: 0 6px 24px rgba(255, 67, 108, 0.35);
+		&.has-item {
+			background-color: rgba(255, 255, 255, 0.065);
+			border-color: rgba(255, 255, 255, 0.10);
 		}
+
+		&.active {
+			background-color: rgba(255, 67, 108, 0.14);
+			border-color: rgba(255, 67, 108, 0.82);
+			box-shadow: none;
+			transform: translateY(-4px);
+		}
+	}
 
 	.slot-key {
 		position: absolute;
-		top: 5px;
-		left: 7px;
-		font-size: 13px;
-		font-weight: 700;
-		color: rgba(255, 255, 255, 0.62);
+		top: 4px;
+		left: 6px;
+		font-size: 8px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.4);
+		z-index: 2;
+	}
+
+	.slot.active .slot-key {
+		color: $brand-pink-light;
 	}
 
 	.slot-icon {
-		width: 100%;
-		height: 100%;
+		width: 45px;
+		height: 45px;
 		background-repeat: no-repeat;
-		background-size: 75%;
+		background-size: contain;
 		background-position: center;
 	}
 
 	.slot-count {
 		position: absolute;
-		right: 7px;
-		bottom: 5px;
-		font-size: 14px;
-		font-weight: 700;
-		color: #ff436c;
-		text-shadow: 0 1px 3px black;
+		right: 4px;
+		bottom: 4px;
+		min-width: 16px;
+		height: 15px;
+		align-items: center;
+		justify-content: center;
+		padding: 0 4px;
+		font-size: 8px;
+		font-weight: 800;
+		color: white;
+		background-color: rgba(255, 67, 108, 0.9);
+		border-radius: 7px;
+		box-shadow: none;
 	}
 }

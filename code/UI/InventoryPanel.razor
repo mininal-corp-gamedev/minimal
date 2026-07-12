@@ -2,6 +2,7 @@
 @using Sandbox.UI;
 @using Ambi.Storage;
 @using System;
+@using System.Linq;
 @inherits PanelComponent
 @namespace Sandbox
 
@@ -12,61 +13,41 @@
 			<div class="inv-bg-close" onclick=@Close></div>
 			<div class="inv-panel" onclick=@OnPanelClick>
 				<div class="inv-header">
-					<div class="inv-title">@GameLocalization.Phrase( "ui.inventory.title" )</div>
+					<div class="inv-heading">
+						<div class="inv-eyebrow">MINIMAL ROLEPLAY</div>
+						<div class="inv-title">@GameLocalization.Phrase( "ui.inventory.title" )</div>
+						<div class="inv-subtitle">@GameLocalization.Phrase( "ui.inventory.subtitle", "Personal items and quick access" )</div>
+					</div>
+					<div class="inv-summary">
+						<div class="summary-value">@OccupiedSlotCount<span>/@SlotCount</span></div>
+						<div class="summary-label">@GameLocalization.Phrase( "ui.inventory.capacity", "Occupied slots" )</div>
+						<div class="summary-track"><div class="summary-fill" style="width: @(CapacityPercent)%;"></div></div>
+					</div>
 					<button class="inv-close" onclick=@Close>X</button>
 				</div>
 
-				<div class="inv-section-label">@GameLocalization.Phrase( "ui.inventory.hotbar" )</div>
-				<div class="inv-row">
-					@for ( int i = 0; i < HotbarCount; i++ )
-					{
-						var idx = i;
-						var slot = GetSlot( idx );
-						<div class="inv-slot @(slot is not null && !slot.IsEmpty ? "has-item" : "") @(IsDragging && DragSourceIndex == idx ? "dragging-source" : "") @(IsDragging && HoverSlotIndex == idx && idx != DragSourceIndex ? "drag-over" : "")"
-							 onrightclick=@(() => OnSlotRightClick( idx ))
-							 onmousedown=@((PanelEvent e) => OnSlotMouseDown( idx, e ))
-							 onmouseup=@((PanelEvent e) => OnSlotMouseUp( e ))
-							 onmouseover=@(() => HoverSlotIndex = idx)
-							 onmouseout=@(() => { if ( HoverSlotIndex == idx ) HoverSlotIndex = -1; })>
-							@if ( slot is not null && !slot.IsEmpty )
-							{
-								<div class="slot-icon" style="background-image: url(@slot.Item.Definition.IconPath);"></div>
-								@if ( slot.Item.Count > 1 )
-								{
-									<div class="slot-count">@slot.Item.Count</div>
-								}
-							}
+				<div class="inv-body">
+					<div class="inventory-column">
+						<div class="section-header">
+							<div><div class="inv-section-label">@GameLocalization.Phrase( "ui.inventory.hotbar" )</div><div class="section-note">1—9</div></div>
+							<div class="section-hint">@GameLocalization.Phrase( "ui.inventory.quick_access", "Quick access" )</div>
 						</div>
-					}
-				</div>
-
-				<div class="inv-section-label">@GameLocalization.Phrase( "ui.inventory.backpack" )</div>
-				@{
-					int backpackCount = SlotCount - HotbarCount;
-					if ( backpackCount < 0 ) backpackCount = 0;
-					int rows = (int)Math.Ceiling( backpackCount / (float)SlotsPerRow );
-					if ( rows < 1 ) rows = 1;
-				}
-				@for ( int r = 0; r < rows; r++ )
-				{
-					<div class="inv-row">
-						@for ( int c = 0; c < SlotsPerRow; c++ )
-						{
-							var globalIndex = HotbarCount + r * SlotsPerRow + c;
-							var slot = GetSlot( globalIndex );
-							var exists = globalIndex < SlotCount;
-
-							@if ( exists )
+						<div class="inv-row hotbar-row">
+							@for ( int i = 0; i < HotbarCount; i++ )
 							{
-								<div class="inv-slot @(slot is not null && !slot.IsEmpty ? "has-item" : "") @(IsDragging && DragSourceIndex == globalIndex ? "dragging-source" : "") @(IsDragging && HoverSlotIndex == globalIndex && globalIndex != DragSourceIndex ? "drag-over" : "")"
-									 onrightclick=@(() => OnSlotRightClick( globalIndex ))
-									 onmousedown=@((PanelEvent e) => OnSlotMouseDown( globalIndex, e ))
+								var idx = i;
+								var slot = GetSlot( idx );
+								<div class="inv-slot @SlotStateClass( idx, slot )"
+									 onrightclick=@(() => OnSlotRightClick( idx ))
+									 onmousedown=@((PanelEvent e) => OnSlotMouseDown( idx, e ))
 									 onmouseup=@((PanelEvent e) => OnSlotMouseUp( e ))
-									 onmouseover=@(() => HoverSlotIndex = globalIndex)
-									 onmouseout=@(() => { if ( HoverSlotIndex == globalIndex ) HoverSlotIndex = -1; })>
+									 onmouseover=@(() => HoverSlotIndex = idx)
+									 onmouseout=@(() => { if ( HoverSlotIndex == idx ) HoverSlotIndex = -1; })>
+									<div class="slot-key">@(i + 1)</div>
 									@if ( slot is not null && !slot.IsEmpty )
 									{
 										<div class="slot-icon" style="background-image: url(@slot.Item.Definition.IconPath);"></div>
+										<div class="slot-name">@GameLocalization.ItemHeader( slot.Item.Definition )</div>
 										@if ( slot.Item.Count > 1 )
 										{
 											<div class="slot-count">@slot.Item.Count</div>
@@ -74,22 +55,83 @@
 									}
 								</div>
 							}
-							else
-							{
-								<div class="inv-slot locked"></div>
-							}
+						</div>
+
+						<div class="section-header backpack-header">
+							<div class="inv-section-label">@GameLocalization.Phrase( "ui.inventory.backpack" )</div>
+							<div class="section-hint">@(Math.Max( 0, OccupiedSlotCount - OccupiedHotbarCount ))/@(Math.Max( 0, SlotCount - HotbarCount ))</div>
+						</div>
+						@{
+							int backpackCount = SlotCount - HotbarCount;
+							if ( backpackCount < 0 ) backpackCount = 0;
+							int rows = (int)Math.Ceiling( backpackCount / (float)SlotsPerRow );
+							if ( rows < 1 ) rows = 1;
+						}
+						@for ( int r = 0; r < rows; r++ )
+						{
+							<div class="inv-row">
+								@for ( int c = 0; c < SlotsPerRow; c++ )
+								{
+									var globalIndex = HotbarCount + r * SlotsPerRow + c;
+									var slot = GetSlot( globalIndex );
+									@if ( globalIndex < SlotCount )
+									{
+										<div class="inv-slot @SlotStateClass( globalIndex, slot )"
+											 onrightclick=@(() => OnSlotRightClick( globalIndex ))
+											 onmousedown=@((PanelEvent e) => OnSlotMouseDown( globalIndex, e ))
+											 onmouseup=@((PanelEvent e) => OnSlotMouseUp( e ))
+											 onmouseover=@(() => HoverSlotIndex = globalIndex)
+											 onmouseout=@(() => { if ( HoverSlotIndex == globalIndex ) HoverSlotIndex = -1; })>
+											@if ( slot is not null && !slot.IsEmpty )
+											{
+												<div class="slot-icon" style="background-image: url(@slot.Item.Definition.IconPath);"></div>
+												<div class="slot-name">@GameLocalization.ItemHeader( slot.Item.Definition )</div>
+												@if ( slot.Item.Count > 1 )
+												{
+													<div class="slot-count">@slot.Item.Count</div>
+												}
+											}
+										</div>
+									}
+									else
+									{
+										<div class="inv-slot locked"><div class="lock-mark">×</div></div>
+									}
+								}
+							</div>
 						}
 					</div>
-				}
+
+					<div class="details-column">
+						<div class="details-label">@GameLocalization.Phrase( "ui.inventory.selected_item", "Selected item" )</div>
+						@if ( SelectedSlot is not null )
+						{
+							<div class="details-icon-wrap"><div class="details-icon" style="background-image: url(@SelectedSlot.Item.Definition.IconPath);"></div></div>
+							<div class="details-category">@GameLocalization.Category( SelectedSlot.Item.Definition.Category )</div>
+							<div class="details-name">@GameLocalization.ItemHeader( SelectedSlot.Item.Definition )</div>
+							<div class="details-description">@ItemDescription( SelectedSlot )</div>
+							<div class="details-meta">
+								<div class="meta-label">@GameLocalization.Phrase( "ui.inventory.quantity", "Quantity" )</div>
+								<div class="meta-value">@SelectedSlot.Item.Count</div>
+							</div>
+							<div class="details-actions">
+								<button class="detail-btn primary" onclick=@OnUseSelected>@GameLocalization.Phrase( "ui.inventory.use" )</button>
+								<button class="detail-btn" onclick=@OnDropSelected>@GameLocalization.Phrase( "ui.inventory.drop" )</button>
+								<button class="detail-btn danger" onclick=@OnDropAllSelected>@GameLocalization.Phrase( "ui.inventory.drop_all" )</button>
+							</div>
+						}
+						else
+						{
+							<div class="details-empty">
+								<div class="details-empty-mark">+</div>
+								<div class="details-empty-title">@GameLocalization.Phrase( "ui.inventory.select_item", "Select an item" )</div>
+								<div class="details-empty-text">@GameLocalization.Phrase( "ui.inventory.select_item_hint", "Hover over or click an item to view its details" )</div>
+							</div>
+						}
+					</div>
+				</div>
 			</div>
 
-			@if ( TooltipSlot is not null && !IsDragging )
-			{
-				<div class="inv-tooltip" style="left: @(TipX)px; top: @(TipY)px;">
-					<div class="tip-name">@GameLocalization.ItemHeader( TooltipSlot.Item.Definition )</div>
-					<div class="tip-count">x@(TooltipSlot.Item.Count)</div>
-				</div>
-			}
 			@if ( CtxVisible && !IsDragging )
 			{
 				<div class="ctx-menu" style="left: @(CtxX)px; top: @(CtxY)px;">
@@ -122,8 +164,7 @@
 	int CtxSlotIndex { get; set; } = -1;
 
 	int HoverSlotIndex { get; set; } = -1;
-	float TipX { get; set; }
-	float TipY { get; set; }
+	int FocusedSlotIndex { get; set; } = -1;
 
 	bool IsDragging { get; set; }
 	int DragSourceIndex { get; set; } = -1;
@@ -134,22 +175,32 @@
 
 	const float SlotSizePx = 64f;
 
-	Slot TooltipSlot
-	{
-		get
-		{
-			if ( HoverSlotIndex < 0 ) return null;
-			var s = GetSlot( HoverSlotIndex );
-			return s is not null && !s.IsEmpty ? s : null;
-		}
-	}
-
 	const int HotbarCount = 9;
 	const int SlotsPerRow = 9;
+	// Visual layout keeps the existing 9 + 18 slot model intact.
 
 	Inventory Inv => Player.Local?.Inventory;
 	int SlotCount => Inv?.Slots?.Count ?? 0;
-
+	int OccupiedSlotCount => Inv?.Slots?.Count( slot => !slot.IsEmpty ) ?? 0;
+	int OccupiedHotbarCount => Inv?.Slots?.Take( HotbarCount ).Count( slot => !slot.IsEmpty ) ?? 0;
+	float CapacityPercent => SlotCount <= 0 ? 0f : Math.Clamp( OccupiedSlotCount / (float)SlotCount * 100f, 0f, 100f );
+	int HoveredItemSlotIndex
+	{
+		get
+		{
+			var slot = GetSlot( HoverSlotIndex );
+			return slot is not null && !slot.IsEmpty ? HoverSlotIndex : -1;
+		}
+	}
+	int SelectedSlotIndex => HoveredItemSlotIndex >= 0 ? HoveredItemSlotIndex : FocusedSlotIndex;
+	Slot SelectedSlot
+	{
+		get
+		{
+			var slot = GetSlot( SelectedSlotIndex );
+			return slot is not null && !slot.IsEmpty ? slot : null;
+		}
+	}
 	Slot GetSlot( int index )
 	{
 		if ( Inv is null ) return null;
@@ -189,6 +240,7 @@
 		if ( IsDragging )
 			ResetDragState();
 
+		FocusedSlotIndex = index;
 		CtxSlotIndex = index;
 		CtxX = GetMousePanelX();
 		CtxY = GetMousePanelY();
@@ -231,6 +283,26 @@
 		CloseContextMenu();
 	}
 
+	void OnUseSelected()
+	{
+		if ( SelectedSlot is not null )
+			Player.Local?.UseInventorySlot( SelectedSlotIndex );
+	}
+
+	void OnDropSelected()
+	{
+		var slot = SelectedSlot;
+		if ( slot is not null )
+			Player.Local?.DropItem( slot, 1 );
+	}
+
+	void OnDropAllSelected()
+	{
+		var slot = SelectedSlot;
+		if ( slot is not null )
+			Player.Local?.DropItem( slot, slot.Item.Count );
+	}
+
 	private void SetOpen( bool open )
 	{
 		if ( open )
@@ -269,12 +341,6 @@
 		{
 			UiModalManager.UpdateMouseVisibility();
 
-			if ( HoverSlotIndex >= 0 )
-			{
-				TipX = GetMousePanelX() + 16f;
-				TipY = GetMousePanelY() + 16f;
-			}
-
 			if ( IsDragging )
 				UpdateDragGhostPosition();
 		}
@@ -303,6 +369,7 @@
 		var slot = GetSlot( index );
 		if ( slot is null || slot.IsEmpty ) return;
 
+		FocusedSlotIndex = index;
 		DragSourceIndex = index;
 		DragIconPath = slot.Item.Definition?.IconPath;
 		DragCount = slot.Item.Count;
@@ -362,6 +429,24 @@
 		DragCount = 0;
 	}
 
+	string SlotStateClass( int index, Slot slot )
+	{
+		var result = slot is not null && !slot.IsEmpty ? "has-item" : "empty";
+		if ( Player.Local?.CurrentInventorySlotIndex == index ) result += " equipped";
+		if ( FocusedSlotIndex == index ) result += " selected";
+		if ( IsDragging && DragSourceIndex == index ) result += " dragging-source";
+		if ( IsDragging && HoverSlotIndex == index && index != DragSourceIndex ) result += " drag-over";
+		return result;
+	}
+
+	string ItemDescription( Slot slot )
+	{
+		var description = GameLocalization.ItemDescription( slot?.Item?.Definition );
+		return string.IsNullOrWhiteSpace( description )
+			? GameLocalization.Phrase( "common.no_description", "No description" )
+			: description;
+	}
+
 	protected override void OnDisabled()
 	{
 		ReleaseCrosshairBlock();
@@ -404,8 +489,6 @@
 		hashBuilder.Add( CtxY );
 		hashBuilder.Add( SlotCount );
 		hashBuilder.Add( HoverSlotIndex );
-		hashBuilder.Add( TipX );
-		hashBuilder.Add( TipY );
 		hashBuilder.Add( IsDragging );
 		hashBuilder.Add( DragSourceIndex );
 		hashBuilder.Add( DragX );

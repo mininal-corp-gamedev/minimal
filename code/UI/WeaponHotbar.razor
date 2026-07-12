@@ -7,22 +7,28 @@
 <root>
 	@if ( !IsDead )
 	{
-		<div class="hotbar">
-			@for ( int i = 0; i < HotbarCount; i++ )
+		<div class="hotbar-wrap">
+			@if ( ActiveItem is not null )
 			{
-				Slot slot = GetSlot( i );
-				<div class="slot @SlotClass( i ) @(slot is not null && !slot.IsEmpty ? "has-item" : "")">
-					<div class="slot-key">@(i + 1)</div>
-					@if ( slot is not null && !slot.IsEmpty )
-					{
-						<div class="slot-icon" style="background-image: url(@slot.Item.Definition.IconPath);"></div>
-						@if ( slot.Item.Count > 1 )
-						{
-							<div class="slot-count">@slot.Item.Count</div>
-						}
-					}
-				</div>
+				<div class="active-item-name">@GameLocalization.ItemHeader( ActiveItem.Definition )</div>
 			}
+			<div class="hotbar">
+				@for ( int i = 0; i < HotbarCount; i++ )
+				{
+					Slot slot = GetSlot( i );
+					<div class="slot @SlotClass( i ) @(slot is not null && !slot.IsEmpty ? "has-item" : "")">
+						<div class="slot-key">@(i + 1)</div>
+						@if ( slot is not null && !slot.IsEmpty )
+						{
+							<div class="slot-icon" style="background-image: url(@slot.Item.Definition.IconPath);"></div>
+							@if ( slot.Item.Count > 1 )
+							{
+								<div class="slot-count">@slot.Item.Count</div>
+							}
+						}
+					</div>
+				}
+			</div>
 		</div>
 	}
 </root>
@@ -44,6 +50,7 @@
 	}
 
 	Inventory Inv => Player.Local?.Inventory;
+	Item ActiveItem => GetSlot( ActiveSlot )?.Item;
 
 	Slot GetSlot( int index )
 	{

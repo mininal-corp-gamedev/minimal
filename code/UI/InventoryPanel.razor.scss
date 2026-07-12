@@ -1,12 +1,15 @@
-$inv-bg: rgba(12, 14, 18, 0.82);
-$inv-slot-size: 64px;
-$inv-slot-bg: rgba(255, 255, 255, 0.06);
-$inv-slot-border: rgba(255, 255, 255, 0.10);
-$inv-slot-hover: rgba(255, 255, 255, 0.12);
-$inv-slot-has-item: rgba(255, 255, 255, 0.09);
-$inv-text: rgba(255, 255, 255, 0.94);
-$inv-dim: rgba(255, 255, 255, 0.50);
-$inv-gap: 6px;
+$brand-pink: #ff436c;
+$brand-pink-light: #ffd7e2;
+$brand-blue: #a7c9e8;
+$surface-deep: rgba(8, 11, 17, 0.97);
+$surface: rgba(17, 22, 30, 0.94);
+$surface-soft: rgba(255, 255, 255, 0.055);
+$surface-hover: rgba(255, 255, 255, 0.095);
+$border: rgba(255, 255, 255, 0.11);
+$text: rgba(255, 255, 255, 0.95);
+$muted: rgba(255, 255, 255, 0.52);
+$slot-size: 64px;
+$gap: 6px;
 
 InventoryPanel {
 	position: absolute;
@@ -16,6 +19,7 @@ InventoryPanel {
 	bottom: 0;
 	z-index: 100;
 	pointer-events: none;
+	font-family: Montserrat;
 
 	.inv-overlay {
 		position: absolute;
@@ -25,9 +29,9 @@ InventoryPanel {
 		bottom: 0;
 		justify-content: center;
 		align-items: center;
-		background-color: rgba(0, 0, 0, 0.35);
-		backdrop-filter: blur(8px) saturate(70%);
+		background-color: rgba(2, 4, 9, 0.64);
 		pointer-events: all;
+		backdrop-filter: none;
 	}
 
 	.inv-bg-close {
@@ -40,197 +44,505 @@ InventoryPanel {
 
 	.inv-panel {
 		position: relative;
+		width: 1060px;
+		height: 650px;
 		flex-direction: column;
-		background-color: $inv-bg;
-		border-radius: 16px;
-		border: 1px solid rgba(255, 255, 255, 0.09);
-		box-shadow: 0 16px 64px rgba(0, 0, 0, 0.7);
-		padding: 32px 40px 40px 40px;
-		min-width: 720px;
+		padding: 30px 32px 32px;
+		background-color: $surface-deep;
+		border: 1px solid rgba(255, 67, 108, 0.22);
+		border-top: 3px solid $brand-pink;
+		border-radius: 20px;
+		overflow: hidden;
+		box-shadow: none;
+	}
+
+	// Explicit reset is required because s&box hot reload can retain a removed pseudo-element.
+	.inv-panel:before {
+		display: none;
+		width: 0;
+		height: 0;
+		opacity: 0;
+		background-color: transparent;
+		box-shadow: none;
 	}
 
 	.inv-header {
+		position: relative;
 		flex-direction: row;
 		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 16px;
+		min-height: 82px;
+		padding: 0 4px 22px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+	}
+
+	.inv-heading {
+		flex-direction: column;
+		flex-grow: 1;
+	}
+
+	.inv-eyebrow {
+		font-size: 10px;
+		font-weight: 800;
+		letter-spacing: 2px;
+		color: $brand-pink;
+		margin-bottom: 5px;
 	}
 
 	.inv-title {
-		font-family: Montserrat;
-		font-size: 20px;
-		font-weight: 700;
-		color: $inv-text;
+		font-size: 27px;
+		font-weight: 800;
+		letter-spacing: 0.5px;
+		color: $text;
 		text-transform: uppercase;
 	}
 
-	.inv-close {
-		width: 32px;
-		height: 32px;
-		flex-shrink: 0;
-		align-items: center;
-		justify-content: center;
-		background-color: rgba(255, 255, 255, 0.06);
-		border-radius: 8px;
-		font-family: Montserrat;
-		font-size: 16px;
-		font-weight: 700;
-		color: rgba(255, 255, 255, 0.6);
-		transition: all 0.1s ease-out;
+	.inv-subtitle {
+		font-size: 11px;
+		font-weight: 500;
+		color: $muted;
+		margin-top: 4px;
+	}
 
-		&:hover {
-			background-color: rgba(255, 80, 80, 0.25);
-			color: rgba(255, 120, 120, 0.95);
+	.inv-summary {
+		width: 172px;
+		flex-direction: column;
+		margin-right: 24px;
+	}
+
+	.summary-value {
+		font-size: 18px;
+		font-weight: 800;
+		color: $text;
+
+		span {
+			font-size: 12px;
+			color: $muted;
+			margin-left: 3px;
 		}
 	}
 
-	.inv-section-label {
-		font-family: Montserrat;
-		font-size: 11px;
+	.summary-label {
+		font-size: 9px;
 		font-weight: 700;
-		color: $inv-dim;
 		text-transform: uppercase;
+		letter-spacing: 0.8px;
+		color: $muted;
+		margin-top: 2px;
+	}
+
+	.summary-track {
+		height: 3px;
+		margin-top: 9px;
+		background-color: rgba(255, 255, 255, 0.08);
+		border-radius: 2px;
+		overflow: hidden;
+	}
+
+	.summary-fill {
+		height: 100%;
+		background-color: $brand-pink;
+		box-shadow: none;
+	}
+
+	.inv-close {
+		width: 38px;
+		height: 38px;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba(255, 255, 255, 0.055);
+		border: 1px solid $border;
+		border-radius: 10px;
+		font-size: 14px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.62);
+		transition: all 0.12s ease-out;
+
+		&:hover {
+			background-color: rgba(255, 67, 108, 0.18);
+			border-color: rgba(255, 67, 108, 0.48);
+			color: $brand-pink-light;
+		}
+	}
+
+	.inv-body {
+		flex-direction: row;
+		flex-grow: 1;
+		padding-top: 26px;
+		overflow: hidden;
+	}
+
+	.details-label {
+		font-size: 10px;
+		font-weight: 800;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.66);
+		margin-top: 24px;
 		margin-bottom: 10px;
-		letter-spacing: 0;
+	}
+
+	.inventory-column {
+		width: 690px;
+		flex-shrink: 0;
+		flex-direction: column;
+		padding: 0 28px 0 4px;
+	}
+
+	.section-header {
+		min-height: 30px;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 10px;
+	}
+
+	.backpack-header {
+		margin-top: 18px;
+	}
+
+	.inv-section-label {
+		font-size: 12px;
+		font-weight: 800;
+		color: $text;
+		text-transform: uppercase;
+		letter-spacing: 0.6px;
+	}
+
+	.section-note {
+		font-size: 9px;
+		font-weight: 700;
+		color: $brand-pink;
+		margin-left: 8px;
+		align-items: center;
+	}
+
+	.section-hint {
+		font-size: 9px;
+		font-weight: 650;
+		color: $muted;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
 	}
 
 	.inv-row {
 		flex-direction: row;
-		flex-wrap: wrap;
-		margin-bottom: 14px;
+		flex-wrap: nowrap;
+		margin-bottom: $gap;
+	}
+
+	.hotbar-row {
+		padding-bottom: 16px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.055);
 	}
 
 	.inv-slot {
-		width: $inv-slot-size;
-		height: $inv-slot-size;
+		width: $slot-size;
+		height: $slot-size;
 		flex-shrink: 0;
 		position: relative;
 		align-items: center;
 		justify-content: center;
-		background-color: $inv-slot-bg;
-		border: 1px solid $inv-slot-border;
-		border-radius: 10px;
-		margin-right: $inv-gap;
-		margin-bottom: $inv-gap;
-		transition: background-color 0.08s ease-out;
+		margin-right: $gap;
+		background-color: $surface-soft;
+		border: 1px solid $border;
+		border-radius: 11px;
+		transition: all 0.1s ease-out;
+		overflow: hidden;
+		box-shadow: none;
 
 		&:hover {
-			background-color: $inv-slot-hover;
+			background-color: $surface-hover;
+			border-color: rgba(167, 201, 232, 0.32);
 		}
 
 		&.has-item {
-			background-color: $inv-slot-has-item;
-			border-color: rgba(255, 255, 255, 0.16);
+			background-color: rgba(255, 255, 255, 0.07);
+		}
+
+		&.selected {
+			border-color: rgba(167, 201, 232, 0.62);
+		}
+
+		&.equipped {
+			background-color: rgba(255, 67, 108, 0.11);
+			border-color: rgba(255, 67, 108, 0.7);
 		}
 
 		&.locked {
-			background-color: rgba(255, 255, 255, 0.02);
-			border-color: rgba(255, 255, 255, 0.04);
+			background-color: rgba(0, 0, 0, 0.18);
+			border-color: rgba(255, 255, 255, 0.035);
 			opacity: 0.4;
 		}
 
 		&.dragging-source {
-			opacity: 0.35;
+			opacity: 0.28;
+			transform: scale(0.94);
 		}
 
 		&.drag-over {
-			background-color: rgba(255, 255, 255, 0.18);
-			border-color: rgba(120, 190, 255, 0.65);
+			background-color: rgba(255, 67, 108, 0.16);
+			border-color: $brand-pink;
 		}
 	}
 
-	.inv-drag-ghost {
+	.slot-key {
 		position: absolute;
-		width: $inv-slot-size;
-		height: $inv-slot-size;
-		align-items: center;
-		justify-content: center;
-		background-color: rgba(255, 255, 255, 0.10);
-		border: 1px solid rgba(255, 255, 255, 0.22);
-		border-radius: 10px;
-		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
-		opacity: 0.92;
-		pointer-events: none;
+		top: 5px;
+		left: 7px;
+		font-size: 9px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.42);
+		z-index: 2;
 	}
 
 	.slot-icon {
-		width: 44px;
-		height: 44px;
+		width: 52px;
+		height: 52px;
 		background-repeat: no-repeat;
 		background-size: contain;
 		background-position: center;
 		pointer-events: none;
 	}
 
+	.slot-name {
+		position: absolute;
+		left: 5px;
+		right: 5px;
+		bottom: 4px;
+		font-size: 7px;
+		font-weight: 650;
+		color: rgba(255, 255, 255, 0.58);
+		text-align: center;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
 	.slot-count {
 		position: absolute;
-		right: 4px;
-		bottom: 2px;
-		font-family: Montserrat;
-		font-size: 12px;
-		font-weight: 700;
-		color: rgba(255, 255, 255, 0.9);
-		text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
-		pointer-events: none;
-	}
-
-	// Tooltip (lives inside inv-overlay for full-screen visibility)
-	.inv-tooltip {
-		position: absolute;
-		flex-direction: column;
-		background-color: rgba(14, 16, 22, 0.96);
-		border: 1px solid rgba(255, 255, 255, 0.12);
+		right: 5px;
+		top: 5px;
+		min-width: 18px;
+		height: 17px;
+		align-items: center;
+		justify-content: center;
+		padding: 0 5px;
+		font-size: 9px;
+		font-weight: 800;
+		color: white;
+		background-color: rgba(255, 67, 108, 0.86);
 		border-radius: 8px;
-		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-		padding: 8px 12px;
 		pointer-events: none;
 	}
 
-	.tip-name {
-		font-family: Montserrat;
-		font-size: 13px;
+	.lock-mark {
+		font-size: 14px;
 		font-weight: 700;
-		color: rgba(255, 255, 255, 0.95);
-		white-space: nowrap;
+		color: rgba(255, 255, 255, 0.18);
 	}
 
-	.tip-count {
-		font-family: Montserrat;
-		font-size: 11px;
-		font-weight: 600;
-		color: rgba(255, 255, 255, 0.52);
-		margin-top: 2px;
-		white-space: nowrap;
+	.details-column {
+		width: 306px;
+		flex-grow: 1;
+		flex-direction: column;
+		padding-left: 24px;
+		border-left: 1px solid rgba(255, 255, 255, 0.07);
 	}
 
-	// Context menu (lives inside inv-overlay for screen-space positioning)
+	.details-label {
+		margin-top: 0;
+	}
+
+	.details-icon-wrap {
+		height: 180px;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba(255, 255, 255, 0.035);
+		border: 1px solid rgba(255, 255, 255, 0.075);
+		border-radius: 16px;
+		box-shadow: none;
+	}
+
+	.details-icon {
+		width: 145px;
+		height: 145px;
+		background-repeat: no-repeat;
+		background-size: contain;
+		background-position: center;
+	}
+
+	.details-category {
+		align-self: flex-start;
+		padding: 4px 8px;
+		margin-top: 15px;
+		font-size: 8px;
+		font-weight: 800;
+		letter-spacing: 0.8px;
+		text-transform: uppercase;
+		color: $brand-pink-light;
+		background-color: rgba(255, 67, 108, 0.12);
+		border: 1px solid rgba(255, 67, 108, 0.25);
+		border-radius: 6px;
+	}
+
+	.details-name {
+		font-size: 19px;
+		font-weight: 800;
+		color: $text;
+		margin-top: 10px;
+	}
+
+	.details-description {
+		min-height: 44px;
+		font-size: 10px;
+		font-weight: 500;
+		line-height: 15px;
+		color: $muted;
+		margin-top: 7px;
+	}
+
+	.details-meta {
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: 12px;
+		padding: 10px 12px;
+		background-color: rgba(167, 201, 232, 0.07);
+		border: 1px solid rgba(167, 201, 232, 0.14);
+		border-radius: 9px;
+	}
+
+	.meta-label {
+		font-size: 9px;
+		font-weight: 650;
+		color: rgba(167, 201, 232, 0.72);
+	}
+
+	.meta-value {
+		font-size: 13px;
+		font-weight: 800;
+		color: $text;
+	}
+
+	.details-actions {
+		flex-direction: column;
+		margin-top: auto;
+	}
+
+	.detail-btn {
+		height: 36px;
+		align-items: center;
+		justify-content: center;
+		margin-top: 7px;
+		background-color: rgba(255, 255, 255, 0.065);
+		border: 1px solid $border;
+		border-radius: 9px;
+		font-size: 9px;
+		font-weight: 800;
+		letter-spacing: 0.5px;
+		text-transform: uppercase;
+		color: rgba(255, 255, 255, 0.78);
+		transition: all 0.1s ease-out;
+		box-shadow: none;
+
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.11);
+			color: white;
+		}
+
+		&.primary {
+			background-color: $brand-pink;
+			border-color: rgba(255, 255, 255, 0.16);
+			color: white;
+
+			&:hover { background-color: #ff5a7e; }
+		}
+
+		&.danger:hover {
+			background-color: rgba(255, 76, 76, 0.16);
+			border-color: rgba(255, 96, 96, 0.35);
+			color: #ffb7b7;
+		}
+	}
+
+	.details-empty {
+		flex-grow: 1;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 28px;
+		border: 1px dashed rgba(255, 255, 255, 0.10);
+		border-radius: 16px;
+	}
+
+	.details-empty-mark {
+		width: 46px;
+		height: 46px;
+		align-items: center;
+		justify-content: center;
+		font-size: 24px;
+		font-weight: 400;
+		color: rgba(255, 67, 108, 0.6);
+		background-color: rgba(255, 67, 108, 0.07);
+		border: 1px solid rgba(255, 67, 108, 0.16);
+		border-radius: 50%;
+	}
+
+	.details-empty-title {
+		font-size: 12px;
+		font-weight: 750;
+		color: rgba(255, 255, 255, 0.66);
+		margin-top: 14px;
+	}
+
+	.details-empty-text {
+		font-size: 9px;
+		line-height: 14px;
+		color: rgba(255, 255, 255, 0.34);
+		text-align: center;
+		margin-top: 5px;
+	}
+
+	.inv-drag-ghost {
+		position: absolute;
+		width: $slot-size;
+		height: $slot-size;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba(22, 27, 36, 0.96);
+		border: 1px solid $brand-pink;
+		border-radius: 11px;
+		opacity: 0.94;
+		pointer-events: none;
+		box-shadow: none;
+	}
+
 	.ctx-menu {
 		position: absolute;
+		min-width: 150px;
 		flex-direction: column;
-		background-color: rgba(18, 20, 26, 0.95);
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		border-radius: 8px;
-		box-shadow: 0 8px 28px rgba(0, 0, 0, 0.65);
-		padding: 4px;
-		min-width: 120px;
+		padding: 5px;
+		background-color: rgba(13, 17, 24, 0.98);
+		border: 1px solid rgba(255, 67, 108, 0.25);
+		border-radius: 10px;
 		pointer-events: all;
+		box-shadow: none;
 	}
 
 	.ctx-btn {
-		flex-direction: row;
+		height: 32px;
 		align-items: center;
-		padding: 8px 14px;
-		font-family: Montserrat;
-		font-size: 13px;
-		font-weight: 600;
-		color: rgba(255, 255, 255, 0.88);
+		padding: 0 12px;
+		font-size: 10px;
+		font-weight: 650;
+		color: rgba(255, 255, 255, 0.78);
 		background-color: transparent;
-		border-radius: 6px;
-		transition: background-color 0.08s ease-out;
+		border-radius: 7px;
 
 		&:hover {
-			background-color: rgba(255, 255, 255, 0.10);
-			color: rgba(255, 255, 255, 1);
+			background-color: rgba(255, 67, 108, 0.12);
+			color: $brand-pink-light;
 		}
 	}
 }

@@ -1,0 +1,169 @@
+@using Sandbox
+@using Sandbox.UI
+@using System
+@using System.Collections.Generic
+@using Minimal.PhoneSystem
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( IsOpen && Player.Local?.IsDead != true )
+	{
+		<div class="phone-anchor">
+			<div class="phone-shell">
+				<div class="phone-art"></div>
+				<div class="phone-screen">
+					<div class="phone-header">
+						<button class="phone-close" onclick=@(() => Close())>×</button>
+					</div>
+
+					@if ( ActiveApp is null )
+					{
+						<div class="clock-widget">
+							<div class="clock-time">@CurrentTimeText</div>
+							<div class="clock-date">@CurrentDateText</div>
+						</div>
+						<div class="app-grid">
+							@foreach ( var app in Apps )
+							{
+								<button class="app-button" onclick=@(() => OpenApp( app ))>
+									<div class="app-icon" style="@GetIconStyle( app )">
+										@if ( string.IsNullOrWhiteSpace( app.IconPath ) )
+										{
+											<span>@app.FallbackGlyph</span>
+										}
+									</div>
+									<div class="app-name">@GameLocalization.PhoneAppHeader( app )</div>
+								</button>
+							}
+						</div>
+					}
+					else
+					{
+						<div class="app-page">
+							<div class="app-icon app-page-icon" style="@GetIconStyle( ActiveApp )">
+								@if ( string.IsNullOrWhiteSpace( ActiveApp.IconPath ) )
+								{
+									<span>@ActiveApp.FallbackGlyph</span>
+								}
+							</div>
+							<div class="app-page-title">@GameLocalization.PhoneAppHeader( ActiveApp )</div>
+							@if ( !string.IsNullOrWhiteSpace( GameLocalization.PhoneAppDescription( ActiveApp ) ) )
+							{
+								<div class="app-page-hint">@GameLocalization.PhoneAppDescription( ActiveApp )</div>
+							}
+							@if ( ActiveApp.Actions is not null && ActiveApp.Actions.Count > 0 )
+							{
+								<div class="app-actions">
+									@foreach ( var action in ActiveApp.Actions )
+									{
+										<button class="app-action" onclick=@(() => InvokeAction( action ))>
+											<div class="app-action-title">@GameLocalization.PhoneAppActionHeader( ActiveApp, action )</div>
+											@if ( !string.IsNullOrWhiteSpace( GameLocalization.PhoneAppActionDescription( ActiveApp, action ) ) )
+											{
+												<div class="app-action-description">@GameLocalization.PhoneAppActionDescription( ActiveApp, action )</div>
+											}
+										</button>
+									}
+								</div>
+							}
+							<button class="back-button" onclick=@(() => ActiveApp = null)>@GameLocalization.Phrase( "ui.phone.home", "Home screen" )</button>
+						</div>
+					}
+				</div>
+
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	private const string ModalId = nameof( Phone );
+	private const string PhoneArtPath = "ui/phone-brand-wallpaper-transparent.vtex";
+	private const int PhoneArtRequiredMipSize = 2048;
+	private bool IsOpen { get; set; }
+	private Texture PhoneArtTexture { get; set; }
+	private PhoneAppDefinition ActiveApp { get; set; }
+	private IReadOnlyList<PhoneAppDefinition> Apps => PhoneAppDatabase.GetAll();
+	private string CurrentTimeText => DateTime.Now.ToString( "HH:mm" );
+	private string CurrentDateText => DateTime.Now.ToString( "dd.MM.yyyy" );
+
+	private void OpenApp( PhoneAppDefinition app )
+	{
+		if ( app is null )
+			return;
+
+		PhoneAppHandlerRegistry.FireOpened( app );
+		if ( app.ClosePhoneOnOpen )
+		{
+			Close();
+			return;
+		}
+
+		ActiveApp = app.ShowPage ? app : null;
+	}
+
+	private void InvokeAction( PhoneAppActionDefinition action )
+	{
+		if ( ActiveApp is null || action is null || string.IsNullOrWhiteSpace( action.Id ) )
+			return;
+
+		PhoneAppHandlerRegistry.FireAction( ActiveApp, action.Id );
+		if ( action.ClosePhoneOnUse )
+			Close();
+	}
+
+	private static string GetIconStyle( PhoneAppDefinition app )
+	{
+		if ( app is null )
+			return "";
+
+		var background = string.IsNullOrWhiteSpace( app.IconBackground ) ? "#394250" : app.IconBackground.Trim();
+		if ( string.IsNullOrWhiteSpace( app.IconPath ) )
+			return $"background-color: {background};";
+
+		return $"background-color: {background}; background-image: url({app.IconPath.Trim()});";
+	}
+
+	private void Close()
+	{
+		IsOpen = false;
+		ActiveApp = null;
+		UiModalManager.Close( ModalId );
+		UiModalManager.UpdateMouseVisibility();
+	}
+
+	protected override void OnUpdate()
+	{
+		PhoneArtTexture?.MarkUsed( PhoneArtRequiredMipSize );
+
+		if ( Input.Pressed( "Phone" ) )
+		{
+			if ( IsOpen ) Close();
+			else
+			{
+				PhoneAppDatabase.Reload();
+				IsOpen = true;
+				ActiveApp = null;
+				UiModalManager.Open( ModalId );
+				UiModalManager.UpdateMouseVisibility();
+			}
+		}
+	}
+
+	protected override void OnStart()
+	{
+		PhoneArtTexture = Texture.Load( PhoneArtPath, true );
+	}
+
+	protected override void OnDisabled() => Close();
+	protected override void OnDestroy() => Close();
+
+	protected override int BuildHash() => HashCode.Combine(
+		IsOpen,
+		ActiveApp?.Header,
+		Player.Local?.IsDead ?? false,
+		IsOpen ? DateTime.Now.Minute : 0,
+		HashCode.Combine( Apps.Count, GameLocalization.CurrentCode ) );
+}

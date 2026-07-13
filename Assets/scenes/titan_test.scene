@@ -183,45 +183,8 @@
       "__version": 2,
       "__Prefab": "prefabs/managers.prefab",
       "__PrefabInstancePatch": {
-        "AddedObjects": [
-          {
-            "Id": {
-              "Type": "Component",
-              "IdValue": "ebb7c758-103c-4dba-9fc8-5d4f4b5f515c"
-            },
-            "Parent": {
-              "Type": "GameObject",
-              "IdValue": "1eb7475f-1c69-4490-90c5-e0137be5e753"
-            },
-            "PreviousElement": {
-              "Type": "Component",
-              "IdValue": "628471c1-e9af-4a99-903a-cfc54c59b21d"
-            },
-            "ContainerProperty": "Components",
-            "IsContainerArray": true,
-            "Data": {
-              "__type": "Sandbox.DoorHud",
-              "__guid": "ebb7c758-103c-4dba-9fc8-5d4f4b5f515c",
-              "__enabled": true,
-              "Flags": 0,
-              "Door": null,
-              "OnComponentDestroy": null,
-              "OnComponentDisabled": null,
-              "OnComponentEnabled": null,
-              "OnComponentFixedUpdate": null,
-              "OnComponentStart": null,
-              "OnComponentUpdate": null
-            }
-          }
-        ],
-        "RemovedObjects": [
-          {
-            "Id": {
-              "Type": "Component",
-              "IdValue": "f2c128dc-5efe-402c-8dcc-6ace485f0460"
-            }
-          }
-        ],
+        "AddedObjects": [],
+        "RemovedObjects": [],
         "PropertyOverrides": [
           {
             "Target": {

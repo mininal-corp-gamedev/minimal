@@ -1,0 +1,26 @@
+{
+  "Id": "settings",
+  "Header": "Настройки",
+  "Description": "Настройки телефона.",
+  "HeaderEnglish": "Settings",
+  "HeaderRussian": "Настройки",
+  "DescriptionEnglish": "Phone settings.",
+  "DescriptionRussian": "Настройки телефона.",
+  "IconPath": "",
+  "FallbackGlyph": "⚙",
+  "IconBackground": "#657181",
+  "SortOrder": 60,
+  "Enabled": true,
+  "ShowPage": true,
+  "ClosePhoneOnOpen": false,
+  "Actions": [
+    {
+      "Id": "reload_apps",
+      "Header": "Обновить приложения",
+      "Description": "Повторно загрузить каталог definitions.",
+      "ClosePhoneOnUse": false
+    }
+  ],
+  "__references": [],
+  "__version": 0
+}

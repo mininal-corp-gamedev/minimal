@@ -533,6 +533,18 @@
             "OnComponentUpdate": null
           },
           {
+            "__type": "Sandbox.Phone",
+            "__guid": "0d4db2c5-0e6d-4fc1-9f32-2e0dbf7a5a22",
+            "__enabled": true,
+            "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
             "__type": "Sandbox.DropMoneyConfirmPanel",
             "__guid": "e444138a-4090-4d55-8a16-761dc8aacab3",
             "__enabled": true,
@@ -562,6 +574,19 @@
             "__guid": "628471c1-e9af-4a99-903a-cfc54c59b21d",
             "__enabled": true,
             "Flags": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
+            "__type": "Sandbox.DoorHud",
+            "__guid": "ebb7c758-103c-4dba-9fc8-5d4f4b5f515c",
+            "__enabled": true,
+            "Flags": 0,
+            "Door": null,
             "OnComponentDestroy": null,
             "OnComponentDisabled": null,
             "OnComponentEnabled": null,

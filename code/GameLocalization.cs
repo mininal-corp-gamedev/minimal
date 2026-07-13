@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Ambi.Storage;
+using Minimal.PhoneSystem;
 using Minimal.Shop;
 using Sandbox;
 
@@ -119,6 +120,58 @@ public static partial class GameLocalization
 		return Phrase( $"items.{NormalizeId( item.Id )}.description", item.Description );
 	}
 
+	public static string PhoneAppHeader( PhoneAppDefinition app )
+	{
+		if ( app is null )
+			return string.Empty;
+
+		var definitionValue = IsRussian ? app.HeaderRussian : app.HeaderEnglish;
+		if ( !string.IsNullOrWhiteSpace( definitionValue ) )
+			return definitionValue;
+
+		var legacyFallback = IsRussian
+			? FirstNotEmpty( app.Header, app.HeaderEnglish )
+			: FirstNotEmpty( app.Header, app.HeaderRussian );
+
+		return Phrase( $"phone.app.{NormalizeId( app.Id )}.header", legacyFallback );
+	}
+
+	public static string PhoneAppDescription( PhoneAppDefinition app )
+	{
+		if ( app is null )
+			return string.Empty;
+
+		var definitionValue = IsRussian ? app.DescriptionRussian : app.DescriptionEnglish;
+		if ( !string.IsNullOrWhiteSpace( definitionValue ) )
+			return definitionValue;
+
+		var legacyFallback = IsRussian
+			? FirstNotEmpty( app.Description, app.DescriptionEnglish )
+			: FirstNotEmpty( app.Description, app.DescriptionRussian );
+
+		return Phrase( $"phone.app.{NormalizeId( app.Id )}.description", legacyFallback );
+	}
+
+	public static string PhoneAppActionHeader( PhoneAppDefinition app, PhoneAppActionDefinition action )
+	{
+		if ( app is null || action is null )
+			return string.Empty;
+
+		return Phrase(
+			$"phone.app.{NormalizeId( app.Id )}.action.{NormalizeId( action.Id )}.header",
+			action.Header );
+	}
+
+	public static string PhoneAppActionDescription( PhoneAppDefinition app, PhoneAppActionDefinition action )
+	{
+		if ( app is null || action is null )
+			return string.Empty;
+
+		return Phrase(
+			$"phone.app.{NormalizeId( app.Id )}.action.{NormalizeId( action.Id )}.description",
+			action.Description );
+	}
+
 	public static string Category( string category )
 	{
 		var normalized = NormalizeId( category );
@@ -155,5 +208,16 @@ public static partial class GameLocalization
 	private static string NormalizeId( string id )
 	{
 		return (id ?? string.Empty).Trim().ToLowerInvariant().Replace( " ", "_" );
+	}
+
+	private static string FirstNotEmpty( params string[] values )
+	{
+		foreach ( var value in values ?? Array.Empty<string>() )
+		{
+			if ( !string.IsNullOrWhiteSpace( value ) )
+				return value;
+		}
+
+		return string.Empty;
 	}
 }

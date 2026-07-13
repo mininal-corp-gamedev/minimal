@@ -115,8 +115,8 @@
         "display",
         "panel"
       ],
-      "Enabled": false,
-      "VisibleInMenu": false,
+      "Enabled": true,
+      "VisibleInMenu": true,
       "Spawnable": false,
       "AdminOnly": false,
       "PolicyMode": "Manual",

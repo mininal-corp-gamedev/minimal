@@ -1,0 +1,250 @@
+@using Sandbox
+@using Sandbox.UI
+@using System
+@using System.Collections.Generic
+@using System.Globalization
+@inherits PanelComponent
+@namespace Sandbox
+
+<root>
+	@if ( ShouldShow )
+	{
+		<div class="compass-shell">
+			<div class="compass-backdrop"></div>
+			<div class="compass-strip">
+				@foreach ( var tick in VisibleTicks )
+				{
+					<div class="compass-tick @tick.CssClass" style="left: @PercentCss( tick.LeftPercent );">
+						<div class="tick-line"></div>
+						@if ( !string.IsNullOrEmpty( tick.Label ) )
+						{
+							<div class="tick-label">@tick.Label</div>
+						}
+					</div>
+				}
+
+				@foreach ( var marker in ActiveMarkers )
+				{
+					@if ( IsMarkerVisible( marker ) )
+					{
+						<div class="compass-marker" style="left: @MarkerLeftCss( marker );">
+							<div class="marker-diamond">◆</div>
+							<div class="marker-caption">
+								<span class="marker-label">@MarkerLabel( marker )</span>
+								@if ( marker.ShowDistance )
+								{
+									<span class="marker-distance">@MarkerDistance( marker )</span>
+								}
+							</div>
+						</div>
+					}
+				}
+			</div>
+
+			<div class="heading-pointer"></div>
+			<div class="heading-line"></div>
+		</div>
+	}
+</root>
+
+@code
+{
+	private const float TickStep = 5f;
+	private const float VisibleHalfAngle = 75f;
+	private const float UnitsPerMeter = 39.3701f;
+	private float _heading;
+
+	/// <summary>
+	/// World yaw treated as north. Leave at zero for the default S&amp;box axes,
+	/// or adjust it on the HUD component if the map was authored with another north.
+	/// </summary>
+	[Property] public float NorthYaw { get; set; } = 0f;
+
+	private bool ShouldShow => Player.Local is not null && Player.Local.IsDead != true;
+
+	private IEnumerable<CompassTick> VisibleTicks
+	{
+		get
+		{
+			var first = MathF.Floor( (_heading - VisibleHalfAngle) / TickStep ) * TickStep;
+			var last = _heading + VisibleHalfAngle;
+
+			for ( var heading = first; heading <= last + TickStep; heading += TickStep )
+			{
+				var normalized = NormalizeHeading( heading );
+				var rounded = (int)MathF.Round( normalized ) % 360;
+				var isCardinal = rounded % 45 == 0;
+				var isMajor = rounded % 15 == 0;
+				var cssClass = isCardinal ? "cardinal" : isMajor ? "major" : "minor";
+				var label = isCardinal ? CardinalLabel( rounded ) : isMajor ? rounded.ToString( CultureInfo.InvariantCulture ) : string.Empty;
+				var left = 50f + (heading - _heading) / (VisibleHalfAngle * 2f) * 100f;
+
+				yield return new CompassTick( left, label, cssClass );
+			}
+		}
+	}
+
+	private IEnumerable<CompassMarker> ActiveMarkers
+	{
+		get
+		{
+			if ( Scene is null )
+				yield break;
+
+			foreach ( var marker in Scene.GetAllComponents<CompassMarker>() )
+			{
+				if ( marker.IsValid() && marker.GameObject.IsValid() && marker.GameObject.Enabled )
+					yield return marker;
+			}
+		}
+	}
+
+	protected override void OnStart()
+	{
+		_heading = ReadHeading();
+	}
+
+	protected override void OnUpdate()
+	{
+		var nextHeading = ReadHeading();
+		if ( MathF.Abs( DeltaAngle( _heading, nextHeading ) ) < 0.025f )
+			return;
+
+		_heading = nextHeading;
+		StateHasChanged();
+	}
+
+	private float ReadHeading()
+	{
+		if ( Scene?.Camera is not null )
+			return NormalizeHeading( Scene.Camera.WorldRotation.Angles().yaw - NorthYaw );
+
+		var player = Player.Local;
+		if ( player is not null && player.Controller.IsValid() )
+			return NormalizeHeading( player.Controller.EyeAngles.yaw - NorthYaw );
+
+		return 0f;
+	}
+
+	private string MarkerLeftCss( CompassMarker marker )
+	{
+		var delta = MarkerDeltaAngle( marker );
+		var left = 50f + delta / (VisibleHalfAngle * 2f) * 100f;
+		return PercentCss( left );
+	}
+
+	private bool IsMarkerVisible( CompassMarker marker )
+	{
+		return MathF.Abs( MarkerDeltaAngle( marker ) ) <= VisibleHalfAngle;
+	}
+
+	private float MarkerDeltaAngle( CompassMarker marker )
+	{
+		var player = Player.Local;
+		if ( player is null || !marker.IsValid() )
+			return 0f;
+
+		var toMarker = marker.WorldPosition - player.WorldPosition;
+		toMarker.z = 0f;
+		if ( toMarker.LengthSquared <= 0.001f )
+			return 0f;
+
+		Vector3 viewForward;
+		Vector3 viewRight;
+
+		if ( Scene?.Camera is not null )
+		{
+			viewForward = Scene.Camera.WorldRotation.Forward;
+			viewRight = Scene.Camera.WorldRotation.Right;
+		}
+		else if ( player.Controller.IsValid() )
+		{
+			var eye = player.Controller.EyeTransform;
+			viewForward = eye.Forward;
+			viewRight = eye.Right;
+		}
+		else
+		{
+			return 0f;
+		}
+
+		viewForward.z = 0f;
+		viewRight.z = 0f;
+		if ( viewForward.LengthSquared <= 0.001f || viewRight.LengthSquared <= 0.001f )
+			return 0f;
+
+		toMarker = toMarker.Normal;
+		viewForward = viewForward.Normal;
+		viewRight = viewRight.Normal;
+
+		var forwardAmount = Vector3.Dot( toMarker, viewForward );
+		var rightAmount = Vector3.Dot( toMarker, viewRight );
+		return MathF.Atan2( rightAmount, forwardAmount ) * 180f / MathF.PI;
+	}
+
+	private static string MarkerLabel( CompassMarker marker )
+	{
+		if ( !string.IsNullOrWhiteSpace( marker?.Label ) )
+			return marker.Label;
+
+		return marker?.GameObject?.Name ?? "Objective";
+	}
+
+	private static string MarkerDistance( CompassMarker marker )
+	{
+		var player = Player.Local;
+		if ( player is null || !marker.IsValid() )
+			return string.Empty;
+
+		var meters = Vector3.DistanceBetween( player.WorldPosition, marker.WorldPosition ) / UnitsPerMeter;
+		return $"{MathF.Round( meters ):0} m";
+	}
+
+	private static string CardinalLabel( int heading ) => heading switch
+	{
+		0 => "N",
+		45 => "NE",
+		90 => "E",
+		135 => "SE",
+		180 => "S",
+		225 => "SW",
+		270 => "W",
+		315 => "NW",
+		_ => heading.ToString( CultureInfo.InvariantCulture )
+	};
+
+	private static float NormalizeHeading( float heading )
+	{
+		heading %= 360f;
+		return heading < 0f ? heading + 360f : heading;
+	}
+
+	private static float DeltaAngle( float from, float to )
+	{
+		var delta = NormalizeHeading( to ) - NormalizeHeading( from );
+		if ( delta > 180f ) delta -= 360f;
+		if ( delta < -180f ) delta += 360f;
+		return delta;
+	}
+
+	private static string PercentCss( float value ) => $"{value.ToString( "0.###", CultureInfo.InvariantCulture )}%";
+
+	protected override int BuildHash()
+	{
+		var hash = new HashCode();
+		hash.Add( ShouldShow );
+		hash.Add( MathF.Round( _heading * 20f ) );
+
+		foreach ( var marker in ActiveMarkers )
+		{
+			hash.Add( marker.GameObject.Id );
+			hash.Add( marker.WorldPosition );
+			hash.Add( marker.Label );
+			hash.Add( marker.ShowDistance );
+		}
+
+		return hash.ToHashCode();
+	}
+
+	private readonly record struct CompassTick( float LeftPercent, string Label, string CssClass );
+}

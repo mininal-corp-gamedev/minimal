@@ -719,6 +719,19 @@
             "OnComponentUpdate": null
           },
           {
+            "__type": "Sandbox.CompassHud",
+            "__guid": "a99e8fb3-d713-47e7-ad60-5bbc9f277c79",
+            "__enabled": true,
+            "Flags": 0,
+            "NorthYaw": 0,
+            "OnComponentDestroy": null,
+            "OnComponentDisabled": null,
+            "OnComponentEnabled": null,
+            "OnComponentFixedUpdate": null,
+            "OnComponentStart": null,
+            "OnComponentUpdate": null
+          },
+          {
             "__type": "Sandbox.DeathScreen",
             "__guid": "b4de8248-1b6c-48c9-b244-6fee873d30c5",
             "__enabled": true,

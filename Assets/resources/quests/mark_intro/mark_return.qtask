@@ -1,0 +1,9 @@
+{
+  "Id": "mark_return",
+  "Header": "Вернуться к Марку",
+  "Description": "Вернись к Марку и поговори с ним.",
+  "Count": 1,
+  "HasPostCompleted": true,
+  "__references": [],
+  "__version": 0
+}

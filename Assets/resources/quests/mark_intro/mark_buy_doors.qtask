@@ -1,0 +1,9 @@
+{
+  "Id": "mark_buy_doors",
+  "Header": "Крыша над головой",
+  "Description": "Купи любые 2 свободные двери в городе.",
+  "Count": 2,
+  "HasPostCompleted": true,
+  "__references": [],
+  "__version": 0
+}

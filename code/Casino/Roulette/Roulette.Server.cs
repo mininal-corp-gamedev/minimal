@@ -343,7 +343,7 @@ public sealed partial class Roulette
 		if ( active == null ) return;
 		if ( active.CurrentQuestTask == null || active.CurrentQuestTask.Id != "q1t1" ) return;
 
-		QuestManager.Instance?.AdvanceCount( pq, def );
+		QuestManager.TryAdvanceCount( pq, def );
 	}
 
 	private bool DoesBetWin( RouletteBet bet, int number )

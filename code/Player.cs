@@ -2431,49 +2431,8 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         // (тогда сеттер не вызвал бы SavePlayerData).
         SavePlayerData();
 
-        TryGiveStarterQuest();
 #endif
-    }
-
-#if SERVER
-    private void TryGiveStarterQuest()
-    {
-        if ( !Networking.IsHost ) return;
-
-        var pq = Components.Get<PlayerQuest>();
-        if ( !pq.IsValid() )
-        {
-            Log.Error( $"[StarterQuest] PlayerQuest component is missing on player {GameObject.Network.Owner?.DisplayName ?? GameObject.Name}." );
-            return;
-        }
-
-        if ( !pq.EnsureLoadedFromDisk() )
-        {
-            Log.Error( $"[StarterQuest] Could not load PlayerQuest save for {GameObject.Network.Owner?.DisplayName ?? GameObject.Name}." );
-            return;
-        }
-
-        var def = QuestDatabase.FindQuestById( "q1" );
-        if ( def == null )
-        {
-            Log.Error( "[StarterQuest] q1 quest definition was not found. Expected Assets/resources/quests/q1/q1.quest." );
-            return;
-        }
-
-        var questManager = QuestManager.Instance;
-        if ( !questManager.IsValid() )
-        {
-            Log.Error( "[StarterQuest] QuestManager is missing from the scene. Add prefabs/managers.prefab or a QuestManager component to every playable scene." );
-            return;
-        }
-
-        if ( pq.HasActiveQuest( def ) ) return;
-        if ( pq.HasFinishedQuest( def ) ) return;
-
-        if ( !questManager.GiveQuest( pq, def ) )
-            Log.Error( $"[StarterQuest] QuestManager failed to give q1 to {GameObject.Network.Owner?.DisplayName ?? GameObject.Name}." );
-    }
-#endif
+	}
 
     private void HostInitInventorySave()
     {

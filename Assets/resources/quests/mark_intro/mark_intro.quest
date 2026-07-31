@@ -1,0 +1,17 @@
+{
+  "Id": "mark_intro",
+  "Header": "Добро пожаловать в город",
+  "Category": "tutorial_mark",
+  "Description": "Первое знакомство с базовыми механиками Minimal RP.",
+  "CanGetSameCategoryQuest": false,
+  "CanRepeat": false,
+  "QuestTasks": [
+    "resources/quests/mark_intro/mark_hit.qtask",
+    "resources/quests/mark_intro/mark_buy_doors.qtask",
+    "resources/quests/mark_intro/mark_return.qtask"
+  ],
+  "HasPostCompleted": true,
+  "HasPostCanceled": false,
+  "__references": [],
+  "__version": 0
+}

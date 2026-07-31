@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 
 /// <summary>A door component with open/close animation, lock state, and break mechanics.</summary>
-public sealed class Door : Component, Component.IPressable, Component.INetworkListener, IDoorHackable
+public sealed partial class Door : Component, Component.IPressable, Component.INetworkListener, IDoorHackable
 {
+	partial void OnBoughtForQuest( Player buyer );
+
 	public enum DoorState { Closed, Open }
 	public enum DoorLockState { Unlocked, Locked }
 	public enum DoorMovementMode { Swing, Slide }
@@ -803,6 +805,8 @@ public sealed class Door : Component, Component.IPressable, Component.INetworkLi
 		{
 			DoorSecond.PlayerOwner = buyer;
 		}
+
+		OnBoughtForQuest( buyer );
 
 		return true;
 #else

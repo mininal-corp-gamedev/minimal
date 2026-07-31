@@ -1,0 +1,9 @@
+{
+  "Id": "mark_hit",
+  "Header": "Проверка силы",
+  "Description": "Возьми кулаки и ударь Марка 3 раза.",
+  "Count": 3,
+  "HasPostCompleted": true,
+  "__references": [],
+  "__version": 0
+}

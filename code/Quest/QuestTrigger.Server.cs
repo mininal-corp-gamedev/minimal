@@ -12,6 +12,6 @@ public sealed partial class QuestTrigger
 		var active = ply.GetActiveQuest( Quest );
 		if ( active == null || active.CurrentQuestTask != QuestTask ) return;
 
-		QuestManager.Instance?.AdvanceCount( ply, Quest );
+		QuestManager.TryAdvanceCount( ply, Quest );
 	}
 }

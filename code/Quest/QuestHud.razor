@@ -1,54 +1,144 @@
 @using Sandbox;
 @using Sandbox.UI;
+@using System;
 @using System.Linq;
 @inherits PanelComponent
 @namespace Sandbox
 
 @{
-	var pq = PlayerQuest.Local;
-	var quest = pq?.ClientCurrentQuests?.FirstOrDefault( q => q != null && !q.IsFinish && q.QuestDefinition != null && q.CurrentQuestTask != null );
+	var quests = PlayerQuest.Local?.ClientCurrentQuests?
+		.Where( q => q != null && !q.IsFinish && q.QuestDefinition != null && q.CurrentQuestTask != null )
+		.Take( 3 )
+		.ToList();
 }
 
-@if ( quest != null )
-{
-	var def = quest.QuestDefinition;
-	var task = quest.CurrentQuestTask;
-	var tasks = def.QuestTasks;
-	var idx = tasks != null ? tasks.IndexOf( task ) : -1;
-	var currentNumber = (idx >= 0 ? idx : 0) + 1;
-	var tasksTotal = tasks != null ? System.Math.Max( 1, tasks.Count ) : 1;
+<root class="@(quests is { Count: > 0 } ? "has-quests" : "no-quests")">
+	@if ( quests is { Count: > 0 } )
+	{
+		@foreach ( var quest in quests )
+		{
+			var def = quest.QuestDefinition;
+			var task = quest.CurrentQuestTask;
+			var tasks = def.QuestTasks;
+			var idx = tasks != null ? tasks.IndexOf( task ) : -1;
+			var currentNumber = (idx >= 0 ? idx : 0) + 1;
+			var tasksTotal = tasks != null ? Math.Max( 1, tasks.Count ) : 1;
+			var required = Math.Max( 1, task.Count );
+			var current = Math.Clamp( quest.CurrentCount, 0, required );
+			var percent = Math.Clamp( current * 100f / required, 0f, 100f );
+			var remaining = Math.Max( 0, required - current );
+			var overallPercent = Math.Clamp( ((currentNumber - 1) + current / (float)required) * 100f / tasksTotal, 0f, 100f );
 
-	<root>
-		<div class="qh-panel">
-			<div class="qh-row-top">
-				<div class="qh-header">@def.Header</div>
-				<div class="qh-task-meta">@currentNumber / @tasksTotal</div>
-			</div>
-			<div class="qh-row-body">
-				<div class="qh-desc">
-					<div class="qh-task-header">@task.Header</div>
-					<div class="qh-task-desc">@task.Description</div>
+			<div class="qh-panel">
+				<div class="qh-accent"></div>
+				<div class="qh-content">
+					<div class="qh-row-top">
+						<div class="qh-quest-icon">!</div>
+						<div class="qh-title-stack">
+							<div class="qh-header">@GameLocalization.QuestHeader( def )</div>
+							<div class="qh-task-meta">@GameLocalization.Format( "ui.quest.step", "{0}/{1}", currentNumber, tasksTotal )</div>
+						</div>
+					</div>
+					<div class="qh-task-header">@GameLocalization.QuestTaskHeader( task )</div>
+					@if ( Expanded )
+					{
+						<div class="qh-task-desc">@GameLocalization.QuestTaskDescription( task )</div>
+					}
+					<div class="qh-progress-row">
+						<div class="qh-progress"><div class="qh-progress-fill" style="width: @(percent)%;"></div></div>
+						<div class="qh-count">@current/@required</div>
+					</div>
+					@if ( Expanded )
+					{
+						<div class="qh-stage-track">
+							@for ( var stage = 0; stage < tasksTotal; stage++ )
+							{
+								<div class="qh-stage @(stage < currentNumber - 1 ? "done" : stage == currentNumber - 1 ? "current" : "future")">
+									<span>@(stage < currentNumber - 1 ? "✓" : (stage + 1).ToString())</span>
+								</div>
+							}
+						</div>
+						<div class="qh-footer">
+							<div class="qh-remaining">@(remaining > 0 ? GameLocalization.Format( "ui.quest.remaining", "Remaining: {0}", remaining ) : GameLocalization.Phrase( "ui.quest.objective_done", "Objective complete" ))</div>
+							<div class="qh-overall">@MathF.Round( overallPercent )%</div>
+						</div>
+					}
 				</div>
-				@if ( task.Count > 1 )
-				{
-					<div class="qh-count">@quest.CurrentCount/@task.Count</div>
-				}
 			</div>
-		</div>
-	</root>
-}
+		}
+	}
+</root>
 
 @code
 {
+	public static QuestHud Instance { get; private set; }
+	private bool Expanded { get; set; } = true;
+
+	public static void EnsureInstance()
+	{
+		if ( Instance.IsValid() ) return;
+		var scene = Game.ActiveScene;
+		if ( scene is null ) return;
+
+		foreach ( var hud in scene.GetAllComponents<QuestHud>() )
+		{
+			Instance = hud;
+			return;
+		}
+
+		foreach ( var screenPanel in scene.GetAllComponents<ScreenPanel>() )
+		{
+			Instance = screenPanel.GameObject.Components.Create<QuestHud>();
+			return;
+		}
+
+		var panelObject = scene.CreateObject();
+		panelObject.Name = nameof( QuestHud );
+		panelObject.Components.Create<ScreenPanel>();
+		Instance = panelObject.Components.Create<QuestHud>();
+	}
+
+	protected override void OnStart()
+	{
+		if ( Instance.IsValid() && Instance != this )
+		{
+			Enabled = false;
+			return;
+		}
+
+		Instance = this;
+	}
+
+	protected override void OnDestroy()
+	{
+		if ( Instance == this ) Instance = null;
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( UiModalManager.HasActiveModal || !Input.Pressed( "QuestJournal" ) ) return;
+		Expanded = !Expanded;
+		StateHasChanged();
+	}
+
 	protected override int BuildHash()
 	{
-		var pq = PlayerQuest.Local;
-		var list = pq?.ClientCurrentQuests;
-		if ( list == null || list.Count == 0 ) return 0;
+		var hash = new HashCode();
+		hash.Add( Expanded );
+		hash.Add( GameLocalization.CurrentCode );
+		hash.Add( GameLocalization.Version );
 
-		var q = list.FirstOrDefault( x => x != null && !x.IsFinish && x.QuestDefinition != null && x.CurrentQuestTask != null );
-		if ( q == null ) return 0;
+		var list = PlayerQuest.Local?.ClientCurrentQuests;
+		if ( list is null ) return hash.ToHashCode();
 
-		return System.HashCode.Combine( q.QuestDefinition.Id, q.CurrentQuestTask.Id, q.CurrentCount, q.IsFinish, list.Count );
+		foreach ( var quest in list.Where( q => q != null && !q.IsFinish ).Take( 3 ) )
+		{
+			hash.Add( quest.QuestDefinition?.Id );
+			hash.Add( quest.CurrentQuestTask?.Id );
+			hash.Add( quest.CurrentCount );
+			hash.Add( quest.IsFinish );
+		}
+
+		return hash.ToHashCode();
 	}
 }

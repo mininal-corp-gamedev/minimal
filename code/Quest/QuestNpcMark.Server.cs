@@ -19,20 +19,20 @@ public sealed partial class QuestNpcMark
 		if ( questDefinition is null )
 		{
 			Log.Error( $"[Mark] Quest definition '{NormalizedQuestId}' was not found." );
-			HostNotify( caller, "Марк пока не может выдать задание.", false );
+			HostOpenDialogue( caller, MarkDialogueState.Unavailable );
 			return;
 		}
 
 		if ( !EnsureMarkTasksLoaded( questDefinition ) )
 		{
-			HostNotify( caller, "Марк пока не может выдать задание: этапы обучения не загрузились.", false );
+			HostOpenDialogue( caller, MarkDialogueState.Unavailable );
 			return;
 		}
 
 		var playerQuest = player.Components.Get<PlayerQuest>();
 		if ( !playerQuest.IsValid() || !playerQuest.EnsureLoadedFromDisk() )
 		{
-			HostNotify( caller, "Квесты игрока ещё не загрузились.", false );
+			HostOpenDialogue( caller, MarkDialogueState.Unavailable );
 			return;
 		}
 
@@ -40,7 +40,7 @@ public sealed partial class QuestNpcMark
 
 		if ( playerQuest.HasFinishedQuest( questDefinition ) )
 		{
-			HostNotify( caller, "Марк: Ты уже освоил самые основы. Скоро у меня появятся новые поручения.", true );
+			HostOpenDialogue( caller, MarkDialogueState.AlreadyFinished );
 			return;
 		}
 
@@ -49,22 +49,81 @@ public sealed partial class QuestNpcMark
 		{
 			if ( !QuestManager.TryGiveQuest( playerQuest, questDefinition ) )
 			{
-				HostNotify( caller, "Марк не смог выдать задание. Попробуй ещё раз.", false );
+				HostOpenDialogue( caller, MarkDialogueState.Unavailable );
 				return;
 			}
 
-			HostNotify( caller, "Марк: Для начала покажи, что умеешь постоять за себя. Ударь меня кулаками 3 раза.", true );
+			activeQuest = playerQuest.GetActiveQuest( questDefinition );
+		}
+
+		if ( string.Equals( activeQuest?.CurrentQuestTask?.Id, MarkIntroQuest.MeetTaskId, StringComparison.OrdinalIgnoreCase ) )
+		{
+			MarkIntroQuest.TryAdvance( player, MarkIntroQuest.MeetTaskId );
+			HostOpenDialogue( caller, MarkDialogueState.Introduction, 1, 1 );
 			return;
 		}
 
 		var taskId = activeQuest.CurrentQuestTask?.Id ?? string.Empty;
 		if ( string.Equals( taskId, MarkIntroQuest.ReturnTaskId, StringComparison.OrdinalIgnoreCase ) )
 		{
-			QuestManager.TryAdvanceCount( playerQuest, questDefinition );
+			HostOpenDialogue( caller, MarkDialogueState.ReturnReady, activeQuest.CurrentCount, activeQuest.CurrentQuestTask?.Count ?? 1 );
 			return;
 		}
 
-		HostNotify( caller, CurrentObjectiveMessage( taskId ), true );
+		OpenCurrentObjective( caller, activeQuest );
+	}
+
+	partial void RequestDialogueActionServer( int action )
+	{
+		if ( !Networking.IsHost ) return;
+
+		var caller = Rpc.Caller ?? Connection.Local;
+		if ( !TryGetCallerPlayer( caller, out var player ) ) return;
+		if ( Vector3.DistanceBetween( player.WorldPosition, WorldPosition ) > MathF.Max( 1f, MaxInteractDistance ) ) return;
+
+		var definition = QuestDatabase.FindQuestById( NormalizedQuestId );
+		var playerQuest = player.Components.Get<PlayerQuest>();
+		if ( definition is null || !EnsureMarkTasksLoaded( definition ) || !playerQuest.IsValid() || !playerQuest.EnsureLoadedFromDisk() )
+		{
+			HostOpenDialogue( caller, MarkDialogueState.Unavailable );
+			return;
+		}
+
+		if ( (MarkDialogueAction)action == MarkDialogueAction.AcceptQuest )
+		{
+			if ( playerQuest.HasFinishedQuest( definition ) )
+			{
+				HostOpenDialogue( caller, MarkDialogueState.AlreadyFinished );
+				return;
+			}
+
+			var active = playerQuest.GetActiveQuest( definition );
+			if ( active is null && !QuestManager.TryGiveQuest( playerQuest, definition ) )
+			{
+				HostOpenDialogue( caller, MarkDialogueState.Unavailable );
+				return;
+			}
+
+			active = playerQuest.GetActiveQuest( definition );
+			HostOpenDialogue( caller, MarkDialogueState.QuestStarted, active?.CurrentCount ?? 0, active?.CurrentQuestTask?.Count ?? 1 );
+			return;
+		}
+
+		if ( (MarkDialogueAction)action == MarkDialogueAction.TurnInQuest )
+		{
+			var active = playerQuest.GetActiveQuest( definition );
+			if ( active is null || !string.Equals( active.CurrentQuestTask?.Id, MarkIntroQuest.ReturnTaskId, StringComparison.OrdinalIgnoreCase ) )
+			{
+				if ( active is null ) HostOpenDialogue( caller, MarkDialogueState.AlreadyFinished );
+				else OpenCurrentObjective( caller, active );
+				return;
+			}
+
+			if ( QuestManager.TryAdvanceCount( playerQuest, definition ) )
+				HostOpenDialogue( caller, MarkDialogueState.Completed, 1, 1 );
+			else
+				HostOpenDialogue( caller, MarkDialogueState.Unavailable );
+		}
 	}
 
 	partial void RequestTrainingHitServer( Vector3 origin, Vector3 direction )
@@ -108,20 +167,7 @@ public sealed partial class QuestNpcMark
 
 	private static bool EnsureMarkTasksLoaded( QuestDefinition definition )
 	{
-		if ( definition.QuestTasks is { Count: > 0 } ) return true;
-
-		var hit = QuestDatabase.FindTaskById( MarkIntroQuest.HitTaskId );
-		var buyDoors = QuestDatabase.FindTaskById( MarkIntroQuest.BuyDoorsTaskId );
-		var returnToMark = QuestDatabase.FindTaskById( MarkIntroQuest.ReturnTaskId );
-		if ( hit is null || buyDoors is null || returnToMark is null )
-		{
-			Log.Error( $"[Mark] Task resources failed to load: hit={hit != null}, doors={buyDoors != null}, return={returnToMark != null}." );
-			return false;
-		}
-
-		definition.QuestTasks = new() { hit, buyDoors, returnToMark };
-		Log.Warning( "[Mark] Quest task references were empty and have been restored from the resource database." );
-		return true;
+		return MarkIntroQuest.EnsureDefinitionTasks( definition );
 	}
 
 	private bool TraceHitThisMark( GameObject hitObject )
@@ -146,14 +192,42 @@ public sealed partial class QuestNpcMark
 		return player.IsValid() && player.GameObject.Network.Owner == caller;
 	}
 
-	private static string CurrentObjectiveMessage( string taskId )
+	private void OpenCurrentObjective( Connection caller, Quest activeQuest )
 	{
+		var taskId = activeQuest?.CurrentQuestTask?.Id ?? string.Empty;
+		var current = activeQuest?.CurrentCount ?? 0;
+		var total = activeQuest?.CurrentQuestTask?.Count ?? 1;
 		if ( string.Equals( taskId, MarkIntroQuest.HitTaskId, StringComparison.OrdinalIgnoreCase ) )
-			return "Марк: Возьми кулаки и ударь меня 3 раза.";
-		if ( string.Equals( taskId, MarkIntroQuest.BuyDoorsTaskId, StringComparison.OrdinalIgnoreCase ) )
-			return "Марк: Найди любое свободное жильё и купи любые 2 двери.";
+		{
+			HostOpenDialogue( caller, MarkDialogueState.HitObjective, current, total );
+			return;
+		}
 
-		return "Марк: Посмотри текущее задание в интерфейсе.";
+		if ( string.Equals( taskId, MarkIntroQuest.BuyDoorsTaskId, StringComparison.OrdinalIgnoreCase ) )
+		{
+			HostOpenDialogue( caller, MarkDialogueState.DoorsObjective, current, total );
+			return;
+		}
+
+		if ( string.Equals( taskId, MarkIntroQuest.SpawnPropTaskId, StringComparison.OrdinalIgnoreCase ) )
+		{
+			HostOpenDialogue( caller, MarkDialogueState.SpawnPropObjective, current, total );
+			return;
+		}
+
+		if ( string.Equals( taskId, MarkIntroQuest.PhysgunPropTaskId, StringComparison.OrdinalIgnoreCase ) )
+		{
+			HostOpenDialogue( caller, MarkDialogueState.PhysgunObjective, current, total );
+			return;
+		}
+
+		if ( string.Equals( taskId, MarkIntroQuest.RemovePropTaskId, StringComparison.OrdinalIgnoreCase ) )
+		{
+			HostOpenDialogue( caller, MarkDialogueState.RemovePropObjective, current, total );
+			return;
+		}
+
+		HostOpenDialogue( caller, MarkDialogueState.Unavailable );
 	}
 
 	private static void CancelLegacyStarterQuest( PlayerQuest playerQuest )
@@ -164,13 +238,13 @@ public sealed partial class QuestNpcMark
 		QuestManager.TryCancelQuest( playerQuest, legacyQuest );
 	}
 
-	internal static void HostNotify( Connection connection, string message, bool positive )
+	private void HostOpenDialogue( Connection connection, MarkDialogueState state, int currentCount = 0, int requiredCount = 1 )
 	{
 		if ( !Networking.IsHost || connection is null ) return;
 
 		using ( Rpc.FilterInclude( c => c.SteamId.Value == connection.SteamId.Value ) )
 		{
-			RpcReceiveMarkMessage( message, positive );
+			RpcOpenDialogue( (int)state, Math.Max( 0, currentCount ), Math.Max( 1, requiredCount ) );
 		}
 	}
 }

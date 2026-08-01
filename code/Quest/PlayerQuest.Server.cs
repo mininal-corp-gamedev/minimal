@@ -13,7 +13,8 @@ public sealed partial class PlayerQuest
 	{
 		if ( !Networking.IsHost ) return;
 
-		EnsureLoadedFromDisk();
+		if ( EnsureLoadedFromDisk() )
+			MarkIntroQuest.EnsureStarterQuest( this );
 		OnHostStateChangedServer();
 	}
 
@@ -61,15 +62,86 @@ public sealed partial class PlayerQuest
 		get
 		{
 			var sid = Network.Owner?.SteamId ?? 0;
-			return $"quests_{sid}.json";
+			return GetSavePath( sid );
 		}
 	}
+
+	private static string GetSavePath( long steamId ) => $"quests_{steamId}.json";
 
 	private class SaveData
 	{
 		public List<QuestSnapshot> Current { get; set; } = new();
 		public List<QuestSnapshot> Finished { get; set; } = new();
 	}
+
+	/// <summary>
+	/// Clears only Mark's tutorial progress. Online players are restarted and synced immediately;
+	/// offline players receive the starter quest the next time their PlayerQuest component loads.
+	/// </summary>
+	public static bool HostResetMarkTutorial( long steamId, out string error )
+	{
+		error = null;
+
+		if ( !Networking.IsHost )
+		{
+			error = "The command must run on the host.";
+			return false;
+		}
+
+		if ( steamId <= 0 )
+		{
+			error = "Invalid SteamId.";
+			return false;
+		}
+
+		try
+		{
+			var online = Game.ActiveScene?.GetAllComponents<PlayerQuest>()
+				.FirstOrDefault( quest => quest.IsValid() && quest.GameObject.Network.Owner?.SteamId.Value == steamId );
+
+			if ( online.IsValid() )
+			{
+				online.EnsureLoadedFromDisk();
+				online.CurrentQuests.RemoveAll( IsMarkTutorial );
+				online.FinishedQuests.RemoveAll( IsMarkTutorial );
+
+				if ( !MarkIntroQuest.EnsureStarterQuest( online ) )
+				{
+					online.OnHostStateChanged();
+					error = "Mark's tutorial resources are not ready.";
+					return false;
+				}
+
+				MarkIntroQuest.ApplyInventoryUnlocks( online );
+				online.OnHostStateChanged();
+				return true;
+			}
+
+			var path = GetSavePath( steamId );
+			var data = FileSystem.Data.FileExists( path )
+				? Json.Deserialize<SaveData>( FileSystem.Data.ReadAllText( path ) ) ?? new SaveData()
+				: new SaveData();
+
+			data.Current ??= new();
+			data.Finished ??= new();
+			data.Current.RemoveAll( snapshot => IsMarkTutorial( snapshot ) );
+			data.Finished.RemoveAll( snapshot => IsMarkTutorial( snapshot ) );
+			FileSystem.Data.WriteAllText( path, Json.Serialize( data ) );
+			return true;
+		}
+		catch ( System.Exception ex )
+		{
+			Logger.Warning( $"HostResetMarkTutorial failed for {steamId}: {ex.Message}" );
+			error = ex.Message;
+			return false;
+		}
+	}
+
+	private static bool IsMarkTutorial( Quest quest )
+		=> string.Equals( quest?.QuestDefinition?.Id, MarkIntroQuest.QuestId, System.StringComparison.OrdinalIgnoreCase );
+
+	private static bool IsMarkTutorial( QuestSnapshot snapshot )
+		=> string.Equals( snapshot.QuestId, MarkIntroQuest.QuestId, System.StringComparison.OrdinalIgnoreCase );
 
 	private void SaveToDisk()
 	{

@@ -184,6 +184,13 @@ public sealed class AdminManager : Component, Component.INetworkListener
 #endif
 	}
 
+	[Rpc.Host] public static void RpcRequestResetQuest( long steamId )
+	{
+#if SERVER
+		ResetQuest( Rpc.Caller, steamId );
+#endif
+	}
+
 	[Rpc.Host] public static void RpcRequestRemoveClan( int clanId )
 	{
 #if SERVER
@@ -257,8 +264,12 @@ public sealed class AdminManager : Component, Component.INetworkListener
 			case "clearinventory":
 				ClearInventory( caller, steamId );
 				break;
+			case "resetquest":
+			case "resetquests":
+				ResetQuest( caller, steamId );
+				break;
 			default:
-				NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.usage", "Usage: adm <kick|ban|unban|spawn|arrest|setmoney|sethp|kill|setjob|selldoor|goto|tp|return|giverank|inv|clearinv> ..." ), AdminNotifyType.Warn );
+				NotifyCaller( caller, GameLocalization.Phrase( "notify.admin.usage", "Usage: adm <kick|ban|unban|spawn|arrest|setmoney|sethp|kill|setjob|selldoor|goto|tp|return|giverank|inv|clearinv|resetquest> ..." ), AdminNotifyType.Warn );
 				break;
 		}
 #endif
@@ -744,6 +755,23 @@ public sealed class AdminManager : Component, Component.INetworkListener
 
 		var removed = target.HostClearInventoryExceptDefaultItems();
 		NotifyCaller( caller, GameLocalization.Format( "notify.admin.inventory_cleared", "Cleared {0}'s inventory. Removed {1} item(s).", GetPlayerName( target ), removed ), AdminNotifyType.Info );
+	}
+
+	private static void ResetQuest( Connection caller, long steamId )
+	{
+		if ( !HasAccess( caller, AdministratorRank, out var accessError ) )
+		{
+			NotifyCaller( caller, accessError, AdminNotifyType.Error );
+			return;
+		}
+
+		if ( PlayerQuest.HostResetMarkTutorial( steamId, out var resetError ) )
+		{
+			NotifyCaller( caller, GameLocalization.Format( "notify.admin.quest_reset", "Reset Mark's tutorial for {0}.", steamId ), AdminNotifyType.Info );
+			return;
+		}
+
+		NotifyCaller( caller, GameLocalization.Format( "notify.admin.quest_reset_failed", "Could not reset Mark's tutorial: {0}", resetError ), AdminNotifyType.Error );
 	}
 
 	private static void RemoveClan( Connection caller, int clanId )

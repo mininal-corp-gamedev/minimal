@@ -1,0 +1,9 @@
+{
+  "Id": "mark_meet",
+  "Header": "Познакомиться с Марком",
+  "Description": "Найди Марка по метке на компасе, подойди к нему и нажми E.",
+  "Count": 1,
+  "HasPostCompleted": false,
+  "__references": [],
+  "__version": 0
+}

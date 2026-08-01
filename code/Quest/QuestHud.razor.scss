@@ -1,81 +1,183 @@
 QuestHud {
 	position: absolute;
-	top: 10px;
-	left: 10px;
+	top: 22px;
+	left: 22px;
+	width: 370px;
+	z-index: 20;
 	pointer-events: none;
 	flex-direction: column;
+	gap: 8px;
+
+	&.no-quests { display: none; }
 
 	.qh-panel {
+		width: 100%;
+		flex-direction: row;
+		background-color: rgba(10, 15, 25, 0.92);
+		border: 1px solid rgba(255, 255, 255, 0.09);
+		border-radius: 11px;
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.40);
+		overflow: hidden;
+		backdrop-filter: blur(12px);
+	}
+
+	.qh-accent {
+		width: 4px;
+		flex-shrink: 0;
+		background: linear-gradient(180deg, #ff436c, #8a4df2);
+	}
+
+	.qh-content {
+		flex-grow: 1;
+		min-width: 0;
 		flex-direction: column;
-		padding: 12px 14px;
-		min-width: 280px;
-		max-width: 380px;
-		background-color: rgba(28, 39, 47, 0.88);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		border-radius: 10px;
-		box-shadow: 0 7px 20px rgba(0, 0, 0, 0.34);
+		padding: 13px 14px 12px;
 	}
 
 	.qh-row-top {
 		flex-direction: row;
 		align-items: center;
-		justify-content: space-between;
-		margin-bottom: 18px;
+		margin-bottom: 8px;
+	}
+
+	.qh-quest-icon {
+		width: 30px;
+		height: 30px;
+		margin-right: 10px;
+		flex-shrink: 0;
+		align-items: center;
+		justify-content: center;
+		font-family: Poppins;
+		font-size: 17px;
+		font-weight: 900;
+		color: #ffffff;
+		background: linear-gradient(145deg, #ff436c, #8a4df2);
+		border-radius: 9px;
+		box-shadow: 0 4px 14px rgba(255, 67, 108, 0.28);
+	}
+
+	.qh-title-stack {
+		flex-grow: 1;
+		min-width: 0;
+		flex-direction: column;
 	}
 
 	.qh-header {
-		flex-grow: 1;
 		font-family: Montserrat;
-		font-size: 16px;
-		font-weight: 700;
-		color: rgba(255, 255, 255, 0.95);
+		font-size: 14px;
+		font-weight: 900;
+		color: rgba(255, 255, 255, 0.96);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		margin-right: 12px;
 	}
 
 	.qh-task-meta {
-		flex-shrink: 0;
-		font-family: Montserrat;
-		font-size: 13px;
-		font-weight: 700;
-		color: #ff436c;
-	}
-
-	.qh-row-body {
-		flex-direction: row;
-		align-items: center;
-		justify-content: space-between;
-	}
-
-	.qh-desc {
-		flex-direction: column;
-		flex-grow: 1;
-		min-width: 0;
-		margin-right: 12px;
+		margin-top: 2px;
+		font-family: Poppins;
+		font-size: 10px;
+		font-weight: 900;
+		color: #ff92aa;
 	}
 
 	.qh-task-header {
 		font-family: Montserrat;
 		font-size: 13px;
-		font-weight: 700;
-		color: rgba(255, 255, 255, 0.92);
-		margin-bottom: 2px;
+		font-weight: 800;
+		color: rgba(255, 255, 255, 0.90);
 	}
 
 	.qh-task-desc {
+		margin-top: 2px;
 		font-family: Montserrat;
-		font-size: 12px;
-		font-weight: 400;
-		color: rgba(255, 255, 255, 0.72);
+		font-size: 11px;
+		font-weight: 500;
+		line-height: 1.3;
+		color: rgba(255, 255, 255, 0.58);
+		white-space: normal;
+	}
+
+	.qh-progress-row {
+		margin-top: 10px;
+		flex-direction: row;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.qh-progress {
+		height: 7px;
+		flex-grow: 1;
+		background-color: rgba(255, 255, 255, 0.09);
+		border-radius: 4px;
+		overflow: hidden;
+	}
+
+	.qh-progress-fill {
+		height: 100%;
+		background: linear-gradient(90deg, #ff436c, #ff8e68);
+		border-radius: 4px;
+		box-shadow: 0 0 9px rgba(255, 67, 108, 0.46);
+		transition: width 0.25s ease;
 	}
 
 	.qh-count {
-		flex-shrink: 0;
-		font-family: Montserrat;
-		font-size: 18px;
-		font-weight: 800;
+		min-width: 38px;
+		font-family: Poppins;
+		font-size: 13px;
+		font-weight: 900;
 		color: #ffd7e2;
+		text-align: right;
 	}
+
+	.qh-stage-track {
+		margin-top: 11px;
+		width: 100%;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.qh-stage {
+		width: 24px;
+		height: 24px;
+		align-items: center;
+		justify-content: center;
+		font-family: Poppins;
+		font-size: 10px;
+		font-weight: 900;
+		color: rgba(255, 255, 255, 0.35);
+		background-color: rgba(255, 255, 255, 0.06);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 12px;
+
+		&.done {
+			color: #ffffff;
+			background-color: #36b887;
+			border-color: #58d9a8;
+		}
+
+		&.current {
+			color: #ffffff;
+			background-color: #ff436c;
+			border-color: #ff92aa;
+			box-shadow: 0 0 12px rgba(255, 67, 108, 0.55);
+		}
+	}
+
+	.qh-footer {
+		margin-top: 7px;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.qh-remaining,
+	.qh-overall {
+		font-family: Montserrat;
+		font-size: 10px;
+		font-weight: 700;
+		color: rgba(255, 255, 255, 0.44);
+	}
+
+	.qh-overall { color: rgba(255, 146, 170, 0.82); }
 }

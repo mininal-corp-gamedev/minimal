@@ -1,0 +1,236 @@
+@using Sandbox;
+@using Sandbox.UI;
+@using System;
+@inherits PanelComponent
+@namespace Sandbox
+
+@* Client-side presentation; every quest mutation is still validated by QuestNpcMark on the host. *@
+
+<root>
+	@if ( IsOpen && UiModalManager.IsActive( ModalId ) )
+	{
+		<div class="dialogue-overlay">
+			<div class="dialogue-window">
+				<div class="npc-column">
+					<div class="npc-portrait"><span>M</span></div>
+					<div class="npc-name">@GameLocalization.Phrase( "npc.mark.name", "Mark" )</div>
+					<div class="npc-role">@GameLocalization.Phrase( "npc.mark.role", "City guide" )</div>
+				</div>
+
+				<div class="dialogue-content">
+					<div class="dialogue-kicker">@GameLocalization.Phrase( "ui.quest.dialogue", "Dialogue" )</div>
+					<div class="dialogue-title">@DialogueTitle</div>
+					<div class="dialogue-text">@DialogueText</div>
+
+					@if ( ShowsObjective )
+					{
+						<div class="objective-card">
+							<div class="objective-heading">@GameLocalization.Phrase( "ui.quest.current_objective", "Current objective" )</div>
+							<div class="objective-name">@ObjectiveName</div>
+							<div class="objective-description">@ObjectiveDescription</div>
+							<div class="objective-progress-row">
+								<div class="progress-track"><div class="progress-fill" style="width: @(ProgressPercent)%;"></div></div>
+								<div class="progress-count">@CurrentCount / @RequiredCount</div>
+							</div>
+						</div>
+					}
+
+					<div class="dialogue-actions">
+						<button class="secondary" onclick=@Close>@GameLocalization.Phrase( "ui.common.close", "Close" )</button>
+						@if ( PrimaryAction != MarkDialogueAction.None )
+						{
+							<button class="primary" onclick=@RunPrimaryAction>@PrimaryActionLabel</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+</root>
+
+@code
+{
+	private const string ModalId = nameof( QuestDialoguePanel );
+	public static QuestDialoguePanel Instance { get; private set; }
+
+	private bool IsOpen { get; set; }
+	private QuestNpcMark Npc { get; set; }
+	private MarkDialogueState State { get; set; }
+	private int CurrentCount { get; set; }
+	private int RequiredCount { get; set; } = 1;
+
+	public static void Open( QuestNpcMark npc, MarkDialogueState state, int currentCount, int requiredCount )
+	{
+		EnsureInstance();
+		Instance?.OpenInternal( npc, state, currentCount, requiredCount );
+	}
+
+	private static void EnsureInstance()
+	{
+		if ( Instance.IsValid() ) return;
+		var scene = Game.ActiveScene;
+		if ( scene is null ) return;
+
+		foreach ( var panel in scene.GetAllComponents<QuestDialoguePanel>() )
+		{
+			Instance = panel;
+			return;
+		}
+
+		// A PanelComponent needs an active ScreenPanel canvas. The managers prefab
+		// normally provides one, but this fallback also supports custom scenes.
+		foreach ( var screenPanel in scene.GetAllComponents<ScreenPanel>() )
+		{
+			Instance = screenPanel.GameObject.Components.Create<QuestDialoguePanel>();
+			return;
+		}
+
+		var panelObject = scene.CreateObject();
+		panelObject.Name = nameof( QuestDialoguePanel );
+		panelObject.Components.Create<ScreenPanel>();
+		Instance = panelObject.Components.Create<QuestDialoguePanel>();
+	}
+
+	private void OpenInternal( QuestNpcMark npc, MarkDialogueState state, int currentCount, int requiredCount )
+	{
+		Npc = npc;
+		State = state;
+		CurrentCount = Math.Max( 0, currentCount );
+		RequiredCount = Math.Max( 1, requiredCount );
+		IsOpen = true;
+		UiModalManager.Open( ModalId );
+		Crosshair.SetBlocked( ModalId, true );
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void RunPrimaryAction()
+	{
+		var action = PrimaryAction;
+		if ( action == MarkDialogueAction.None || !Npc.IsValid() ) return;
+		Npc.RequestDialogueAction( action );
+	}
+
+	private void Close()
+	{
+		IsOpen = false;
+		Npc = null;
+		UiModalManager.Close( ModalId );
+		Crosshair.SetBlocked( ModalId, false );
+		UiModalManager.UpdateMouseVisibility();
+		StateHasChanged();
+	}
+
+	private void OnActiveModalChanged( string activeModal )
+	{
+		if ( activeModal == ModalId || !IsOpen ) return;
+		IsOpen = false;
+		Npc = null;
+		Crosshair.SetBlocked( ModalId, false );
+		StateHasChanged();
+	}
+
+	protected override void OnStart()
+	{
+		if ( Instance.IsValid() && Instance != this ) return;
+		Instance = this;
+		UiModalManager.ActiveModalChanged += OnActiveModalChanged;
+	}
+
+	protected override void OnUpdate()
+	{
+		if ( !IsOpen ) return;
+		UiModalManager.UpdateMouseVisibility();
+
+		if ( Input.EscapePressed )
+		{
+			Input.EscapePressed = false;
+			Close();
+			return;
+		}
+
+		var local = Player.Local;
+		if ( !Npc.IsValid() || !local.IsValid() || Vector3.DistanceBetween( local.WorldPosition, Npc.WorldPosition ) > Npc.MaxInteractDistance + 48f )
+			Close();
+	}
+
+	protected override void OnDestroy()
+	{
+		UiModalManager.ActiveModalChanged -= OnActiveModalChanged;
+		if ( UiModalManager.IsActive( ModalId ) ) UiModalManager.Close( ModalId );
+		Crosshair.SetBlocked( ModalId, false );
+		if ( Instance == this ) Instance = null;
+	}
+
+	private MarkDialogueAction PrimaryAction => State switch
+	{
+		MarkDialogueState.Introduction => MarkDialogueAction.AcceptQuest,
+		MarkDialogueState.ReturnReady => MarkDialogueAction.TurnInQuest,
+		_ => MarkDialogueAction.None
+	};
+
+	private string PrimaryActionLabel => PrimaryAction switch
+	{
+		MarkDialogueAction.AcceptQuest => GameLocalization.Phrase( "ui.quest.accept", "Accept quest" ),
+		MarkDialogueAction.TurnInQuest => GameLocalization.Phrase( "ui.quest.turn_in", "Turn in quest" ),
+		_ => GameLocalization.Phrase( "ui.common.close", "Close" )
+	};
+
+	private bool ShowsObjective => State is MarkDialogueState.QuestStarted
+		or MarkDialogueState.HitObjective
+		or MarkDialogueState.DoorsObjective
+		or MarkDialogueState.SpawnPropObjective
+		or MarkDialogueState.PhysgunObjective
+		or MarkDialogueState.RemovePropObjective
+		or MarkDialogueState.ReturnReady;
+
+	private string DialogueTitle => State switch
+	{
+		MarkDialogueState.Introduction => GameLocalization.Phrase( "npc.mark.dialogue.intro_title", "Welcome to the city" ),
+		MarkDialogueState.QuestStarted => GameLocalization.Phrase( "npc.mark.dialogue.started_title", "First assignment" ),
+		MarkDialogueState.HitObjective => GameLocalization.Phrase( "npc.mark.dialogue.reminder_title", "Back already?" ),
+		MarkDialogueState.DoorsObjective => GameLocalization.Phrase( "npc.mark.dialogue.next_title", "A roof over your head" ),
+		MarkDialogueState.SpawnPropObjective => GameLocalization.Phrase( "npc.mark.dialogue.spawn_title", "Build something" ),
+		MarkDialogueState.PhysgunObjective => GameLocalization.Phrase( "npc.mark.dialogue.physgun_title", "Learn the Physgun" ),
+		MarkDialogueState.RemovePropObjective => GameLocalization.Phrase( "npc.mark.dialogue.toolgun_title", "Clean up after yourself" ),
+		MarkDialogueState.ReturnReady => GameLocalization.Phrase( "npc.mark.dialogue.return_title", "Good work" ),
+		MarkDialogueState.Completed => GameLocalization.Phrase( "npc.mark.dialogue.complete_title", "Welcome aboard" ),
+		MarkDialogueState.AlreadyFinished => GameLocalization.Phrase( "npc.mark.dialogue.finished_title", "Nothing else for now" ),
+		_ => GameLocalization.Phrase( "npc.mark.dialogue.error_title", "Not right now" )
+	};
+
+	private string DialogueText => GameLocalization.Phrase( State switch
+	{
+		MarkDialogueState.Introduction => "npc.mark.dialogue.intro",
+		MarkDialogueState.QuestStarted => "npc.mark.dialogue.started",
+		MarkDialogueState.HitObjective => "npc.mark.dialogue.hit",
+		MarkDialogueState.DoorsObjective => "npc.mark.dialogue.doors",
+		MarkDialogueState.SpawnPropObjective => "npc.mark.dialogue.spawn",
+		MarkDialogueState.PhysgunObjective => "npc.mark.dialogue.physgun",
+		MarkDialogueState.RemovePropObjective => "npc.mark.dialogue.toolgun",
+		MarkDialogueState.ReturnReady => "npc.mark.dialogue.return",
+		MarkDialogueState.Completed => "npc.mark.dialogue.complete",
+		MarkDialogueState.AlreadyFinished => "npc.mark.dialogue.finished",
+		_ => "npc.mark.dialogue.error"
+	} );
+
+	private string ObjectiveTaskId => State switch
+	{
+		MarkDialogueState.DoorsObjective => "mark_buy_doors",
+		MarkDialogueState.SpawnPropObjective => "mark_spawn_prop",
+		MarkDialogueState.PhysgunObjective => "mark_physgun_prop",
+		MarkDialogueState.RemovePropObjective => "mark_remove_prop",
+		MarkDialogueState.ReturnReady => "mark_return",
+		_ => "mark_hit"
+	};
+
+	private string ObjectiveName => GameLocalization.Phrase( $"quest.task.{ObjectiveTaskId}.header" );
+
+	private string ObjectiveDescription => GameLocalization.Phrase( $"quest.task.{ObjectiveTaskId}.description" );
+
+	private float ProgressPercent => Math.Clamp( CurrentCount * 100f / RequiredCount, 0f, 100f );
+
+	protected override int BuildHash() => HashCode.Combine(
+		IsOpen, UiModalManager.Version, State, CurrentCount, RequiredCount,
+		Npc.IsValid(), GameLocalization.CurrentCode, GameLocalization.Version );
+}

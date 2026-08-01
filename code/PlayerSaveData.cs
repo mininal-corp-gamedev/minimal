@@ -4,7 +4,8 @@ public static class PlayerSaveData
 {
 	public const int InventorySlotCount = 27;
 	public const int DefaultStartingMoney = 500;
-	public static readonly string[] DefaultInventoryItemIds = { "hands", "physgun", "toolgun", "keys" };
+	// Tutorial equipment is unlocked by Mark. A brand-new account starts with fists only.
+	public static readonly string[] DefaultInventoryItemIds = { "hands" };
 }
 
 public sealed class PlayerMoneySaveData

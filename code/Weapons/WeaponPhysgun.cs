@@ -1149,11 +1149,15 @@ public sealed class WeaponPhysgun : Weapon
 
         PropCollisionTags.RefreshPhysicsShapeTags(rb.GameObject);
 
-        if (isPropCustom)
-        {
-            propCustom.NotifyPhysgunGrabbed();
+		if (isPropCustom)
+		{
+			propCustom.NotifyPhysgunGrabbed();
+#if SERVER
+			if ( propCustom.PlayerOwner == player )
+				MarkIntroQuest.TryAdvance( player, MarkIntroQuest.PhysgunPropTaskId );
+#endif
 
-            if (rb.GameObject.Network.Owner is not null)
+			if (rb.GameObject.Network.Owner is not null)
                 rb.GameObject.Network.DropOwnership();
         }
 

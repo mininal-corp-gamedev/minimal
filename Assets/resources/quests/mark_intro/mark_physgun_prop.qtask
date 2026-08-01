@@ -1,0 +1,9 @@
+{
+  "Id": "mark_physgun_prop",
+  "Header": "Освоить Physgun",
+  "Description": "Возьми Physgun и подними свой проп основной атакой.",
+  "Count": 1,
+  "HasPostCompleted": true,
+  "__references": [],
+  "__version": 0
+}

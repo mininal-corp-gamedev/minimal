@@ -58,18 +58,47 @@ public sealed partial class QuestNpcMark : Component, Component.IPressable, ICus
 	[Rpc.Host]
 	private void RpcRequestInteract() => RequestInteractServer();
 
+	public void RequestDialogueAction( MarkDialogueAction action )
+	{
+		if ( action == MarkDialogueAction.None ) return;
+		RpcRequestDialogueAction( (int)action );
+	}
+
+	[Rpc.Host]
+	private void RpcRequestDialogueAction( int action ) => RequestDialogueActionServer( action );
+
 	[Rpc.Host]
 	private void RpcRequestTrainingHit( Vector3 origin, Vector3 direction ) => RequestTrainingHitServer( origin, direction );
 
 	partial void RequestInteractServer();
+	partial void RequestDialogueActionServer( int action );
 	partial void RequestTrainingHitServer( Vector3 origin, Vector3 direction );
 
 	[Rpc.Broadcast]
-	private static void RpcReceiveMarkMessage( string message, bool positive )
+	private void RpcOpenDialogue( int state, int currentCount, int requiredCount )
 	{
-		if ( positive )
-			Notification.Info( message, 4f );
-		else
-			Notification.Warn( message, 4f );
+		QuestDialoguePanel.Open( this, (MarkDialogueState)state, currentCount, requiredCount );
 	}
+}
+
+public enum MarkDialogueState
+{
+	Introduction,
+	QuestStarted,
+	HitObjective,
+	DoorsObjective,
+	SpawnPropObjective,
+	PhysgunObjective,
+	RemovePropObjective,
+	ReturnReady,
+	Completed,
+	AlreadyFinished,
+	Unavailable
+}
+
+public enum MarkDialogueAction
+{
+	None,
+	AcceptQuest,
+	TurnInQuest
 }

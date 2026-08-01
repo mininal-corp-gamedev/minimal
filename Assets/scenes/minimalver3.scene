@@ -4170,7 +4170,7 @@
                   "IsTrigger": false,
                   "Mesh": {
                     "Data": {
-                      "$blob": "f5d50eb9-c437-4205-b7e4-8266b3366204"
+                      "$blob": "0e08224e-5df0-44c5-9539-347ce35f8d99"
                     },
                     "Materials": [
                       "materials/grass/floor_grass_dirt_blend_a.vmat",
@@ -4227,7 +4227,7 @@
                   "IsTrigger": false,
                   "Mesh": {
                     "Data": {
-                      "$blob": "a116eb43-8d90-44d0-bd1b-48051ef22b77"
+                      "$blob": "cbbe1f3a-bb26-4777-8445-f9c7fae772c1"
                     },
                     "Materials": [
                       "materials/grass/floor_grass_dirt_blend_a.vmat",
@@ -4320,7 +4320,7 @@
                   "IsTrigger": false,
                   "Mesh": {
                     "Data": {
-                      "$blob": "20e544fb-e6c0-4cb2-ace2-f948b180294b"
+                      "$blob": "1d6c2a25-9087-40ae-af10-0d794549091b"
                     },
                     "Materials": [
                       "materials/tools/toolsskybox.vmat"
@@ -5923,7 +5923,7 @@
                   "IsTrigger": false,
                   "Mesh": {
                     "Data": {
-                      "$blob": "ec4a6a0f-24ff-4bfc-8057-a76d9faa0d47"
+                      "$blob": "96de0f76-812d-48a1-8dc6-0c6b13cffe79"
                     },
                     "Materials": [
                       "materials/dev/reflectivity_30.vmat",
@@ -6438,7 +6438,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "253c5610-d9cf-47e1-b28d-e940b2c0545e"
+                        "$blob": "c28ddf14-b621-4187-a7a3-a590275283fa"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -10916,7 +10916,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "f0b3c2bf-7df2-48dc-8063-dbd56a7411f1"
+                        "$blob": "6880ca66-948f-43f3-b2ac-fe23dbc1de2e"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -11189,7 +11189,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "3629bc88-96b5-4cf8-bde5-d3e670d9e3fb"
+                        "$blob": "4688b42b-ffe2-461d-80bd-f43a136fc8b2"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -11837,7 +11837,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "2e4443a8-b42d-4d0d-907b-80f2f36c5e32"
+                            "$blob": "98b8150a-8013-499b-b253-ec2ae3a0ecfb"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -12139,7 +12139,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "d9f2485e-0132-46f9-b629-a70cbcfbadce"
+                            "$blob": "06c6a759-19b8-4ec5-92e9-4144a97caeb9"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -12444,7 +12444,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "3e3a072d-119b-4885-8c36-749927c768b1"
+                            "$blob": "ec25d6d6-cede-491b-b514-cd46dfb9aede"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -12738,7 +12738,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "9d4696b2-87ff-4dc2-ac0c-ed43e3797bdf"
+                            "$blob": "452ee4d8-75f0-44bf-b66a-d7a5fe1c92fc"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -13043,7 +13043,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "099484e6-b86d-41f1-8447-5e4e33e5866f"
+                            "$blob": "bb1614a1-fb28-42eb-8d67-46edfdac682b"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -13337,7 +13337,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "cf6a4922-58f2-4f72-b45e-f90ffc982567"
+                            "$blob": "7d8efadb-aaae-496b-8a02-a2c85c73cd3d"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -16312,7 +16312,7 @@
                   "IsTrigger": false,
                   "Mesh": {
                     "Data": {
-                      "$blob": "d8f6b6f5-6bd5-429a-816e-90c0340ec7b2"
+                      "$blob": "556b8655-936f-40c8-8689-c571f41a6b4f"
                     },
                     "Materials": [
                       "materials/dev/reflectivity_30.vmat",
@@ -16542,7 +16542,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "4f494dac-47d7-42ac-a70a-95b2f17eae04"
+                        "$blob": "d4f5ffbf-4304-48da-97ac-7de16f0428a1"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -16784,7 +16784,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "94ca1d2f-e1e8-4d76-81a5-d5e157578191"
+                        "$blob": "8352313c-2ac1-4fa3-8e21-ce01906de0b0"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -20770,7 +20770,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "aae42197-6daf-416a-822c-b096e7f8ee05"
+                        "$blob": "626bdde4-cb89-4741-af0d-f06c51d8363a"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -23175,7 +23175,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "dc9c49bf-dd25-4504-b442-c8bc50616668"
+                        "$blob": "e7b259b6-3865-4c21-b5fa-dac1217f1aaf"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -23423,7 +23423,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "670e426c-3c97-444b-9d09-d26cf669b862"
+                        "$blob": "550d27af-ea58-410c-8e73-2f9cffa33d4a"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -23655,7 +23655,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "5651106d-4d96-4c0d-8297-e9d0c7b80c8b"
+                        "$blob": "55aed8a9-cbc9-42c4-b01a-2f4d73d2b1ad"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -25708,7 +25708,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "95ca15f4-b801-415e-8f95-db5a586a4575"
+                            "$blob": "020ce7b6-30fd-4980-9275-43c9b9cdbc36"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -25969,7 +25969,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "cff11b49-15bc-47e4-bd06-b8df337a0e72"
+                            "$blob": "3de89b6a-235f-49bc-9047-e580ec0976c5"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -26816,7 +26816,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "cbebc8ff-8643-417b-9e8e-cd93145557d2"
+                        "$blob": "b6ff3588-546b-4ed0-b6ce-cbe601f3b8cb"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -27844,7 +27844,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "cedc9e83-6eb4-4c80-a1f4-4c9967c8ca46"
+                        "$blob": "73081d46-abd5-429c-b7fb-27778c2f69a6"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -28291,7 +28291,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "059f1587-7b94-4588-95a0-d5e6ef946d51"
+                        "$blob": "e260e3fe-4881-455f-a3f6-21d21c75cee3"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -28531,7 +28531,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "9c725d45-5b90-4e4a-810a-1b218af9bd9a"
+                        "$blob": "6cd652d5-c321-4d78-badd-766a9aabe83d"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -34741,7 +34741,7 @@
                     "Property": "Mesh",
                     "Value": {
                       "Data": {
-                        "$blob": "2b916320-575d-40b5-b1ed-c0991ab22b03"
+                        "$blob": "c575d743-4b43-4bad-a665-dc3c5ff22fbe"
                       },
                       "Materials": [
                         "materials/glass.vmat"
@@ -35024,7 +35024,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "1600e908-b688-45fe-8ca2-51253a6932bd"
+                            "$blob": "03300464-109f-4a9f-b0b9-b8a6d70f1e1a"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -35279,7 +35279,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "f60cc734-d11c-443a-8372-7e06ecda44e2"
+                            "$blob": "f9c0df6a-b2d1-4d9c-a9de-288ef7c96200"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -35553,7 +35553,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "09a8ed2e-6022-4dac-8294-e952592f9ccc"
+                            "$blob": "3432fd22-42c3-4480-88e7-4bb56a3452a6"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -35808,7 +35808,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "a105f901-5829-4aeb-be4e-fb56b042edbb"
+                            "$blob": "784a3802-3e4d-40fb-bd87-2b1e9dc7660b"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -36082,7 +36082,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "a687837d-6ad7-4b50-bed1-db721327fe99"
+                            "$blob": "f3c14cb5-f6f7-49da-9681-f2ffeb352d92"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -36337,7 +36337,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "de415bf5-35f7-41c0-96bd-4fa34852bf73"
+                            "$blob": "72478ad7-6533-47bb-9cf4-25a1ef7455f2"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -36611,7 +36611,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "e4d4013b-d7e2-4db3-a8f9-e94de48ab635"
+                            "$blob": "de229e01-cad4-4495-be06-5fcde89dbe23"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -36866,7 +36866,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "34c94e89-50c5-4421-8fb3-bea61c266c7a"
+                            "$blob": "53b13724-8dcd-4844-adaf-118d89a3cf82"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -37089,7 +37089,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "bfa2979d-2e6f-44a2-8fc0-5e2a6aa61969"
+                            "$blob": "8b3466cd-73e7-4f7e-b30a-09abc834402e"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -37293,7 +37293,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "4e42a2ce-630b-4cb7-b46f-e5b8efd55d4b"
+                            "$blob": "eda32779-b937-4b4f-8be9-e5f96714158d"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -37516,7 +37516,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "8016fec9-fd6c-4655-8027-1ffd80117cbf"
+                            "$blob": "e6a1cfa3-6621-4541-ba75-a464bc345ba1"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -37720,7 +37720,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "6c28dbb4-f9fa-4bcd-a264-1dfa40c809e9"
+                            "$blob": "de9c8aa3-cfc7-4ade-bcae-717dfab4b331"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -37943,7 +37943,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "8fa417f7-9357-41ed-80db-1643a96b9d0a"
+                            "$blob": "3a2061e0-d02e-4f49-8576-767c2b654a24"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -38147,7 +38147,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "097f9329-b4d1-43a6-aff4-8eef189fb9be"
+                            "$blob": "12694625-01c0-46f7-918c-a240229729f9"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -38370,7 +38370,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "5308a204-87f4-4d69-b452-8ae3fc3622e4"
+                            "$blob": "d114e5e8-fb86-4de5-a6f9-25427a2a35bf"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -38574,7 +38574,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "a2bd4a1a-8ffd-46eb-a42f-adb6cd52f12f"
+                            "$blob": "46e2a0d3-29ce-4235-807e-bbe79fef0bf2"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -38840,7 +38840,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "22d19e79-324e-474d-ae65-5da7d808ebdb"
+                            "$blob": "cdfaf8d7-a03e-47e7-9c5f-74a8ad0a9755"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -39095,7 +39095,7 @@
                         "Property": "Mesh",
                         "Value": {
                           "Data": {
-                            "$blob": "c19bd3de-4a64-466c-a284-02be0bf7a4ad"
+                            "$blob": "2911aa91-cf9c-4246-a469-09e99bb6be53"
                           },
                           "Materials": [
                             "materials/glass.vmat"
@@ -43874,7 +43874,7 @@
                   "IsTrigger": true,
                   "Mesh": {
                     "Data": {
-                      "$blob": "d5211a17-ca7c-4496-ba5e-16fe3712374d"
+                      "$blob": "23ea6d12-f576-49cf-aaf1-cdfe288cf704"
                     },
                     "Materials": [
                       "materials/glass/glass_a.vmat"
@@ -45397,6 +45397,22 @@
               "Type": "Component",
               "IdValue": "e2af179e-9f12-4c4b-a921-0f62bd16d754"
             }
+          },
+          {
+            "Id": {
+              "Type": "Component",
+              "IdValue": "f71ae1c8-9d38-4d85-965f-8f686f4ea750"
+            },
+            "NewParent": {
+              "Type": "GameObject",
+              "IdValue": "1eb7475f-1c69-4490-90c5-e0137be5e753"
+            },
+            "NewContainerProperty": "Components",
+            "IsNewContainerArray": true,
+            "NewPreviousElement": {
+              "Type": "Component",
+              "IdValue": "a99e8fb3-d713-47e7-ad60-5bbc9f277c79"
+            }
           }
         ]
       },
@@ -45447,7 +45463,8 @@
         "0d4db2c5-0e6d-4fc1-9f32-2e0dbf7a5a22": "328243b3-4269-8491-af2d-84e1ba0fc8af",
         "ebb7c758-103c-4dba-9fc8-5d4f4b5f515c": "a6c3cdce-1c6f-83f3-bb15-8d79bcbd403c",
         "a99e8fb3-d713-47e7-ad60-5bbc9f277c79": "6c7dc922-13d1-80a1-86f0-43936681b000",
-        "243c6a62-82d2-411c-b42f-722e018bb07c": "6f27abbc-a41f-8428-94b2-9a3c18b436ce"
+        "243c6a62-82d2-411c-b42f-722e018bb07c": "6f27abbc-a41f-8428-94b2-9a3c18b436ce",
+        "f71ae1c8-9d38-4d85-965f-8f686f4ea750": "995edf72-c276-89cd-85e0-207f909de755"
       }
     },
     {
@@ -45480,7 +45497,7 @@
           "IsTrigger": true,
           "Mesh": {
             "Data": {
-              "$blob": "99fe9b71-14b7-48a5-a9a9-4eb93b6c8858"
+              "$blob": "11af63e3-e348-4adf-b5e8-faa9d240fba6"
             },
             "Materials": [
               "materials/glass/glass_a.vmat"
@@ -46119,7 +46136,7 @@
           "IsTrigger": true,
           "Mesh": {
             "Data": {
-              "$blob": "5704deb9-e7a2-49a6-8bc5-2ce2bbfec559"
+              "$blob": "6d825cf3-03ce-4435-afbd-8c2debc6df86"
             },
             "Materials": [
               "materials/glass/glass_a.vmat"
@@ -46691,7 +46708,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "37ce37e0-edd8-49b3-a7b3-7f02094fede8"
+              "IdValue": "57a076d5-9022-4280-8749-9171b62b6def"
             },
             "Parent": {
               "Type": "GameObject",
@@ -46701,7 +46718,7 @@
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "37ce37e0-edd8-49b3-a7b3-7f02094fede8",
+              "__guid": "57a076d5-9022-4280-8749-9171b62b6def",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - braids_hair",
@@ -46722,18 +46739,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "2227bd2d-7aa5-4f24-92cd-f3606aafed41"
+              "IdValue": "8b9f7af9-2333-4458-a408-2fcdd8ee2b32"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "37ce37e0-edd8-49b3-a7b3-7f02094fede8"
+              "IdValue": "57a076d5-9022-4280-8749-9171b62b6def"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "2227bd2d-7aa5-4f24-92cd-f3606aafed41",
+              "__guid": "8b9f7af9-2333-4458-a408-2fcdd8ee2b32",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -46785,7 +46802,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "f0e8c5c2-f7f5-435f-b3ef-7ee233d6012d"
+              "IdValue": "fd17fc37-c667-4d01-b1b2-af9db16e5d1b"
             },
             "Parent": {
               "Type": "GameObject",
@@ -46793,12 +46810,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "37ce37e0-edd8-49b3-a7b3-7f02094fede8"
+              "IdValue": "57a076d5-9022-4280-8749-9171b62b6def"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "f0e8c5c2-f7f5-435f-b3ef-7ee233d6012d",
+              "__guid": "fd17fc37-c667-4d01-b1b2-af9db16e5d1b",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - gold earrings",
@@ -46819,18 +46836,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "91ff4fe5-ca33-4124-8fe4-64702a2f4df4"
+              "IdValue": "3caca660-7400-4921-9759-1ff1b4936868"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "f0e8c5c2-f7f5-435f-b3ef-7ee233d6012d"
+              "IdValue": "fd17fc37-c667-4d01-b1b2-af9db16e5d1b"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "91ff4fe5-ca33-4124-8fe4-64702a2f4df4",
+              "__guid": "3caca660-7400-4921-9759-1ff1b4936868",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -46882,7 +46899,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "67dc2878-c3fb-4b5e-9e63-8752524655a5"
+              "IdValue": "36323c73-87ad-4279-aba1-58220d939dc4"
             },
             "Parent": {
               "Type": "GameObject",
@@ -46890,12 +46907,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "f0e8c5c2-f7f5-435f-b3ef-7ee233d6012d"
+              "IdValue": "fd17fc37-c667-4d01-b1b2-af9db16e5d1b"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "67dc2878-c3fb-4b5e-9e63-8752524655a5",
+              "__guid": "36323c73-87ad-4279-aba1-58220d939dc4",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - grillz",
@@ -46916,18 +46933,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "77afbdec-32a5-433d-979d-ea5f3bb59d75"
+              "IdValue": "ec2463c6-61f6-4728-bb61-915d562ae290"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "67dc2878-c3fb-4b5e-9e63-8752524655a5"
+              "IdValue": "36323c73-87ad-4279-aba1-58220d939dc4"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "77afbdec-32a5-433d-979d-ea5f3bb59d75",
+              "__guid": "ec2463c6-61f6-4728-bb61-915d562ae290",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -46979,7 +46996,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "c121d8ff-9ee2-49bd-a66a-222a39ca22e0"
+              "IdValue": "6a07419e-92ed-400e-8342-8313b40042cb"
             },
             "Parent": {
               "Type": "GameObject",
@@ -46987,12 +47004,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "67dc2878-c3fb-4b5e-9e63-8752524655a5"
+              "IdValue": "36323c73-87ad-4279-aba1-58220d939dc4"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "c121d8ff-9ee2-49bd-a66a-222a39ca22e0",
+              "__guid": "6a07419e-92ed-400e-8342-8313b40042cb",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - cigar",
@@ -47013,18 +47030,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "479d53b8-c13b-4ce4-b804-a7d0f50fb843"
+              "IdValue": "40b5802a-f688-4830-acc5-fbbfd73b3cd4"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "c121d8ff-9ee2-49bd-a66a-222a39ca22e0"
+              "IdValue": "6a07419e-92ed-400e-8342-8313b40042cb"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "479d53b8-c13b-4ce4-b804-a7d0f50fb843",
+              "__guid": "40b5802a-f688-4830-acc5-fbbfd73b3cd4",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -47076,7 +47093,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "8c5e3538-d303-4c9c-9a40-a82170126433"
+              "IdValue": "b18a52ec-cf6f-484d-9da6-9229e41d401d"
             },
             "Parent": {
               "Type": "GameObject",
@@ -47084,12 +47101,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "c121d8ff-9ee2-49bd-a66a-222a39ca22e0"
+              "IdValue": "6a07419e-92ed-400e-8342-8313b40042cb"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "8c5e3538-d303-4c9c-9a40-a82170126433",
+              "__guid": "b18a52ec-cf6f-484d-9da6-9229e41d401d",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - boss_shades",
@@ -47110,18 +47127,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "5753be37-fce4-42f0-9f24-6eb10679b755"
+              "IdValue": "0b83dd8a-4b3f-4546-9340-b7754976c676"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "8c5e3538-d303-4c9c-9a40-a82170126433"
+              "IdValue": "b18a52ec-cf6f-484d-9da6-9229e41d401d"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "5753be37-fce4-42f0-9f24-6eb10679b755",
+              "__guid": "0b83dd8a-4b3f-4546-9340-b7754976c676",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -47173,7 +47190,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "f0720197-480b-4723-b9f0-ccb3c2b67fe6"
+              "IdValue": "e5026a01-6800-4af7-84a0-ab23b133b2a5"
             },
             "Parent": {
               "Type": "GameObject",
@@ -47181,12 +47198,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "8c5e3538-d303-4c9c-9a40-a82170126433"
+              "IdValue": "b18a52ec-cf6f-484d-9da6-9229e41d401d"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "f0720197-480b-4723-b9f0-ccb3c2b67fe6",
+              "__guid": "e5026a01-6800-4af7-84a0-ab23b133b2a5",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - tattoo_triabal",
@@ -47207,18 +47224,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "7f86014c-ac64-4876-987e-86019d217077"
+              "IdValue": "e8f81e1f-756d-421d-a46c-37aa66a5090c"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "f0720197-480b-4723-b9f0-ccb3c2b67fe6"
+              "IdValue": "e5026a01-6800-4af7-84a0-ab23b133b2a5"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "7f86014c-ac64-4876-987e-86019d217077",
+              "__guid": "e8f81e1f-756d-421d-a46c-37aa66a5090c",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -47270,7 +47287,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "78457ff5-a348-4f8b-84fe-3edf5d6cd2bc"
+              "IdValue": "d1075b6b-bf50-4306-b1ad-7ba6d3acb753"
             },
             "Parent": {
               "Type": "GameObject",
@@ -47278,12 +47295,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "f0720197-480b-4723-b9f0-ccb3c2b67fe6"
+              "IdValue": "e5026a01-6800-4af7-84a0-ab23b133b2a5"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "78457ff5-a348-4f8b-84fe-3edf5d6cd2bc",
+              "__guid": "d1075b6b-bf50-4306-b1ad-7ba6d3acb753",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - charm_bracelet_mat_clean.vmat",
@@ -47304,18 +47321,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "f9b38174-92c9-41d3-9278-1a61442c8c32"
+              "IdValue": "5d189743-cdaa-4003-a6a8-63132df3a2f5"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "78457ff5-a348-4f8b-84fe-3edf5d6cd2bc"
+              "IdValue": "d1075b6b-bf50-4306-b1ad-7ba6d3acb753"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "f9b38174-92c9-41d3-9278-1a61442c8c32",
+              "__guid": "5d189743-cdaa-4003-a6a8-63132df3a2f5",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -47367,7 +47384,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "78f3943d-a181-47d5-a153-c4fa3cba0a52"
+              "IdValue": "30e2fa7c-0faa-4be4-abfa-3820359a0d32"
             },
             "Parent": {
               "Type": "GameObject",
@@ -47375,12 +47392,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "78457ff5-a348-4f8b-84fe-3edf5d6cd2bc"
+              "IdValue": "d1075b6b-bf50-4306-b1ad-7ba6d3acb753"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "78f3943d-a181-47d5-a153-c4fa3cba0a52",
+              "__guid": "30e2fa7c-0faa-4be4-abfa-3820359a0d32",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - sneakers gravity",
@@ -47401,18 +47418,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "21877643-a080-4694-bc67-b313c6271f28"
+              "IdValue": "84f3a3d5-c156-48d7-b25d-52042ab6bc30"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "78f3943d-a181-47d5-a153-c4fa3cba0a52"
+              "IdValue": "30e2fa7c-0faa-4be4-abfa-3820359a0d32"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "21877643-a080-4694-bc67-b313c6271f28",
+              "__guid": "84f3a3d5-c156-48d7-b25d-52042ab6bc30",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -47464,7 +47481,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "e0fcc54f-4524-4fed-9675-a80eea2550d7"
+              "IdValue": "ce42be75-d72a-4b9e-80fb-0dbee9c7ca3b"
             },
             "Parent": {
               "Type": "GameObject",
@@ -47472,12 +47489,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "78f3943d-a181-47d5-a153-c4fa3cba0a52"
+              "IdValue": "30e2fa7c-0faa-4be4-abfa-3820359a0d32"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "e0fcc54f-4524-4fed-9675-a80eea2550d7",
+              "__guid": "ce42be75-d72a-4b9e-80fb-0dbee9c7ca3b",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - baggy pants blue",
@@ -47498,18 +47515,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "feb085ac-edf9-4262-985d-6f6490948d77"
+              "IdValue": "b9c88bfc-7aaf-4d13-96a0-febbc7336249"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "e0fcc54f-4524-4fed-9675-a80eea2550d7"
+              "IdValue": "ce42be75-d72a-4b9e-80fb-0dbee9c7ca3b"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "feb085ac-edf9-4262-985d-6f6490948d77",
+              "__guid": "b9c88bfc-7aaf-4d13-96a0-febbc7336249",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -47561,7 +47578,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "ef0297c5-d5ba-4c53-a012-772aad140b01"
+              "IdValue": "a59115c8-c0d3-493a-b8f1-009ff1aaabd5"
             },
             "Parent": {
               "Type": "GameObject",
@@ -47569,12 +47586,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "e0fcc54f-4524-4fed-9675-a80eea2550d7"
+              "IdValue": "ce42be75-d72a-4b9e-80fb-0dbee9c7ca3b"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "ef0297c5-d5ba-4c53-a012-772aad140b01",
+              "__guid": "a59115c8-c0d3-493a-b8f1-009ff1aaabd5",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - og_tshirt",
@@ -47595,18 +47612,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "2297c710-c517-4ab2-a2ed-7e75ed1f83da"
+              "IdValue": "7bdd31b0-d3db-4fe0-9f77-fe0b0a0653c7"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "ef0297c5-d5ba-4c53-a012-772aad140b01"
+              "IdValue": "a59115c8-c0d3-493a-b8f1-009ff1aaabd5"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "2297c710-c517-4ab2-a2ed-7e75ed1f83da",
+              "__guid": "7bdd31b0-d3db-4fe0-9f77-fe0b0a0653c7",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,
@@ -47658,7 +47675,7 @@
           {
             "Id": {
               "Type": "GameObject",
-              "IdValue": "ddf4ad60-2d20-46d2-bb39-58946928283e"
+              "IdValue": "52b0326d-dc03-4b84-98e7-a8abeb316780"
             },
             "Parent": {
               "Type": "GameObject",
@@ -47666,12 +47683,12 @@
             },
             "PreviousElement": {
               "Type": "GameObject",
-              "IdValue": "ef0297c5-d5ba-4c53-a012-772aad140b01"
+              "IdValue": "a59115c8-c0d3-493a-b8f1-009ff1aaabd5"
             },
             "ContainerProperty": "Children",
             "IsContainerArray": true,
             "Data": {
-              "__guid": "ddf4ad60-2d20-46d2-bb39-58946928283e",
+              "__guid": "52b0326d-dc03-4b84-98e7-a8abeb316780",
               "__version": 2,
               "Flags": 0,
               "Name": "Clothing - swag_ring",
@@ -47692,18 +47709,18 @@
           {
             "Id": {
               "Type": "Component",
-              "IdValue": "1c13d646-9189-4db0-a959-d219cf6d0670"
+              "IdValue": "71bc64a7-2b5e-4d33-8234-34fbf247e49f"
             },
             "Parent": {
               "Type": "GameObject",
-              "IdValue": "ddf4ad60-2d20-46d2-bb39-58946928283e"
+              "IdValue": "52b0326d-dc03-4b84-98e7-a8abeb316780"
             },
             "PreviousElement": null,
             "ContainerProperty": "Components",
             "IsContainerArray": true,
             "Data": {
               "__type": "Sandbox.SkinnedModelRenderer",
-              "__guid": "1c13d646-9189-4db0-a959-d219cf6d0670",
+              "__guid": "71bc64a7-2b5e-4d33-8234-34fbf247e49f",
               "__enabled": true,
               "Flags": 0,
               "AnimationGraph": null,

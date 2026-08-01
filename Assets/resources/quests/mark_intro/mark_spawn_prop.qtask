@@ -1,0 +1,9 @@
+{
+  "Id": "mark_spawn_prop",
+  "Header": "Первый проп",
+  "Description": "Открой меню пропов клавишей Q и поставь любой предмет.",
+  "Count": 1,
+  "HasPostCompleted": true,
+  "__references": [],
+  "__version": 0
+}

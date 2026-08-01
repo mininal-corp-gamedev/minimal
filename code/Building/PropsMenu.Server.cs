@@ -368,6 +368,7 @@ public sealed partial class PropsMenu
 			gameObj.Tags.Add( "prop" );
 			gameObj.NetworkSpawn();
 			OwnedPropNetwork.ConfigurePropCustom( gameObj );
+			MarkIntroQuest.TryAdvance( player, MarkIntroQuest.SpawnPropTaskId );
 
 			Log.Info( $"[PropsMenu] {caller.DisplayName} spawned cloud prop '{GetCatalogPropHeader( prop )}' (ident: {prop.PackageIdent})." );
 			NotifySpawnCaller( caller, GameLocalization.Format( "notify.props.spawned", "Spawned: {0}.", GetCatalogPropHeader( prop ) ), true );

@@ -6,8 +6,12 @@
   "CanGetSameCategoryQuest": false,
   "CanRepeat": false,
   "QuestTasks": [
+    "resources/quests/mark_intro/mark_meet.qtask",
     "resources/quests/mark_intro/mark_hit.qtask",
     "resources/quests/mark_intro/mark_buy_doors.qtask",
+    "resources/quests/mark_intro/mark_spawn_prop.qtask",
+    "resources/quests/mark_intro/mark_physgun_prop.qtask",
+    "resources/quests/mark_intro/mark_remove_prop.qtask",
     "resources/quests/mark_intro/mark_return.qtask"
   ],
   "HasPostCompleted": true,

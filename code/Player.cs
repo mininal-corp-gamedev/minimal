@@ -2356,6 +2356,17 @@ public sealed partial class Player : Component, ICustomDamagable, PlayerControll
         if ( player._inventorySaveInitialized ) return;
 
         player.HostInitInventorySave();
+
+		var playerQuest = player.Components.Get<PlayerQuest>();
+		if ( playerQuest.IsValid() && playerQuest.EnsureLoadedFromDisk() )
+		{
+			MarkIntroQuest.EnsureStarterQuest( playerQuest );
+			MarkIntroQuest.ApplyInventoryUnlocks( playerQuest );
+			// The quest may already exist in the save, in which case EnsureStarterQuest
+			// does not mutate it and therefore does not trigger an owner RPC itself.
+			// Always send the loaded snapshot once the owner and client component are ready.
+			playerQuest.OnHostStateChanged();
+		}
 #endif
     }
 

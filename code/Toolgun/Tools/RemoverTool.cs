@@ -13,6 +13,7 @@ public sealed class RemoverTool : ToolMode
 		var propObject = prop.GameObject;
 		var propName = !propObject.IsValid() || string.IsNullOrWhiteSpace(propObject.Name) ? "Prop" : propObject.Name;
 
+		MarkIntroQuest.TryAdvance( context.Player, MarkIntroQuest.RemovePropTaskId );
 		context.Player.UnregisterSpawnedProp(prop);
 		propObject.Destroy();
 

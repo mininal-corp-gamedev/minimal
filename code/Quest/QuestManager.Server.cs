@@ -80,6 +80,7 @@ public sealed partial class QuestManager
 			IsFinish = false,
 		};
 		player.CurrentQuests.Add( quest );
+		MarkIntroQuest.ApplyInventoryUnlocks( player );
 		player.OnHostStateChanged();
 		return true;
 	}
@@ -158,6 +159,7 @@ public sealed partial class QuestManager
 
 		quest.CurrentQuestTask = def.QuestTasks[taskIndex];
 		quest.CurrentCount = 0;
+		MarkIntroQuest.ApplyInventoryUnlocks( player );
 		player.OnHostStateChanged();
 		return true;
 	}
@@ -180,6 +182,7 @@ public sealed partial class QuestManager
 
 		quest.CurrentQuestTask = def.QuestTasks[idx + 1];
 		quest.CurrentCount = 0;
+		MarkIntroQuest.ApplyInventoryUnlocks( player );
 		player.OnHostStateChanged();
 		return true;
 	}
@@ -194,6 +197,7 @@ public sealed partial class QuestManager
 		if ( def != null && def.HasPostCompleted )
 			QuestDatabase.Get( def.Id )?.OnQuestCompleted( player, quest );
 
+		MarkIntroQuest.ApplyInventoryUnlocks( player );
 		player.OnHostStateChanged();
 	}
 }

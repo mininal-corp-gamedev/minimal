@@ -1,0 +1,9 @@
+{
+  "Id": "mark_remove_prop",
+  "Header": "Убрать проп",
+  "Description": "Выбери Remover, возьми Toolgun и удали свой проп.",
+  "Count": 1,
+  "HasPostCompleted": false,
+  "__references": [],
+  "__version": 0
+}

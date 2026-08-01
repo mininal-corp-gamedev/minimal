@@ -21,7 +21,10 @@ public sealed partial class PlayerQuest : Component
 	protected override void OnStart()
 	{
 		if ( !IsProxy )
+		{
 			Local = this;
+			QuestHud.EnsureInstance();
+		}
 
 		OnStartHost();
 	}

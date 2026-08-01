@@ -120,6 +120,30 @@ public static partial class GameLocalization
 		return Phrase( $"items.{NormalizeId( item.Id )}.description", item.Description );
 	}
 
+	public static string QuestHeader( QuestDefinition quest )
+	{
+		if ( quest is null ) return string.Empty;
+		return Phrase( $"quest.{NormalizeId( quest.Id )}.header", quest.Header );
+	}
+
+	public static string QuestDescription( QuestDefinition quest )
+	{
+		if ( quest is null ) return string.Empty;
+		return Phrase( $"quest.{NormalizeId( quest.Id )}.description", quest.Description );
+	}
+
+	public static string QuestTaskHeader( QuestTaskDefinition task )
+	{
+		if ( task is null ) return string.Empty;
+		return Phrase( $"quest.task.{NormalizeId( task.Id )}.header", task.Header );
+	}
+
+	public static string QuestTaskDescription( QuestTaskDefinition task )
+	{
+		if ( task is null ) return string.Empty;
+		return Phrase( $"quest.task.{NormalizeId( task.Id )}.description", task.Description );
+	}
+
 	public static string PhoneAppHeader( PhoneAppDefinition app )
 	{
 		if ( app is null )

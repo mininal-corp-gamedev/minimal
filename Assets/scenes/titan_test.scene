@@ -328,9 +328,11 @@
         "b245acd0-c34b-4a10-a05b-8da4a395a219": "159c138e-4d12-47a4-baad-ee148e26b82f",
         "59508a21-d539-4e12-9b5d-387ebbf78f34": "f2834f36-0dc5-4f80-87f5-b2e0aa01a6b4",
         "243c6a62-82d2-411c-b42f-722e018bb07c": "01f87b45-bb1b-41a2-9385-5485d410d4d6",
-        "a77f0ad9-c0c2-4c63-8b9d-318da9f12136": "42bbf049-dbb9-8ef0-9c28-cdda50ef8c16",
-        "d59fd660-e52f-4c76-9cb8-89d790fd76ea": "db7b4b74-8014-85c7-bf14-8d60de7d2c32",
-        "ebb7c758-103c-4dba-9fc8-5d4f4b5f515c": "beebc7b3-269e-8da2-923c-baacf49e0224"
+        "0d4db2c5-0e6d-4fc1-9f32-2e0dbf7a5a22": "585f3fa8-8c25-89a6-b84b-e1f8bd76d05e",
+        "f10b331f-1245-477a-96e8-8fd9f15a2df9": "a65e0242-5d23-8536-8e9b-ffaf6a1e2779",
+        "ebb7c758-103c-4dba-9fc8-5d4f4b5f515c": "beebc7b3-269e-8da2-923c-baacf49e0224",
+        "d257ce97-3799-480b-9c92-0609cc3d1355": "edc6264b-d539-85fb-8e35-1cb82be5cb69",
+        "3a7c9003-ea93-44e1-ad35-fe1f66976ebd": "55c5df97-7a4f-8eb6-8770-aabcbbbee76f"
       }
     },
     {
@@ -406,7 +408,7 @@
           "IsTrigger": false,
           "Mesh": {
             "Data": {
-              "$blob": "0bdc2d50-0f2e-48e7-8375-d1dfebe3b12b"
+              "$blob": "996f3545-614b-80fa-8964-30739a6df970"
             },
             "Materials": [
               "materials/dev/reflectivity_30.vmat"
@@ -1031,7 +1033,7 @@
           "IsTrigger": true,
           "Mesh": {
             "Data": {
-              "$blob": "41530b8f-2c2a-4ee2-9c08-772ee89c0fce"
+              "$blob": "369db8d0-eac7-88d1-94a8-d50352c71a07"
             },
             "Materials": [
               "materials/dev/reflectivity_30.vmat"
@@ -1111,7 +1113,7 @@
           "IsTrigger": false,
           "Mesh": {
             "Data": {
-              "$blob": "aef82089-848f-47bd-b5c3-cc1eb180d320"
+              "$blob": "b4d0f9e9-5021-8df0-b1c9-446e853f736b"
             },
             "Materials": [
               "materials/dev/reflectivity_30.vmat"
@@ -1167,7 +1169,7 @@
           "IsTrigger": false,
           "Mesh": {
             "Data": {
-              "$blob": "50664f39-06f2-40e5-8cd6-5bf4c22145ba"
+              "$blob": "39c10f4b-dda2-8852-a488-e14f7eee3db5"
             },
             "Materials": [
               "materials/dev/reflectivity_30.vmat"
@@ -1223,7 +1225,7 @@
           "IsTrigger": false,
           "Mesh": {
             "Data": {
-              "$blob": "76ce994b-6870-497e-972c-15cbeb60d408"
+              "$blob": "a9fe4f88-fa13-8d54-9b46-f26a9ae2f614"
             },
             "Materials": [
               "materials/dev/reflectivity_30.vmat"
@@ -1279,7 +1281,7 @@
           "IsTrigger": false,
           "Mesh": {
             "Data": {
-              "$blob": "da773e9a-1c66-4d0b-a497-47b7652cec0a"
+              "$blob": "4a8e43f6-c49e-8853-94a7-4922693e3807"
             },
             "Materials": [
               "materials/dev/reflectivity_30.vmat"
@@ -1428,7 +1430,7 @@
           "IsTrigger": false,
           "Mesh": {
             "Data": {
-              "$blob": "d88e040b-1023-4454-9ca0-4261db92be0e"
+              "$blob": "5a2642c9-ce42-8843-9472-92165bf24d31"
             },
             "Materials": [
               "materials/dev/reflectivity_30.vmat"
@@ -1517,9 +1519,7 @@
             },
             "Property": "Mesh",
             "Value": {
-              "Data": {
-                "$blob": "2a0abc37-a88c-4e85-8f9d-0a6d7c3edbf8"
-              },
+              "Data": "AQAAAAcAAAAIAAAAdG9wb2xvZ3nEAQAACAAAABgAAAAGAAAAAAAAAAIAAAAEAAAABgAAAAgAAAAKAAAADAAAAA4AAAABAAAAAQAAAAIAAAAAAAAAAAAAAAAAAAARAAAABQAAAAIAAAADAAAABAAAAAAAAAABAAAAAgAAABQAAAADAAAAAwAAAAUAAAAGAAAAAAAAAAIAAAAEAAAAFwAAAAQAAAAAAAAABwAAAAAAAAAAAAAAAwAAAAYAAAASAAAAAgAAAAUAAAAJAAAACgAAAAEAAAAEAAAACAAAABMAAAAEAAAABgAAAAsAAAAMAAAAAQAAAAUAAAAKAAAAFgAAAAMAAAAHAAAADQAAAA4AAAABAAAABgAAAAwAAAAVAAAABQAAAAQAAAAPAAAACAAAAAEAAAAHAAAADgAAABAAAAACAAAAAAAAABEAAAAHAAAAAgAAAAcAAAAQAAAADQAAAAUAAAAEAAAAEwAAAA8AAAACAAAAAwAAABIAAAAFAAAABAAAAAYAAAAVAAAACwAAAAMAAAABAAAAFAAAAAEAAAAFAAAAAgAAABcAAAADAAAAAwAAAAUAAAAWAAAACQAAAAQAAAAGAAAADgAAABIAAAAWAAAAFwAAABUAAAAJAAAAcG9zaXRpb25zYAAAACC6kcEAUNa+uZAxQiC6kUEAUNa+uZAxQiC6kUEAUNY+uZAxQiC6kcEAUNY+uZAxQiC6kcEAUNY+uZAxwiC6kUEAUNY+uZAxwiC6kUEAUNa+uZAxwiC6kcEAUNa+uZAxwgYAAABibGVuZHNgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAGNvbG9yc2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAdGV4Y29vcmTAAAAAHTMbRJy1SMR7FxJE4ofDwh0zG0Qw60jEnPVIROKHw8J7FxJEMOtIxB3zGsTih8PCexcSRJy1SMQw60jE4ofDwh0zG0Qw60jEe9cRxEi5D8EdMxtEnLVIxDArSURIuQ/BexcSRJy1SMQdMxtESLkPwXsXEkQw60jEnLVIxEi5D8GctUjE4ofDwnsXEkRIuQ/BMOtIxEi5D8F71xHE4ofDwpz1SERIuQ/BHTMbROKHw8IwK0lE4ofDwh3zGsRIuQ/BDQAAAG1hdGVyaWFsaW5kZXgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAAGVkZ2VmbGFnc2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
               "Materials": [
                 "materials/glass.vmat"
               ]
@@ -1646,9 +1646,7 @@
             },
             "Property": "Mesh",
             "Value": {
-              "Data": {
-                "$blob": "a15ac318-d1a0-4413-b4cf-97ce6802982f"
-              },
+              "Data": "AQAAAAcAAAAIAAAAdG9wb2xvZ3nEAQAACAAAABgAAAAGAAAAAAAAAAIAAAAEAAAABgAAAAgAAAAKAAAADAAAAA4AAAABAAAAAQAAAAIAAAAAAAAAAAAAAAAAAAARAAAABQAAAAIAAAADAAAABAAAAAAAAAABAAAAAgAAABQAAAADAAAAAwAAAAUAAAAGAAAAAAAAAAIAAAAEAAAAFwAAAAQAAAAAAAAABwAAAAAAAAAAAAAAAwAAAAYAAAASAAAAAgAAAAUAAAAJAAAACgAAAAEAAAAEAAAACAAAABMAAAAEAAAABgAAAAsAAAAMAAAAAQAAAAUAAAAKAAAAFgAAAAMAAAAHAAAADQAAAA4AAAABAAAABgAAAAwAAAAVAAAABQAAAAQAAAAPAAAACAAAAAEAAAAHAAAADgAAABAAAAACAAAAAAAAABEAAAAHAAAAAgAAAAcAAAAQAAAADQAAAAUAAAAEAAAAEwAAAA8AAAACAAAAAwAAABIAAAAFAAAABAAAAAYAAAAVAAAACwAAAAMAAAABAAAAFAAAAAEAAAAFAAAAAgAAABcAAAADAAAAAwAAAAUAAAAWAAAACQAAAAQAAAAGAAAADgAAABIAAAAWAAAAFwAAABUAAAAJAAAAcG9zaXRpb25zYAAAACS6kcEITta+7LzkQSS6kUEETta+7LzkQSS6kUEITtY+7LzkQSS6kcEETtY+7LzkQSS6kcEETtY+8LzkwSS6kUEITtY+8LzkwSS6kUEETta+8LzkwSS6kcEITta+8LzkwQYAAABibGVuZHNgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABgAAAGNvbG9yc2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAdGV4Y29vcmTAAAAA48wCxDjrvsOF6AvEvqrbwuPMAsRgVr/DOGu/Q76q28KF6AvEYFa/w+MMA0S+qtvChegLxDjrvsNgVr/DvqrbwuPMAsRgVr/DhSgMRI2YUsLjzALEOOu+w2DWv0OMmFLChegLxDjrvsPjzALEjJhSwoXoC8RgVr/DOOu+w42YUsI4677DvqrbwoXoC8SMmFLCYFa/w42YUsKFKAxEvqrbwjhrv0OMmFLC48wCxL6q28Jg1r9DvqrbwuMMA0SNmFLCDQAAAG1hdGVyaWFsaW5kZXgYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACQAAAGVkZ2VmbGFnc2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
               "Materials": [
                 "materials/glass.vmat"
               ]
@@ -1697,7 +1695,8 @@
     "GameObjectSystems": {
       "Sandbox.Clutter.ClutterGridSystem": {
         "Storage": {
-          "$blob": "4c8d8be3-9b2a-45ca-a21b-eaa302af4bec"
+          "$blob": "64db792e-5935-8fbc-8cfa-050cd49fa7fd",
+          "$refs": []
         }
       },
       "Sandbox.SelectionSetsSystem": {
@@ -1711,7 +1710,8 @@
   "Title": "titan_test",
   "Description": null,
   "__references": [
-    "facepunch.wooden_door_01d#143453"
+    "facepunch.wooden_door_01d#143453",
+    "nightstudio.boss_shades#183071"
   ],
   "__version": 3
 }

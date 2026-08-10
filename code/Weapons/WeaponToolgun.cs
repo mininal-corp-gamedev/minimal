@@ -28,6 +28,23 @@ public sealed class WeaponToolgun : Weapon
 		return null;
 	}
 
+	protected override void OnWeaponUpdate()
+	{
+		StackerGhost.Update();
+	}
+
+	protected override void OnDisabled()
+	{
+		StackerGhost.Clear();
+		base.OnDisabled();
+	}
+
+	protected override void OnDestroy()
+	{
+		StackerGhost.Clear();
+		base.OnDestroy();
+	}
+
 	protected override void OnWeaponFixedUpdate()
 	{
 		if (!Player.Local.IsValid() || !Player.Local.Controller.IsValid())

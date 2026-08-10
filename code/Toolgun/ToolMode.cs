@@ -68,7 +68,8 @@ public abstract class ToolMode
 		new FadingDoorTool(),
 		new NoCollideTool(),
 		new PushTool(),
-		new TextscreenTool()
+		new TextscreenTool(),
+		new StackerTool()
 	};
 
 	public static ToolMode Get(string id)

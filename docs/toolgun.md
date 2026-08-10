@@ -62,6 +62,15 @@
   - создаёт `prefabs/textscreen.prefab`;
   - на объекте настраиваются `Textscreen`, `PropCustom`, physics shell, prop collision tags;
   - занимает prop slot и должен удаляться/двигаться как обычный prop.
+- `StackerTool`
+  - owned `PropCustom`;
+  - config: `stacker.side` (button: up/down/left/right/front/back, default up), `stacker.count` (slider 1..10, default 1), `stacker.gap` (slider 0..100 step 0.25, default 1);
+  - ЛКМ создаёт копии пропа по локальным осям в выбранном направлении;
+  - копии наследуют model, tint, scale оригинала; спавнятся frozen (`PropPhysicsMode.Frozen`);
+  - уважает `Player.MaxProps` — если лимит достигнут, спавнит сколько можно;
+  - каждый копия регистрируется через `Player.RegisterSpawnedProp` (доступен Undo и Remover);
+  - клиентский ghost-предпросмотр через `StackerGhost` (`code/Toolgun/StackerGhost.cs`): прозрачные non-physical `ModelRenderer`-объекты, видны при наведении на любой `PropCustom`, пропадают при отведении;
+  - `StackerGhost.Update()` вызывается из `WeaponToolgun.OnWeaponUpdate()`.
 
 ## Подводные камни
 
